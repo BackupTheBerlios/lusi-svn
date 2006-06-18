@@ -1,0 +1,4 @@
+default: all
+
+all:
+	@export ACLOCAL="aclocal -I ." && autoreconf -i
