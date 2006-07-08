@@ -24,6 +24,8 @@ using namespace lusi;
 
 using package::Package;
 
+//public:
+
 Uninstaller::Uninstaller() {
 }
 

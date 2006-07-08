@@ -231,7 +231,7 @@ private:
     /**
      * The package to use in this Task.
      */
-    lusi::package::Package* package;
+    lusi::package::Package* mPackage;
 
     /**
      * The task configuration to use in this Task.
