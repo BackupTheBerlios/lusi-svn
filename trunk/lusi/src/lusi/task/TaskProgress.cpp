@@ -38,11 +38,11 @@ TaskProgress::~TaskProgress() {
 void TaskProgress::progress(float value) {
 }
 
-void TaskProgress::addObserver(TaskProgressObserver* observer) {
+void TaskProgress::attachObserver(TaskProgressObserver* observer) {
 }
 
 vector<TaskProgressObserver*> TaskProgress::getObservers() {
 }
 
-void TaskProgress::removeObserver(TaskProgressObserver* observer) {
+void TaskProgress::detachObserver(TaskProgressObserver* observer) {
 }

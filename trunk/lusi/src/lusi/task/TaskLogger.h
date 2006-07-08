@@ -53,11 +53,11 @@ public:
 
     void event(const std::string& message, LoggedEventType type);
 
-    void addObserver(TaskLoggerObserver* observer);
+    void attachObserver(TaskLoggerObserver* observer);
 
     std::vector<TaskLoggerObserver*> getObservers();
 
-    void removeObserver(TaskLoggerObserver* observer);
+    void detachObserver(TaskLoggerObserver* observer);
 
 protected:
 

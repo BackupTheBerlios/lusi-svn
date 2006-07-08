@@ -37,11 +37,11 @@ TaskLogger::~TaskLogger() {
 void TaskLogger::event(const string& message, LoggedEventType type) {
 }
 
-void TaskLogger::addObserver(TaskLoggerObserver* observer) {
+void TaskLogger::attachObserver(TaskLoggerObserver* observer) {
 }
 
 vector<TaskLoggerObserver*> TaskLogger::getObservers() {
 }
 
-void TaskLogger::removeObserver(TaskLoggerObserver* observer) {
+void TaskLogger::detachObserver(TaskLoggerObserver* observer) {
 }

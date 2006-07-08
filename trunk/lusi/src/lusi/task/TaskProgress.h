@@ -51,11 +51,11 @@ public:
 
     void progress(float value);
 
-    void addObserver(TaskProgressObserver* observer);
+    void attachObserver(TaskProgressObserver* observer);
 
     std::vector<lusi::task::TaskProgressObserver*> getObservers();
 
-    void removeObserver(TaskProgressObserver* observer);
+    void detachObserver(TaskProgressObserver* observer);
 
 protected:
 
