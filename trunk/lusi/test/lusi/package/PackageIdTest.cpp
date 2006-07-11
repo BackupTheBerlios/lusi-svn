@@ -35,13 +35,13 @@ void PackageIdTest::tearDown() {
 
 void PackageIdTest::testGetName() {
     PackageId packageId("wesnoth");
-    CPPUNIT_ASSERT(packageId.getName() == "wesnoth");
+    CPPUNIT_ASSERT_EQUAL(string("wesnoth"), packageId.getName());
 }
 
 void PackageIdTest::testGetVersion() {
     PackageId packageIdDefault("wesnoth");
-    CPPUNIT_ASSERT(packageIdDefault.getVersion() == "");
+    CPPUNIT_ASSERT_EQUAL(string(""), packageIdDefault.getVersion());
 
     PackageId packageId("wesnoth", "1.0");
-    CPPUNIT_ASSERT(packageId.getVersion() == "1.0");
+    CPPUNIT_ASSERT_EQUAL(string("1.0"), packageId.getVersion());
 }
