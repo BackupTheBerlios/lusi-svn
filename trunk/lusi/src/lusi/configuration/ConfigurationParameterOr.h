@@ -32,8 +32,9 @@ namespace configuration {
 class ConfigurationParameterOr: public ConfigurationParameterComposed {
 public:
 
-    ConfigurationParameterOr(string id,
-            ConfigurationParameterPriority priority, string information = 0);
+    ConfigurationParameterOr(const std::string& id,
+            ConfigurationParameterPriority priority,
+            const std::string& information = 0);
 
     virtual ~ConfigurationParameterOr();
 

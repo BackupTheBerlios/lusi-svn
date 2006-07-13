@@ -75,12 +75,12 @@ private:
     /**
      * Copy constructor disabled.
      */
-    BuiltPackageStatus(const BuiltPackageStatus &builtPackageStatus);
+    BuiltPackageStatus(const BuiltPackageStatus& builtPackageStatus);
 
     /**
      * Assignment disabled.
      */
-    BuiltPackageStatus& operator=(const BuiltPackageStatus &builtPackageStatus);
+    BuiltPackageStatus& operator=(const BuiltPackageStatus& builtPackageStatus);
 
 };
 

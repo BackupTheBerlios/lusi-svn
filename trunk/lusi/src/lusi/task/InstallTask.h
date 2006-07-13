@@ -48,8 +48,8 @@ public:
      * @param package The Package to use.
      * @param taskConfiguration The TaskConfiguration to use.
      */
-    InstallTask(lusi::package::Package *package,
-            TaskConfiguration *taskConfiguration);
+    InstallTask(lusi::package::Package* package,
+            TaskConfiguration* taskConfiguration);
 
     /**
      * Destroys this InstallTask.
@@ -78,12 +78,12 @@ private:
     /**
      * Copy constructor disabled.
      */
-    InstallTask(const InstallTask &installTask);
+    InstallTask(const InstallTask& installTask);
 
     /**
      * Assignment disabled.
      */
-    InstallTask& operator=(const InstallTask &installTask);
+    InstallTask& operator=(const InstallTask& installTask);
 
 };
 

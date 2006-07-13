@@ -32,7 +32,7 @@ using namespace lusi::task;
 
 //public:
 
-BuildTask::BuildTask(Package *package, TaskConfiguration *taskConfiguration):
+BuildTask::BuildTask(Package* package, TaskConfiguration* taskConfiguration):
         Task("BuildTask", package, taskConfiguration) {
 }
 

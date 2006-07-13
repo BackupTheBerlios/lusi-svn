@@ -79,7 +79,7 @@ protected:
      * Protected to avoid classes other than derived to create Resource
      * objects.
      */
-    Resource(std::string id);
+    Resource(const std::string& id);
 
 private:
 
@@ -94,12 +94,12 @@ private:
     /**
      * Copy constructor disabled.
      */
-    Resource(const Resource &resource);
+    Resource(const Resource& resource);
 
     /**
      * Assignment disabled.
      */
-    Resource& operator=(const Resource &resource);
+    Resource& operator=(const Resource& resource);
 
 };
 

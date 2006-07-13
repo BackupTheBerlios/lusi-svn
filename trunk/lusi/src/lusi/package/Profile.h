@@ -138,12 +138,12 @@ private:
     /**
      * Copy constructor disabled.
      */
-    Profile(const Profile &profile);
+    Profile(const Profile& profile);
 
     /**
      * Assignment disabled.
      */
-    Profile& operator=(const Profile &profile);
+    Profile& operator=(const Profile& profile);
 
 };
 

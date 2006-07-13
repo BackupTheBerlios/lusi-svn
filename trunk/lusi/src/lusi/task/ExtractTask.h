@@ -49,8 +49,8 @@ public:
      * @param package The Package to use.
      * @param taskConfiguration The TaskConfiguration to use.
      */
-    ExtractTask(lusi::package::Package *package,
-            TaskConfiguration *taskConfiguration);
+    ExtractTask(lusi::package::Package* package,
+            TaskConfiguration* taskConfiguration);
 
     /**
      * Destroys this ExtractTask.
@@ -79,12 +79,12 @@ private:
     /**
      * Copy constructor disabled.
      */
-    ExtractTask(const ExtractTask &extractTask);
+    ExtractTask(const ExtractTask& extractTask);
 
     /**
      * Assignment disabled.
      */
-    ExtractTask& operator=(const ExtractTask &extractTask);
+    ExtractTask& operator=(const ExtractTask& extractTask);
 
 };
 

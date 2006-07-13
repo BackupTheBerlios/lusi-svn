@@ -24,9 +24,9 @@ using namespace lusi::configuration;
 
 //public:
 
-ConfigurationParameterAnd::ConfigurationParameterAnd (string id,
+ConfigurationParameterAnd::ConfigurationParameterAnd(const string& id,
                                 ConfigurationParameterPriority priority,
-                                string information /*= 0*/) {
+                                const string& information /*= 0*/) {
 }
 
 ConfigurationParameterAnd::~ConfigurationParameterAnd() {

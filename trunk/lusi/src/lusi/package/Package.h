@@ -152,12 +152,12 @@ private:
     /**
      * Copy constructor disabled.
      */
-    Package(const Package &package);
+    Package(const Package& package);
 
     /**
      * Assignment disabled.
      */
-    Package& operator=(const Package &package);
+    Package& operator=(const Package& package);
 
 };
 

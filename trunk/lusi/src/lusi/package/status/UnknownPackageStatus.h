@@ -75,12 +75,13 @@ private:
     /**
      * Copy constructor disabled.
      */
-    UnknownPackageStatus(const UnknownPackageStatus &unknownPackageStatus);
+    UnknownPackageStatus(const UnknownPackageStatus& unknownPackageStatus);
 
     /**
      * Assignment disabled.
      */
-    UnknownPackageStatus& operator=(const UnknownPackageStatus &unknownPackageStatus);
+    UnknownPackageStatus& operator=(
+            const UnknownPackageStatus& unknownPackageStatus);
 
 };
 

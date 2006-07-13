@@ -107,12 +107,12 @@ private:
     /**
      * Copy constructor disabled.
      */
-    ResourceMap(const ResourceMap &resourceMap);
+    ResourceMap(const ResourceMap& resourceMap);
 
     /**
      * Assignment disabled.
      */
-    ResourceMap& operator=(const ResourceMap &resourceMap);
+    ResourceMap& operator=(const ResourceMap& resourceMap);
 
 };
 

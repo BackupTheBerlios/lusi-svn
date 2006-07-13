@@ -74,12 +74,14 @@ private:
     /**
      * Copy constructor disabled.
      */
-    InstalledPackageStatus(const InstalledPackageStatus &installedPackageStatus);
+    InstalledPackageStatus(
+            const InstalledPackageStatus& installedPackageStatus);
 
     /**
      * Assignment disabled.
      */
-    InstalledPackageStatus& operator=(const InstalledPackageStatus &installedPackageStatus);
+    InstalledPackageStatus& operator=(
+            const InstalledPackageStatus& installedPackageStatus);
 
 };
 

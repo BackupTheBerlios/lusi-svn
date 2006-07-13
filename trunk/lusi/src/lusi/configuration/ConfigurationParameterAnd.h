@@ -32,9 +32,9 @@ namespace configuration {
 class ConfigurationParameterAnd: public ConfigurationParameterComposed {
 public:
 
-    ConfigurationParameterAnd(string id,
+    ConfigurationParameterAnd(const std::string& id,
                               ConfigurationParameterPriority priority,
-                              string information = 0);
+                              const std::string& information = 0);
 
     virtual ~ConfigurationParameterAnd();
 

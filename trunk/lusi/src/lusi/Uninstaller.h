@@ -69,12 +69,12 @@ private:
     /**
      * Copy constructor disabled.
      */
-    Uninstaller(const Uninstaller &uninstaller);
+    Uninstaller(const Uninstaller& uninstaller);
 
     /**
      * Assignment disabled.
      */
-    Uninstaller& operator=(const Uninstaller &uninstaller);
+    Uninstaller& operator=(const Uninstaller& uninstaller);
 
 };
 

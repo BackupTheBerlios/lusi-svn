@@ -76,12 +76,13 @@ private:
     /**
      * Copy constructor disabled.
      */
-    PackedPackageStatus(const PackedPackageStatus &packedPackageStatus);
+    PackedPackageStatus(const PackedPackageStatus& packedPackageStatus);
 
     /**
      * Assignment disabled.
      */
-    PackedPackageStatus& operator=(const PackedPackageStatus &packedPackageStatus);
+    PackedPackageStatus& operator=(
+            const PackedPackageStatus& packedPackageStatus);
 
 };
 

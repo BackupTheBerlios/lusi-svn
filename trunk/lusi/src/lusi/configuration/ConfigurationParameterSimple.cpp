@@ -24,10 +24,10 @@ using namespace lusi::configuration;
 
 //public:
 
-ConfigurationParameterSimple::ConfigurationParameterSimple(string id,
+ConfigurationParameterSimple::ConfigurationParameterSimple(const string& id,
                                     ConfigurationParameterPriority priority,
-                                    string defaultValue,
-                                    string information /*= 0*/) {
+                                    const string& defaultValue,
+                                    const string& information /*= 0*/) {
 }
 
 ConfigurationParameterSimple::~ConfigurationParameterSimple() {

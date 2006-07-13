@@ -86,13 +86,13 @@ private:
      * Copy constructor disabled.
      */
     TaskConfigurationManager(
-            const TaskConfigurationManager &taskConfigurationManager);
+            const TaskConfigurationManager& taskConfigurationManager);
 
     /**
      * Assignment disabled.
      */
     TaskConfigurationManager& operator=(
-            const TaskConfigurationManager &taskConfigurationManager);
+            const TaskConfigurationManager& taskConfigurationManager);
 
 };
 

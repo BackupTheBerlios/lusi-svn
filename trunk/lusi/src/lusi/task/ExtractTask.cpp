@@ -31,8 +31,8 @@ using namespace lusi::task;
 
 //public:
 
-ExtractTask::ExtractTask(Package *package,
-                TaskConfiguration *taskConfiguration):
+ExtractTask::ExtractTask(Package* package,
+                TaskConfiguration* taskConfiguration):
         Task("ExtractTask", package, taskConfiguration) {
 }
 

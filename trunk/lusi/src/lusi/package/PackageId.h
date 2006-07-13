@@ -91,12 +91,12 @@ private:
     /**
      * Copy constructor disabled.
      */
-    PackageId(const PackageId &packageId);
+    PackageId(const PackageId& packageId);
 
     /**
      * Assignment disabled.
      */
-    PackageId& operator=(const PackageId &packageId);
+    PackageId& operator=(const PackageId& packageId);
 
 };
 

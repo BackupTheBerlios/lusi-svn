@@ -32,9 +32,10 @@ namespace configuration {
 class ConfigurationParameterSimple: public ConfigurationParameter {
 public:
 
-    ConfigurationParameterSimple(string id,
-            ConfigurationParameterPriority priority, string defaultValue,
-            string information = 0);
+    ConfigurationParameterSimple(const std::string& id,
+            ConfigurationParameterPriority priority,
+            const std::string& defaultValue,
+            const std::string& information = 0);
 
     virtual ~ConfigurationParameterSimple();
 

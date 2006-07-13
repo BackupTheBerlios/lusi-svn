@@ -44,7 +44,7 @@ ConfigurationParameterPriority ConfigurationParameter::getPriority() {
 
 //protected:
 
-ConfigurationParameter::ConfigurationParameter(string id,
+ConfigurationParameter::ConfigurationParameter(const string& id,
                                 ConfigurationParameterPriority priority,
-                                string information /*= 0*/) {
+                                const string& information /*= 0*/) {
 }

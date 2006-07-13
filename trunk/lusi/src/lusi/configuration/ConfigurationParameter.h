@@ -50,9 +50,9 @@ public:
 
 protected:
 
-    ConfigurationParameter(std::string id,
+    ConfigurationParameter(const std::string& id,
                            ConfigurationParameterPriority priority,
-                           std::string information = 0);
+                           const std::string& information = 0);
 
 private:
 

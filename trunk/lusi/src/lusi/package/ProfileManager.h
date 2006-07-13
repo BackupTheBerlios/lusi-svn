@@ -96,12 +96,12 @@ private:
     /**
      * Copy constructor disabled.
      */
-    ProfileManager(const ProfileManager &profileManager);
+    ProfileManager(const ProfileManager& profileManager);
 
     /**
      * Assignment disabled.
      */
-    ProfileManager& operator=(const ProfileManager &profileManager);
+    ProfileManager& operator=(const ProfileManager& profileManager);
 
 };
 

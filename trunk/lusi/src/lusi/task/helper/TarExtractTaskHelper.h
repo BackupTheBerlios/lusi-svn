@@ -92,7 +92,8 @@ private:
     /**
      * Assignment disabled.
      */
-    TarExtractTaskHelper& operator=(const TarExtractTaskHelper& tarExtractTaskHelper);
+    TarExtractTaskHelper& operator=(
+            const TarExtractTaskHelper& tarExtractTaskHelper);
 
 };
 

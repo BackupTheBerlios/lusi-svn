@@ -69,12 +69,12 @@ private:
     /**
      * Copy constructor disabled.
      */
-    Installer(const Installer &installer);
+    Installer(const Installer& installer);
 
     /**
      * Assignment disabled.
      */
-    Installer& operator=(const Installer &installer);
+    Installer& operator=(const Installer& installer);
 
 };
 

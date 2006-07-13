@@ -37,6 +37,6 @@ inline const string& Resource::getId() const {
 
 //protected:
 
-Resource::Resource(string id) {
+Resource::Resource(const string& id) {
     mId = id;
 }

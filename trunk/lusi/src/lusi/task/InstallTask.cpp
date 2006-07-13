@@ -31,8 +31,8 @@ using namespace lusi::task;
 
 //public:
 
-InstallTask::InstallTask(Package *package,
-                TaskConfiguration *taskConfiguration):
+InstallTask::InstallTask(Package* package,
+                TaskConfiguration* taskConfiguration):
         Task("InstallTask", package, taskConfiguration) {
 }
 
