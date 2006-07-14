@@ -19,7 +19,10 @@
  ***************************************************************************/
 
 #include "ResourceMap.h"
+#include "Resource.h"
 
+using std::make_pair;
+using std::map;
 using std::string;
 using std::vector;
 
@@ -27,23 +30,50 @@ using namespace lusi::package;
 
 //public:
 
-ResourceMap::ResourceMap() {
+ResourceMap::ResourceMap(): mMap() {
 }
 
 ResourceMap::~ResourceMap() {
+    for (map<string, Resource*>::const_iterator iterator = mMap.begin();
+            iterator != mMap.end(); ++iterator) {
+        delete iterator->second;
+    }
 }
 
-bool ResourceMap::addResource(const Resource* resource) {
-    return false;
+bool ResourceMap::addResource(Resource* resource) {
+    //TODO assert for null pointers
+    return mMap.insert(make_pair(resource->getId(), resource)).second;
 }
 
 Resource* ResourceMap::getResource(const string& id) const {
-    return 0;
+    map<string, Resource*>::const_iterator iterator = mMap.find(id);
+
+    if (iterator == mMap.end()) {
+        return 0;
+    }
+
+    return iterator->second;
 }
 
-vector<Resource> ResourceMap::getAllResources() {
+vector<Resource*> ResourceMap::getAllResources() const {
+    vector<Resource*> allResources;
+
+    for (map<string, Resource*>::const_iterator iterator = mMap.begin();
+            iterator != mMap.end(); ++iterator) {
+        allResources.push_back(iterator->second);
+    }
+
+    return allResources;
 }
 
 bool ResourceMap::removeResource(const string& id) {
-    return false;
+    Resource* resource = getResource(id);
+    if (resource == 0) {
+        return false;
+    }
+
+    mMap.erase(id);
+    delete resource;
+
+    return true;
 }

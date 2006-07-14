@@ -18,24 +18,42 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "PackageTestSuite.h"
-#include "PackageIdTest.h"
-#include "ProfileManagerTest.h"
-#include "ResourceMapTest.h"
-#include "status/PackageStatusTestSuite.h"
+#ifndef LUSI_PACKAGE_RESOURCETESTIMPLEMENTATION_H
+#define LUSI_PACKAGE_RESOURCETESTIMPLEMENTATION_H
 
-using lusi::package::status::PackageStatusTestSuite;
+#include <Resource.h>
 
-using namespace lusi::package;
+namespace lusi {
+namespace package {
 
-//public:
+/**
+ * Implementation of Resource interface for testing purposes.
+ * This class helps testing Resource class non-abstract methods, and also to be
+ * used where Resource objects are needed.
+ */
+class ResourceTestImplementation : public Resource {
+public:
 
-PackageTestSuite::PackageTestSuite() {
-    //Own namespace Tests
-    addTest(PackageIdTest::suite());
-    addTest(ProfileManagerTest::suite());
-    addTest(ResourceMapTest::suite());
+    /**
+     * Creates a new ResourceTestImplementation.
+     */
+    ResourceTestImplementation(const std::string& id);
 
-    //Direct child namespaces TestSuites
-    addTest(new PackageStatusTestSuite());
+    /**
+     * Destroys this ResourceTestImplementation.
+     */
+    virtual ~ResourceTestImplementation();
+
+    /**
+     * Returns an empty vector.
+     *
+     * @return An empty vector.
+     */
+    virtual std::vector<char> getData();
+
+};
+
 }
+}
+
+#endif

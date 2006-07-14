@@ -21,6 +21,7 @@
 #ifndef LUSI_PACKAGE_RESOURCEMAP_H
 #define LUSI_PACKAGE_RESOURCEMAP_H
 
+#include <map>
 #include <string>
 #include <vector>
 
@@ -38,17 +39,23 @@ namespace package {
  *
  * Maps Resources with their ids.
  * Resources can be added using addResource(Resource). It uses the id of the
- * Resource as the key to map to. A specific Resource can be get using its id
+ * Resource as the key to map to. A specific Resource can be got using its id
  * with getResource(string). All the added Resources can be got as a vector
  * using getAllResources(). To remove a Resource, use removeResource(string).
  *
  * Once a Resource is added, ResourceMap gets control over lifespan and
  * destruction of the Resource. Resources are destroyed when the Map is
  * destroyed or when they're removed from it.
+ * Resources added to the map must not be deleted from outside.
+ *
+ * Only initialized Resources can be stored. The null pointer element can't be
+ * added.
+ *
+ * This class acts as a wrapper for STL Map class, simplifying its interface to
+ * be used with Resources, and also getting control over lifespan of Resources.
+ * It follows Adapter Design Pattern.
  *
  * @see Resource
- * @todo typedef stl::Map as ResourceMap? If not, overload operators for this
- * class?
  */
 class ResourceMap {
 public:
@@ -68,11 +75,12 @@ public:
      * Adds a new Resource to this ResourceMap, using as key the Resource id.
      * If the Resource (identified only by its id) is already added, nothing
      * happens.
+     * A null pointer can't be added.
      *
      * @param resource The Resource to add.
      * @return True if the Resource was added, false otherwise.
      */
-    bool addResource(const Resource* resource);
+    bool addResource(Resource* resource);
 
     /**
      * Returns the Resource identified by id.
@@ -86,10 +94,11 @@ public:
 
     /**
      * Returns all the Resources in the Map in a vector.
+     * This is an accessor method.
      *
      * @return All the Resources in the Map in a vector.
      */
-    std::vector<Resource> getAllResources();
+    std::vector<Resource*> getAllResources() const;
 
     /**
      * Removes the Resource identified by id from the Map, also deleting it.
@@ -103,6 +112,14 @@ public:
 protected:
 
 private:
+
+    /**
+     * The STL Map used internally to store the elements.
+     */
+    std::map<std::string, Resource*> mMap;
+
+
+
 
     /**
      * Copy constructor disabled.

@@ -18,24 +18,22 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "PackageTestSuite.h"
-#include "PackageIdTest.h"
-#include "ProfileManagerTest.h"
-#include "ResourceMapTest.h"
-#include "status/PackageStatusTestSuite.h"
+#include "ResourceTestImplementation.h"
 
-using lusi::package::status::PackageStatusTestSuite;
+using std::string;
+using std::vector;
 
 using namespace lusi::package;
 
 //public:
 
-PackageTestSuite::PackageTestSuite() {
-    //Own namespace Tests
-    addTest(PackageIdTest::suite());
-    addTest(ProfileManagerTest::suite());
-    addTest(ResourceMapTest::suite());
+ResourceTestImplementation::ResourceTestImplementation(const string& id):
+                                    Resource(id) {
+}
 
-    //Direct child namespaces TestSuites
-    addTest(new PackageStatusTestSuite());
+ResourceTestImplementation::~ResourceTestImplementation() {
+}
+
+vector<char> ResourceTestImplementation::getData() {
+    return vector<char>();
 }
