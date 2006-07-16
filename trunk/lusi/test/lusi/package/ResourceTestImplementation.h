@@ -21,13 +21,13 @@
 #ifndef LUSI_PACKAGE_RESOURCETESTIMPLEMENTATION_H
 #define LUSI_PACKAGE_RESOURCETESTIMPLEMENTATION_H
 
-#include <Resource.h>
+#include <lusi/package/Resource.h>
 
 namespace lusi {
 namespace package {
 
 /**
- * Implementation of Resource interface for testing purposes.
+ * Implementation of Resource for testing purposes.
  * This class helps testing Resource class non-abstract methods, and also to be
  * used where Resource objects are needed.
  */
