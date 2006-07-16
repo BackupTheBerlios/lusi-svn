@@ -35,7 +35,7 @@ TaskHelper* lusi::task::helper::createTarExtractTaskHelper(
 //public:
 
 TarExtractTaskHelper::TarExtractTaskHelper(Task* task):
-                            ExtractTaskHelper("TarExtractTaskHelper", task) {
+                        BaseExtractTaskHelper("TarExtractTaskHelper", task) {
 }
 
 TarExtractTaskHelper::~TarExtractTaskHelper() {

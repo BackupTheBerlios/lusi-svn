@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef LUSI_TASK_HELPER_EXTRACTTASKHELPER_H
-#define LUSI_TASK_HELPER_EXTRACTTASKHELPER_H
+#ifndef LUSI_TASK_HELPER_BASEEXTRACTTASKHELPER_H
+#define LUSI_TASK_HELPER_BASEEXTRACTTASKHELPER_H
 
 #include <string>
 
@@ -36,13 +36,10 @@ namespace task {
 namespace helper {
 
 /**
- * @class ExtractTaskHelper ExtractTaskHelper.h \
- * lusi/task/helper/ExtractTaskHelper.h
+ * @class BaseExtractTaskHelper BaseExtractTaskHelper.h \
+ * lusi/task/helper/BaseExtractTaskHelper.h
  *
  * Base TaskHelper for ExtractTask.
- * All the TaskHelpers which provide an implementation for ExtractTask must
- * inherit from this class.
- *
  * This class provides a default behaviour for TaskHelpers that extract the
  * contents of a packed Package. Real extracting is left to derived classes
  * in method extract(string). Reverting the changes is implemented in revert()
@@ -57,16 +54,16 @@ namespace helper {
  * be extracted, as an optional parameter. It can also be redefined if the
  * derived class needs it.
  */
-class ExtractTaskHelper: public TaskHelper {
+class BaseExtractTaskHelper: public TaskHelper {
 public:
 
     /**
-     * Destroys this ExtractTaskHelper.
+     * Destroys this BaseExtractTaskHelper.
      */
-    virtual ~ExtractTaskHelper();
+    virtual ~BaseExtractTaskHelper();
 
     /**
-     * Returns the generic configuration needed by ExtractTaskHelpers.
+     * Returns the generic configuration needed by BaseExtractTaskHelpers.
      * The default configuration contains only the path where the package must
      * be extracted, as an optional parameter.
      *
@@ -100,12 +97,12 @@ public:
 protected:
 
     /**
-     * Creates a new ExtractTaskHelper.
+     * Creates a new BaseExtractTaskHelper.
      *
-     * @param name The name of the ExtractTaskHelper.
+     * @param name The name of the BaseExtractTaskHelper.
      * @param task The Task to help.
      */
-    ExtractTaskHelper(const std::string& name, lusi::task::Task* task);
+    BaseExtractTaskHelper(const std::string& name, lusi::task::Task* task);
 
     /**
      * Extracts the Package to the specified path.
@@ -130,12 +127,13 @@ private:
     /**
      * Copy constructor disabled.
      */
-    ExtractTaskHelper(const ExtractTaskHelper& extractTaskHelper);
+    BaseExtractTaskHelper(const BaseExtractTaskHelper& baseExtractTaskHelper);
 
     /**
      * Assignment disabled.
      */
-    ExtractTaskHelper& operator=(const ExtractTaskHelper& extractTaskHelper);
+    BaseExtractTaskHelper& operator=(
+            const BaseExtractTaskHelper& baseExtractTaskHelper);
 
 };
 

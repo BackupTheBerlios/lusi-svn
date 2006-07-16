@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef LUSI_TASK_HELPER_BUILDTASKHELPER_H
-#define LUSI_TASK_HELPER_BUILDTASKHELPER_H
+#ifndef LUSI_TASK_HELPER_BASEBUILDTASKHELPER_H
+#define LUSI_TASK_HELPER_BASEBUILDTASKHELPER_H
 
 #include <string>
 
@@ -36,12 +36,10 @@ namespace task {
 namespace helper {
 
 /**
- * @class BuildTaskHelper BuildTaskHelper.h lusi/task/helper/BuildTaskHelper.h
+ * @class BaseBuildTaskHelper BaseBuildTaskHelper.h \
+ * lusi/task/helper/BaseBuildTaskHelper.h
  *
  * Base TaskHelper for BuildTask.
- * All the TaskHelpers which provide an implementation for BuildTask must
- * inherit from this class.
- *
  * This class provides a default behaviour for those TaskHelpers that only need
  * to call an external command to do the build. This command should be returned
  * by buildCommand() method. Also, the clean command to revert the changes
@@ -54,16 +52,16 @@ namespace helper {
  * returns an empty ConfigurationParametersSet, as most build systems don't
  * need parameters. It can also be redefined if the derived class needs it.
  */
-class BuildTaskHelper: public TaskHelper {
+class BaseBuildTaskHelper: public TaskHelper {
 public:
 
     /**
-     * Destroys this BuildTaskHelper.
+     * Destroys this BaseBuildTaskHelper.
      */
-    virtual ~BuildTaskHelper();
+    virtual ~BaseBuildTaskHelper();
 
     /**
-     * Returns the generic configuration needed by BuildTaskHelpers.
+     * Returns the generic configuration needed by BaseBuildTaskHelpers.
      * The default configuration is empty, as there are no generic parameters
      * needed for build systems, and some of them doesn't have even specific
      * parameters.
@@ -103,12 +101,12 @@ public:
 protected:
 
     /**
-     * Creates a new BuildTaskHelper.
+     * Creates a new BaseBuildTaskHelper.
      *
-     * @param name The name of the BuildTaskHelper.
+     * @param name The name of the BaseBuildTaskHelper.
      * @param task The task to help.
      */
-    BuildTaskHelper(const std::string& name, lusi::task::Task* task);
+    BaseBuildTaskHelper(const std::string& name, lusi::task::Task* task);
 
     /**
      * Returns the name of the build command to invoke to execute the
@@ -143,12 +141,13 @@ private:
     /**
      * Copy constructor disabled.
      */
-    BuildTaskHelper(const BuildTaskHelper& buildTaskHelper);
+    BaseBuildTaskHelper(const BaseBuildTaskHelper& baseBuildTaskHelper);
 
     /**
      * Assignment disabled.
      */
-    BuildTaskHelper& operator=(const BuildTaskHelper& buildTaskHelper);
+    BaseBuildTaskHelper& operator=(
+            const BaseBuildTaskHelper& baseBuildTaskHelper);
 
 };
 

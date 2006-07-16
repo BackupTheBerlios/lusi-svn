@@ -36,8 +36,6 @@ namespace task {
  *
  * The name used is "ConfigureTask". Needed status is UnpackedPackageStatus,
  * while provided status is ConfiguredPackageStatus.
- *
- * @see helper::ConfigureTaskHelper
  */
 class ConfigureTask: public Task {
 public:

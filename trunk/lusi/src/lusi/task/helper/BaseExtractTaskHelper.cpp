@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "BuildTaskHelper.h"
+#include "BaseExtractTaskHelper.h"
 #include "../../configuration/ConfigurationParametersSet.h"
 
 using std::string;
@@ -30,20 +30,20 @@ using namespace lusi::task::helper;
 
 //public:
 
-BuildTaskHelper::~BuildTaskHelper() {
+BaseExtractTaskHelper::~BaseExtractTaskHelper() {
 }
 
-ConfigurationParametersSet BuildTaskHelper::checkConfiguration() {
+ConfigurationParametersSet BaseExtractTaskHelper::checkConfiguration() {
 }
 
-void BuildTaskHelper::execute() {
+void BaseExtractTaskHelper::execute() {
 }
 
-void BuildTaskHelper::revert() {
+void BaseExtractTaskHelper::revert() {
 }
 
 //protected:
 
-BuildTaskHelper::BuildTaskHelper(const string& name, Task* task):
+BaseExtractTaskHelper::BaseExtractTaskHelper(const string& name, Task* task):
                         TaskHelper(name, task) {
 }

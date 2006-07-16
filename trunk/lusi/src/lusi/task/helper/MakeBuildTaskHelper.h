@@ -23,7 +23,7 @@
 
 #include <string>
 
-#include <lusi/task/helper/BuildTaskHelper.h>
+#include <lusi/task/helper/BaseBuildTaskHelper.h>
 
 namespace lusi {
 namespace package {
@@ -60,7 +60,7 @@ TaskHelper* createMakeBuildTaskHelper(lusi::task::Task* task);
  *
  * No configuration is needed.
  */
-class MakeBuildTaskHelper: public BuildTaskHelper {
+class MakeBuildTaskHelper: public BaseBuildTaskHelper {
 public:
 
     /**

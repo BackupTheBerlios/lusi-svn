@@ -35,8 +35,6 @@ namespace task {
  *
  * The name used is "InstallTask". Needed status is BuiltPackageStatus,
  * while provided status is InstalledPackageStatus.
- *
- * @see helper::InstallTaskHelper
  */
 class InstallTask: public Task {
 public:

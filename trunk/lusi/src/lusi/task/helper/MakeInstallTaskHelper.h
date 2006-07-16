@@ -23,7 +23,7 @@
 
 #include <string>
 
-#include <lusi/task/helper/InstallTaskHelper.h>
+#include <lusi/task/helper/BaseInstallTaskHelper.h>
 
 namespace lusi {
 namespace package {
@@ -60,7 +60,7 @@ TaskHelper* createMakeInstallTaskHelper(lusi::task::Task* task);
  *
  * No configuration is needed.
  */
-class MakeInstallTaskHelper: public InstallTaskHelper {
+class MakeInstallTaskHelper: public BaseInstallTaskHelper {
 public:
 
     /**

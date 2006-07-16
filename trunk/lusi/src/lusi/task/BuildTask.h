@@ -34,8 +34,6 @@ namespace task {
  *
  * The name used is "BuildTask". Needed status is ConfiguredPackageStatus,
  * while provided status is BuiltPackageStatus.
- *
- * @see helper::BuildTaskHelper
  */
 class BuildTask: public Task {
 public:

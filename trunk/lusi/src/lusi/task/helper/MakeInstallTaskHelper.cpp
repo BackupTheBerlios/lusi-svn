@@ -35,7 +35,7 @@ TaskHelper* lusi::task::helper::createMakeInstallTaskHelper(
 //public:
 
 MakeInstallTaskHelper::MakeInstallTaskHelper(Task* task):
-                            InstallTaskHelper("MakeInstallTaskHelper", task) {
+                        BaseInstallTaskHelper("MakeInstallTaskHelper", task) {
 }
 
 MakeInstallTaskHelper::~MakeInstallTaskHelper() {

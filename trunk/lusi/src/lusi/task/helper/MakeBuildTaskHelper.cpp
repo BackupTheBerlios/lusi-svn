@@ -35,7 +35,7 @@ TaskHelper* lusi::task::helper::createMakeBuildTaskHelper(
 //public:
 
 MakeBuildTaskHelper::MakeBuildTaskHelper(Task* task):
-                            BuildTaskHelper("MakeBuildTaskHelper", task) {
+                            BaseBuildTaskHelper("MakeBuildTaskHelper", task) {
 }
 
 MakeBuildTaskHelper::~MakeBuildTaskHelper() {

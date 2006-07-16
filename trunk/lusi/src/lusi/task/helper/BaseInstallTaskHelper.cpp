@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "InstallTaskHelper.h"
+#include "BaseInstallTaskHelper.h"
 #include "../../configuration/ConfigurationParametersSet.h"
 
 using std::string;
@@ -30,20 +30,20 @@ using namespace lusi::task::helper;
 
 //public:
 
-InstallTaskHelper::~InstallTaskHelper() {
+BaseInstallTaskHelper::~BaseInstallTaskHelper() {
 }
 
-ConfigurationParametersSet InstallTaskHelper::checkConfiguration() {
+ConfigurationParametersSet BaseInstallTaskHelper::checkConfiguration() {
 }
 
-void InstallTaskHelper::execute() {
+void BaseInstallTaskHelper::execute() {
 }
 
-void InstallTaskHelper::revert() {
+void BaseInstallTaskHelper::revert() {
 }
 
 //protected:
 
-InstallTaskHelper::InstallTaskHelper(const string& name, Task* task):
+BaseInstallTaskHelper::BaseInstallTaskHelper(const string& name, Task* task):
                         TaskHelper(name, task) {
 }

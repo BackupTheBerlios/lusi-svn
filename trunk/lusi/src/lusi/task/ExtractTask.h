@@ -36,7 +36,6 @@ namespace task {
  * The name used is "ExtractTask". Needed status is PackedPackageStatus,
  * while provided status is UnpackedPackageStatus.
  *
- * @see ExtractTaskHelper
  * @todo Rename to UnpackTask?
  */
 class ExtractTask: public Task {

@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef LUSI_TASK_HELPER_INSTALLTASKHELPER_H
-#define LUSI_TASK_HELPER_INSTALLTASKHELPER_H
+#ifndef LUSI_TASK_HELPER_BASEINSTALLTASKHELPER_H
+#define LUSI_TASK_HELPER_BASEINSTALLTASKHELPER_H
 
 #include <lusi/task/helper/TaskHelper.h>
 
@@ -34,13 +34,10 @@ namespace task {
 namespace helper {
 
 /**
- * @class InstallTaskHelper InstallTaskHelper.h \
- * lusi/task/helper/InstallTaskHelper.h
+ * @class BaseInstallTaskHelper BaseInstallTaskHelper.h \
+ * lusi/task/helper/BaseInstallTaskHelper.h
  *
  * Base TaskHelper for InstallTask.
- * All the TaskHelpers which provide an implementation for InstallTask must
- * inherit from this class.
- *
  * This class provides a default behaviour for those TaskHelpers that only need
  * to call an external command to do the installtion. This command should be
  * returned by installCommand() method. Also, the uninstall command to revert
@@ -57,16 +54,16 @@ namespace helper {
  *
  * @todo User changes to another user or root should be handled.
  */
-class InstallTaskHelper: public TaskHelper {
+class BaseInstallTaskHelper: public TaskHelper {
 public:
 
     /**
-     * Destroys this InstallTaskHelper.
+     * Destroys this BaseInstallTaskHelper.
      */
-    virtual ~InstallTaskHelper();
+    virtual ~BaseInstallTaskHelper();
 
     /**
-     * Returns the generic configuration needed by InstallTaskHelpers.
+     * Returns the generic configuration needed by BaseInstallTaskHelpers.
      * The default configuration is empty, as there are no generic parameters
      * needed for installation systems, and some of them doesn't have even
      * specific parameters.
@@ -106,12 +103,12 @@ public:
 protected:
 
     /**
-     * Creates a new InstallTaskHelper.
+     * Creates a new BaseInstallTaskHelper.
      *
-     * @param name The name of the InstallTaskHelper.
+     * @param name The name of the BaseInstallTaskHelper.
      * @param task The Task to help.
      */
-    InstallTaskHelper(const std::string& name, lusi::task::Task* task);
+    BaseInstallTaskHelper(const std::string& name, lusi::task::Task* task);
 
     /**
      * Returns the name of the install command to invoke to execute the
@@ -146,12 +143,13 @@ private:
     /**
      * Copy constructor disabled.
      */
-    InstallTaskHelper(const InstallTaskHelper& installTaskHelper);
+    BaseInstallTaskHelper(const BaseInstallTaskHelper& baseInstallTaskHelper);
 
     /**
      * Assignment disabled.
      */
-    InstallTaskHelper& operator=(const InstallTaskHelper& installTaskHelper);
+    BaseInstallTaskHelper& operator=(
+            const BaseInstallTaskHelper& baseInstallTaskHelper);
 
 };
 

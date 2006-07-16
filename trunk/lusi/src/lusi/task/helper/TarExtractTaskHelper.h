@@ -23,7 +23,7 @@
 
 #include <string>
 
-#include <lusi/task/helper/ExtractTaskHelper.h>
+#include <lusi/task/helper/BaseExtractTaskHelper.h>
 
 namespace lusi {
 namespace package {
@@ -57,9 +57,10 @@ TaskHelper* createTarExtractTaskHelper(lusi::task::Task* task);
  * ResourceMaps that can be used with TarExtractTaskHelper are those
  * with a packed file with a format supported by tar, containing the Package.
  *
- * No specific configuration is needed, only the generic for ExtractTaskHelpers.
+ * No specific configuration is needed, only the generic for
+ * BaseExtractTaskHelpers.
  */
-class TarExtractTaskHelper: public ExtractTaskHelper {
+class TarExtractTaskHelper: public BaseExtractTaskHelper {
 public:
 
     /**
