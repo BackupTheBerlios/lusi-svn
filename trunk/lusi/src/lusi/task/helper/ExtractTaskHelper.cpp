@@ -24,13 +24,11 @@
 using std::string;
 
 using lusi::configuration::ConfigurationParametersSet;
+using lusi::task::Task;
 
 using namespace lusi::task::helper;
 
 //public:
-
-ExtractTaskHelper::ExtractTaskHelper() {
-}
 
 ExtractTaskHelper::~ExtractTaskHelper() {
 }
@@ -42,4 +40,10 @@ void ExtractTaskHelper::execute() {
 }
 
 void ExtractTaskHelper::revert() {
+}
+
+//protected:
+
+ExtractTaskHelper::ExtractTaskHelper(const string& name, Task* task):
+                        TaskHelper(name, task) {
 }

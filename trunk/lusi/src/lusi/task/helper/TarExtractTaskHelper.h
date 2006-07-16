@@ -36,6 +36,16 @@ namespace task {
 namespace helper {
 
 /**
+ * Returns a new TarExtractTaskHelper.
+ * Used to register TarExtractTaskHelper with Task names.
+ *
+ * @param task The Task to help.
+ * @return The new TarExtractTaskHelper created.
+ * @see TaskHelperManager
+ */
+TaskHelper* createTarExtractTaskHelper(lusi::task::Task* task);
+
+/**
  * @class TarExtractTaskHelper TarExtractTaskHelper.h \
  * lusi/task/helper/TarExtractTaskHelper.h
  *
@@ -55,7 +65,7 @@ public:
     /**
      * Creates a new TarExtractTaskHelper.
      */
-    TarExtractTaskHelper();
+    TarExtractTaskHelper(lusi::task::Task* task);
 
     /**
      * Destroys this TarExtractTaskHelper.
@@ -63,14 +73,13 @@ public:
     virtual ~TarExtractTaskHelper();
 
     /**
-     * Returns True if this ResourceMap contains a packed file with the name of
+     * Returns True if the ResourceMap contains a packed file with the name of
      * the Package in a format supported by "tar" command (those are tar, gzip
      * and bzip2).
      *
-     * @param resourceMap The ResourceMap to check.
      * @return bool True if the ResourceMap contains the packed Package.
      */
-    virtual bool isValidResourceMap(lusi::package::ResourceMap* resourceMap);
+    virtual bool hasValidResourceMap();
 
 protected:
 

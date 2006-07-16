@@ -36,6 +36,16 @@ namespace task {
 namespace helper {
 
 /**
+ * Returns a new MakeBuildTaskHelper.
+ * Used to register MakeBuildTaskHelpers with Task names.
+ *
+ * @param task The Task to help.
+ * @return The new MakeBuildTaskHelper created.
+ * @see TaskHelperManager
+ */
+TaskHelper* createMakeBuildTaskHelper(lusi::task::Task* task);
+
+/**
  * @class MakeBuildTaskHelper MakeBuildTaskHelper.h \
  * lusi/task/helper/MakeBuildTaskHelper.h
  *
@@ -56,7 +66,7 @@ public:
     /**
      * Creates a new MakeBuildTaskHelper.
      */
-    MakeBuildTaskHelper();
+    MakeBuildTaskHelper(lusi::task::Task* task);
 
     /**
      * Destroys this MakeBuildTaskHelper.
@@ -64,13 +74,12 @@ public:
     virtual ~MakeBuildTaskHelper();
 
     /**
-     * Returns True if this ResourceMap contains a Makefile that contains
+     * Returns True if the ResourceMap contains a Makefile that contains
      * macros to be executed by make command.
      *
-     * @param resourceMap The ResourceMap to check.
      * @return bool True if the ResourceMap contains a Makefile.
      */
-    bool isValidResourceMap(lusi::package::ResourceMap* resourceMap);
+    virtual bool hasValidResourceMap();
 
 protected:
 

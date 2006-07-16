@@ -22,22 +22,24 @@
 #include "TaskLogger.h"
 #include "TaskProgress.h"
 #include "helper/TaskHelper.h"
+#include "helper/TaskHelperManager.h"
 
 using std::string;
+using std::vector;
 
 using lusi::task::helper::TaskHelper;
+using lusi::task::helper::TaskHelperManager;
 using lusi::package::Package;
 
 using namespace lusi::task;
 
 //public:
 
-Task::Task(const string& name, Package* package,
-            TaskConfiguration* taskConfiguration) {
-    mName = name;
-}
-
 Task::~Task() {
+    for (vector<TaskHelper*>::const_iterator iterator = mTaskHelpers.begin();
+            iterator != mTaskHelpers.end(); ++iterator) {
+        delete *iterator;
+    }
 }
 
 const string& Task::getName() const {
@@ -67,5 +69,18 @@ void Task::undo() {
 
 //protected:
 
-TaskHelper* Task::getHelpers() {
+Task::Task(const string& name, Package* package,
+            TaskConfiguration* taskConfiguration) {
+    mName = name;
+
+    //mName must be set before calling getTaskHelpers, as it uses getName()
+    mTaskHelpers = TaskHelperManager::getInstance()->getTaskHelpers(this);
+}
+
+//private:
+
+TaskHelper* Task::getRedoHelper() {
+}
+
+TaskHelper* Task::getUndoHelper() {
 }

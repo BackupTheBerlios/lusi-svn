@@ -36,6 +36,16 @@ namespace task {
 namespace helper {
 
 /**
+ * Returns a new MakeInstallTaskHelper.
+ * Used to register MakeInstallTaskHelpers with Task names.
+ *
+ * @param task The Task to help.
+ * @return The new MakeInstallTaskHelper created.
+ * @see TaskHelperManager
+ */
+TaskHelper* createMakeInstallTaskHelper(lusi::task::Task* task);
+
+/**
  * @class MakeInstallTaskHelper MakeInstallTaskHelper.h \
  * lusi/task/helper/MakeInstallTaskHelper.h
  *
@@ -56,7 +66,7 @@ public:
     /**
      * Creates a new MakeInstallTaskHelper.
      */
-    MakeInstallTaskHelper();
+    MakeInstallTaskHelper(lusi::task::Task* task);
 
     /**
      * Destroys this MakeInstallTaskHelper.
@@ -64,14 +74,13 @@ public:
     virtual ~MakeInstallTaskHelper();
 
     /**
-     * Returns True if this ResourceMap contains a Makefile that contains
+     * Returns True if the ResourceMap contains a Makefile that contains
      * macros to be executed by make command.
      *
-     * @param resourceMap The ResourceMap to check.
      * @return bool True if the ResourceMap contains a Makefile.
      * @todo Check for install objective in Makefile?
      */
-    bool isValidResourceMap(lusi::package::ResourceMap* resourceMap);
+    virtual bool hasValidResourceMap();
 
 protected:
 

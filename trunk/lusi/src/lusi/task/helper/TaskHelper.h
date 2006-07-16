@@ -37,6 +37,12 @@ class ResourceMap;
 
 namespace lusi {
 namespace task {
+class Task;
+}
+}
+
+namespace lusi {
+namespace task {
 namespace helper {
 
 /**
@@ -47,28 +53,30 @@ namespace helper {
  * TaskHelper is an implementation of a Task, and a Task can have various
  * TaskHelpers.
  *
- * A TaskHelper can be used with a Task only if the ResourceMap of the Package
- * of the Task is valid for the TaskHelper. That is, for the same Task,
- * different TaskHelpers could be executed depending on the Package being used.
+ * A Task can use a TaskHelper only if the ResourceMap of the Package of the
+ * Task is valid for the TaskHelper. It can be checked with
+ * hasValidResourceMap().
+ * This way, for the same Task, different TaskHelpers could be executed
+ * depending on the Package being used.
  *
  * As each TaskHelper does different things, each TaskHelper needs different
  * configuration parameters. Those are specified with the method
  * checkConfiguration, which returns the configuration parameters the TaskHelper
  * accepts but weren't already set in the TaskConfiguration of the Task.
  *
- * TaskHelpers can be registered with a specific Task using
- * registerWithTask(string). This will likely change when dynamic modules are
- * used.
+ * TaskHelpers must be registered with the Tasks they can help. This can be done
+ * using TaskHelperManager. Further information can be seen in the documentation
+ * of that class.
+ *
+ * TaskHelpers of the same class share the same name. Therefore, the name
+ * identifies classes, not individual objects. The name is equal to the name
+ * of the class.
  *
  * @see lusi::task::Task
+ * @see TaskHelperManager
  */
 class TaskHelper {
 public:
-
-    /**
-     * Creates a new TaskHelper.
-     */
-    TaskHelper();
 
     /**
      * Destroys this TaskHelper.
@@ -76,15 +84,15 @@ public:
     virtual ~TaskHelper();
 
     /**
-     * Returns True if this TaskHelper can be executed or reverted using the
-     * specified ResourceMap.
+     * Returns True if this TaskHelper can be executed using the ResourceMap of
+     * the Package of the Task.
+     * The ResourceMap isn't checked when reverting, as the Task takes care of
+     * reverting only previously executed TaskHelpers.
      * Must be implemented in derived classes.
      *
-     * @param resourceMap The ResourceMap to check.
      * @return bool True if the ResourceMap is valid, false otherwise.
      */
-    virtual bool isValidResourceMap(
-                        lusi::package::ResourceMap* resourceMap) = 0;
+    virtual bool hasValidResourceMap() = 0;
 
     /**
      * Returns the Configuration needed by this TaskHelper.
@@ -116,19 +124,42 @@ public:
      */
     virtual void revert() = 0;
 
+    /**
+     * Returns the name of the TaskHelper.
+     *
+     * @return The name of the TaskHelper.
+     */
+    const std::string& getName() {
+        return mName;
+    }
+
 protected:
 
     /**
-     * Registers a TaskHelper with the Task with the specified taskName.
-     * When a TaskHelper is registered with a Task, the TaskHelper can be used
-     * by the Task when getting an implementation to be executed or reverted.
-     *
-     * @param taskName The task to register this TaskHelper with.
-     * @todo Design a better approach to register TaskHelpers with Tasks.
+     * Task to help.
      */
-    void registerWithTask(const std::string& taskName);
+    lusi::task::Task* mTask;
+
+
+
+    /**
+     * Creates a new TaskHelper.
+     * The name of the TaskHelper identifies classes of TaskHelpers, not
+     * individual objects.
+     *
+     * @param name The name of the TaskHelper.
+     * @param task The task to help.
+     */
+    TaskHelper(const std::string& name, lusi::task::Task* task);
 
 private:
+
+    /**
+     * The name of the TaskHelper.
+     */
+    std::string mName;
+
+
 
     /**
      * Copy constructor disabled.

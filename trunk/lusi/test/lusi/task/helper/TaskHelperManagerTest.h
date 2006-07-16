@@ -18,32 +18,75 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "InstallTaskHelper.h"
-#include "../../configuration/ConfigurationParametersSet.h"
+#ifndef LUSI_TASK_HELPER_TASKHELPERMANAGERTEST_H
+#define LUSI_TASK_HELPER_TASKHELPERMANAGERTEST_H
 
-using std::string;
+#include <cppunit/extensions/HelperMacros.h>
 
-using lusi::configuration::ConfigurationParametersSet;
-using lusi::task::Task;
-
-using namespace lusi::task::helper;
-
-//public:
-
-InstallTaskHelper::~InstallTaskHelper() {
+namespace lusi {
+namespace task {
+namespace helper {
+class TaskHelper;
+class TaskHelperManager;
+}
+}
 }
 
-ConfigurationParametersSet InstallTaskHelper::checkConfiguration() {
+namespace lusi {
+namespace task {
+namespace helper {
+
+/**
+ * Test class for TaskManager.
+ *
+ * @see TaskManager
+ */
+class TaskHelperManagerTest: public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(TaskHelperManagerTest);
+    CPPUNIT_TEST(testSingleton);
+    CPPUNIT_TEST(testRegisterTaskHelper);
+    CPPUNIT_TEST(testGetTaskHelpers);
+    CPPUNIT_TEST_SUITE_END();
+
+public:
+
+    /**
+     * Sets up context before running a test.
+     */
+    virtual void setUp();
+
+    /**
+     * Cleans up after the test run.
+     */
+    virtual void tearDown();
+
+    /**
+     * Checks if getInstance() always returns the same not null reference.
+     */
+    void testSingleton();
+
+    /**
+     * Checks if the registered function is stored in the internal multimap.
+     */
+    void testRegisterTaskHelper();
+
+    /**
+     * Checks if the registered TaskHelper for the Task name are returned in
+     * the vector.
+     */
+    void testGetTaskHelpers();
+
+private:
+
+    /**
+     * The TaskHelperManager to test.
+     */
+    TaskHelperManager* mTaskHelperManager;
+
+};
+
+}
+}
 }
 
-void InstallTaskHelper::execute() {
-}
-
-void InstallTaskHelper::revert() {
-}
-
-//protected:
-
-InstallTaskHelper::InstallTaskHelper(const string& name, Task* task):
-                        TaskHelper(name, task) {
-}
+#endif

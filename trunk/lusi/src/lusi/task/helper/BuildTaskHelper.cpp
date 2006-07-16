@@ -24,13 +24,11 @@
 using std::string;
 
 using lusi::configuration::ConfigurationParametersSet;
+using lusi::task::Task;
 
 using namespace lusi::task::helper;
 
 //public:
-
-BuildTaskHelper::BuildTaskHelper() {
-}
 
 BuildTaskHelper::~BuildTaskHelper() {
 }
@@ -42,4 +40,10 @@ void BuildTaskHelper::execute() {
 }
 
 void BuildTaskHelper::revert() {
+}
+
+//protected:
+
+BuildTaskHelper::BuildTaskHelper(const string& name, Task* task):
+                        TaskHelper(name, task) {
 }

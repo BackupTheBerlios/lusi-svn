@@ -22,6 +22,7 @@
 #define LUSI_TASK_TASK_H
 
 #include <string>
+#include <vector>
 
 namespace lusi {
 namespace package {
@@ -70,12 +71,19 @@ namespace task {
  * build...), but not how it can be done (extract using tar or zip, build with
  * make or jam...). When a task is executed, it uses a helper class which
  * defines how things can be done. The task looks for the right implementation
- * for the package used and executes it. How implementations are selected from
- * the list of available implementations for a specific task can be modified
- * overriding getHelpers() method. Task and TaskHelper are similar to Bridge
- * Design Pattern, although not follow exactly that design pattern. In fact,
- * they're more like a Task composed (not in the sense of Composite Design
- * Pattern) with TaskHelpers (which follow Strategy Design Pattern).
+ * for the package used and executes it.
+ * The task executes each TaskHelper returned by getRedoHelper() method until
+ * the Task is done or the TaskHelper returned is a null pointer. If a
+ * TaskHelper is executed successfully, the type of the TaskHelper is saved in
+ * the configuration, so it will be tried the first if the Task is executed
+ * again with the same Package. This TaskHelper will be the one used to undo the
+ * Task.
+ * TaskHelpers are registered with a task name using TaskHelperManager. A Task
+ * can, therefore, know which TaskHelpers it can use.
+ * Task and TaskHelper are similar to Bridge Design Pattern, although not
+ * follow exactly that design pattern. In fact, they're more like a Task
+ * composed (not in the sense of Composite Design Pattern) with TaskHelpers
+ * (which follow Strategy Design Pattern).
  *
  * The task is executed using redo() method, and the changes made by that
  * method can be reverted with undo(). Reverting a task doesn't need to be done
@@ -90,7 +98,7 @@ namespace task {
  * or undoing the task. There are Loggers for both events, which can be got
  * with getTaskLogger() and getProgress() methods.
  *
- * Tasks are identified by its name, so it must be unique. Two different tasks
+ * Tasks are identified by their name, so it must be unique. Two different tasks
  * can't both need and provide the same PackageStatus. The methods that return
  * the needed and provided PackageStatus must be implemented in derived
  * classes.
@@ -107,16 +115,6 @@ namespace task {
  */
 class Task {
 public:
-
-    /**
-     * Creates a new Task.
-     *
-     * @param name The name of the Task.
-     * @param package The Package to use.
-     * @param taskConfiguration The TaskConfiguration to use.
-     */
-    Task(const std::string& name, lusi::package::Package* package,
-         TaskConfiguration* taskConfiguration);
 
     /**
      * Destroys this Task.
@@ -195,9 +193,9 @@ public:
     /**
      * Executes this Task.
      * Selects the right implementations of this Task from all the availables,
-     * based on the Package and the TaskConfiguration, and executes them. Once
-     * the Task is completed, this method finishes, even if there are more
-     * implementations that could be executed.
+     * using getRedoHelper(), and executes them. Once the Task is completed,
+     * this method finishes, even if there are more implementations that could
+     * be executed.
      * All the operations done can be reverted using undo().
      *
      * @see undo()
@@ -207,8 +205,7 @@ public:
     /**
      * Reverts the changes made executing this Task.
      * Selects the right implementation of this Task from all the availables,
-     * based on the Package and the TaskConfiguration, and reverts the changes
-     * made when it was executed.
+     * using getUndoHelper(), and reverts the changes made when it was executed.
      *
      * @see redo()
      */
@@ -217,9 +214,14 @@ public:
 protected:
 
     /**
-     * @todo Documentation
+     * Creates a new Task.
+     *
+     * @param name The name of the Task.
+     * @param package The Package to use.
+     * @param taskConfiguration The TaskConfiguration to use.
      */
-    virtual lusi::task::helper::TaskHelper* getHelpers();
+    Task(const std::string& name, lusi::package::Package* package,
+         TaskConfiguration* taskConfiguration);
 
 private:
 
@@ -236,10 +238,43 @@ private:
     /**
      * The task configuration to use in this Task.
      */
-    TaskConfiguration* taskConfiguration;
+    TaskConfiguration* mTaskConfiguration;
+
+    /**
+     * The TaskHelpers for this Task.
+     */
+    std::vector<lusi::task::helper::TaskHelper*> mTaskHelpers;
 
 
 
+    /**
+     * Returns a TaskHelper to be executed.
+     * If there are no more available TaskHelpers suitable to be executed with
+     * the Package, returns a null pointer.
+     *
+     * The TaskHelper returned is, in first case, a TaskHelper previously
+     * executed with the Package in the current status. If there isn't any, the
+     * suitable TaskHelpers from the vector of TaskHelpers are returned, one
+     * at a time each time the method is called, until there're no more
+     * suitable TaskHelpers left.
+     *
+     * @return A TaskHelper to be executed, or a null pointer if there are no
+     *         more suitable TaskHelpers.
+     */
+    lusi::task::helper::TaskHelper* getRedoHelper();
+
+    /**
+     * Returns a TaskHelper to be reverted.
+     * If there is no available TaskHelper suitable to be reverted with
+     * the Package, returns a null pointer.
+     *
+     * The TaskHelper returned is a TaskHelper previously successfully executed
+     * with the Package in the current status.
+     *
+     * @return A TaskHelper to be reverted, or a null pointer if there is no
+     *         suitable TaskHelper.
+     */
+    lusi::task::helper::TaskHelper* getUndoHelper();
 
     /**
      * Copy constructor disabled.

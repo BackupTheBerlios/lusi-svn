@@ -49,7 +49,7 @@ namespace helper {
  * methods can be redefined if this behaviour doesn't suit the needs of the
  * derived class.
  *
- * Derived classes must define isValidResourceMap(ResourceMap) method, as this
+ * Derived classes must define hasValidResourceMap() method, as this
  * method depends on the specific installtion system used. checkConfiguration()
  * returns an empty ConfigurationParametersSet, as most installation systems
  * don't need parameters. It can also be redefined if the derived class needs
@@ -59,11 +59,6 @@ namespace helper {
  */
 class InstallTaskHelper: public TaskHelper {
 public:
-
-    /**
-     * Creates a new InstallTaskHelper.
-     */
-    InstallTaskHelper();
 
     /**
      * Destroys this InstallTaskHelper.
@@ -111,6 +106,14 @@ public:
 protected:
 
     /**
+     * Creates a new InstallTaskHelper.
+     *
+     * @param name The name of the InstallTaskHelper.
+     * @param task The Task to help.
+     */
+    InstallTaskHelper(const std::string& name, lusi::task::Task* task);
+
+    /**
      * Returns the name of the install command to invoke to execute the
      * TaskHelper.
      * Must be implemented in derived classes.
@@ -136,7 +139,7 @@ protected:
      *       it and other default implementations to a derived class called
      *       DefaultInstallTaskHelper or something like that?
      */
-    virtual std::string buildCommand() = 0;
+    virtual std::string uninstallCommand() = 0;
 
 private:
 

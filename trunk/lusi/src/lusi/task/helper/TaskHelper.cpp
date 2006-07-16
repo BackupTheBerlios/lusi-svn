@@ -22,17 +22,24 @@
 
 using std::string;
 
+using lusi::task::Task;
+
 using namespace lusi::task::helper;
 
 //public:
 
-TaskHelper::TaskHelper() {
-}
-
 TaskHelper::~TaskHelper() {
 }
 
+/*
+inline const string& TaskHelper::getName() {
+    return mName;
+}
+*/
+
 //protected:
 
-void TaskHelper::registerWithTask(const string& taskName) {
+TaskHelper::TaskHelper(const string& name, Task* task) {
+    mName = name;
+    mTask = task;
 }

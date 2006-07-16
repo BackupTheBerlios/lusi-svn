@@ -21,7 +21,7 @@
 #ifndef LUSI_TASK_HELPER_CONFIGURECONFIGURETASKHELPER_H
 #define LUSI_TASK_HELPER_CONFIGURECONFIGURETASKHELPER_H
 
-#include <lusi/task/helper/ConfigureTaskHelper.h>
+#include <lusi/task/helper/TaskHelper.h>
 
 namespace lusi {
 namespace configuration {
@@ -38,6 +38,16 @@ class ResourceMap;
 namespace lusi {
 namespace task {
 namespace helper {
+
+/**
+ * Returns a new ConfigureConfigureTaskHelper.
+ * Used to register ConfigureConfigureTaskHelpers with Task names.
+ *
+ * @param task The Task to help.
+ * @return The new ConfigureConfigureTaskHelper created.
+ * @see TaskHelperManager
+ */
+TaskHelper* createConfigureConfigureTaskHelper(lusi::task::Task* task);
 
 /**
  * @class ConfigureConfigureTaskHelper ConfigureConfigureTaskHelper.h \
@@ -59,13 +69,15 @@ namespace helper {
  * execute() invokes the configure script keeping track of the created files,
  * so they can be removed later using revert().
  */
-class ConfigureConfigureTaskHelper: public ConfigureTaskHelper {
+class ConfigureConfigureTaskHelper: public TaskHelper {
 public:
 
     /**
      * Creates a new ConfigureConfigureTaskHelper.
+     *
+     * @param task The Task to help.
      */
-    ConfigureConfigureTaskHelper();
+    ConfigureConfigureTaskHelper(lusi::task::Task* task);
 
     /**
      * Destroys this ConfigureConfigureTaskHelper.
@@ -73,13 +85,12 @@ public:
     virtual ~ConfigureConfigureTaskHelper();
 
     /**
-     * Returns True if this ResourceMap contains a configure script that can be
+     * Returns True if the ResourceMap contains a configure script that can be
      * executed.
      *
-     * @param resourceMap The ResourceMap to check.
      * @return bool True if the ResourceMap contains a configure script.
      */
-    virtual bool isValidResourceMap(lusi::package::ResourceMap* resourceMap);
+    virtual bool hasValidResourceMap();
 
     /**
      * Returns the parameters accepted by configure script.

@@ -23,18 +23,25 @@
 using std::string;
 
 using lusi::package::ResourceMap;
+using lusi::task::Task;
 
 using namespace lusi::task::helper;
 
+TaskHelper* lusi::task::helper::createMakeInstallTaskHelper(
+                                        Task* task) {
+    return new MakeInstallTaskHelper(task);
+}
+
 //public:
 
-MakeInstallTaskHelper::MakeInstallTaskHelper() {
+MakeInstallTaskHelper::MakeInstallTaskHelper(Task* task):
+                            InstallTaskHelper("MakeInstallTaskHelper", task) {
 }
 
 MakeInstallTaskHelper::~MakeInstallTaskHelper() {
 }
 
-bool MakeInstallTaskHelper::isValidResourceMap(ResourceMap* resourceMap) {
+bool MakeInstallTaskHelper::hasValidResourceMap() {
 }
 
 //protected:

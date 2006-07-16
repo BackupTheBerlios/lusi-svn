@@ -49,18 +49,13 @@ namespace helper {
  * commands as needed. However, if execute() and revert() methods can be
  * redefined if this behaviour doesn't suit the needs of the derived class.
  *
- * Derived classes must define isValidResourceMap(ResourceMap) method, as this
+ * Derived classes must define hasValidResourceMap() method, as this
  * method depends on the specific build system used. checkConfiguration()
  * returns an empty ConfigurationParametersSet, as most build systems don't
  * need parameters. It can also be redefined if the derived class needs it.
  */
 class BuildTaskHelper: public TaskHelper {
 public:
-
-    /**
-     * Creates a new BuildTaskHelper.
-     */
-    BuildTaskHelper();
 
     /**
      * Destroys this BuildTaskHelper.
@@ -106,6 +101,14 @@ public:
     virtual void revert();
 
 protected:
+
+    /**
+     * Creates a new BuildTaskHelper.
+     *
+     * @param name The name of the BuildTaskHelper.
+     * @param task The task to help.
+     */
+    BuildTaskHelper(const std::string& name, lusi::task::Task* task);
 
     /**
      * Returns the name of the build command to invoke to execute the

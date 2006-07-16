@@ -51,7 +51,7 @@ namespace helper {
  * execute() and revert() methods can be redefined if this behaviour doesn't
  * suit the needs of the derived class.
  *
- * Derived classes must define isValidResourceMap(ResourceMap) method, as this
+ * Derived classes must define hasValidResourceMap() method, as this
  * method depends on the specific extracter command used. checkConfiguration()
  * returns a configuration that contains only the path where the package must
  * be extracted, as an optional parameter. It can also be redefined if the
@@ -59,11 +59,6 @@ namespace helper {
  */
 class ExtractTaskHelper: public TaskHelper {
 public:
-
-    /**
-     * Creates a new ExtractTaskHelper.
-     */
-    ExtractTaskHelper();
 
     /**
      * Destroys this ExtractTaskHelper.
@@ -103,6 +98,14 @@ public:
     virtual void revert();
 
 protected:
+
+    /**
+     * Creates a new ExtractTaskHelper.
+     *
+     * @param name The name of the ExtractTaskHelper.
+     * @param task The Task to help.
+     */
+    ExtractTaskHelper(const std::string& name, lusi::task::Task* task);
 
     /**
      * Extracts the Package to the specified path.

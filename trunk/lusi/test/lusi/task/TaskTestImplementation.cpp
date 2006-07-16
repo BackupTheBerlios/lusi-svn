@@ -18,58 +18,31 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef LUSI_TASK_HELPER_CONFIGURETASKHELPER_H
-#define LUSI_TASK_HELPER_CONFIGURETASKHELPER_H
+#include "TaskTestImplementation.h"
 
-#include <lusi/task/helper/TaskHelper.h>
+using lusi::package::Package;
 
-namespace lusi {
-namespace task {
-namespace helper {
+using namespace lusi::task;
 
-/**
- * @class ConfigureTaskHelper ConfigureTaskHelper.h \
- * lusi/task/helper/ConfigureTaskHelper.h
- *
- * Base TaskHelper for ConfigureTask.
- * All the TaskHelpers which provide an implementation for ConfigureTask must
- * inherit from this class.
- *
- * No default implementation is defined for this class. Everything must be done
- * in child classes.
- */
-class ConfigureTaskHelper: public TaskHelper {
-public:
+//public:
 
-    /**
-     * Creates a new ConfigureTaskHelper.
-     */
-    ConfigureTaskHelper();
-
-    /**
-     * Destroys this ConfigureTaskHelper.
-     */
-    virtual ~ConfigureTaskHelper();
-
-protected:
-
-private:
-
-    /**
-     * Copy constructor disabled.
-     */
-    ConfigureTaskHelper(const ConfigureTaskHelper& configureTaskHelper);
-
-    /**
-     * Assignment disabled.
-     */
-    ConfigureTaskHelper& operator=(
-            const ConfigureTaskHelper& configureTaskHelper);
-
-};
-
-}
-}
+TaskTestImplementation::TaskTestImplementation(const std::string& name,
+                                Package* package,
+                                TaskConfiguration* taskConfiguration):
+                Task(name, package, taskConfiguration) {
 }
 
-#endif
+TaskTestImplementation::~TaskTestImplementation() {
+}
+
+/*
+inline const lusi::package::status::PackageStatus*
+TaskTestImplementation::needsPackageStatus() const {
+    return lusi::package::status::UnknownPackageStatus::getInstance();
+}
+
+inline const lusi::package::status::PackageStatus*
+TaskTestImplementation::providesPackageStatus() const {
+    return lusi::package::status::UnknownPackageStatus::getInstance();
+}
+*/

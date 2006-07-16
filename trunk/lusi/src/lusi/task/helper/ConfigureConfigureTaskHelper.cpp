@@ -23,19 +23,25 @@
 
 using lusi::configuration::ConfigurationParametersSet;
 using lusi::package::ResourceMap;
+using lusi::task::Task;
 
 using namespace lusi::task::helper;
 
+TaskHelper* lusi::task::helper::createConfigureConfigureTaskHelper(
+                                        Task* task) {
+    return new ConfigureConfigureTaskHelper(task);
+}
+
 //public:
 
-ConfigureConfigureTaskHelper::ConfigureConfigureTaskHelper() {
+ConfigureConfigureTaskHelper::ConfigureConfigureTaskHelper(Task* task):
+                            TaskHelper("ConfigureConfigureTaskHelper", task) {
 }
 
 ConfigureConfigureTaskHelper::~ConfigureConfigureTaskHelper() {
 }
 
-bool ConfigureConfigureTaskHelper::isValidResourceMap(
-                                        ResourceMap* resourceMap) {
+bool ConfigureConfigureTaskHelper::hasValidResourceMap() {
 }
 
 ConfigurationParametersSet ConfigureConfigureTaskHelper::checkConfiguration() {

@@ -18,17 +18,56 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "ConfigureTaskHelper.h"
+#include "TaskHelperTestImplementation.h"
+#include "../../configuration/ConfigurationParametersSet.h"
+
+using std::string;
+
+using lusi::configuration::ConfigurationParametersSet;
+using lusi::package::ResourceMap;
 
 using namespace lusi::task::helper;
 
+TaskHelper* lusi::task::helper::createTaskHelperTestImplementation1(
+                                        Task* task) {
+    return new TaskHelperTestImplementation(task, "1");
+}
+
+TaskHelper* lusi::task::helper::createTaskHelperTestImplementation2(
+                                        Task* task) {
+    return new TaskHelperTestImplementation(task, "2");
+}
+
+TaskHelper* lusi::task::helper::createTaskHelperTestImplementation3(
+                                        Task* task) {
+    return new TaskHelperTestImplementation(task, "3");
+}
+
 //public:
 
-ConfigureTaskHelper::ConfigureTaskHelper() {
+TaskHelperTestImplementation::TaskHelperTestImplementation(Task* task,
+                                                           const string& name):
+                                    TaskHelper(name, task) {
 }
 
-ConfigureTaskHelper::~ConfigureTaskHelper() {
+TaskHelperTestImplementation::~TaskHelperTestImplementation() {
 }
 
+bool TaskHelperTestImplementation::hasValidResourceMap() {
+    return false;
+}
 
+ConfigurationParametersSet TaskHelperTestImplementation::checkConfiguration() {
+}
 
+void TaskHelperTestImplementation::execute() {
+}
+
+void TaskHelperTestImplementation::revert() {
+}
+
+/*
+inline const string& getName() const {
+    return mName;
+}
+*/

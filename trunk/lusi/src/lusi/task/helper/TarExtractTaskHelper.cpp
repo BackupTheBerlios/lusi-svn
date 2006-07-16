@@ -23,18 +23,25 @@
 using std::string;
 
 using lusi::package::ResourceMap;
+using lusi::task::Task;
 
 using namespace lusi::task::helper;
 
+TaskHelper* lusi::task::helper::createTarExtractTaskHelper(
+                                        Task* task) {
+    return new TarExtractTaskHelper(task);
+}
+
 //public:
 
-TarExtractTaskHelper::TarExtractTaskHelper() {
+TarExtractTaskHelper::TarExtractTaskHelper(Task* task):
+                            ExtractTaskHelper("TarExtractTaskHelper", task) {
 }
 
 TarExtractTaskHelper::~TarExtractTaskHelper() {
 }
 
-bool TarExtractTaskHelper::isValidResourceMap(ResourceMap* resourceMap) {
+bool TarExtractTaskHelper::hasValidResourceMap() {
 }
 
 //protected:
