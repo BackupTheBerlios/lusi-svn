@@ -18,42 +18,39 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "Package.h"
+#ifndef LUSI_PACKAGE_RESOURCETEST_H
+#define LUSI_PACKAGE_RESOURCETEST_H
 
-using lusi::package::status::PackageStatus;
+#include <cppunit/extensions/HelperMacros.h>
 
-using namespace lusi::package;
+namespace lusi {
+namespace package {
 
-//public:
+class ResourceTest: public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(ResourceTest);
+    CPPUNIT_TEST(testGetId);
+    CPPUNIT_TEST_SUITE_END();
 
-Package::Package(PackageId* packageId,
-                 const status::PackageStatus* packageStatus /*=
-                        status::UnknownPackageStatus::getInstance()*/) {
-    mPackageId = packageId;
-    mPackageStatus = packageStatus;
+public:
+
+    /**
+     * Sets up context before running a test.
+     */
+    virtual void setUp();
+
+    /**
+     * Cleans up after the test run.
+     */
+    virtual void tearDown();
+
+    /**
+     * Checks if getId() returns the string set in the constructor.
+     */
+    void testGetId();
+
+};
+
+}
 }
 
-Package::~Package() {
-}
-
-/*
-inline PackageId* Package::getPackageId() {
-    return mPackageId;
-}
-
-inline Profile* Package::getProfile() {
-    return mProfile;
-}
-
-inline ResourceMap* Package::getResourceMap() {
-    return mResourceMap;
-}
-
-inline const PackageStatus* Package::getPackageStatus() {
-    return mPackageStatus;
-}
-
-inline void Package::setPackageStatus(const PackageStatus* packageStatus) {
-    mPackageStatus = packageStatus;
-}
-*/
+#endif

@@ -18,42 +18,60 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include "PackageTest.h"
 #include "Package.h"
+#include "PackageId.h"
+#include "status/BuiltPackageStatus.h"
+#include "status/UnknownPackageStatus.h"
 
+using lusi::package::status::BuiltPackageStatus;
 using lusi::package::status::PackageStatus;
+using lusi::package::status::UnknownPackageStatus;
 
 using namespace lusi::package;
 
 //public:
 
-Package::Package(PackageId* packageId,
-                 const status::PackageStatus* packageStatus /*=
-                        status::UnknownPackageStatus::getInstance()*/) {
-    mPackageId = packageId;
-    mPackageStatus = packageStatus;
+void PackageTest::setUp() {
+    mPackageId = new PackageId("Scorched3D");
+    mPackage = new Package(mPackageId);
 }
 
-Package::~Package() {
+void PackageTest::tearDown() {
+    delete mPackage;
+    delete mPackageId;
 }
 
-/*
-inline PackageId* Package::getPackageId() {
-    return mPackageId;
+void PackageTest::testGetPackageId() {
+    CPPUNIT_ASSERT_EQUAL(mPackageId, mPackage->getPackageId());
 }
 
-inline Profile* Package::getProfile() {
-    return mProfile;
+//TODO Check getProfile
+void PackageTest::testGetProfile() {
 }
 
-inline ResourceMap* Package::getResourceMap() {
-    return mResourceMap;
+//TODO Check getResourceMap
+void PackageTest::testGetResourceMap() {
 }
 
-inline const PackageStatus* Package::getPackageStatus() {
-    return mPackageStatus;
+void PackageTest::testGetPackageStatus() {
+    //Test constructor with default PackageStatus
+    CPPUNIT_ASSERT_EQUAL(static_cast<const PackageStatus*>
+                                (UnknownPackageStatus::getInstance()),
+                         mPackage->getPackageStatus());
+
+    delete mPackage;
+    mPackage = new Package(mPackageId, BuiltPackageStatus::getInstance());
+
+    //Test constructor with explicit PackageStatus
+    CPPUNIT_ASSERT_EQUAL(static_cast<const PackageStatus*>
+                                (BuiltPackageStatus::getInstance()),
+                         mPackage->getPackageStatus());
 }
 
-inline void Package::setPackageStatus(const PackageStatus* packageStatus) {
-    mPackageStatus = packageStatus;
+void PackageTest::testSetPackageStatus() {
+    mPackage->setPackageStatus(BuiltPackageStatus::getInstance());
+    CPPUNIT_ASSERT_EQUAL(static_cast<const PackageStatus*>
+                                (BuiltPackageStatus::getInstance()),
+                         mPackage->getPackageStatus());
 }
-*/

@@ -69,7 +69,7 @@ public:
      * If no PackageStatus is specified, it uses UnkwnonPackageStatus. You're
      * encouraged to set it, however.
      */
-    Package(PackageId* packageId, status::PackageStatus* packageStatus =
+    Package(PackageId* packageId, const status::PackageStatus* packageStatus =
                     status::UnknownPackageStatus::getInstance());
 
     /**
@@ -109,7 +109,7 @@ public:
      *
      * @return The PackageStatus.
      */
-    status::PackageStatus* getPackageStatus() {
+    const status::PackageStatus* getPackageStatus() {
         return mPackageStatus;
     }
 
@@ -118,7 +118,7 @@ public:
      *
      * @param packageStatus The PackageStatus.
      */
-    void setPackageStatus(status::PackageStatus* packageStatus) {
+    void setPackageStatus(const status::PackageStatus* packageStatus) {
         mPackageStatus = packageStatus;
     }
 
@@ -144,7 +144,7 @@ private:
     /**
      * The PackageStatus.
      */
-    status::PackageStatus* mPackageStatus;
+    const status::PackageStatus* mPackageStatus;
 
 
 

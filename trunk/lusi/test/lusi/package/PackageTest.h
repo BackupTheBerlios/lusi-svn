@@ -18,42 +18,87 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "Package.h"
+#ifndef LUSI_PACKAGE_PACKAGETEST_H
+#define LUSI_PACKAGE_PACKAGETEST_H
 
-using lusi::package::status::PackageStatus;
+#include <cppunit/extensions/HelperMacros.h>
 
-using namespace lusi::package;
-
-//public:
-
-Package::Package(PackageId* packageId,
-                 const status::PackageStatus* packageStatus /*=
-                        status::UnknownPackageStatus::getInstance()*/) {
-    mPackageId = packageId;
-    mPackageStatus = packageStatus;
+namespace lusi {
+namespace package {
+class Package;
+class PackageId;
+}
 }
 
-Package::~Package() {
+namespace lusi {
+namespace package {
+
+/**
+ * Test class for Package.
+ *
+ * @see Package
+ */
+class PackageTest: public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(PackageTest);
+    CPPUNIT_TEST(testGetPackageId);
+    CPPUNIT_TEST(testGetPackageStatus);
+    CPPUNIT_TEST(testSetPackageStatus);
+    CPPUNIT_TEST_SUITE_END();
+
+public:
+
+    /**
+     * Sets up context before running a test.
+     */
+    virtual void setUp();
+
+    /**
+     * Cleans up after the test run.
+     */
+    virtual void tearDown();
+
+    /**
+     * Checks if getPackageId() returns the PackageId set in the constructor.
+     */
+    void testGetPackageId();
+
+    /**
+     * TODO Check getProfile
+     */
+    void testGetProfile();
+
+    /**
+     * TODO Check getResourceMap
+     */
+    void testGetResourceMap();
+
+    /**
+     * Checks if getPackageStatus() returns the PackageStatus set in the
+     * constructor.
+     */
+    void testGetPackageStatus();
+
+    /**
+     * Checks if setPackageStatus() sets the PackageStatus and is returned with
+     * getPackageStatus().
+     */
+    void testSetPackageStatus();
+
+private:
+
+    /**
+     * The Package to test.
+     */
+    Package* mPackage;
+
+    /**
+     * The PackageId for the Package.
+     */
+    PackageId* mPackageId;
+
+};
+
+}
 }
 
-/*
-inline PackageId* Package::getPackageId() {
-    return mPackageId;
-}
-
-inline Profile* Package::getProfile() {
-    return mProfile;
-}
-
-inline ResourceMap* Package::getResourceMap() {
-    return mResourceMap;
-}
-
-inline const PackageStatus* Package::getPackageStatus() {
-    return mPackageStatus;
-}
-
-inline void Package::setPackageStatus(const PackageStatus* packageStatus) {
-    mPackageStatus = packageStatus;
-}
-*/
+#endif

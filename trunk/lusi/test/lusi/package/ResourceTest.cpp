@@ -18,42 +18,22 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "Package.h"
+#include "ResourceTest.h"
+#include "ResourceTestImplementation.h"
 
-using lusi::package::status::PackageStatus;
+using std::string;
 
 using namespace lusi::package;
 
 //public:
 
-Package::Package(PackageId* packageId,
-                 const status::PackageStatus* packageStatus /*=
-                        status::UnknownPackageStatus::getInstance()*/) {
-    mPackageId = packageId;
-    mPackageStatus = packageStatus;
+void ResourceTest::setUp() {
 }
 
-Package::~Package() {
+void ResourceTest::tearDown() {
 }
 
-/*
-inline PackageId* Package::getPackageId() {
-    return mPackageId;
+void ResourceTest::testGetId() {
+    ResourceTestImplementation resource("chocolate");
+    CPPUNIT_ASSERT_EQUAL(string("chocolate"), resource.getId());
 }
-
-inline Profile* Package::getProfile() {
-    return mProfile;
-}
-
-inline ResourceMap* Package::getResourceMap() {
-    return mResourceMap;
-}
-
-inline const PackageStatus* Package::getPackageStatus() {
-    return mPackageStatus;
-}
-
-inline void Package::setPackageStatus(const PackageStatus* packageStatus) {
-    mPackageStatus = packageStatus;
-}
-*/

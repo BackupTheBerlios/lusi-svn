@@ -19,8 +19,10 @@
  ***************************************************************************/
 
 #include "PackageTestSuite.h"
+#include "PackageTest.h"
 #include "PackageIdTest.h"
 #include "ProfileManagerTest.h"
+#include "ResourceTest.h"
 #include "ResourceMapTest.h"
 #include "status/PackageStatusTestSuite.h"
 
@@ -32,8 +34,10 @@ using namespace lusi::package;
 
 PackageTestSuite::PackageTestSuite() {
     //Own namespace Tests
+    addTest(PackageTest::suite());
     addTest(PackageIdTest::suite());
     addTest(ProfileManagerTest::suite());
+    addTest(ResourceTest::suite());
     addTest(ResourceMapTest::suite());
 
     //Direct child namespaces TestSuites
