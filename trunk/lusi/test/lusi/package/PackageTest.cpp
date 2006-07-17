@@ -21,6 +21,8 @@
 #include "PackageTest.h"
 #include "Package.h"
 #include "PackageId.h"
+#include "ProfileManager.h"
+#include "ResourceMap.h"
 #include "status/BuiltPackageStatus.h"
 #include "status/UnknownPackageStatus.h"
 
@@ -46,12 +48,14 @@ void PackageTest::testGetPackageId() {
     CPPUNIT_ASSERT_EQUAL(mPackageId, mPackage->getPackageId());
 }
 
-//TODO Check getProfile
 void PackageTest::testGetProfile() {
+    CPPUNIT_ASSERT_EQUAL(ProfileManager::getInstance()->getProfile(mPackageId),
+                         mPackage->getProfile());
 }
 
-//TODO Check getResourceMap
 void PackageTest::testGetResourceMap() {
+    CPPUNIT_ASSERT(mPackage->getResourceMap() != 0);
+    CPPUNIT_ASSERT(mPackage->getResourceMap()->getAllResources().size() == 0);
 }
 
 void PackageTest::testGetPackageStatus() {

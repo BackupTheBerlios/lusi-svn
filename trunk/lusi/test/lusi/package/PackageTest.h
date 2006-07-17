@@ -41,6 +41,8 @@ namespace package {
 class PackageTest: public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(PackageTest);
     CPPUNIT_TEST(testGetPackageId);
+    CPPUNIT_TEST(testGetProfile);
+    CPPUNIT_TEST(testGetResourceMap);
     CPPUNIT_TEST(testGetPackageStatus);
     CPPUNIT_TEST(testSetPackageStatus);
     CPPUNIT_TEST_SUITE_END();
@@ -63,12 +65,14 @@ public:
     void testGetPackageId();
 
     /**
-     * TODO Check getProfile
+     * Checks if getProfile() returns the Profile created in the
+     * constructor (get from ProfileManager).
      */
     void testGetProfile();
 
     /**
-     * TODO Check getResourceMap
+     * Checks if getResourceMap() returns the ResourceMap created in the
+     * constructor (an empty ResourceMap).
      */
     void testGetResourceMap();
 

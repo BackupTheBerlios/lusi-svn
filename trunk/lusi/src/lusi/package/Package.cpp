@@ -19,6 +19,9 @@
  ***************************************************************************/
 
 #include "Package.h"
+#include "Profile.h"
+#include "ProfileManager.h"
+#include "ResourceMap.h"
 
 using lusi::package::status::PackageStatus;
 
@@ -31,9 +34,14 @@ Package::Package(PackageId* packageId,
                         status::UnknownPackageStatus::getInstance()*/) {
     mPackageId = packageId;
     mPackageStatus = packageStatus;
+
+    mProfile = ProfileManager::getInstance()->getProfile(packageId);
+    mResourceMap = new ResourceMap();
 }
 
 Package::~Package() {
+    delete mProfile;
+    delete mResourceMap;
 }
 
 /*

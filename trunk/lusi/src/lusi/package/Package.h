@@ -66,8 +66,11 @@ public:
 
     /**
      * Creates a new Package using the specified PackageId and PackageStatus.
-     * If no PackageStatus is specified, it uses UnkwnonPackageStatus. You're
+     * If no PackageStatus is specified, it uses UnknownPackageStatus. You're
      * encouraged to set it, however.
+     *
+     * @param packageId The PackageId.
+     * @param packageStatus The PackageStatus, UnknownPackageStatus by default.
      */
     Package(PackageId* packageId, const status::PackageStatus* packageStatus =
                     status::UnknownPackageStatus::getInstance());
