@@ -88,7 +88,7 @@ public:
      *         availables for the Task.
      * @see registerTaskHelper(TaskHelper* (*)(lusi::task::Task*), std::string)
      */
-    std::vector<TaskHelper*> getTaskHelpers(lusi::task::Task* task);
+    std::vector<TaskHelper*> getTaskHelpers(lusi::task::Task* task) const;
 
     /**
      * Register a TaskHelper with a task name.
