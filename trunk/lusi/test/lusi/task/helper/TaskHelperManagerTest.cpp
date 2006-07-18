@@ -109,4 +109,11 @@ void TaskHelperManagerTest::testGetTaskHelpers() {
     CPPUNIT_ASSERT(recordHelpers.size() == 1);
 
     delete recordHelpers[0];
+
+
+    //Not registered TaskHelper
+    Task* unregisteredTask = new TaskTestImplementation("Clean my room", 0, 0);
+    vector<TaskHelper*> unregisteredHelpers = mTaskHelperManager->getTaskHelpers(
+                                                    unregisteredTask);
+    CPPUNIT_ASSERT(unregisteredHelpers.size() == 0);
 }
