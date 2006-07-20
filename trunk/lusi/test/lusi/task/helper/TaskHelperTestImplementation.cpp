@@ -46,16 +46,20 @@ TaskHelper* lusi::task::helper::createTaskHelperTestImplementation3(
 //public:
 
 TaskHelperTestImplementation::TaskHelperTestImplementation(Task* task,
-                                                           const string& name):
-                                    TaskHelper(name, task) {
+                                    const string& name,
+                                    bool validResourceMap /* = false*/):
+                            TaskHelper(name, task) {
+    mValidResourceMap = validResourceMap;
 }
 
 TaskHelperTestImplementation::~TaskHelperTestImplementation() {
 }
 
-bool TaskHelperTestImplementation::hasValidResourceMap() {
-    return false;
+/*
+inline bool TaskHelperTestImplementation::hasValidResourceMap() {
+    return mValidResourceMap;
 }
+*/
 
 ConfigurationParametersSet TaskHelperTestImplementation::checkConfiguration() {
 }

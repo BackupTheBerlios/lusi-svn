@@ -62,7 +62,8 @@ public:
     /**
      * Creates a new TaskHelperTestImplementation.
      */
-    TaskHelperTestImplementation(Task* task, const std::string& name);
+    TaskHelperTestImplementation(Task* task, const std::string& name,
+                                 bool validResourceMap = false);
 
     /**
      * Destroys this TaskHelperTestImplementation.
@@ -70,11 +71,13 @@ public:
     virtual ~TaskHelperTestImplementation();
 
     /**
-     * Returns false.
+     * Returns the value set in the constructor.
      *
      * @param resourceMap A ResourceMap.
      */
-    virtual bool hasValidResourceMap();
+    virtual bool hasValidResourceMap() {
+        return mValidResourceMap;
+    }
 
     /**
      * Returns an empty ConfigurationParametersSet.
@@ -90,6 +93,13 @@ public:
      * Does nothing.
      */
     virtual void revert();
+
+private:
+
+    /**
+     * The value to return in hasValidResourceMap().
+     */
+    bool mValidResourceMap;
 
 };
 
