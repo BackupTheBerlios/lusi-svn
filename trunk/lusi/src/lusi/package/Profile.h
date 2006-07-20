@@ -103,7 +103,7 @@ public:
      *
      * @return The suggested Task to execute.
      */
-    lusi::task::Task* getTask();
+    lusi::task::Task* getRedoTask();
 
     /**
      * Returns a suggested Task to be reverted based on the status of the
