@@ -28,6 +28,7 @@
 
 namespace lusi {
 namespace task {
+class Task;
 class TaskLoggerObserver;
 }
 }
@@ -36,7 +37,18 @@ namespace lusi {
 namespace task {
 
 /**
- * @todo Documentation
+ * @class TaskLogger TaskLogger.h lusi/util/TaskLogger.h
+ *
+ * A TaskLogger which notifies events in the execution of a Task.
+ * This class notifies all the observers when some event happens in the
+ * associated Task. It's responsability of the Task to call the notifyEvent
+ * method, as this class only handles the notifications and the observers. The
+ * Task itself must "warn" this class about events happened.
+ *
+ * Observers can be registered using attachObserver(TaskLoggerObserver*) and
+ * deregistered with detachObserver(TaskLoggerObserver*).
+ *
+ * @see TaskLoggerObserver
  */
 class TaskLogger {
 public:
@@ -44,24 +56,55 @@ public:
     /**
      * Creates a new TaskLogger.
      */
-    TaskLogger();
+    TaskLogger(Task* task);
 
     /**
      * Destroys this TaskLogger.
      */
     virtual ~TaskLogger();
 
-    void event(const std::string& message, LoggedEventType type);
-
+    /**
+     * Adds a new observer to be notified when some event in the execution of
+     * the Task happens.
+     * If the observer was already added, it's not added again.
+     *
+     * @param observer The TaskLoggerObserver to add.
+     */
     void attachObserver(TaskLoggerObserver* observer);
 
-    std::vector<TaskLoggerObserver*> getObservers();
-
+    /**
+     * Removes an observer, so it will no longer be notified when events in
+     * the execution of the Task happen.
+     *
+     * @param observer The TaskLoggerObserver to remove.
+     */
     void detachObserver(TaskLoggerObserver* observer);
 
 protected:
 
 private:
+
+    /**
+     * The Task which notifies the events.
+     */
+    Task* mTask;
+
+    /**
+     * A vector containing all the TaskLoggerObservers registered.
+     */
+    std::vector<TaskLoggerObserver*> mTaskLoggerObservers;
+
+
+
+    /**
+     * Notifies all the observers about the event.
+     * The event is the information message and the type of it (message,
+     * warning or error).
+     *
+     * @param message The message of the event.
+     * @param type The type of the event.
+     */
+    void notifyEvent(const std::string& message, LoggedEventType type);
 
 };
 

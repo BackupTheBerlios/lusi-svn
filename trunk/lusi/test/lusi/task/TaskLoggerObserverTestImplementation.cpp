@@ -18,23 +18,44 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef LUSI_TASK_LOGGEDEVENTTYPE_H
-#define LUSI_TASK_LOGGEDEVENTTYPE_H
+#include "TaskLoggerObserverTestImplementation.h"
 
-namespace lusi {
-namespace task {
+using std::string;
 
-/**
- * Enumeration for TaskLogger events.
- * Specifies the type of the event. It can be: message, warning or error.
- */
-enum LoggedEventType {
-    message = 0,
-    warning,
-    error
-};
+using namespace lusi::task;
 
-}
+//public:
+
+TaskLoggerObserverTestImplementation::TaskLoggerObserverTestImplementation():
+                                            TaskLoggerObserver() {
+    mTask = 0;
+    mMessage = string("");
 }
 
-#endif
+
+TaskLoggerObserverTestImplementation::~TaskLoggerObserverTestImplementation() {
+}
+
+void TaskLoggerObserverTestImplementation::event(Task* task,
+                                                 const string& message,
+                                                 LoggedEventType type) {
+    mTask = task;
+    mMessage = message;
+    mEventType = type;
+}
+
+/*
+inline Task* getTask() {
+    Task* task = mTask;
+    mTask = 0;
+    return task;
+}
+
+inline const std::string& getMessage() const {
+    return mMessage;
+}
+
+inline const LoggedEventType& getEventType() const {
+    return mEventType;
+}
+*/

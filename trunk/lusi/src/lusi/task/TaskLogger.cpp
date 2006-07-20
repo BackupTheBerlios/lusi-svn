@@ -19,29 +19,49 @@
  ***************************************************************************/
 
 #include "TaskLogger.h"
+#include "TaskLoggerObserver.h"
 
 using std::string;
 using std::vector;
-using lusi::task::TaskLoggerObserver;
 
 using namespace lusi::task;
 
 //public:
 
-TaskLogger::TaskLogger() {
+TaskLogger::TaskLogger(Task* task) {
+    mTask = task;
+    mTaskLoggerObservers = vector<TaskLoggerObserver*>();
 }
 
 TaskLogger::~TaskLogger() {
 }
 
-void TaskLogger::event(const string& message, LoggedEventType type) {
-}
-
 void TaskLogger::attachObserver(TaskLoggerObserver* observer) {
-}
+    if (find(mTaskLoggerObservers.begin(), mTaskLoggerObservers.end(),
+                    observer) != mTaskLoggerObservers.end()) {
+        return;
+    }
 
-vector<TaskLoggerObserver*> TaskLogger::getObservers() {
+    mTaskLoggerObservers.push_back(observer);
 }
 
 void TaskLogger::detachObserver(TaskLoggerObserver* observer) {
+    vector<TaskLoggerObserver*>::iterator iterator =
+                    find(mTaskLoggerObservers.begin(),
+                         mTaskLoggerObservers.end(),
+                         observer);
+
+    if (iterator != mTaskLoggerObservers.end()) {
+        mTaskLoggerObservers.erase(iterator);
+    }
+}
+
+//private:
+
+void TaskLogger::notifyEvent(const string& message, LoggedEventType type) {
+    vector<TaskLoggerObserver*>::iterator it;
+    for (it = mTaskLoggerObservers.begin();
+                it != mTaskLoggerObservers.end(); ++it) {
+        (*it)->event(mTask, message, type);
+    }
 }
