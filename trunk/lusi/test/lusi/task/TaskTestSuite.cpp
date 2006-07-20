@@ -21,6 +21,7 @@
 #include "TaskTestSuite.h"
 #include "TaskLoggerTest.h"
 #include "TaskManagerTest.h"
+#include "TaskProgressTest.h"
 #include "helper/TaskHelperTestSuite.h"
 
 using lusi::task::helper::TaskHelperTestSuite;
@@ -33,6 +34,7 @@ TaskTestSuite::TaskTestSuite() {
     //Own namespace Tests
     addTest(TaskLoggerTest::suite());
     addTest(TaskManagerTest::suite());
+    addTest(TaskProgressTest::suite());
 
     //Direct child namespaces TestSuites
     addTest(new TaskHelperTestSuite());

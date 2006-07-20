@@ -18,12 +18,16 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef LUSI_TASK_TASKPROGRESSOBSERVER_H
-#define LUSI_TASK_TASKPROGRESSOBSERVER_H
+#ifndef LUSI_TASK_TASKPROGRESSTEST_H
+#define LUSI_TASK_TASKPROGRESSTEST_H
+
+#include <cppunit/extensions/HelperMacros.h>
 
 namespace lusi {
 namespace task {
 class Task;
+class TaskProgress;
+class TaskProgressObserver;
 }
 }
 
@@ -31,56 +35,72 @@ namespace lusi {
 namespace task {
 
 /**
- * @class TaskProgressObserver TaskProgressObserver.h \
- * lusi/util/TaskProgressObserver.h
- *
- * Interface to observe progress in the execution of a Task.
- * Updates values are integers in the range from 0 to 100. They represent the
- * percenteage of execution of the Task.
+ * Test class for TaskProgress.
  *
  * @see TaskProgress
  */
-class TaskProgressObserver {
+class TaskProgressTest: public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(TaskProgressTest);
+    CPPUNIT_TEST(testAttachObserver);
+    CPPUNIT_TEST(testDetachObserver);
+    CPPUNIT_TEST(testNotifyProgress);
+    CPPUNIT_TEST_SUITE_END();
+
 public:
 
     /**
-     * Destroys this TaskProgressObserver.
+     * Sets up context before running a test.
+     * Creates all the observers and the TaskProgress, and attachs the
+     * observers to the TaskProgress.
      */
-    virtual ~TaskProgressObserver() {
-    }
+    virtual void setUp();
 
     /**
-     * Called when some progress is made.
-     * The value is an integer in the range from 0 to 100, representing the
-     * percenteage of execution of the Task.
-     *
-     * @param task A pointer to the Task that made the progress.
-     * @param value The percenteage of execution.
+     * Cleans up after the test run.
      */
-    virtual void progress(Task* task, int value) = 0;
-
-protected:
+    virtual void tearDown();
 
     /**
-     * Creates a new TaskProgressObserver.
-     * Protected to avoid classes other than derived to create
-     * TaskProgressObserver objects.
+     * Tests if TaskProgressObservers are attached as they should.
      */
-    TaskProgressObserver() {
-    }
+    void testAttachObserver();
+
+    /**
+     * Tests if TaskProgressObservers are detached as they should.
+     */
+    void testDetachObserver();
+
+    /**
+     * Tests if the registered observers are notified when progress is made.
+     */
+    void testNotifyProgress();
 
 private:
 
     /**
-     * Copy constructor disabled.
+     * First TaskProgressObserver.
      */
-    TaskProgressObserver(const TaskProgressObserver& taskProgressObserver);
+    TaskProgressObserver* mTaskProgressObserver1;
 
     /**
-     * Assignment disabled.
+     * Second TaskProgressObserver.
      */
-    TaskProgressObserver& operator=(const TaskProgressObserver&
-                                taskProgressObserver);
+    TaskProgressObserver* mTaskProgressObserver2;
+
+    /**
+     * Third TaskProgressObserver.
+     */
+    TaskProgressObserver* mTaskProgressObserver3;
+
+    /**
+     * TaskProgress to be tested.
+     */
+    TaskProgress* mTaskProgress;
+
+    /**
+     * The Task to associate the TaskProgress with.
+     */
+    Task* mTask;
 
 };
 

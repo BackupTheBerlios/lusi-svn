@@ -18,50 +18,35 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "TaskProgress.h"
-#include "TaskProgressObserver.h"
-
-using std::string;
-using std::vector;
+#include "TaskProgressObserverTestImplementation.h"
 
 using namespace lusi::task;
 
 //public:
 
-TaskProgress::TaskProgress(Task* task) {
+TaskProgressObserverTestImplementation::TaskProgressObserverTestImplementation(
+                                                ): TaskProgressObserver() {
+    mTask = 0;
+    mProgress = -1;
+}
+
+TaskProgressObserverTestImplementation::~TaskProgressObserverTestImplementation(
+                                                ) {
+}
+
+void TaskProgressObserverTestImplementation::progress(Task* task, int value) {
     mTask = task;
-    mTaskProgressObservers = vector<TaskProgressObserver*>();
+    mProgress = value;
 }
 
-TaskProgress::~TaskProgress() {
+/*
+inline Task* getTask() {
+    Task* task = mTask;
+    mTask = 0;
+    return task;
 }
 
-void TaskProgress::attachObserver(TaskProgressObserver* observer) {
-    if (find(mTaskProgressObservers.begin(), mTaskProgressObservers.end(),
-                    observer) != mTaskProgressObservers.end()) {
-        return;
-    }
-
-    mTaskProgressObservers.push_back(observer);
+inline int getProgress() const {
+    return mProgress;
 }
-
-void TaskProgress::detachObserver(TaskProgressObserver* observer) {
-    vector<TaskProgressObserver*>::iterator iterator =
-                    find(mTaskProgressObservers.begin(),
-                         mTaskProgressObservers.end(),
-                         observer);
-
-    if (iterator != mTaskProgressObservers.end()) {
-        mTaskProgressObservers.erase(iterator);
-    }
-}
-
-//private:
-
-void TaskProgress::notifyProgress(int value) {
-    vector<TaskProgressObserver*>::iterator it;
-    for (it = mTaskProgressObservers.begin();
-                it != mTaskProgressObservers.end(); ++it) {
-        (*it)->progress(mTask, value);
-    }
-}
+*/

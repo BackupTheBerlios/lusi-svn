@@ -18,69 +18,73 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef LUSI_TASK_TASKPROGRESSOBSERVER_H
-#define LUSI_TASK_TASKPROGRESSOBSERVER_H
+#ifndef LUSI_TASK_TASKPROGRESSOBSERVERTESTIMPLEMENTATION_H
+#define LUSI_TASK_TASKPROGRESSOBSERVERTESTIMPLEMENTATION_H
 
-namespace lusi {
-namespace task {
-class Task;
-}
-}
+#include <lusi/task/TaskProgressObserver.h>
 
 namespace lusi {
 namespace task {
 
 /**
- * @class TaskProgressObserver TaskProgressObserver.h \
- * lusi/util/TaskProgressObserver.h
- *
- * Interface to observe progress in the execution of a Task.
- * Updates values are integers in the range from 0 to 100. They represent the
- * percenteage of execution of the Task.
- *
- * @see TaskProgress
+ * Implementation of TaskProgressObserver interface for testing purposes.
+ * This class helps testing TaskProgress, as it depends on observers.
  */
-class TaskProgressObserver {
+class TaskProgressObserverTestImplementation: public TaskProgressObserver {
 public:
 
     /**
-     * Destroys this TaskProgressObserver.
+     * Creates a new TaskProgressObserverTestImplementation.
      */
-    virtual ~TaskProgressObserver() {
-    }
+    TaskProgressObserverTestImplementation();
+
+    /**
+     * Destroys this TaskProgressObserverTestImplementation.
+     */
+    virtual ~TaskProgressObserverTestImplementation();
 
     /**
      * Called when some progress is made.
-     * The value is an integer in the range from 0 to 100, representing the
-     * percenteage of execution of the Task.
+     * The task is copied to mTask and the value is copied to mProgress.
      *
      * @param task A pointer to the Task that made the progress.
      * @param value The percenteage of execution.
      */
-    virtual void progress(Task* task, int value) = 0;
-
-protected:
+    virtual void progress(Task* task, int value);
 
     /**
-     * Creates a new TaskProgressObserver.
-     * Protected to avoid classes other than derived to create
-     * TaskProgressObserver objects.
+     * Returns the last task that sent a progress value.
+     * mTask is cleaned, so, if no new progress is notified, it'll return a null
+     * pointer.
+     *
+     * @return The last task that sent a progress value.
      */
-    TaskProgressObserver() {
+    Task* getTask() {
+        Task* task = mTask;
+        mTask = 0;
+        return task;
+    }
+
+    /**
+     * Returns the last progress value received.
+     *
+     * @return The last progress value received.
+     */
+    int getProgress() const {
+        return mProgress;
     }
 
 private:
 
     /**
-     * Copy constructor disabled.
+     * The last task that sent a value.
      */
-    TaskProgressObserver(const TaskProgressObserver& taskProgressObserver);
+    Task* mTask;
 
     /**
-     * Assignment disabled.
+     * The last value received.
      */
-    TaskProgressObserver& operator=(const TaskProgressObserver&
-                                taskProgressObserver);
+    int mProgress;
 
 };
 
