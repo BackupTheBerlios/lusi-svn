@@ -58,8 +58,7 @@ public:
     virtual ~TaskConfigurationManager();
 
     lusi::task::TaskConfiguration* getTaskConfiguration(
-                            const lusi::package::PackageId* packageId,
-                            const std::string& name);
+                            const lusi::package::PackageId* packageId);
 
 protected:
 

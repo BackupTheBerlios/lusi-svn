@@ -38,8 +38,7 @@ TaskConfigurationManager::~TaskConfigurationManager() {
 }
 
 TaskConfiguration* TaskConfigurationManager::getTaskConfiguration(
-                        const PackageId* packageId,
-                        const std::string& name) {
+                        const PackageId* packageId) {
     return 0;
 }
 
