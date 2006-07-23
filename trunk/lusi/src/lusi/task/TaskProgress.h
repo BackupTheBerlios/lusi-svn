@@ -33,6 +33,14 @@ class TaskProgressObserver;
 
 namespace lusi {
 namespace task {
+namespace helper {
+class TaskHelper;
+}
+}
+}
+
+namespace lusi {
+namespace task {
 
 /**
  * @class TaskProgress TaskProgress.h lusi/util/TaskProgress.h
@@ -49,6 +57,7 @@ namespace task {
  * @see TaskProgressObserver
  */
 class TaskProgress {
+friend class lusi::task::helper::TaskHelper;
 public:
 
     /**

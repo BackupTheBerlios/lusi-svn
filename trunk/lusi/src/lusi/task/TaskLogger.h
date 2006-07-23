@@ -35,6 +35,14 @@ class TaskLoggerObserver;
 
 namespace lusi {
 namespace task {
+namespace helper {
+class TaskHelper;
+}
+}
+}
+
+namespace lusi {
+namespace task {
 
 /**
  * @class TaskLogger TaskLogger.h lusi/util/TaskLogger.h
@@ -51,6 +59,7 @@ namespace task {
  * @see TaskLoggerObserver
  */
 class TaskLogger {
+friend class lusi::task::helper::TaskHelper;
 public:
 
     /**

@@ -43,3 +43,14 @@ TaskHelper::TaskHelper(const string& name, Task* task) {
     mName = name;
     mTask = task;
 }
+
+/*
+inline void TaskHelper::notifyTaskLogger(const std::string& message,
+                                         LoggedEventType type) {
+    mTask->getTaskLogger()->notifyEvent(message, type);
+}
+
+inline void TaskHelper::notifyTaskProgress(int value) {
+    mTask->getTaskProgress()->notifyProgress(value);
+}
+*/

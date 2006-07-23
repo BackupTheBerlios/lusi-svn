@@ -23,6 +23,10 @@
 
 #include <string>
 
+#include <lusi/task/Task.h>
+#include <lusi/task/TaskLogger.h>
+#include <lusi/task/TaskProgress.h>
+
 namespace lusi {
 namespace configuration {
 class ConfigurationParametersSet;
@@ -71,6 +75,11 @@ namespace helper {
  * TaskHelpers of the same class share the same name. Therefore, the name
  * identifies classes, not individual objects. The name is equal to the name
  * of the class.
+ *
+ * The TaskHelpers must log what they're doing. To do this, subclasses can use
+ * the protected methods notifyTaskLogger(std::string, LoggedEventType) and
+ * notifyTaskProgress(int), which notifies all the observers of TaskLogger and
+ * TaskProgress of the Task.
  *
  * @see lusi::task::Task
  * @see TaskHelperManager
@@ -151,6 +160,25 @@ protected:
      * @param task The task to help.
      */
     TaskHelper(const std::string& name, lusi::task::Task* task);
+
+    /**
+     * Notifies the TaskLogger of the Task with a new event.
+     *
+     * @param message The message of the event.
+     * @param type The type of the event.
+     */
+    void notifyTaskLogger(const std::string& message, LoggedEventType type) {
+        mTask->getTaskLogger()->notifyEvent(message, type);
+    }
+
+    /**
+     * Notifies the TaskProgress of the Task that progress happened.
+     *
+     * @param value The progress of the TaskHelper.
+     */
+    void notifyTaskProgress(int value) {
+        mTask->getTaskProgress()->notifyProgress(value);
+    }
 
 private:
 
