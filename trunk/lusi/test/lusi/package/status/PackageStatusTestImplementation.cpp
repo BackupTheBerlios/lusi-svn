@@ -18,34 +18,52 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "PackageStatusTestSuite.h"
-#include "BuiltPackageStatusTest.h"
-#include "ConfiguredPackageStatusTest.h"
-#include "InstalledPackageStatusTest.h"
-#include "PackedPackageStatusTest.h"
-#include "UnknownPackageStatusTest.h"
-#include "UnpackedPackageStatusTest.h"
-
 #include "PackageStatusTestImplementation.h"
 
 using namespace lusi::package::status;
 
 //public:
 
-PackageStatusTestSuite::PackageStatusTestSuite() {
-    //Own namespace Tests
-    addTest(BuiltPackageStatusTest::suite());
-    addTest(ConfiguredPackageStatusTest::suite());
-    addTest(InstalledPackageStatusTest::suite());
-    addTest(PackedPackageStatusTest::suite());
-    addTest(UnknownPackageStatusTest::suite());
-    addTest(UnpackedPackageStatusTest::suite());
+const PackageStatusTestImplementation*
+PackageStatusTestImplementation::getFirstInstance() {
+    if (sFirstInstance == 0) {
+        sFirstInstance = new PackageStatusTestImplementation();
+    }
 
-    //Referenced so it can be used from other temporal libraries (the compiler or
-    //the linker seem to remove its symbols from libstatustest.la if it isn't
-    //referenced anywhere in the package)
-    //TODO A cleaner way to do this should exist...
-    PackageStatusTestImplementation::getFirstInstance();
+    return sFirstInstance;
+}
 
-    //Direct child namespaces TestSuites
+const PackageStatusTestImplementation*
+PackageStatusTestImplementation::getSecondInstance() {
+    if (sSecondInstance == 0) {
+        sSecondInstance = new PackageStatusTestImplementation();
+    }
+
+    return sSecondInstance;
+}
+
+const PackageStatusTestImplementation*
+PackageStatusTestImplementation::getThirdInstance() {
+    if (sThirdInstance == 0) {
+        sThirdInstance = new PackageStatusTestImplementation();
+    }
+
+    return sThirdInstance;
+}
+
+PackageStatusTestImplementation::~PackageStatusTestImplementation() {
+}
+
+//private:
+
+PackageStatusTestImplementation*
+PackageStatusTestImplementation::sFirstInstance = 0;
+
+PackageStatusTestImplementation*
+PackageStatusTestImplementation::sSecondInstance = 0;
+
+PackageStatusTestImplementation*
+PackageStatusTestImplementation::sThirdInstance = 0;
+
+PackageStatusTestImplementation::PackageStatusTestImplementation() {
 }
