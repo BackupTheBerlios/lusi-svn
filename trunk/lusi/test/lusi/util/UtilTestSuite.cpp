@@ -18,34 +18,18 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <cppunit/extensions/TestFactoryRegistry.h>
-#include <cppunit/ui/text/TestRunner.h>
+#include "UtilTestSuite.h"
+#include "ProcessTest.h"
+#include "ProcessLinuxTest.h"
 
-#include "configuration/ConfigurationTestSuite.h"
-#include "package/PackageTestSuite.h"
-#include "task/TaskTestSuite.h"
-#include "util/UtilTestSuite.h"
+using namespace lusi::util;
 
-using lusi::configuration::ConfigurationTestSuite;
-using lusi::package::PackageTestSuite;
-using lusi::task::TaskTestSuite;
-using lusi::util::UtilTestSuite;
+//public:
 
-/**
- * Executes a TextTestRunner with all the tests for LUSI.
- * It adds the TestSuites created in direct child directories, which contain
- * also the tests for their subdirectories recursively.
- *
- * If any test fails, main returns 1.
- */
-int main(int argc, char **argv) {
-    CppUnit::TextTestRunner runner;
+UtilTestSuite::UtilTestSuite() {
+    //Own namespace Tests
+    addTest(ProcessTest::suite());
+    addTest(ProcessLinuxTest::suite());
 
-    runner.addTest(new ConfigurationTestSuite());
-    runner.addTest(new PackageTestSuite());
-    runner.addTest(new TaskTestSuite());
-    runner.addTest(new UtilTestSuite());
-
-    bool wasSuccessful = runner.run("", false);
-    return wasSuccessful? 0 : 1;
+    //Direct child namespaces TestSuites
 }

@@ -18,34 +18,34 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <cppunit/extensions/TestFactoryRegistry.h>
-#include <cppunit/ui/text/TestRunner.h>
+#ifndef LUSI_UTIL_UTILTESTSUITE_H
+#define LUSI_UTIL_UTILTESTSUITE_H
 
-#include "configuration/ConfigurationTestSuite.h"
-#include "package/PackageTestSuite.h"
-#include "task/TaskTestSuite.h"
-#include "util/UtilTestSuite.h"
+#include <cppunit/TestSuite.h>
 
-using lusi::configuration::ConfigurationTestSuite;
-using lusi::package::PackageTestSuite;
-using lusi::task::TaskTestSuite;
-using lusi::util::UtilTestSuite;
+namespace lusi {
+namespace util {
 
 /**
- * Executes a TextTestRunner with all the tests for LUSI.
- * It adds the TestSuites created in direct child directories, which contain
- * also the tests for their subdirectories recursively.
+ * TestSuite for namespace lusi::util
+ * When a new Test is created in this namespace, it must be added to the
+ * constructor of this class.
  *
- * If any test fails, main returns 1.
+ * It's used from parent namespaces to get all the tests in lusi::util
+ * namespace.
  */
-int main(int argc, char **argv) {
-    CppUnit::TextTestRunner runner;
+class UtilTestSuite: public CppUnit::TestSuite {
+public:
 
-    runner.addTest(new ConfigurationTestSuite());
-    runner.addTest(new PackageTestSuite());
-    runner.addTest(new TaskTestSuite());
-    runner.addTest(new UtilTestSuite());
+    /**
+     * Adds all the Tests from its same namespace and all TestSuites from
+     * direct child namespaces.
+     */
+    UtilTestSuite();
 
-    bool wasSuccessful = runner.run("", false);
-    return wasSuccessful? 0 : 1;
+};
+
 }
+}
+
+#endif

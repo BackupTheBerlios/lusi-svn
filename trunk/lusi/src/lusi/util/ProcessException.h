@@ -18,34 +18,61 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <cppunit/extensions/TestFactoryRegistry.h>
-#include <cppunit/ui/text/TestRunner.h>
+#ifndef LUSI_UTIL_PROCESSEXCEPTION_H
+#define LUSI_UTIL_PROCESSEXCEPTION_H
 
-#include "configuration/ConfigurationTestSuite.h"
-#include "package/PackageTestSuite.h"
-#include "task/TaskTestSuite.h"
-#include "util/UtilTestSuite.h"
+#include <stdexcept>
+#include <string>
 
-using lusi::configuration::ConfigurationTestSuite;
-using lusi::package::PackageTestSuite;
-using lusi::task::TaskTestSuite;
-using lusi::util::UtilTestSuite;
+namespace lusi {
+namespace util {
 
 /**
- * Executes a TextTestRunner with all the tests for LUSI.
- * It adds the TestSuites created in direct child directories, which contain
- * also the tests for their subdirectories recursively.
+ * @class ProcessException ProcessException.h lusi/util/ProcessException.h
  *
- * If any test fails, main returns 1.
+ * Exception for errors happened when executing a process.
+ * Those exceptions are only intended for errors when forking and executing the
+ * child process, not for child process executed by signals or exiting with
+ * errors.
+ * The error message returned by what() will be "ProcessException: " followed
+ * by the error message specified when creating the exception.
  */
-int main(int argc, char **argv) {
-    CppUnit::TextTestRunner runner;
+class ProcessException: public std::exception {
+public:
 
-    runner.addTest(new ConfigurationTestSuite());
-    runner.addTest(new PackageTestSuite());
-    runner.addTest(new TaskTestSuite());
-    runner.addTest(new UtilTestSuite());
+    /**
+     * Creates a new ProcessException.
+     *
+     * @param errorMessage The error message of the exception, "unspecified"
+     *                     by default.
+     */
+    explicit ProcessException(
+                const std::string& errorMessage = std::string("unspecified"));
 
-    bool wasSuccessful = runner.run("", false);
-    return wasSuccessful? 0 : 1;
+    /**
+     * Destroys this ProcessException.
+     */
+    virtual ~ProcessException() throw();
+
+    /**
+     * Returns the error message.
+     *
+     * @return The error message.
+     */
+    virtual const char* what() const throw() {
+        return mErrorMessage.c_str();
+    }
+
+private:
+
+    /**
+     * Error message for the exception.
+     */
+    std::string mErrorMessage;
+
+};
+
 }
+}
+
+#endif
