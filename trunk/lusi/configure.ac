@@ -27,6 +27,7 @@ AC_OUTPUT(Makefile
           src/lusi/package/status/Makefile
           src/lusi/task/Makefile
           src/lusi/task/helper/Makefile
+          src/lusi/util/Makefile
           test/Makefile
           test/lusi/Makefile
           test/lusi/configuration/Makefile
@@ -34,6 +35,7 @@ AC_OUTPUT(Makefile
           test/lusi/package/status/Makefile
           test/lusi/task/Makefile
           test/lusi/task/helper/Makefile
+          test/lusi/util/Makefile
           lusi.pc
 )
 
