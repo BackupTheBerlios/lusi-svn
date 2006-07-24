@@ -19,16 +19,54 @@
  ***************************************************************************/
 
 #include "TaskManagerTest.h"
+
+#define protected public
+#define private public
 #include "TaskManager.h"
+#undef private
+#undef protected
+
+#include "../package/status/PackageStatusTestImplementation.h"
+
+#define firstPackageStatus ((const PackageStatus*) \
+                PackageStatusTestImplementation::getFirstInstance())
+#define secondPackageStatus ((const PackageStatus*) \
+                PackageStatusTestImplementation::getSecondInstance())
+#define thirdPackageStatus ((const PackageStatus*) \
+                PackageStatusTestImplementation::getThirdInstance())
+
+
+using std::multimap;
+using std::pair;
+using std::string;
+using std::vector;
+
+using lusi::package::status::PackageStatus;
+using lusi::package::status::PackageStatusTestImplementation;
 
 using namespace lusi::task;
 
 //public:
 
 void TaskManagerTest::setUp() {
+    mTaskManager = TaskManager::getInstance();
+    mTaskManager->registerTask("Chew gimer stick cane",
+                               firstPackageStatus,
+                               secondPackageStatus);
+    mTaskManager->registerTask("Watch House M.D.",
+                               firstPackageStatus,
+                               thirdPackageStatus);
+    mTaskManager->registerTask("Milk the platypus",
+                               secondPackageStatus,
+                               thirdPackageStatus);
 }
 
 void TaskManagerTest::tearDown() {
+    mTaskManager->mTasksByNeededPackageStatus.erase(firstPackageStatus);
+    mTaskManager->mTasksByNeededPackageStatus.erase(secondPackageStatus);
+
+    mTaskManager->mTasksByProvidedPackageStatus.erase(secondPackageStatus);
+    mTaskManager->mTasksByProvidedPackageStatus.erase(thirdPackageStatus);
 }
 
 void TaskManagerTest::testSingleton() {
@@ -36,4 +74,153 @@ void TaskManagerTest::testSingleton() {
 
     CPPUNIT_ASSERT_EQUAL(TaskManager::getInstance(),
             TaskManager::getInstance());
+}
+
+void TaskManagerTest::testRegisterTask() {
+    typedef multimap<const PackageStatus*,
+                     TaskManager::TaskData>::const_iterator iterator;
+    //Test needed package status
+    pair<iterator, iterator> range1 =
+                mTaskManager->mTasksByNeededPackageStatus.equal_range(
+                                                        firstPackageStatus);
+    CPPUNIT_ASSERT(range1.first != range1.second);
+    CPPUNIT_ASSERT_EQUAL(string("Chew gimer stick cane"),
+                         range1.first->second.name);
+    CPPUNIT_ASSERT_EQUAL(firstPackageStatus,
+                         range1.first->second.neededPackageStatus);
+    CPPUNIT_ASSERT_EQUAL(secondPackageStatus,
+                         range1.first->second.providedPackageStatus);
+    ++range1.first;
+    CPPUNIT_ASSERT_EQUAL(string("Watch House M.D."),
+                         range1.first->second.name);
+    CPPUNIT_ASSERT_EQUAL(firstPackageStatus,
+                         range1.first->second.neededPackageStatus);
+    CPPUNIT_ASSERT_EQUAL(thirdPackageStatus,
+                         range1.first->second.providedPackageStatus);
+    ++range1.first;
+    CPPUNIT_ASSERT(range1.first == range1.second);
+
+    pair<iterator, iterator> range2 =
+                mTaskManager->mTasksByNeededPackageStatus.equal_range(
+                                                        secondPackageStatus);
+    CPPUNIT_ASSERT(range2.first != range2.second);
+    CPPUNIT_ASSERT_EQUAL(string("Milk the platypus"),
+                         range2.first->second.name);
+    CPPUNIT_ASSERT_EQUAL(secondPackageStatus,
+                         range2.first->second.neededPackageStatus);
+    CPPUNIT_ASSERT_EQUAL(thirdPackageStatus,
+                         range2.first->second.providedPackageStatus);
+    ++range2.first;
+    CPPUNIT_ASSERT(range2.first == range2.second);
+
+
+
+    //Test provided package status
+    range1 = mTaskManager->mTasksByProvidedPackageStatus.equal_range(
+                                                        secondPackageStatus);
+    CPPUNIT_ASSERT(range1.first != range1.second);
+    CPPUNIT_ASSERT_EQUAL(string("Chew gimer stick cane"),
+                         range1.first->second.name);
+    CPPUNIT_ASSERT_EQUAL(firstPackageStatus,
+                         range1.first->second.neededPackageStatus);
+    CPPUNIT_ASSERT_EQUAL(secondPackageStatus,
+                         range1.first->second.providedPackageStatus);
+    ++range1.first;
+    CPPUNIT_ASSERT(range1.first == range1.second);
+
+    range2 = mTaskManager->mTasksByProvidedPackageStatus.equal_range(
+                                                        thirdPackageStatus);
+    CPPUNIT_ASSERT(range2.first != range2.second);
+    CPPUNIT_ASSERT_EQUAL(string("Watch House M.D."),
+                         range2.first->second.name);
+    CPPUNIT_ASSERT_EQUAL(firstPackageStatus,
+                         range2.first->second.neededPackageStatus);
+    CPPUNIT_ASSERT_EQUAL(thirdPackageStatus,
+                         range2.first->second.providedPackageStatus);
+    ++range2.first;
+    CPPUNIT_ASSERT_EQUAL(string("Milk the platypus"),
+                         range2.first->second.name);
+    CPPUNIT_ASSERT_EQUAL(secondPackageStatus,
+                         range2.first->second.neededPackageStatus);
+    CPPUNIT_ASSERT_EQUAL(thirdPackageStatus,
+                         range2.first->second.providedPackageStatus);
+    ++range2.first;
+    CPPUNIT_ASSERT(range2.first == range2.second);
+}
+
+void TaskManagerTest::testGetTasksByPackageStatus() {
+    typedef TaskManager::TaskData TaskData;
+    //Test needed package status
+    vector<TaskData> neededStatus1 = mTaskManager->getTasksByPackageStatus(
+                                firstPackageStatus,
+                                mTaskManager->mTasksByNeededPackageStatus);
+    CPPUNIT_ASSERT_EQUAL(string("Chew gimer stick cane"),
+                         neededStatus1[0].name);
+    CPPUNIT_ASSERT_EQUAL(firstPackageStatus,
+                         neededStatus1[0].neededPackageStatus);
+    CPPUNIT_ASSERT_EQUAL(secondPackageStatus,
+                         neededStatus1[0].providedPackageStatus);
+    CPPUNIT_ASSERT_EQUAL(string("Watch House M.D."),
+                         neededStatus1[1].name);
+    CPPUNIT_ASSERT_EQUAL(firstPackageStatus,
+                         neededStatus1[1].neededPackageStatus);
+    CPPUNIT_ASSERT_EQUAL(thirdPackageStatus,
+                         neededStatus1[1].providedPackageStatus);
+    CPPUNIT_ASSERT(neededStatus1.size() == 2);
+
+    vector<TaskData> neededStatus2 = mTaskManager->getTasksByPackageStatus(
+                                secondPackageStatus,
+                                mTaskManager->mTasksByNeededPackageStatus);
+    CPPUNIT_ASSERT_EQUAL(string("Milk the platypus"),
+                         neededStatus2[0].name);
+    CPPUNIT_ASSERT_EQUAL(secondPackageStatus,
+                         neededStatus2[0].neededPackageStatus);
+    CPPUNIT_ASSERT_EQUAL(thirdPackageStatus,
+                         neededStatus2[0].providedPackageStatus);
+    CPPUNIT_ASSERT(neededStatus2.size() == 1);
+
+
+    //Not registered needed package status
+    vector<TaskData> neededStatus3 = mTaskManager->getTasksByPackageStatus(
+                                thirdPackageStatus,
+                                mTaskManager->mTasksByNeededPackageStatus);
+    CPPUNIT_ASSERT(neededStatus3.size() == 0);
+
+
+
+    //Test provided package status
+    vector<TaskData> providedStatus1 = mTaskManager->getTasksByPackageStatus(
+                                secondPackageStatus,
+                                mTaskManager->mTasksByProvidedPackageStatus);
+    CPPUNIT_ASSERT_EQUAL(string("Chew gimer stick cane"),
+                         providedStatus1[0].name);
+    CPPUNIT_ASSERT_EQUAL(firstPackageStatus,
+                         providedStatus1[0].neededPackageStatus);
+    CPPUNIT_ASSERT_EQUAL(secondPackageStatus,
+                         providedStatus1[0].providedPackageStatus);
+    CPPUNIT_ASSERT(providedStatus1.size() == 1);
+
+    vector<TaskData> providedStatus2 = mTaskManager->getTasksByPackageStatus(
+                                thirdPackageStatus,
+                                mTaskManager->mTasksByProvidedPackageStatus);
+    CPPUNIT_ASSERT_EQUAL(string("Watch House M.D."),
+                         providedStatus2[0].name);
+    CPPUNIT_ASSERT_EQUAL(firstPackageStatus,
+                         providedStatus2[0].neededPackageStatus);
+    CPPUNIT_ASSERT_EQUAL(thirdPackageStatus,
+                         providedStatus2[0].providedPackageStatus);
+    CPPUNIT_ASSERT_EQUAL(string("Milk the platypus"),
+                         providedStatus2[1].name);
+    CPPUNIT_ASSERT_EQUAL(secondPackageStatus,
+                         providedStatus2[1].neededPackageStatus);
+    CPPUNIT_ASSERT_EQUAL(thirdPackageStatus,
+                         providedStatus2[1].providedPackageStatus);
+    CPPUNIT_ASSERT(providedStatus2.size() == 2);
+
+
+    //Not registered provided package status
+    vector<TaskData> providedStatus3 = mTaskManager->getTasksByPackageStatus(
+                                firstPackageStatus,
+                                mTaskManager->mTasksByProvidedPackageStatus);
+    CPPUNIT_ASSERT(providedStatus3.size() == 0);
 }

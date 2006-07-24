@@ -19,8 +19,10 @@
  ***************************************************************************/
 
 #include "TaskTestImplementation.h"
+#include "../package/status/PackageStatusTestImplementation.h"
 
 using lusi::package::Package;
+using lusi::package::status::PackageStatusTestImplementation;
 
 using namespace lusi::task;
 
@@ -29,20 +31,10 @@ using namespace lusi::task;
 TaskTestImplementation::TaskTestImplementation(const std::string& name,
                                 Package* package,
                                 TaskConfiguration* taskConfiguration):
-                Task(name, package, taskConfiguration) {
+                Task(name, package, taskConfiguration,
+                     PackageStatusTestImplementation::getFirstInstance(),
+                     PackageStatusTestImplementation::getSecondInstance()) {
 }
 
 TaskTestImplementation::~TaskTestImplementation() {
 }
-
-/*
-inline const lusi::package::status::PackageStatus*
-TaskTestImplementation::needsPackageStatus() const {
-    return lusi::package::status::UnknownPackageStatus::getInstance();
-}
-
-inline const lusi::package::status::PackageStatus*
-TaskTestImplementation::providesPackageStatus() const {
-    return lusi::package::status::UnknownPackageStatus::getInstance();
-}
-*/

@@ -25,15 +25,25 @@
 
 namespace lusi {
 namespace task {
+class TaskManager;
+}
+}
+
+namespace lusi {
+namespace task {
 
 /**
  * Test class for TaskManager.
  *
  * @see TaskManager
+ *
+ * TODO testGetRedoTask and testGetUndoTask
  */
 class TaskManagerTest: public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(TaskManagerTest);
     CPPUNIT_TEST(testSingleton);
+    CPPUNIT_TEST(testRegisterTask);
+    CPPUNIT_TEST(testGetTasksByPackageStatus);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -52,6 +62,24 @@ public:
      * Checks if getInstance() always returns the same not null reference.
      */
     void testSingleton();
+
+    /**
+     * Checks if the task is registered in the two internal multimaps.
+     */
+    void testRegisterTask();
+
+    /**
+     * Checks if the registered Tasks using the needed and provided
+     * PackageStatus are returned in the vector.
+     */
+    void testGetTasksByPackageStatus();
+
+private:
+
+    /**
+     * The TaskManager to test.
+     */
+    TaskManager* mTaskManager;
 
 };
 

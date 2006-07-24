@@ -19,9 +19,29 @@
  ***************************************************************************/
 
 #include "TaskManager.h"
+#include "Task.h"
+#include "TaskConfigurationManager.h"
+#include "../package/Package.h"
+#include "../package/Profile.h"
+#include "../package/status/BuiltPackageStatus.h"
+#include "../package/status/ConfiguredPackageStatus.h"
+#include "../package/status/InstalledPackageStatus.h"
+#include "../package/status/PackedPackageStatus.h"
+#include "../package/status/UnpackedPackageStatus.h"
+
+using std::make_pair;
+using std::multimap;
+using std::pair;
+using std::string;
+using std::vector;
 
 using lusi::package::Package;
-using lusi::task::Task;
+using lusi::package::status::PackageStatus;
+using lusi::package::status::BuiltPackageStatus;
+using lusi::package::status::ConfiguredPackageStatus;
+using lusi::package::status::InstalledPackageStatus;
+using lusi::package::status::PackedPackageStatus;
+using lusi::package::status::UnpackedPackageStatus;
 
 using namespace lusi::task;
 
@@ -38,18 +58,103 @@ TaskManager* TaskManager::getInstance() {
 TaskManager::~TaskManager() {
 }
 
-Task* TaskManager::getTask(Package* package) {
-    return 0;
+//TODO handle several valid Tasks registered with the same needed status
+Task* TaskManager::getRedoTask(Package* package) {
+    Task* task = package->getProfile()->getRedoTask();
+    if (task != 0) {
+        if (task->test()) {
+            return task;
+        }
+        delete task;
+    }
+    task = 0;
+
+    vector<TaskData> tasks = getTasksByPackageStatus(
+                    package->getPackageStatus(), mTasksByNeededPackageStatus);
+    for (vector<TaskData>::const_iterator iterator = tasks.begin();
+                iterator != tasks.end() && task == 0; ++iterator) {
+        task = new Task((*iterator).name, package,
+                TaskConfigurationManager::getInstance()->getTaskConfiguration(
+                        package->getPackageId()),
+                (*iterator).neededPackageStatus,
+                (*iterator).providedPackageStatus);
+        if (!task->test()) {
+            delete task;
+            task = 0;
+        }
+    }
+
+    return task;
 }
 
+//TODO handle several valid Tasks registered with the same provided status
+//TODO should only get UndoTask from Profile?
 Task* TaskManager::getUndoTask(Package* package) {
-    return 0;
+    Task* task = package->getProfile()->getUndoTask();
+    if (task != 0) {
+        return task;
+    }
+
+    vector<TaskData> tasks = getTasksByPackageStatus(
+                    package->getPackageStatus(), mTasksByProvidedPackageStatus);
+    for (vector<TaskData>::const_iterator iterator = tasks.begin();
+                iterator != tasks.end() && task == 0; ++iterator) {
+        task = new Task((*iterator).name, package,
+                TaskConfigurationManager::getInstance()->getTaskConfiguration(
+                        package->getPackageId()),
+                (*iterator).neededPackageStatus,
+                (*iterator).providedPackageStatus);
+        if (!task->test()) {
+            delete task;
+            task = 0;
+        }
+    }
+
+    return task;
+}
+
+void TaskManager::registerTask(const string& name,
+                               const PackageStatus* neededPackageStatus,
+                               const PackageStatus* providedPackageStatus) {
+    TaskData taskData;
+    taskData.name = name;
+    taskData.neededPackageStatus = neededPackageStatus;
+    taskData.providedPackageStatus = providedPackageStatus;
+
+    mTasksByNeededPackageStatus.insert(make_pair(neededPackageStatus,
+                                                 taskData));
+    mTasksByProvidedPackageStatus.insert(make_pair(providedPackageStatus,
+                                                   taskData));
 }
 
 //private:
 
 TaskManager* TaskManager::sInstance = 0;
 
-TaskManager::TaskManager() {
+TaskManager::TaskManager(): mTasksByNeededPackageStatus(),
+                    mTasksByProvidedPackageStatus() {
+    registerTask("BuildTask", ConfiguredPackageStatus::getInstance(),
+                 BuiltPackageStatus::getInstance());
+    registerTask("ConfigureTask", UnpackedPackageStatus::getInstance(),
+                 ConfiguredPackageStatus::getInstance());
+    registerTask("ExtractTask", PackedPackageStatus::getInstance(),
+                 UnpackedPackageStatus::getInstance());
+    registerTask("InstallTask", BuiltPackageStatus::getInstance(),
+                 InstalledPackageStatus::getInstance());
 }
 
+vector<TaskManager::TaskData> TaskManager::getTasksByPackageStatus(
+                                    const PackageStatus* packageStatus,
+                                    const multimap<const PackageStatus*,
+                                                   TaskData>& tasksMultimap) {
+    vector<TaskData> taskDatas;
+
+    typedef multimap<const PackageStatus*, TaskData>::const_iterator iterator;
+    for (pair<iterator, iterator> range =
+                    tasksMultimap.equal_range(packageStatus);
+            range.first != range.second; ++range.first) {
+       taskDatas.push_back(range.first->second);
+    }
+
+    return taskDatas;
+}

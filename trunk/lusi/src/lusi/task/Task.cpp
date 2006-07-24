@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "Task.h"
+#include "TaskConfiguration.h"
 #include "TaskLogger.h"
 #include "TaskProgress.h"
 #include "helper/TaskHelper.h"
@@ -30,57 +31,104 @@ using std::vector;
 using lusi::task::helper::TaskHelper;
 using lusi::task::helper::TaskHelperManager;
 using lusi::package::Package;
+using lusi::package::status::PackageStatus;
 
 using namespace lusi::task;
 
 //public:
+
+Task::Task(const string& name, Package* package,
+           TaskConfiguration* taskConfiguration,
+           const PackageStatus* neededPackageStatus,
+           const PackageStatus* providedPackageStatus) {
+    mName = name;
+    mPackage = package;
+    mTaskConfiguration = taskConfiguration;
+    mNeededPackageStatus = neededPackageStatus;
+    mProvidedPackageStatus = providedPackageStatus;
+
+    //mName must be set before calling getTaskHelpers, as it uses getName()
+    mTaskHelpers = TaskHelperManager::getInstance()->getTaskHelpers(this);
+
+    mTaskLogger = new TaskLogger(this);
+    mTaskProgress = new TaskProgress(this);
+}
 
 Task::~Task() {
     for (vector<TaskHelper*>::const_iterator iterator = mTaskHelpers.begin();
             iterator != mTaskHelpers.end(); ++iterator) {
         delete *iterator;
     }
+
+    delete mTaskConfiguration;
+    delete mTaskLogger;
+    delete mTaskProgress;
 }
 
-const string& Task::getName() const {
+/*
+inline const string& Task::getName() const {
     return mName;
 }
 
-Package* Task::getPackage() {
+inline Package* Task::getPackage() {
+    return mPackage;
 }
 
-TaskConfiguration* Task::getTaskConfiguration() {
+inline TaskConfiguration* Task::getTaskConfiguration() {
+    return mTaskConfiguration;
 }
 
-TaskLogger Task::getTaskLogger() {
+inline TaskLogger* Task::getTaskLogger() {
+    return mTaskLogger;
 }
 
-TaskProgress Task::getProgress() {
+inline TaskProgress* Task::getTaskProgress() {
+    return mTaskProgress;
 }
+*/
 
+//TODO implement a better test logic
 bool Task::test() {
+    return mTaskHelpers.size() > 0;
 }
 
+//TODO throw exception if Task couldn't be done? Return false?
+//TODO add configuration checkings
+//TODO add support for several suitable TaskHelpers
 void Task::redo() {
+    TaskHelper* taskHelper = getRedoHelper();
+    if (taskHelper != 0) {
+        taskHelper->execute();
+    }
 }
 
+//TODO throw exception if Task couldn't be undone? Return false?
 void Task::undo() {
-}
-
-//protected:
-
-Task::Task(const string& name, Package* package,
-            TaskConfiguration* taskConfiguration) {
-    mName = name;
-
-    //mName must be set before calling getTaskHelpers, as it uses getName()
-    mTaskHelpers = TaskHelperManager::getInstance()->getTaskHelpers(this);
+    TaskHelper* taskHelper = getUndoHelper();
+    if (taskHelper != 0) {
+        taskHelper->revert();
+    }
 }
 
 //private:
 
 TaskHelper* Task::getRedoHelper() {
+    //TODO get TaskHelper from TaskConfiguration
+    static vector<TaskHelper*>::const_iterator iterator = mTaskHelpers.begin();
+
+    TaskHelper* taskHelper = 0;
+    bool validTaskHelper = false;
+    for (; !validTaskHelper && iterator != mTaskHelpers.end(); ++iterator) {
+        taskHelper = *iterator;
+        if (taskHelper->hasValidResourceMap()) {
+            validTaskHelper = true;
+        }
+    }
+
+    return taskHelper;
 }
 
 TaskHelper* Task::getUndoHelper() {
+    //TODO get TaskHelper from TaskConfiguration
+    return 0;
 }

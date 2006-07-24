@@ -96,12 +96,12 @@ namespace task {
  *
  * The Task can also notify the operations executed and the progress when doing
  * or undoing the task. There are Loggers for both events, which can be got
- * with getTaskLogger() and getProgress() methods.
+ * with getTaskLogger() and getTaskProgress() methods.
  *
  * Tasks are identified by their name, so it must be unique. Two different tasks
- * can't both need and provide the same PackageStatus. The methods that return
- * the needed and provided PackageStatus must be implemented in derived
- * classes.
+ * can't both need and provide the same PackageStatus. Tasks should be
+ * registered with TaskManager using the name and the needed and provided
+ * PackageStatus.
  *
  * Task shouldn't be created directly. Instead, use
  * TaskManager::getTask(lusi::package::Package*) and
@@ -117,6 +117,21 @@ class Task {
 public:
 
     /**
+     * Creates a new Task.
+     *
+     * @param name The name of the Task.
+     * @param package The Package to use.
+     * @param taskConfiguration The TaskConfiguration to use.
+     * @param neededPackageStatus The PackageStatus needed to execute this Task.
+     * @param providedPackageStatus The PackageStatus this Task provides once
+     *                              it was executed.
+     */
+    Task(const std::string& name, lusi::package::Package* package,
+         TaskConfiguration* taskConfiguration,
+         const lusi::package::status::PackageStatus* neededPackageStatus,
+         const lusi::package::status::PackageStatus* providedPackageStatus);
+
+    /**
      * Destroys this Task.
      * The Package and TaskConfiguration used aren't deleted when destroying
      * the Task.
@@ -124,46 +139,53 @@ public:
     virtual ~Task();
 
     /**
-     * Returns the PackageStatus needed to execute this Task.
-     * The status is read only, and this is an accessor method.
-     * Must be implemented in derived classes.
-     *
-     * @return The PackageStatus needed.
-     */
-    virtual const lusi::package::status::PackageStatus* needsPackageStatus()
-                                                            const = 0;
-
-    /**
-     * Returns the PackageStatus this Task provides once it was executed.
-     * The status is read only, and this is an accessor method.
-     * Must be implemented in derived classes.
-     *
-     * @return The PackageStatus provided.
-     */
-    virtual const lusi::package::status::PackageStatus* providesPackageStatus()
-                                                            const = 0;
-
-    /**
      * Returns the name of this Task.
      * The name is read only, and this is an accessor method.
      *
      * @return The name of this Task.
      */
-    const std::string& getName() const;
+    const std::string& getName() const {
+        return mName;
+    }
 
     /**
      * Returns the Package used by this Task.
      *
      * @return The Package of this Task.
      */
-    lusi::package::Package* getPackage();
+    lusi::package::Package* getPackage() {
+        return mPackage;
+    }
 
     /**
      * Returns the TaskConfiguration used by this Task.
      *
      * @return The TaskConfiguration used by this Task.
      */
-    TaskConfiguration* getTaskConfiguration();
+    TaskConfiguration* getTaskConfiguration() {
+        return mTaskConfiguration;
+    }
+
+    /**
+     * Returns the PackageStatus needed to execute this Task.
+     * The status is read only, and this is an accessor method.
+     *
+     * @return The PackageStatus needed.
+     */
+    const lusi::package::status::PackageStatus* getNeededPackageStatus() const {
+        return mNeededPackageStatus;
+    }
+
+    /**
+     * Returns the PackageStatus this Task provides once it was executed.
+     * The status is read only, and this is an accessor method.
+     *
+     * @return The PackageStatus provided.
+     */
+    const lusi::package::status::PackageStatus* getProvidedPackageStatus()
+                                                            const {
+        return mProvidedPackageStatus;
+    }
 
     /**
      * Returns the TaskLogger which notifies all the operations made when
@@ -171,7 +193,9 @@ public:
      *
      * @return The TaskLogger for the operations made executing the Task.
      */
-    TaskLogger getTaskLogger();
+    TaskLogger* getTaskLogger() {
+        return mTaskLogger;
+    }
 
     /**
      * Returns the TaskProgress which notifies all the changes in the progress
@@ -180,13 +204,16 @@ public:
      * @return The TaskProgress which notifies the progress made executing this
      *         Task.
      */
-    TaskProgress getProgress();
+    TaskProgress* getTaskProgress() {
+        return mTaskProgress;
+    }
 
     /**
      * Checks if the Task can be executed using the Package and
      * TaskConfiguration specified.
      *
      * @return True if it can be executed, false otherwise.
+     * TODO add testUndo?
      */
     bool test();
 
@@ -213,16 +240,6 @@ public:
 
 protected:
 
-    /**
-     * Creates a new Task.
-     *
-     * @param name The name of the Task.
-     * @param package The Package to use.
-     * @param taskConfiguration The TaskConfiguration to use.
-     */
-    Task(const std::string& name, lusi::package::Package* package,
-         TaskConfiguration* taskConfiguration);
-
 private:
 
     /**
@@ -241,9 +258,31 @@ private:
     TaskConfiguration* mTaskConfiguration;
 
     /**
+     * The PackageStatus needed to execute this Task.
+     */
+    const lusi::package::status::PackageStatus* mNeededPackageStatus;
+
+    /**
+     * The PackageStatus this Task provides once it was executed.
+     */
+    const lusi::package::status::PackageStatus* mProvidedPackageStatus;
+
+    /**
      * The TaskHelpers for this Task.
      */
     std::vector<lusi::task::helper::TaskHelper*> mTaskHelpers;
+
+    /**
+     * The TaskLogger which notifies all the operations made when executing the
+     * Task.
+     */
+    TaskLogger* mTaskLogger;
+
+    /**
+     * The TaskProgress which notifies all the changes in the progress made
+     * executing this Task.
+     */
+    TaskProgress* mTaskProgress;
 
 
 

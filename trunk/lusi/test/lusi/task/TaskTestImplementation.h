@@ -22,15 +22,13 @@
 #define LUSI_TASK_TASKTESTIMPLEMENTATION_H
 
 #include <lusi/task/Task.h>
-#include <lusi/package/status/UnknownPackageStatus.h>
 
 namespace lusi {
 namespace task {
 
 /**
  * Implementation of Task for testing purposes.
- * This class helps testing Task class non-abstract methods, and also to
- * be used where Task objects are needed.
+ * This class helps testing where Task objects are needed.
  */
 class TaskTestImplementation: public Task {
 public:
@@ -50,26 +48,6 @@ public:
      * Destroys this TaskTestImplementation.
      */
     virtual ~TaskTestImplementation();
-
-    /**
-     * Returns UnknownPackageStatus.
-     *
-     * @return UnknownPackageStatus instance.
-     */
-    virtual const lusi::package::status::PackageStatus* needsPackageStatus()
-                                                                const {
-        return lusi::package::status::UnknownPackageStatus::getInstance();
-    };
-
-    /**
-     * Returns UnknownPackageStatus.
-     *
-     * @return UnknownPackageStatus instance.
-     */
-    virtual const lusi::package::status::PackageStatus* providesPackageStatus()
-                                                                const {
-        return lusi::package::status::UnknownPackageStatus::getInstance();
-    };
 
 };
 
