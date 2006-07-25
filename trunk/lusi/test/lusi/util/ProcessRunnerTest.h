@@ -50,8 +50,7 @@ public:
 
     /**
      * Sets up context before running a test.
-     * Creates all the observers and the Process, and attachs the observers to
-     * the Process.
+     * Creates the ProcessRunner and the Process.
      */
     virtual void setUp();
 
