@@ -100,7 +100,9 @@ public:
      *
      * @param directory The directory to set the working directory to.
      */
-    void setWorkingDirectory(const std::string& workingDirectory);
+    void setWorkingDirectory(const std::string& workingDirectory) {
+        mWorkingDirectory = workingDirectory;
+    }
 
     /**
      * Adds a new observer to be notified when an update happens in this

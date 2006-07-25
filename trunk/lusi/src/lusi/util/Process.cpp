@@ -38,9 +38,11 @@ Process* Process::newProcess() {
 Process::~Process() {
 }
 
-void Process::setWorkingDirectory(const string& workingDirectory) {
+/*
+inline void Process::setWorkingDirectory(const string& workingDirectory) {
     mWorkingDirectory = workingDirectory;
 }
+*/
 
 void Process::attachObserver(ProcessObserver* processObserver) {
     if (find(mProcessObservers.begin(), mProcessObservers.end(),
