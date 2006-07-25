@@ -18,20 +18,60 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "UtilTestSuite.h"
-#include "ProcessTest.h"
-#include "ProcessLinuxTest.h"
 #include "ProcessRunnerTest.h"
+
+#define protected public
+#include "ProcessTestImplementation.h"
+#undef protected
+
+#include "ProcessRunner.h"
+
+using std::string;
 
 using namespace lusi::util;
 
 //public:
 
-UtilTestSuite::UtilTestSuite() {
-    //Own namespace Tests
-    addTest(ProcessTest::suite());
-    addTest(ProcessLinuxTest::suite());
-    addTest(ProcessRunnerTest::suite());
+void ProcessRunnerTest::setUp() {
+    mProcess = new ProcessTestImplementation();
+    mProcessRunner = new ProcessRunner(mProcess);
+}
 
-    //Direct child namespaces TestSuites
+void ProcessRunnerTest::tearDown() {
+    delete mProcessRunner;
+}
+
+void ProcessRunnerTest::testGetProcess() {
+    CPPUNIT_ASSERT_EQUAL(mProcess, mProcessRunner->getProcess());
+    delete mProcessRunner;
+
+
+    //Test default value
+    mProcessRunner = new ProcessRunner();
+    CPPUNIT_ASSERT(mProcessRunner->getProcess() != 0);
+    CPPUNIT_ASSERT(mProcessRunner->getProcess()->getArguments().size() == 0);
+}
+
+void ProcessRunnerTest::testGetStdoutData() {
+    mProcess->notifyReceivedStdout("Worst. ");
+    mProcess->notifyReceivedStdout("Library. ");
+    mProcess->notifyReceivedStdout("Ever.\n");
+
+    CPPUNIT_ASSERT_EQUAL(string("Worst. Library. Ever.\n"),
+                         mProcessRunner->getStdoutData());
+}
+
+void ProcessRunnerTest::testGetStderrData() {
+    mProcess->notifyReceivedStderr("D'oh! ");
+    mProcess->notifyReceivedStderr("D'oh? ");
+    mProcess->notifyReceivedStderr("D'oh.\n");
+
+    CPPUNIT_ASSERT_EQUAL(string("D'oh! D'oh? D'oh.\n"),
+                         mProcessRunner->getStderrData());
+}
+
+void ProcessRunnerTest::testGetProcessExitedNumber() {
+    mProcess->notifyProcessExited();
+
+    CPPUNIT_ASSERT_EQUAL(1, mProcessRunner->getProcessExitedNumber());
 }

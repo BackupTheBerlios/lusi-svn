@@ -18,20 +18,53 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "UtilTestSuite.h"
-#include "ProcessTest.h"
-#include "ProcessLinuxTest.h"
-#include "ProcessRunnerTest.h"
+#include "ProcessRunner.h"
+
+using std::string;
 
 using namespace lusi::util;
 
-//public:
+ProcessRunner::ProcessRunner(Process* process /*= Process::newProcess()*/) {
+    mProcess = process;
+    mStdoutData = string("");
+    mStderrData = string("");
+    mProcessExitedNumber = 0;
 
-UtilTestSuite::UtilTestSuite() {
-    //Own namespace Tests
-    addTest(ProcessTest::suite());
-    addTest(ProcessLinuxTest::suite());
-    addTest(ProcessRunnerTest::suite());
-
-    //Direct child namespaces TestSuites
+    mProcess->attachObserver(this);
 }
+
+ProcessRunner::~ProcessRunner() {
+    delete mProcess;
+}
+
+/*
+inline void ProcessRunner::receivedStdout(Process* process,
+                                          const string& data) {
+    mStdoutData += data;
+}
+
+inline void ProcessRunner::receivedStderr(Process* process,
+                                          const string& data) {
+    mStderrData += data;
+}
+
+inline void ProcessRunner::processExited(Process* process) {
+    mProcessExitedNumber++;
+}
+
+inline Process* ProcessRunner::getProcess() {
+    return mProcess;
+}
+
+inline const std::string& ProcessRunner::getStdoutData() const {
+    return mStdoutData;
+}
+
+inline const std::string& ProcessRunner::getStderrData() const {
+    return mStderrData;
+}
+
+inline int ProcessRunner::getProcessExitedNumber() const {
+    return mProcessExitedNumber;
+}
+*/
