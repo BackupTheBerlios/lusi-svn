@@ -28,8 +28,8 @@ namespace util {
 
 /**
  * Implementation of Process abstract class for testing purposes.
- * The abstract method have empty implementations. It's used to test the already
- * implemented methods in Process.
+ * The abstract methods have empty implementations. It's used to test the
+ * already implemented methods in Process.
  */
 class ProcessTestImplementation: public Process {
 public:
@@ -46,23 +46,8 @@ public:
 
     /**
      * Empty implementation.
-     *
-     * @param directory Not used.
-     */
-    virtual void setWorkingDirectory(const std::string& directory);
-
-    /**
-     * Empty implementation.
      */
     virtual void start() throw (ProcessException);
-
-    /**
-     * Empty implementation.
-     *
-     * @param arg Not used.
-     * @return This ProcessTestImplementation.
-     */
-    virtual Process& operator<<(const std::string& argument);
 
 };
 

@@ -40,8 +40,10 @@ namespace util {
  */
 class ProcessTest: public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(ProcessTest);
+    CPPUNIT_TEST(testSetWorkingDirectory);
     CPPUNIT_TEST(testAttachObserver);
     CPPUNIT_TEST(testDetachObserver);
+    CPPUNIT_TEST(testOperatorAppend);
     CPPUNIT_TEST(testNotifyReceivedStdout);
     CPPUNIT_TEST(testNotifyReceivedStderr);
     CPPUNIT_TEST(testNotifyProcessExited);
@@ -62,6 +64,11 @@ public:
     virtual void tearDown();
 
     /**
+     * Tests if the working directory is set in the mWorkingDirectory attribute.
+     */
+    void testSetWorkingDirectory();
+
+    /**
      * Tests if ProcessObservers are attached as they should.
      */
     void testAttachObserver();
@@ -70,6 +77,11 @@ public:
      * Tests if ProcessObservers are detached as they should.
      */
     void testDetachObserver();
+
+    /**
+     * Tests if the operator << appends arguments to the arguments list.
+     */
+    void testOperatorAppend();
 
     /**
      * Tests if the registered observers are notified when new data is received

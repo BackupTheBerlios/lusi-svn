@@ -21,6 +21,7 @@
 #ifndef LUSI_UTIL_PROCESS_H
 #define LUSI_UTIL_PROCESS_H
 
+#include <string>
 #include <vector>
 
 #include <lusi/util/ProcessException.h>
@@ -81,16 +82,6 @@ public:
     virtual ~Process();
 
     /**
-     * Sets the current working directory of this process.
-     * This function must be called before starting this Process.
-     *
-     * Must be implemented in derived classes.
-     *
-     * @param directory The directory to set the working directory to.
-     */
-    virtual void setWorkingDirectory(const std::string& workingDirectory) = 0;
-
-    /**
      * Starts this process.
      * The ProcessException are refered to problems when trying to execute the
      * process (like a command not found), not errors in the process itself
@@ -104,17 +95,12 @@ public:
     virtual void start() throw (ProcessException) = 0;
 
     /**
-     * Sets the executable or adds a new argument to the process to be executed.
-     * The executable and the arguments list must be added using this method.
-     * The first call must set the executable name (or the full path to it), and
-     * later calls all the needed arguments.
+     * Sets the current working directory of this process.
+     * This function must be called before starting this Process.
      *
-     * Must be implemented in derived classes.
-     *
-     * @param arg The executable to set or argument to add.
-     * @return This Process instance.
+     * @param directory The directory to set the working directory to.
      */
-    virtual Process& operator<<(const std::string& argument) = 0;
+    void setWorkingDirectory(const std::string& workingDirectory);
 
     /**
      * Adds a new observer to be notified when an update happens in this
@@ -135,7 +121,31 @@ public:
      */
     void detachObserver(ProcessObserver* processObserver);
 
+    /**
+     * Sets the executable or adds a new argument to the process to be executed.
+     * The executable and the arguments list must be added using this method.
+     * The first call must set the executable name (or the full path to it), and
+     * later calls all the needed arguments.
+     *
+     * @param arg The executable to set or argument to add.
+     * @return This Process instance.
+     */
+    Process& operator<<(const std::string& argument);
+
 protected:
+
+    /**
+     * The executable and arguments list.
+     * First element is the executable. The others are the arguments.
+     */
+    std::vector<std::string> mArguments;
+
+    /**
+     * Working directory for the process.
+     */
+    std::string mWorkingDirectory;
+
+
 
     /**
      * Creates a new Process.

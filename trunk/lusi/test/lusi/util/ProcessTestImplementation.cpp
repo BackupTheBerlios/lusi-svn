@@ -20,8 +20,6 @@
 
 #include "ProcessTestImplementation.h"
 
-using std::string;
-
 using namespace lusi::util;
 
 //public:
@@ -33,12 +31,5 @@ ProcessTestImplementation::ProcessTestImplementation():
 ProcessTestImplementation::~ProcessTestImplementation() {
 }
 
-void ProcessTestImplementation::setWorkingDirectory(const string& directory) {
-}
-
 void ProcessTestImplementation::start() throw (ProcessException) {
-}
-
-Process& ProcessTestImplementation::operator<<(const string& argument) {
-    return *this;
 }

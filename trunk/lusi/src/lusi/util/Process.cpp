@@ -38,6 +38,10 @@ Process* Process::newProcess() {
 Process::~Process() {
 }
 
+void Process::setWorkingDirectory(const string& workingDirectory) {
+    mWorkingDirectory = workingDirectory;
+}
+
 void Process::attachObserver(ProcessObserver* processObserver) {
     if (find(mProcessObservers.begin(), mProcessObservers.end(),
                     processObserver) != mProcessObservers.end()) {
@@ -57,9 +61,16 @@ void Process::detachObserver(ProcessObserver* processObserver) {
     }
 }
 
+Process& Process::operator<<(const string& argument) {
+    mArguments.push_back(argument);
+    return *this;
+}
+
 //protected:
 
 Process::Process() {
+    mArguments = vector<string>();
+    mWorkingDirectory = string();
     mProcessObservers = vector<ProcessObserver*>();
 }
 

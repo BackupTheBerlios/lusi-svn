@@ -47,17 +47,6 @@ void ProcessLinuxTest::tearDown() {
     delete mProcessObserver;
 }
 
-void ProcessLinuxTest::testOperatorAppend() {
-    *mProcessLinux << "/bin/echo" << "Hello World!\n" << "Bye!";
-
-    CPPUNIT_ASSERT_EQUAL(string("/bin/echo"),
-            mProcessLinux->mArguments[0]);
-    CPPUNIT_ASSERT_EQUAL(string("Hello World!\n"),
-            mProcessLinux->mArguments[1]);
-    CPPUNIT_ASSERT_EQUAL(string("Bye!"),
-            mProcessLinux->mArguments[2]);
-}
-
 void ProcessLinuxTest::testNotifyReceivedStdout() {
     *mProcessLinux << "/bin/echo" << "Hello World!\nBye!";
     mProcessLinux->start();

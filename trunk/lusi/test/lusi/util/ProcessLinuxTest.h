@@ -41,7 +41,6 @@ namespace util {
 class ProcessLinuxTest: public CppUnit::TestFixture {
 public:
     CPPUNIT_TEST_SUITE(ProcessLinuxTest);
-    CPPUNIT_TEST(testOperatorAppend);
     CPPUNIT_TEST(testNotifyReceivedStdout);
     CPPUNIT_TEST(testNotifyReceivedStderr);
     CPPUNIT_TEST(testNotifyProcessExited);
@@ -62,11 +61,6 @@ public:
      * Cleans up after the test run.
      */
     virtual void tearDown();
-
-    /**
-     * Tests if the operator << appends arguments to the arguments list.
-     */
-    void testOperatorAppend();
 
     /**
      * Tests if the registered observers are notified when new data is received

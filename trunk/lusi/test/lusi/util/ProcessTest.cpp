@@ -54,6 +54,18 @@ void ProcessTest::tearDown() {
     delete mProcess;
 }
 
+void ProcessTest::testSetWorkingDirectory() {
+    mProcess->setWorkingDirectory("/");
+
+    CPPUNIT_ASSERT_EQUAL(string("/"), mProcess->mWorkingDirectory);
+
+
+    //Test with another directory
+    mProcess->setWorkingDirectory("/etc");
+
+    CPPUNIT_ASSERT_EQUAL(string("/etc"), mProcess->mWorkingDirectory);
+}
+
 void ProcessTest::testAttachObserver() {
     CPPUNIT_ASSERT(mProcess->mProcessObservers.size() == 3);
     CPPUNIT_ASSERT_EQUAL(mProcessObserver1, mProcess->mProcessObservers[0]);
@@ -88,6 +100,17 @@ void ProcessTest::testDetachObserver() {
     mProcess->detachObserver(mProcessObserver3);
 
     CPPUNIT_ASSERT(mProcess->mProcessObservers.size() == 0);
+}
+
+void ProcessTest::testOperatorAppend() {
+    *mProcess << "/bin/echo" << "Hello World!\n" << "Bye!";
+
+    CPPUNIT_ASSERT_EQUAL(string("/bin/echo"),
+            mProcess->mArguments[0]);
+    CPPUNIT_ASSERT_EQUAL(string("Hello World!\n"),
+            mProcess->mArguments[1]);
+    CPPUNIT_ASSERT_EQUAL(string("Bye!"),
+            mProcess->mArguments[2]);
 }
 
 void ProcessTest::testNotifyReceivedStdout() {

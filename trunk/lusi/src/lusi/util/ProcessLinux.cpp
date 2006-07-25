@@ -33,14 +33,10 @@ using namespace lusi::util;
 
 //public:
 
-ProcessLinux::ProcessLinux(): Process(), mArguments(), mWorkingDirectory() {
+ProcessLinux::ProcessLinux(): Process() {
 }
 
 ProcessLinux::~ProcessLinux() {
-}
-
-void ProcessLinux::setWorkingDirectory(const string& workingDirectory) {
-    mWorkingDirectory = workingDirectory;
 }
 
 void ProcessLinux::start() throw (ProcessException) {
@@ -97,11 +93,6 @@ void ProcessLinux::start() throw (ProcessException) {
     closeCommunicationChannels();
 
     notifyProcessExited();
-}
-
-Process& ProcessLinux::operator<<(const string& argument) {
-    mArguments.push_back(argument);
-    return *this;
 }
 
 //private:

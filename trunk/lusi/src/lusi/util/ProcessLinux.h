@@ -21,9 +21,6 @@
 #ifndef LUSI_UTIL_PROCESSLINUX_H
 #define LUSI_UTIL_PROCESSLINUX_H
 
-#include <string>
-#include <vector>
-
 #include <lusi/util/Process.h>
 
 namespace lusi {
@@ -53,13 +50,6 @@ public:
     ~ProcessLinux();
 
     /**
-     * Sets the current working directory of this process.
-     *
-     * @param directory The directory to set the working directory to.
-     */
-    virtual void setWorkingDirectory(const std::string& workingDirectory);
-
-    /**
      * Starts this process.
      *
      * In order to execute the process, two forks are made. One for the process
@@ -80,14 +70,6 @@ public:
      */
     virtual void start() throw (ProcessException);
 
-    /**
-     * Sets the executable or adds a new argument to the process to be executed.
-     *
-     * @param arg The executable to set or argument to add.
-     * @return This Process instance.
-     */
-    virtual Process& operator<<(const std::string& argument);
-
 private:
 
     /**
@@ -99,17 +81,6 @@ private:
         forkError,
         executionError
     };
-
-    /**
-     * The executable and arguments list.
-     * First element is the executable. The others are the arguments.
-     */
-    std::vector<std::string> mArguments;
-
-    /**
-     * Working directory for the process.
-     */
-    std::string mWorkingDirectory;
 
     /**
      * Pipe to get executed process stdout.
