@@ -39,6 +39,10 @@ Process::~Process() {
 }
 
 /*
+inline const std::vector<std::string>& getArguments() {
+    return mArguments;
+}
+
 inline void Process::setWorkingDirectory(const string& workingDirectory) {
     mWorkingDirectory = workingDirectory;
 }

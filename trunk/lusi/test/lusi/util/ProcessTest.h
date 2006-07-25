@@ -40,6 +40,7 @@ namespace util {
  */
 class ProcessTest: public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(ProcessTest);
+    CPPUNIT_TEST(testGetArguments);
     CPPUNIT_TEST(testSetWorkingDirectory);
     CPPUNIT_TEST(testAttachObserver);
     CPPUNIT_TEST(testDetachObserver);
@@ -62,6 +63,12 @@ public:
      * Cleans up after the test run.
      */
     virtual void tearDown();
+
+    /**
+     * Tests if the arguments returned are the same as the added with
+     * operator<<.
+     */
+    void testGetArguments();
 
     /**
      * Tests if the working directory is set in the mWorkingDirectory attribute.

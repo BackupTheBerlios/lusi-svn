@@ -54,6 +54,17 @@ void ProcessTest::tearDown() {
     delete mProcess;
 }
 
+void ProcessTest::testGetArguments() {
+    *mProcess << "/bin/echo" << "Hello World!\n" << "Bye!";
+
+    CPPUNIT_ASSERT_EQUAL(string("/bin/echo"),
+            mProcess->getArguments()[0]);
+    CPPUNIT_ASSERT_EQUAL(string("Hello World!\n"),
+            mProcess->getArguments()[1]);
+    CPPUNIT_ASSERT_EQUAL(string("Bye!"),
+            mProcess->getArguments()[2]);
+}
+
 void ProcessTest::testSetWorkingDirectory() {
     mProcess->setWorkingDirectory("/");
 

@@ -95,6 +95,18 @@ public:
     virtual void start() throw (ProcessException) = 0;
 
     /**
+     * Returns the list of arguments of this Process.
+     * The first element is the executable name (or the full path to it), and
+     * later elements all the needed arguments.
+     * The arguments are set using operator<<(std::string)
+     *
+     * @return The list of arguments of this Process.
+     */
+    const std::vector<std::string>& getArguments() {
+        return mArguments;
+    }
+
+    /**
      * Sets the current working directory of this process.
      * This function must be called before starting this Process.
      *
