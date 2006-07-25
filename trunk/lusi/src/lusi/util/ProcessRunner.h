@@ -34,6 +34,8 @@ namespace lusi {
 namespace util {
 
 /**
+ * @class ProcessRunner ProcessRunner.h lusi/util/ProcessRunner.h
+ *
  * A wrapper class to run a Process.
  * The only utility of this class is run a Process and then get all the data
  * received in stdout and stderr at the same time.
