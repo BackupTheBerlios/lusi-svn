@@ -61,6 +61,17 @@ friend class lusi::task::helper::TaskHelper;
 public:
 
     /**
+     * This value represents the progress of a Task which hasn't been started
+     * yet.
+     */
+    static const int UNSTARTED = 0;
+
+    /**
+     * This value represents the progress of a Task which has been finished.
+     */
+    static const int FINISHED = 100;
+
+    /**
      * Creates a new TaskProgress.
      *
      * @param task The Task which mades the progress.

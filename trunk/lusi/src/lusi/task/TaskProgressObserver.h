@@ -35,8 +35,9 @@ namespace task {
  * lusi/util/TaskProgressObserver.h
  *
  * Interface to observe progress in the execution of a Task.
- * Updates values are integers in the range from 0 to 100. They represent the
- * percenteage of execution of the Task.
+ * Updates values are integers in the range from TaskProgress::UNSTARTED (0) to
+ * TaskProgress::FINISHED (100). They represent the percenteage of execution of
+ * the Task.
  *
  * @see TaskProgress
  */
