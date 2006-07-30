@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "UtilTestSuite.h"
+#include "LocalUrlTest.h"
 #include "ProcessTest.h"
 #include "ProcessLinuxTest.h"
 #include "ProcessRunnerTest.h"
@@ -29,6 +30,7 @@ using namespace lusi::util;
 
 UtilTestSuite::UtilTestSuite() {
     //Own namespace Tests
+    addTest(LocalUrlTest::suite());
     addTest(ProcessTest::suite());
     addTest(ProcessLinuxTest::suite());
     addTest(ProcessRunnerTest::suite());
