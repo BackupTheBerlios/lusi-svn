@@ -39,8 +39,12 @@ Process::~Process() {
 }
 
 /*
-inline const std::vector<std::string>& getArguments() {
+inline const vector<string>& getArguments() {
     return mArguments;
+}
+
+inline const string& getWorkingDirectory() const {
+    return mWorkingDirectory;
 }
 
 inline void Process::setWorkingDirectory(const string& workingDirectory) {
@@ -68,7 +72,9 @@ void Process::detachObserver(ProcessObserver* processObserver) {
 }
 
 Process& Process::operator<<(const string& argument) {
-    mArguments.push_back(argument);
+    if (!argument.empty()) {
+        mArguments.push_back(argument);
+    }
     return *this;
 }
 

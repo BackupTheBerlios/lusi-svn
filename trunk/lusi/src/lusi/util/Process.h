@@ -102,12 +102,21 @@ public:
      *
      * @return The list of arguments of this Process.
      */
-    const std::vector<std::string>& getArguments() {
+    const std::vector<std::string>& getArguments() const {
         return mArguments;
     }
 
     /**
-     * Sets the current working directory of this process.
+     * Returns the current working directory of this Process.
+     *
+     * @return The current working directory of this Process.
+     */
+    const std::string& getWorkingDirectory() const {
+        return mWorkingDirectory;
+    }
+
+    /**
+     * Sets the current working directory of this Process.
      * This function must be called before starting this Process.
      *
      * @param directory The directory to set the working directory to.
@@ -140,6 +149,7 @@ public:
      * The executable and the arguments list must be added using this method.
      * The first call must set the executable name (or the full path to it), and
      * later calls all the needed arguments.
+     * Empty arguments are ignored.
      *
      * @param arg The executable to set or argument to add.
      * @return This Process instance.

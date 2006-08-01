@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include <string>
+#include <vector>
 
 #include "ProcessTest.h"
 
@@ -31,6 +32,7 @@
 #include "ProcessObserverTestImplementation.h"
 
 using std::string;
+using std::vector;
 
 using namespace lusi::util;
 
@@ -65,6 +67,18 @@ void ProcessTest::testGetArguments() {
             mProcess->getArguments()[2]);
 }
 
+void ProcessTest::testGetWorkingDirectory() {
+    mProcess->mWorkingDirectory = "/";
+
+    CPPUNIT_ASSERT_EQUAL(string("/"), mProcess->getWorkingDirectory());
+
+
+    //Test with another directory
+    mProcess->mWorkingDirectory = "/etc/";
+
+    CPPUNIT_ASSERT_EQUAL(string("/etc/"), mProcess->getWorkingDirectory());
+}
+
 void ProcessTest::testSetWorkingDirectory() {
     mProcess->setWorkingDirectory("/");
 
@@ -72,9 +86,9 @@ void ProcessTest::testSetWorkingDirectory() {
 
 
     //Test with another directory
-    mProcess->setWorkingDirectory("/etc");
+    mProcess->setWorkingDirectory("/etc/");
 
-    CPPUNIT_ASSERT_EQUAL(string("/etc"), mProcess->mWorkingDirectory);
+    CPPUNIT_ASSERT_EQUAL(string("/etc/"), mProcess->mWorkingDirectory);
 }
 
 void ProcessTest::testAttachObserver() {
@@ -122,6 +136,16 @@ void ProcessTest::testOperatorAppend() {
             mProcess->mArguments[1]);
     CPPUNIT_ASSERT_EQUAL(string("Bye!"),
             mProcess->mArguments[2]);
+    CPPUNIT_ASSERT_EQUAL(vector<string>::size_type(3),
+            mProcess->mArguments.size());
+
+    //Test adding an empty argument
+    *mProcess << "" << "Another argument";
+
+    CPPUNIT_ASSERT_EQUAL(string("Another argument"),
+            mProcess->mArguments[3]);
+    CPPUNIT_ASSERT_EQUAL(vector<string>::size_type(4),
+            mProcess->mArguments.size());
 }
 
 void ProcessTest::testNotifyReceivedStdout() {

@@ -41,6 +41,7 @@ namespace util {
 class ProcessTest: public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(ProcessTest);
     CPPUNIT_TEST(testGetArguments);
+    CPPUNIT_TEST(testGetWorkingDirectory);
     CPPUNIT_TEST(testSetWorkingDirectory);
     CPPUNIT_TEST(testAttachObserver);
     CPPUNIT_TEST(testDetachObserver);
@@ -69,6 +70,11 @@ public:
      * operator<<.
      */
     void testGetArguments();
+
+    /**
+     * Tests if mWorkingDirectory is returned.
+     */
+    void testGetWorkingDirectory();
 
     /**
      * Tests if the working directory is set in the mWorkingDirectory attribute.
