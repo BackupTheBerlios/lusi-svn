@@ -59,6 +59,7 @@ namespace task {
  * @see TaskLoggerObserver
  */
 class TaskLogger {
+friend class lusi::task::Task;
 friend class lusi::task::helper::TaskHelper;
 public:
 
