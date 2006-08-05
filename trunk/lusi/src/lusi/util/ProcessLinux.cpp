@@ -92,6 +92,9 @@ void ProcessLinux::start() throw (ProcessException) {
 
     closeCommunicationChannels();
 
+    //Avoids zombie child
+    while (waitpid(pid, 0, 0) <= 0);
+
     notifyProcessExited();
 }
 
