@@ -24,6 +24,7 @@
 #include "TaskProgress.h"
 #include "helper/TaskHelper.h"
 #include "helper/TaskHelperManager.h"
+#include "../package/Package.h"
 
 using std::string;
 using std::vector;
@@ -49,6 +50,7 @@ Task::Task(const string& name, Package* package,
 
     //mName must be set before calling getTaskHelpers, as it uses getName()
     mTaskHelpers = TaskHelperManager::getInstance()->getTaskHelpers(this);
+    mCurrentTaskHelper = mTaskHelpers.begin();
 
     mTaskLogger = new TaskLogger(this);
     mTaskProgress = new TaskProgress(this);
@@ -96,30 +98,36 @@ bool Task::test() {
 //TODO add configuration checkings
 //TODO add support for several suitable TaskHelpers
 void Task::redo() {
-    TaskHelper* taskHelper = getRedoHelper();
+    TaskHelper* taskHelper = getRedoTaskHelper();
     if (taskHelper != 0) {
+        mTaskLogger->notifyEvent(mName + ": executing " + taskHelper->getName() +
+                                            '\n', message);
         taskHelper->execute();
+
+        mPackage->setPackageStatus(mProvidedPackageStatus);
     }
 }
 
 //TODO throw exception if Task couldn't be undone? Return false?
 void Task::undo() {
-    TaskHelper* taskHelper = getUndoHelper();
+    TaskHelper* taskHelper = getUndoTaskHelper();
     if (taskHelper != 0) {
         taskHelper->revert();
+
+        mPackage->setPackageStatus(mNeededPackageStatus);
     }
 }
 
 //private:
 
-TaskHelper* Task::getRedoHelper() {
+TaskHelper* Task::getRedoTaskHelper() {
     //TODO get TaskHelper from TaskConfiguration
-    static vector<TaskHelper*>::const_iterator iterator = mTaskHelpers.begin();
 
     TaskHelper* taskHelper = 0;
     bool validTaskHelper = false;
-    for (; !validTaskHelper && iterator != mTaskHelpers.end(); ++iterator) {
-        taskHelper = *iterator;
+    for (; !validTaskHelper && mCurrentTaskHelper != mTaskHelpers.end();
+            ++mCurrentTaskHelper) {
+        taskHelper = *mCurrentTaskHelper;
         if (taskHelper->hasValidResourceMap()) {
             validTaskHelper = true;
         }
@@ -128,7 +136,7 @@ TaskHelper* Task::getRedoHelper() {
     return taskHelper;
 }
 
-TaskHelper* Task::getUndoHelper() {
+TaskHelper* Task::getUndoTaskHelper() {
     //TODO get TaskHelper from TaskConfiguration
     return 0;
 }

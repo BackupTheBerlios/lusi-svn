@@ -62,6 +62,7 @@ void TaskTest::setUp() {
                                                                    true));
     mTask->mTaskHelpers.push_back(new TaskHelperTestImplementation(mTask, "3",
                                                                    true));
+    mTask->mCurrentTaskHelper = mTask->mTaskHelpers.begin();
 }
 
 void TaskTest::tearDown() {
@@ -117,12 +118,24 @@ void TaskTest::testGetTaskProgress() {
     delete observer;
 }
 
-void TaskTest::testGetRedoHelper() {
-    TaskHelper* taskHelper = mTask->getRedoHelper();
+void TaskTest::testGetRedoTaskHelper() {
+    TaskHelper* taskHelper = mTask->getRedoTaskHelper();
     CPPUNIT_ASSERT(taskHelper != 0);
     CPPUNIT_ASSERT_EQUAL(string("2"), taskHelper->getName());
-    taskHelper = mTask->getRedoHelper();
+    taskHelper = mTask->getRedoTaskHelper();
     CPPUNIT_ASSERT(taskHelper != 0);
     CPPUNIT_ASSERT_EQUAL(string("3"), taskHelper->getName());
-    CPPUNIT_ASSERT(mTask->getRedoHelper() == 0);
+    CPPUNIT_ASSERT(mTask->getRedoTaskHelper() == 0);
+    //Try to go out of bounds
+    CPPUNIT_ASSERT(mTask->getRedoTaskHelper() == 0);
+
+    //Test with no available taskHelpers
+    delete mTask;
+    mTaskConfiguration = new TaskConfiguration();
+    mTask = new Task("Make tests", mPackage, mTaskConfiguration,
+                     PackageStatusTestImplementation::getFirstInstance(),
+                     PackageStatusTestImplementation::getSecondInstance());
+
+    taskHelper = mTask->getRedoTaskHelper();
+    CPPUNIT_ASSERT(taskHelper == 0);
 }

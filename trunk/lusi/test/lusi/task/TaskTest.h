@@ -54,7 +54,7 @@ class TaskTest: public CppUnit::TestFixture {
     CPPUNIT_TEST(testGetProvidedPackageStatus);
     CPPUNIT_TEST(testGetTaskLogger);
     CPPUNIT_TEST(testGetTaskProgress);
-    CPPUNIT_TEST(testGetRedoHelper);
+    CPPUNIT_TEST(testGetRedoTaskHelper);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -110,10 +110,10 @@ public:
     void testGetTaskProgress();
 
     /**
-     * Checks if getRedoHelper() returns the TaskHelpers suitable for the
+     * Checks if getRedoTaskHelper() returns the TaskHelpers suitable for the
      * Package.
      */
-    void testGetRedoHelper();
+    void testGetRedoTaskHelper();
 
 private:
 

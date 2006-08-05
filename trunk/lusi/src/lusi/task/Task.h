@@ -273,6 +273,12 @@ private:
     std::vector<lusi::task::helper::TaskHelper*> mTaskHelpers;
 
     /**
+     * The current TaskHelper to be returned in getRedoTaskHelper.
+     */
+    std::vector<lusi::task::helper::TaskHelper*>::const_iterator
+    mCurrentTaskHelper;
+
+    /**
      * The TaskLogger which notifies all the operations made when executing the
      * Task.
      */
@@ -300,7 +306,7 @@ private:
      * @return A TaskHelper to be executed, or a null pointer if there are no
      *         more suitable TaskHelpers.
      */
-    lusi::task::helper::TaskHelper* getRedoHelper();
+    lusi::task::helper::TaskHelper* getRedoTaskHelper();
 
     /**
      * Returns a TaskHelper to be reverted.
@@ -313,7 +319,7 @@ private:
      * @return A TaskHelper to be reverted, or a null pointer if there is no
      *         suitable TaskHelper.
      */
-    lusi::task::helper::TaskHelper* getUndoHelper();
+    lusi::task::helper::TaskHelper* getUndoTaskHelper();
 
     /**
      * Copy constructor disabled.
