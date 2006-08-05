@@ -63,7 +63,7 @@ void ProcessLinux::start() throw (ProcessException) {
     bool exited = false;
     while (!exited) {
         //I'm not sure why, but this code must be into the loop
-        //If put outside it, sometimes the process exit notification isn't get
+        //If put outside it, sometimes the process exit notification isn't got
         //in select call
         int fds[3] = { mStdoutPipe[0], mStderrPipe[0], mExitPipe[0] };
         int maxFd = prepareFileDescriptorSet(&readFdSet, fds, 3);
