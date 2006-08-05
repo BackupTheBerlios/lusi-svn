@@ -43,6 +43,7 @@ class ResourceMapTest: public CppUnit::TestFixture {
     CPPUNIT_TEST(testAddResource);
     CPPUNIT_TEST(testGetResource);
     CPPUNIT_TEST(testGetAllResources);
+    CPPUNIT_TEST(testGetAllResourcesByType);
     CPPUNIT_TEST(testRemoveResource);
     CPPUNIT_TEST_SUITE_END();
 
@@ -74,6 +75,12 @@ public:
      * Checks if getAllResources() returns a vector with all the added elements.
      */
     void testGetAllResources();
+
+    /**
+     * Checks if getAllResourcesByType() returns a vector with all the added
+     * elements of the specified type.
+     */
+    void testGetAllResourcesByType();
 
     /**
      * Checks if removeResource()removes and deletes an added element.

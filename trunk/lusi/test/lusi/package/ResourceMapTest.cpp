@@ -27,9 +27,12 @@
 #undef protected
 
 #include "ResourceTestImplementation.h"
+#include "LocalFileResource.h"
 
 using std::string;
 using std::vector;
+
+using lusi::package::LocalFileResource;
 
 using namespace lusi::package;
 
@@ -94,6 +97,24 @@ void ResourceMapTest::testGetAllResources() {
     CPPUNIT_ASSERT_EQUAL(mResource1, allResources[0]);
     CPPUNIT_ASSERT_EQUAL(mResource2, allResources[1]);
     CPPUNIT_ASSERT_EQUAL(mResource3, allResources[2]);
+}
+
+void ResourceMapTest::testGetAllResourcesByType() {
+    vector<ResourceTestImplementation*> allResources =
+            mResourceMap->getAllResourcesByType<ResourceTestImplementation>();
+
+    CPPUNIT_ASSERT(allResources.size() == 3);
+    CPPUNIT_ASSERT_EQUAL(dynamic_cast<ResourceTestImplementation*>(mResource1),
+                         allResources[0]);
+    CPPUNIT_ASSERT_EQUAL(dynamic_cast<ResourceTestImplementation*>(mResource2),
+                         allResources[1]);
+    CPPUNIT_ASSERT_EQUAL(dynamic_cast<ResourceTestImplementation*>(mResource3),
+                         allResources[2]);
+
+    //Test with a type not added
+    vector<LocalFileResource*> allLocalFileResources =
+                    mResourceMap->getAllResourcesByType<LocalFileResource>();
+    CPPUNIT_ASSERT(allLocalFileResources.size() == 0);
 }
 
 void ResourceMapTest::testRemoveResource() {

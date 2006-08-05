@@ -101,6 +101,15 @@ public:
     std::vector<Resource*> getAllResources() const;
 
     /**
+     * Returns all the Resources of the specified Type in the Map in a vector.
+     * This is an accessor method.
+     *
+     * @return All the Resources of the specified Type in the Map in a vector.
+     */
+    template<typename Type>
+    std::vector<Type*> getAllResourcesByType() const;
+
+    /**
      * Removes the Resource identified by id from the Map, also deleting it.
      * If there's no Resource with the specified id, nothing happens.
      *
@@ -132,6 +141,22 @@ private:
     ResourceMap& operator=(const ResourceMap& resourceMap);
 
 };
+
+template<typename Type>
+std::vector<Type*> ResourceMap::getAllResourcesByType() const {
+    std::vector<Type*> resourcesByType;
+
+    for (std::map<std::string, Resource*>::const_iterator iterator =
+                    mMap.begin();
+            iterator != mMap.end(); ++iterator) {
+        Type* resource = dynamic_cast<Type*>(iterator->second);
+        if (resource != 0) {
+            resourcesByType.push_back(resource);
+        }
+    }
+
+    return resourcesByType;
+}
 
 }
 }

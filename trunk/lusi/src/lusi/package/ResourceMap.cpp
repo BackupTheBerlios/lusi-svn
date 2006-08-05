@@ -66,6 +66,23 @@ vector<Resource*> ResourceMap::getAllResources() const {
     return allResources;
 }
 
+/*
+template<typename Type>
+vector<Type*> ResourceMap::getAllResourcesByType() const {
+    vector<Type*> resourcesByType;
+
+    for (map<string, Resource*>::const_iterator iterator = mMap.begin();
+            iterator != mMap.end(); ++iterator) {
+        Type* resource = dynamic_cast<Type*>(iterator->second);
+        if (resource != 0) {
+            resourcesByType.push_back(resource);
+        }
+    }
+
+    return resourcesByType;
+}
+*/
+
 bool ResourceMap::removeResource(const string& id) {
     Resource* resource = getResource(id);
     if (resource == 0) {
