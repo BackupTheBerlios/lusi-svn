@@ -38,7 +38,7 @@ TaskProgress::~TaskProgress() {
 }
 
 /*
-inline bool TaskProgress::isExtendedProgress() {
+inline bool TaskProgress::isExtendedProgress() const {
     return mExtendedProgress;
 }
 

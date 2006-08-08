@@ -99,7 +99,7 @@ public:
      *         are basic.
      * @see mExtendedProgress
      */
-    bool isExtendedProgress() {
+    bool isExtendedProgress() const {
         return mExtendedProgress;
     }
 
