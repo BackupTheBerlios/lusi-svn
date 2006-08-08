@@ -54,6 +54,13 @@ namespace task {
  * Observers can be registered using attachObserver(TaskProgressObserver*) and
  * deregistered with detachObserver(TaskProgressObserver*).
  *
+ * TaskProgress can be marked as basic or extended, depending on the values they
+ * notify: only UNSTARTED and FINISHED, or all the range between them. By
+ * default, they are basic.
+ * This value is only a hint, and TaskProgress marked as basic can do extended
+ * notifications, and viceversa. However, Task and TaskHelpers are encouraged
+ * to respect it ;)
+ *
  * @see TaskProgressObserver
  */
 class TaskProgress {
@@ -73,6 +80,7 @@ public:
 
     /**
      * Creates a new TaskProgress.
+     * ExtendedProgress is false.
      *
      * @param task The Task which mades the progress.
      */
@@ -82,6 +90,29 @@ public:
      * Destroys this TaskProgress.
      */
     virtual ~TaskProgress();
+
+    /**
+     * Returns true if the Progress notifications are extended, false if they
+     * are basic.
+     *
+     * @return True if the Progress notifications are extended, false if they
+     *         are basic.
+     * @see mExtendedProgress
+     */
+    bool isExtendedProgress() {
+        return mExtendedProgress;
+    }
+
+    /**
+     * Sets if the Progress notifications are basic or extended.
+     *
+     * @param extendedProgress True if the notifications are extended, false if
+     *                         they are basic.
+     * @see mExtendedProgress
+     */
+    void setExtendedProgress(bool extendedProgress) {
+        mExtendedProgress = extendedProgress;
+    }
 
     /**
      * Adds a new observer to be notified when some progress in the execution of
@@ -113,6 +144,18 @@ private:
      * A vector containing all the TaskProgressObservers registered.
      */
     std::vector<TaskProgressObserver*> mTaskProgressObservers;
+
+    /**
+     * If the Progress notifications are extended or basic.
+     * Basic notifications refers to simply notifying UNSTARTED progress and
+     * FINISHED progress. Extended, on the other hand, can notify any value in
+     * that range.
+     *
+     * This value is only a hint. A TaskProgress marked as basic can do extended
+     * notifications, and a TaskProgress marked as extended can do only basic
+     * notifications.
+     */
+    bool mExtendedProgress;
 
 
 

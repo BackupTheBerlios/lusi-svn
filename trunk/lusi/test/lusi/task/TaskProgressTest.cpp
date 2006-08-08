@@ -53,6 +53,26 @@ void TaskProgressTest::tearDown() {
     delete mTaskProgress;
 }
 
+void TaskProgressTest::testIsExtendedProgress() {
+    mTaskProgress->mExtendedProgress = true;
+    CPPUNIT_ASSERT_EQUAL(mTaskProgress->mExtendedProgress,
+                         mTaskProgress->isExtendedProgress());
+
+    mTaskProgress->mExtendedProgress = false;
+    CPPUNIT_ASSERT_EQUAL(mTaskProgress->mExtendedProgress,
+                         mTaskProgress->isExtendedProgress());
+}
+
+void TaskProgressTest::testSetExtendedProgress() {
+    mTaskProgress->setExtendedProgress(true);
+    CPPUNIT_ASSERT_EQUAL(true,
+                         mTaskProgress->mExtendedProgress);
+
+    mTaskProgress->setExtendedProgress(false);
+    CPPUNIT_ASSERT_EQUAL(false,
+                         mTaskProgress->mExtendedProgress);
+}
+
 void TaskProgressTest::testAttachObserver() {
     CPPUNIT_ASSERT(mTaskProgress->mTaskProgressObservers.size() == 3);
     CPPUNIT_ASSERT_EQUAL(mTaskProgressObserver1,

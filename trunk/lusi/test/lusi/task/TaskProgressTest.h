@@ -41,6 +41,8 @@ namespace task {
  */
 class TaskProgressTest: public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(TaskProgressTest);
+    CPPUNIT_TEST(testIsExtendedProgress);
+    CPPUNIT_TEST(testSetExtendedProgress);
     CPPUNIT_TEST(testAttachObserver);
     CPPUNIT_TEST(testDetachObserver);
     CPPUNIT_TEST(testNotifyProgress);
@@ -59,6 +61,16 @@ public:
      * Cleans up after the test run.
      */
     virtual void tearDown();
+
+    /**
+     * Tests if mExtendedProgress is returned.
+     */
+    void testIsExtendedProgress();
+
+    /**
+     * Tests if mExtendedProgress is set.
+     */
+    void testSetExtendedProgress();
 
     /**
      * Tests if TaskProgressObservers are attached as they should.

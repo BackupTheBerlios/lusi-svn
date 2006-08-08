@@ -31,10 +31,21 @@ using namespace lusi::task;
 TaskProgress::TaskProgress(Task* task) {
     mTask = task;
     mTaskProgressObservers = vector<TaskProgressObserver*>();
+    mExtendedProgress = false;
 }
 
 TaskProgress::~TaskProgress() {
 }
+
+/*
+inline bool TaskProgress::isExtendedProgress() {
+    return mExtendedProgress;
+}
+
+inline void TaskProgress::setExtendedProgress(bool extendedProgress) {
+    mExtendedProgress = extendedProgress;
+}
+*/
 
 void TaskProgress::attachObserver(TaskProgressObserver* observer) {
     if (find(mTaskProgressObservers.begin(), mTaskProgressObservers.end(),
