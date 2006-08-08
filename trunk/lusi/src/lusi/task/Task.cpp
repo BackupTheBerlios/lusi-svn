@@ -100,8 +100,8 @@ bool Task::test() {
 void Task::redo() {
     TaskHelper* taskHelper = getRedoTaskHelper();
     if (taskHelper != 0) {
-        mTaskLogger->notifyEvent(mName + ": executing " + taskHelper->getName() +
-                                            '\n', message);
+        mTaskLogger->notifyEvent(mName + ": executing " +
+                                    taskHelper->getName() + '\n', message);
         taskHelper->execute();
 
         mPackage->setPackageStatus(mProvidedPackageStatus);
