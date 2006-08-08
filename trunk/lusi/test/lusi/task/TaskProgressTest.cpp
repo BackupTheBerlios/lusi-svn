@@ -53,6 +53,15 @@ void TaskProgressTest::tearDown() {
     delete mTaskProgress;
 }
 
+void TaskProgressTest::testConstructor() {
+    delete mTaskProgress;
+    mTaskProgress = new TaskProgress(mTask);
+
+    CPPUNIT_ASSERT_EQUAL(mTask, mTaskProgress->mTask);
+    CPPUNIT_ASSERT_EQUAL(true, mTaskProgress->mTaskProgressObservers.empty());
+    CPPUNIT_ASSERT_EQUAL(false, mTaskProgress->mExtendedProgress);
+}
+
 void TaskProgressTest::testIsExtendedProgress() {
     mTaskProgress->mExtendedProgress = true;
     CPPUNIT_ASSERT_EQUAL(mTaskProgress->mExtendedProgress,
