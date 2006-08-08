@@ -23,64 +23,109 @@
 
 #include <lusi/util/Process.h>
 
+extern "C" {
+/**
+ * Hanlder for SIGCHLD signal.
+ * It simply writes a 0 in ProcessLinux::sExitPipe[1].
+ */
+static void sigChldHandler(int signalNumber);
+}
+
 namespace lusi {
 namespace util {
 
 /**
  * An implementation of Process using Linux system calls.
- * It makes use of read, write, select (and macros), dup2, execvp and pipe.
+ * It makes use of read, write, select (and macros), dup2, execvp, pipe and
+ * signal functions.
  *
- * To execute a process, an auxiliar process is made which waits for the
- * executed process to finish and then notifies the parent process. The parent
- * process waits for the notification and, meanwhile, notifies observers about
- * new data in stdout and stderr. start() and executeWaitingProcess() have
- * further documentation about how process are executed.
+ * When a process is executed, the parent process waits for a notification in
+ * sExitPipe, which means that a child has exited. Meanwhile, notifies
+ * observers about new data in stdout and stderr. start() has further
+ * documentation about how process are executed.
+ *
+ * Tha static members of this class exist only to be used with the handler of
+ * SIGCHLD signal, as the handler is pure C, and it must use static members as
+ * objects aren't supported.
  */
 class ProcessLinux: public Process {
 public:
 
     /**
+     * Pipe to be notified when child process exites.
+     * Is static, as it is used by SIGCHLD signal hanlder.
+     */
+    static int sExitPipe[2];
+
+
+
+    /**
      * Creates a new ProcessLinux.
+     * If no other ProcessLinux is currently alive, it sets the handler for
+     * SIGCHLD signal and creates the sExitPipe to use to notify about an
+     * exited child.
      */
     ProcessLinux();
 
     /**
      * Destroys this ProcessLinux.
+     * If no other ProcessLinux is currently alive, it resets the handler for
+     * SIGCHLD signal and closes the sExitPipe used to notify about an exited
+     * child.
      */
     ~ProcessLinux();
 
     /**
      * Starts this process.
+     * This is a blocking call: the execution of the calling process, the
+     * parent, won't continue until the process ends. However, notifiers will
+     * be updated with the data in stdout and stderr concurrently.
      *
-     * In order to execute the process, two forks are made. One for the process
-     * that will wait for the real process to end, and another for the real
-     * process. The output of the real process is redirected to the process
-     * which notifies about changes in stdout and stderr.
+     * In order to execute the process, a fork is made to execute it. The
+     * output of the executed process is redirected so it can be got in this
+     * process, the parent.
      *
-     * This process, the parent process of the waiting process, is the one that
-     * takes into account notify the observers about changes in stdout, stderr
-     * and the exit of the real process.
+     * Parent process waits until the child has exited. It's notified through
+     * sExitPipe by SIGCHLD signal handler.
      *
-     * If the real process couldn't be executed, a ProcessException is thrown
+     * This process, the parent, is the one that takes into account notify the
+     * observers about changes in stdout, stderr and the exit of the real
+     * process.
+     *
+     * If the child process couldn't be executed, a ProcessException is thrown
      * with a message explaining the problem occured.
      *
-     * @throw ProcessException If the process couldn't be executed.
-     *
-     * @see executeWaitingProcess()
+     * @throw ProcessException If the child process couldn't be executed.
      */
     virtual void start() throw (ProcessException);
 
 private:
 
     /**
-     * Enumeration with the possible exit values for the executed process.
+     * Enumeration with the possible error types happened when trying to
+     * execute the process.
      */
-    enum ExitResult {
-        success,
+    enum ErrorType {
         pipeError,
         forkError,
-        executionError
+        execvpError
     };
+
+    /**
+     * The number of ProcessLinux currently alive.
+     */
+    static int sReferenceCount;
+
+    /**
+     * Struct to store the SIGCHLD sigaction before it's modified to use
+     * sigChldHandler.
+     */
+    static struct sigaction oldSigChldSigAction;
+
+    /**
+     * The pid of the executed process.
+     */
+    pid_t pid;
 
     /**
      * Pipe to get executed process stdout.
@@ -92,38 +137,22 @@ private:
      */
     int mStderrPipe[2];
 
+
+
     /**
-     * Pipe to be notified when child process exites.
+     * Sets the SIGCHLD handler.
      */
-    int mExitPipe[2];
+    static void setupSigChldHandler();
 
-
+    /**
+     * Resets the SIGCHLD handler.
+     */
+    static void resetSigChldHandler();
 
     /**
      * Closes all the pipes.
      */
     void closeCommunicationChannels();
-
-    /**
-     * Exits a child process with the specified exitValue, writing it to the
-     * specified file descriptor.
-     *
-     * @param exitValue The exit value for the process.
-     * @param fd The file descriptor to write the exit value to.
-     */
-    void exitChildProcess(char exitValue, int fd);
-
-    /**
-     * Executes the code in the waiting process.
-     * When starting a process, it's forked. The child process is the waiting
-     * process. That process will also fork to execute the real process. Then,
-     * the waiting process will wait for the real process to finish.
-     *
-     * Once finished, the waiting process will notify with mExitPipe that the
-     * real process finished, also specifying if some error happened when trying
-     * to execute the real process.
-     */
-    void executeWaitingProcess();
 
     /**
      * Returns the arguments list as a char** to be used with C functions.
@@ -170,16 +199,17 @@ private:
     void sendPendingData();
 
     /**
-     * Checks the execution result using mExitPipe and, in case of error, throws
-     * an exception with a message with information about the error.
-     * Errors checked are only errors to execute the process, but not errors in
-     * the process itself.
-     * Before throwning the exception, communication channels are closed.
+     * Closes the communication channels and throws an exception with a message
+     * with information about the error.
+     * Errors thrown are only errors when trying to execute the process, but
+     * not errors in the process itself.
+     * Before throwning the exception, communication channels are closed using
+     * closeCommunicationChannels().
      *
-     * @throw ProcessException If any problem happened in the execution of the
-     *                         process.
+     * @throw ProcessException A ProcessException with a message about the
+     *                         error happened.
      */
-    void checkExecutionErrors() throw (ProcessException);
+    void handleExecutionError(ErrorType errorType) throw (ProcessException);
 
     /**
      * Copy constructor disabled.

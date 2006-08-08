@@ -31,98 +31,54 @@ using std::vector;
 
 using namespace lusi::util;
 
+extern "C" {
+static void sigChldHandler(int signalNumber) {
+    char dummy = 0;
+    while (write(ProcessLinux::sExitPipe[1], &dummy, 1) <= 0);
+}
+}
+
 //public:
 
 ProcessLinux::ProcessLinux(): Process() {
+    if (!sReferenceCount) {
+        if (pipe(sExitPipe) != 0) {
+            abort();
+        }
+        setupSigChldHandler();
+    }
+    ++sReferenceCount;
+
+    pid = 0;
 }
 
 ProcessLinux::~ProcessLinux() {
+    if (pid > 0 && !kill(pid, 0)) {
+        kill(pid, SIGKILL);
+    }
+
+    --sReferenceCount;
+    if (!sReferenceCount) {
+        resetSigChldHandler();
+        close(sExitPipe[0]);
+        close(sExitPipe[1]);
+    }
 }
 
 void ProcessLinux::start() throw (ProcessException) {
-    if (pipe(mStdoutPipe) != 0 ||
-            pipe(mStderrPipe) != 0 ||
-            pipe(mExitPipe)) {
-        closeCommunicationChannels();
-        throw ProcessException("Could not create communication channels");
-    }
-
-    pid_t pid = fork();
-    if (pid == 0) {
-        //Executes the real process and waits for it to exit. When the real
-        //process exits, mExitPipe is set with a value of ExitResult specifying
-        //if it was a success or any problem happened.
-        executeWaitingProcess();
-    } else if (pid == -1) {
-        closeCommunicationChannels();
-        throw ProcessException("Could not fork process");
-    }
-
-    fd_set readFdSet;
-
-    bool exited = false;
-    while (!exited) {
-        //I'm not sure why, but this code must be into the loop
-        //If put outside it, sometimes the process exit notification isn't got
-        //in select call
-        int fds[3] = { mStdoutPipe[0], mStderrPipe[0], mExitPipe[0] };
-        int maxFd = prepareFileDescriptorSet(&readFdSet, fds, 3);
-
-        //TODO handle errors
-        select(maxFd, &readFdSet, NULL, NULL, NULL);
-
-        if (FD_ISSET(mStdoutPipe[0], &readFdSet)) {
-            notifyReceivedStdout(readStringFromFileDescriptor(mStdoutPipe[0]));
-        }
-
-        if (FD_ISSET(mStderrPipe[0], &readFdSet)) {
-            notifyReceivedStderr(readStringFromFileDescriptor(mStderrPipe[0]));
-        }
-
-        if (FD_ISSET(mExitPipe[0], &readFdSet)) {
-            exited = true;
-        }
-    }
-
-    sendPendingData();
-
-    //Throws ProcessException and closes communication channels if any error
-    //happened when executing the process
-    checkExecutionErrors();
-
-    closeCommunicationChannels();
-
-    //Avoids zombie child
-    while (waitpid(pid, 0, 0) <= 0);
-
-    notifyProcessExited();
-}
-
-//private:
-
-void ProcessLinux::closeCommunicationChannels() {
-    close(mStdoutPipe[0]);
-    close(mStdoutPipe[1]);
-    close(mStderrPipe[0]);
-    close(mStderrPipe[1]);
-    close(mExitPipe[0]);
-    close(mExitPipe[1]);
-}
-
-void ProcessLinux::exitChildProcess(char exitValue, int fd) {
-    while (write(fd, &exitValue, 1) <= 0);
-
-    exit(exitValue);
-}
-
-void ProcessLinux::executeWaitingProcess() {
     //Pipe for notifying a failure in the child execution
     int childExitPipe[2];
-    if (pipe(childExitPipe) != 0) {
-        exitChildProcess(pipeError, mExitPipe[1]);
+
+    if (pipe(mStdoutPipe) != 0 ||
+            pipe(mStderrPipe) != 0 ||
+            pipe(childExitPipe) != 0) {
+        //childExitPipe is the last, so there's no need to close it, because
+        //it never was created (or it failed before creating it, or when
+        //creating it)
+        handleExecutionError(pipeError);
     }
 
-    pid_t pid = fork();
+    pid = fork();
     if (pid == 0) {
         //Child process
 
@@ -140,21 +96,99 @@ void ProcessLinux::executeWaitingProcess() {
 
         execvp(arguments[0], arguments);
 
-        exitChildProcess(executionError, childExitPipe[1]);
+        char errorBuffer = 1;
+        while (write(childExitPipe[1], &errorBuffer, 1) <= 0);
+
+        //Use _exit() instead of exit() to avoid destruction of static resources
+        //of the library
+        _exit(1);
     } else if (pid == -1) {
-        exitChildProcess(forkError, mExitPipe[1]);
+        handleExecutionError(forkError);
     }
 
-    while (waitpid(pid, 0, 0) <= 0);
+    fd_set readFdSet;
 
-    //Checks if child process could be executed
-    close(childExitPipe[1]);
-    char exitResult;
-    if (read(childExitPipe[0], &exitResult, 1) > 0) {
-        exitChildProcess(executionError, mExitPipe[1]);
+    bool exited = false;
+    while (!exited) {
+        //I'm not sure why, but this code must be into the loop
+        //If put outside it, sometimes the process exit notification isn't got
+        //in select call
+        int fds[3] = { mStdoutPipe[0], mStderrPipe[0], sExitPipe[0] };
+        int maxFd = prepareFileDescriptorSet(&readFdSet, fds, 3);
+
+        while (select(maxFd, &readFdSet, NULL, NULL, NULL) == -1);
+
+        if (FD_ISSET(mStdoutPipe[0], &readFdSet)) {
+            notifyReceivedStdout(readStringFromFileDescriptor(mStdoutPipe[0]));
+        }
+
+        if (FD_ISSET(mStderrPipe[0], &readFdSet)) {
+            notifyReceivedStderr(readStringFromFileDescriptor(mStderrPipe[0]));
+        }
+
+        if (FD_ISSET(sExitPipe[0], &readFdSet)) {
+            if (waitpid(pid, 0, WNOHANG) == pid) {
+                exited = true;
+                char dummy = 0;
+                while (read(sExitPipe[0], &dummy, 1) != 1);
+
+                //Checks if child process could be executed
+                close(childExitPipe[1]);
+                int readedSize;
+                while ((readedSize = read(childExitPipe[0], &dummy, 1)) == -1);
+
+                //If childExitPipe had data the process couldn't be executed
+                if (readedSize > 0) {
+                    close(childExitPipe[0]);
+                    handleExecutionError(execvpError);
+                }
+                close(childExitPipe[0]);
+            }
+        }
     }
 
-    exitChildProcess(success, mExitPipe[1]);
+    sendPendingData();
+
+    closeCommunicationChannels();
+
+    notifyProcessExited();
+}
+
+//private:
+
+int ProcessLinux::sReferenceCount = 0;
+
+int ProcessLinux::sExitPipe[2];
+
+struct sigaction ProcessLinux::oldSigChldSigAction;
+
+
+
+void ProcessLinux::setupSigChldHandler() {
+    struct sigaction act;
+    sigemptyset(&act.sa_mask);
+
+    act.sa_handler = sigChldHandler;
+    act.sa_flags = SA_NOCLDSTOP;
+
+    sigaction(SIGCHLD, &act, &oldSigChldSigAction);
+
+    sigaddset(&act.sa_mask, SIGCHLD);
+    //KProcessController code said:
+    //Make sure we don't block this signal. gdb tends to do that :-(
+    //They're clever than me, so I'll follow their advice :)
+    sigprocmask(SIG_UNBLOCK, &act.sa_mask, 0);
+}
+
+void ProcessLinux::resetSigChldHandler() {
+    sigaction(SIGCHLD, &oldSigChldSigAction, 0);
+}
+
+void ProcessLinux::closeCommunicationChannels() {
+    close(mStdoutPipe[0]);
+    close(mStdoutPipe[1]);
+    close(mStderrPipe[0]);
+    close(mStderrPipe[1]);
 }
 
 char** ProcessLinux::newCArguments() {
@@ -208,7 +242,9 @@ string ProcessLinux::readStringFromFileDescriptor(int fileDescriptor) const {
     int openFlags = fcntl(fileDescriptor, F_GETFL);
     fcntl(fileDescriptor, F_SETFL, openFlags | O_NONBLOCK);
 
-    while (read(fileDescriptor, &buffer, 1) > 0) {
+    int readedSize;
+    while ((readedSize = read(fileDescriptor, &buffer, 1)) > 0 ||
+           (readedSize == -1 && errno == EINTR)) {
         data += buffer;
     }
 
@@ -228,8 +264,7 @@ void ProcessLinux::sendPendingData() {
 
         //Inmediate exit from select
         timeval zeroTimeout = { 0l, 0l };
-        //TODO handle errors
-        select(maxFd, &readFdSet, NULL, NULL, &zeroTimeout);
+        while (select(maxFd, &readFdSet, NULL, NULL, &zeroTimeout) == -1);
 
         if (FD_ISSET(mStdoutPipe[0], &readFdSet)) {
             notifyReceivedStdout(readStringFromFileDescriptor(mStdoutPipe[0]));
@@ -247,24 +282,20 @@ void ProcessLinux::sendPendingData() {
     }
 }
 
-void ProcessLinux::checkExecutionErrors() throw (ProcessException) {
-    char exitResult;
-    read(mExitPipe[0], &exitResult, 1);
-
-    if (exitResult != success) {
-        closeCommunicationChannels();
-        switch (exitResult) {
-            case pipeError:
-                throw ProcessException("Could not create pipes with child");
-                break;
-            case forkError:
-                throw ProcessException("Could not fork process");
-                break;
-            case executionError:
-                throw ProcessException("Could not execute process");
-                break;
-            default:
-                throw ProcessException("Unknown error");
-        }
+void ProcessLinux::handleExecutionError(ErrorType errorType)
+                                                    throw (ProcessException) {
+    closeCommunicationChannels();
+    switch (errorType) {
+        case pipeError:
+            throw ProcessException("Could not create communication channels");
+            break;
+        case forkError:
+            throw ProcessException("Could not fork process");
+            break;
+        case execvpError:
+            throw ProcessException("Could not execute process");
+            break;
+        default:
+            throw ProcessException("Unknown error");
     }
 }
