@@ -60,6 +60,7 @@ namespace task {
  * This value is only a hint, and TaskProgress marked as basic can do extended
  * notifications, and viceversa. However, Task and TaskHelpers are encouraged
  * to respect it ;)
+ * At least, UNSTARTED and FINISHED values will be always notified.
  *
  * @see TaskProgressObserver
  */
