@@ -41,6 +41,7 @@ namespace util {
 class ProcessTest: public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(ProcessTest);
     CPPUNIT_TEST(testGetArguments);
+    CPPUNIT_TEST(testGetArgumentsAsString);
     CPPUNIT_TEST(testGetWorkingDirectory);
     CPPUNIT_TEST(testSetWorkingDirectory);
     CPPUNIT_TEST(testAttachObserver);
@@ -70,6 +71,12 @@ public:
      * operator<<.
      */
     void testGetArguments();
+
+    /**
+     * Tests if the arguments returned as a string contains all the arguments with
+     * a blank space between them.
+     */
+    void testGetArgumentsAsString();
 
     /**
      * Tests if mWorkingDirectory is returned.

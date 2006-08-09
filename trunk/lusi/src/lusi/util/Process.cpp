@@ -39,11 +39,27 @@ Process::~Process() {
 }
 
 /*
-inline const vector<string>& getArguments() {
+inline const vector<string>& Process::getArguments() {
     return mArguments;
 }
+*/
 
-inline const string& getWorkingDirectory() const {
+std::string Process::getArgumentsAsString() const {
+    string argumentsAsString("");
+
+    if (mArguments.size() > 0) {
+        int i=0;
+        for (; i<mArguments.size()-1; ++i) {
+            argumentsAsString += mArguments[i] + " ";
+        }
+        argumentsAsString += mArguments[i];
+    }
+
+    return argumentsAsString;
+}
+
+/*
+inline const string& Process::getWorkingDirectory() const {
     return mWorkingDirectory;
 }
 

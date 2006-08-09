@@ -107,6 +107,14 @@ public:
     }
 
     /**
+     * Returns the arguments of this Process as a string.
+     * Each argument has a blank space between the next.
+     *
+     * @return The arguments of this Process as a string.
+     */
+    std::string getArgumentsAsString() const;
+
+    /**
      * Returns the current working directory of this Process.
      *
      * @return The current working directory of this Process.

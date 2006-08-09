@@ -67,6 +67,21 @@ void ProcessTest::testGetArguments() {
             mProcess->getArguments()[2]);
 }
 
+void ProcessTest::testGetArgumentsAsString() {
+    //Test a Process without arguments
+    CPPUNIT_ASSERT_EQUAL(string(""), mProcess->getArgumentsAsString());
+
+    //Test a Process only with the name of the command
+    *mProcess << "echo";
+    CPPUNIT_ASSERT_EQUAL(string("echo"), mProcess->getArgumentsAsString());
+
+    //Test a Process with the name of the command and various arguments
+    *mProcess << "Hello World!\n" << "Bye!";
+    CPPUNIT_ASSERT_EQUAL(string("echo Hello World!\n Bye!"),
+                         mProcess->getArgumentsAsString());
+
+}
+
 void ProcessTest::testGetWorkingDirectory() {
     mProcess->mWorkingDirectory = "/";
 
