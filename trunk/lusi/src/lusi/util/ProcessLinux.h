@@ -142,12 +142,12 @@ private:
     /**
      * Sets the SIGCHLD handler.
      */
-    static void setupSigChldHandler();
+    void setupSigChldHandler();
 
     /**
      * Resets the SIGCHLD handler.
      */
-    static void resetSigChldHandler();
+    void resetSigChldHandler();
 
     /**
      * Closes all the pipes.
