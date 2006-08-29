@@ -25,7 +25,8 @@ using namespace lusi::util;
 //public:
 
 ProcessException::ProcessException(
-            const std::string& errorMessage /*= std::string("unspecified")*/) {
+            const std::string& errorMessage
+                    /*= std::string("ProcessException: unspecified")*/) {
     mErrorMessage = "ProcessException: " + errorMessage;
 }
 

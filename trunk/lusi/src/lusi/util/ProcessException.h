@@ -43,11 +43,12 @@ public:
     /**
      * Creates a new ProcessException.
      *
-     * @param errorMessage The error message of the exception, "unspecified"
-     *                     by default.
+     * @param errorMessage The error message of the exception,
+     *                     "ProcessException: unspecified" by default.
      */
     explicit ProcessException(
-                const std::string& errorMessage = std::string("unspecified"));
+                const std::string& errorMessage =
+                        std::string("ProcessException: unspecified"));
 
     /**
      * Destroys this ProcessException.
