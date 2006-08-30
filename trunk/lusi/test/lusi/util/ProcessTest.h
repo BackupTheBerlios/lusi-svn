@@ -73,8 +73,8 @@ public:
     void testGetArguments();
 
     /**
-     * Tests if the arguments returned as a string contains all the arguments with
-     * a blank space between them.
+     * Tests if the arguments returned as a string contains all the arguments
+     * with a blank space between them.
      */
     void testGetArgumentsAsString();
 
