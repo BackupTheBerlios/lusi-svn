@@ -32,8 +32,7 @@ namespace util {
  *
  * Exception for errors happened when executing a process.
  * Those exceptions are only intended for errors when forking and executing the
- * child process, not for child process executed by signals or exiting with
- * errors.
+ * child process, not for child process exiting with errors.
  * The error message returned by what() will be "ProcessException: " followed
  * by the error message specified when creating the exception.
  */
