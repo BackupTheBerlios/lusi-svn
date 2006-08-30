@@ -18,54 +18,60 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "ProcessRunner.h"
+#ifndef LUSI_UTILOPENCOMMUNICATIONCHANNELSEXCEPTION_H
+#define LUSI_UTILOPENCOMMUNICATIONCHANNELSEXCEPTION_H
 
-using std::string;
+#include <stdexcept>
+#include <string>
 
-using namespace lusi::util;
+namespace lusi {
+namespace util {
 
-ProcessRunner::ProcessRunner(Process* process
-                        /*= Process::newProcess(Process::PipeCommunication)*/) {
-    mProcess = process;
-    mStdoutData = string("");
-    mStderrData = string("");
-    mProcessExitedNumber = 0;
+/**
+ * Exception for errors happened when opening the communication channels in
+ * ProcessLinuxCommunication.
+ * The error message returned by what() will be
+ * "OpenCommunicationChannelsException: " followed by the error message
+ * specified when creating the exception.
+ */
+class OpenCommunicationChannelsException: public std::exception {
+public:
 
-    mProcess->attachObserver(this);
+    /**
+     * Creates a new OpenCommunicationChannelsException.
+     *
+     * @param errorMessage The error message of the exception,
+     *                      "OpenCommunicationChannelsException: unspecified" by
+     *                      default.
+     */
+    explicit OpenCommunicationChannelsException(
+            const std::string& errorMessage =
+                std::string("OpenCommunicationChannelsException: unspecified"));
+
+    /**
+     * Destroys this ProcessException.
+     */
+    virtual ~OpenCommunicationChannelsException() throw();
+
+    /**
+     * Returns the error message.
+     *
+     * @return The error message.
+     */
+    virtual const char* what() const throw() {
+        return mErrorMessage.c_str();
+    }
+
+private:
+
+    /**
+     * Error message for the exception.
+     */
+    std::string mErrorMessage;
+
+};
+
+}
 }
 
-ProcessRunner::~ProcessRunner() {
-    delete mProcess;
-}
-
-/*
-inline void ProcessRunner::receivedStdout(Process* process,
-                                          const string& data) {
-    mStdoutData += data;
-}
-
-inline void ProcessRunner::receivedStderr(Process* process,
-                                          const string& data) {
-    mStderrData += data;
-}
-
-inline void ProcessRunner::processExited(Process* process) {
-    mProcessExitedNumber++;
-}
-
-inline Process* ProcessRunner::getProcess() {
-    return mProcess;
-}
-
-inline const std::string& ProcessRunner::getStdoutData() const {
-    return mStdoutData;
-}
-
-inline const std::string& ProcessRunner::getStderrData() const {
-    return mStderrData;
-}
-
-inline int ProcessRunner::getProcessExitedNumber() const {
-    return mProcessExitedNumber;
-}
-*/
+#endif

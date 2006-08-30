@@ -21,6 +21,8 @@
 #ifndef LUSI_UTIL_PROCESSLINUX_H
 #define LUSI_UTIL_PROCESSLINUX_H
 
+#include <signal.h>
+
 #include <lusi/util/Process.h>
 
 extern "C" {
@@ -33,26 +35,40 @@ static void sigChldHandler(int signalNumber);
 
 namespace lusi {
 namespace util {
+class ProcessLinuxCommunication;
+}
+}
+
+namespace lusi {
+namespace util {
 
 /**
  * An implementation of Process using Linux system calls.
- * It makes use of read, write, select (and macros), dup2, execvp, pipe and
- * signal functions.
+ * It makes use of read, write, select (and macros), dup2, execvp and signal
+ * functions. It will likely work in any POSIX compliant system.
  *
  * When a process is executed, the parent process waits for a notification in
  * sExitPipe, which means that a child has exited. Meanwhile, notifies
  * observers about new data in stdout and stderr. start() has further
  * documentation about how process are executed.
  *
- * Tha static members of this class exist only to be used with the handler of
+ * The static members of this class exist only to be used with the handler of
  * SIGCHLD signal, as the handler is pure C, and it must use static members as
  * objects aren't supported.
+ *
+ * Opening and closing the communication channels between parent and child
+ * process is handled by another class, ProcessLinuxCommunication. Depending on
+ * the selected communication type, pipes or pseudo terminals are created. It
+ * takes care of assigning the right file descriptor to each channel (stdin,
+ * stdout and stderr in parent and child).
+ * As file descriptor are used, read, write, and select operations work doesn't
+ * matter which communication type is being used.
  */
 class ProcessLinux: public Process {
 public:
 
     /**
-     * Pipe to be notified when child process exites.
+     * Pipe to be notified when child process exits.
      * Is static, as it is used by SIGCHLD signal hanlder.
      */
     static int sExitPipe[2];
@@ -62,10 +78,15 @@ public:
     /**
      * Creates a new ProcessLinux.
      * If no other ProcessLinux is currently alive, it sets the handler for
-     * SIGCHLD signal and creates the sExitPipe to use to notify about an
-     * exited child.
+     * SIGCHLD signal and creates the sExitPipe to use to notify about an exited
+     * child.
+     * A ProcessLinuxCommunication is created for each instance of ProcessLinux,
+     * although channels aren't opened yet.
+     *
+     * @param communicationType The type of the communication with the child
+     *                          process.
      */
-    ProcessLinux();
+    ProcessLinux(CommunicationType communicationType);
 
     /**
      * Destroys this ProcessLinux.
@@ -79,11 +100,13 @@ public:
      * Starts this process.
      * This is a blocking call: the execution of the calling process, the
      * parent, won't continue until the process ends. However, notifiers will
-     * be updated with the data in stdout and stderr concurrently.
+     * be updated with the data in stdout and stderr concurrently. Data can also
+     * be written to the process being executed while this method is running (in
+     * fact, this is the only time when data can be written).
      *
      * In order to execute the process, a fork is made to execute it. The
-     * output of the executed process is redirected so it can be got in this
-     * process, the parent.
+     * input, output and error standard streams of the executed process are
+     * redirected so they can be used in this process, the parent.
      *
      * Parent process waits until the child has exited. It's notified through
      * sExitPipe by SIGCHLD signal handler.
@@ -99,6 +122,14 @@ public:
      */
     virtual void start() throw (ProcessException);
 
+    /**
+     * Writes the data as a string in the standard input of this Process.
+     *
+     * @param data The data to be written.
+     * @return True if the data was written, false otherwise.
+     */
+    virtual bool writeData(const std::string& data);
+
 private:
 
     /**
@@ -106,7 +137,7 @@ private:
      * execute the process.
      */
     enum ErrorType {
-        pipeError,
+        communicationError,
         forkError,
         execvpError
     };
@@ -120,22 +151,18 @@ private:
      * Struct to store the SIGCHLD sigaction before it's modified to use
      * sigChldHandler.
      */
-    static struct sigaction oldSigChldSigAction;
+    struct sigaction mOldSigChldSigAction;
 
     /**
      * The pid of the executed process.
      */
-    pid_t pid;
+    pid_t mPid;
 
     /**
-     * Pipe to get executed process stdout.
+     * The ProcessLinuxCommunication to use to open and close the communication
+     * channels.
      */
-    int mStdoutPipe[2];
-
-    /**
-     * Pipe to get executed process stderr.
-     */
-    int mStderrPipe[2];
+    ProcessLinuxCommunication* mProcessLinuxCommunication;
 
 
 
@@ -148,11 +175,6 @@ private:
      * Resets the SIGCHLD handler.
      */
     void resetSigChldHandler();
-
-    /**
-     * Closes all the pipes.
-     */
-    void closeCommunicationChannels();
 
     /**
      * Returns the arguments list as a char** to be used with C functions.
@@ -204,7 +226,7 @@ private:
      * Errors thrown are only errors when trying to execute the process, but
      * not errors in the process itself.
      * Before throwning the exception, communication channels are closed using
-     * closeCommunicationChannels().
+     * closeCommunicationChannels() in mProcessLinuxCommunication.
      *
      * @throw ProcessException A ProcessException with a message about the
      *                         error happened.

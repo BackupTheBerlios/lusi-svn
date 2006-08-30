@@ -18,54 +18,49 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "ProcessRunner.h"
+#ifndef LUSI_UTIL_PROCESSLINUXCOMMUNICATIONTESTIMPLEMENTATION_H
+#define LUSI_UTIL_PROCESSLINUXCOMMUNICATIONTESTIMPLEMENTATION_H
 
-using std::string;
+#include <lusi/util/ProcessLinuxCommunication.h>
 
-using namespace lusi::util;
+namespace lusi {
+namespace util {
 
-ProcessRunner::ProcessRunner(Process* process
-                        /*= Process::newProcess(Process::PipeCommunication)*/) {
-    mProcess = process;
-    mStdoutData = string("");
-    mStderrData = string("");
-    mProcessExitedNumber = 0;
+/**
+ * Specialization of ProcessLinuxCommunication class for testing purposes.
+ * This class sets a flag whenever closeCommunicationChannels is called. It
+ * helps to test openCommunicationChannels method.
+ */
+class ProcessLinuxCommunicationTestImplementation:
+                        public ProcessLinuxCommunication {
+public:
 
-    mProcess->attachObserver(this);
+    /**
+     * Creates a new ProcessLinuxCommunicationTestImplementation;
+     */
+    ProcessLinuxCommunicationTestImplementation();
+
+    /**
+     * Destroys this ProcessLinuxCommunicationTestImplementation.
+     */
+    virtual ~ProcessLinuxCommunicationTestImplementation();
+
+    /**
+     * Calls the base implementation and sets mCloseCommunicationChannelsCalled
+     * to true.
+     */
+    virtual void closeCommunicationChannels();
+
+private:
+
+    /**
+     * True if closeCommunicationChannels method was called, false otherwise.
+     */
+    bool mCloseCommunicationChannelsCalled;
+
+};
+
+}
 }
 
-ProcessRunner::~ProcessRunner() {
-    delete mProcess;
-}
-
-/*
-inline void ProcessRunner::receivedStdout(Process* process,
-                                          const string& data) {
-    mStdoutData += data;
-}
-
-inline void ProcessRunner::receivedStderr(Process* process,
-                                          const string& data) {
-    mStderrData += data;
-}
-
-inline void ProcessRunner::processExited(Process* process) {
-    mProcessExitedNumber++;
-}
-
-inline Process* ProcessRunner::getProcess() {
-    return mProcess;
-}
-
-inline const std::string& ProcessRunner::getStdoutData() const {
-    return mStdoutData;
-}
-
-inline const std::string& ProcessRunner::getStderrData() const {
-    return mStderrData;
-}
-
-inline int ProcessRunner::getProcessExitedNumber() const {
-    return mProcessExitedNumber;
-}
-*/
+#endif

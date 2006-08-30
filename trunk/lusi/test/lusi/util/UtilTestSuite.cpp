@@ -21,6 +21,9 @@
 #include "UtilTestSuite.h"
 #include "LocalUrlTest.h"
 #include "ProcessTest.h"
+#include "ProcessLinuxCommunicationTest.h"
+#include "PipeProcessLinuxCommunicationTest.h"
+#include "PtyProcessLinuxCommunicationTest.h"
 #include "ProcessLinuxTest.h"
 #include "ProcessRunnerTest.h"
 
@@ -32,6 +35,9 @@ UtilTestSuite::UtilTestSuite() {
     //Own namespace Tests
     addTest(LocalUrlTest::suite());
     addTest(ProcessTest::suite());
+    addTest(ProcessLinuxCommunicationTest::suite());
+    addTest(PipeProcessLinuxCommunicationTest::suite());
+    addTest(PtyProcessLinuxCommunicationTest::suite());
     addTest(ProcessLinuxTest::suite());
     addTest(ProcessRunnerTest::suite());
 

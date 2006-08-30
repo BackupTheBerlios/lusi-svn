@@ -31,8 +31,8 @@ using namespace lusi::util;
 
 //public:
 
-Process* Process::newProcess() {
-    return new ProcessLinux();
+Process* Process::newProcess(CommunicationType communicationType) {
+    return new ProcessLinux(communicationType);
 }
 
 Process::~Process() {
@@ -96,7 +96,9 @@ Process& Process::operator<<(const string& argument) {
 
 //protected:
 
-Process::Process() {
+Process::Process(CommunicationType communicationType) {
+    mCommunicationType = communicationType;
+
     mArguments = vector<string>();
     mWorkingDirectory = string();
     mProcessObservers = vector<ProcessObserver*>();

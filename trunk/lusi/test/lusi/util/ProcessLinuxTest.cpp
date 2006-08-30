@@ -36,133 +36,292 @@ using namespace lusi::util;
 //public:
 
 void ProcessLinuxTest::setUp() {
-    mProcessLinux = new ProcessLinux();
-    mProcessObserver = new ProcessObserverTestImplementation();
+    mPipeProcessLinux = new ProcessLinux(Process::PipeCommunication);
+    mPtyProcessLinux = new ProcessLinux(Process::PtyCommunication);
+    mPipeProcessObserver = new ProcessObserverTestImplementation();
+    mPtyProcessObserver = new ProcessObserverTestImplementation();
 
-    mProcessLinux->attachObserver(mProcessObserver);
+    mPipeProcessLinux->attachObserver(mPipeProcessObserver);
+    mPtyProcessLinux->attachObserver(mPtyProcessObserver);
 }
 
 void ProcessLinuxTest::tearDown() {
-    delete mProcessLinux;
-    delete mProcessObserver;
+    delete mPipeProcessLinux;
+    delete mPtyProcessLinux;
+    delete mPipeProcessObserver;
+}
+
+void ProcessLinuxTest::testWriteData() {
+    //Test with ProcessLinux using pipe communication
+    //Unstarted process
+    CPPUNIT_ASSERT_EQUAL(false, mPipeProcessLinux->writeData("BBY"));
+
+    *mPipeProcessLinux << "echo" << "testWriteData";
+    mPipeProcessLinux->start();
+
+    //Finished process
+    CPPUNIT_ASSERT_EQUAL(false, mPipeProcessLinux->writeData("ABY"));
+
+
+    //----------------------------------------------
+    //Test with ProcessLinux using pty communication
+    //----------------------------------------------
+    //Unstarted process
+    CPPUNIT_ASSERT_EQUAL(false, mPtyProcessLinux->writeData("BBY"));
+
+    *mPtyProcessLinux << "echo" << "testWriteData";
+    mPtyProcessLinux->start();
+
+    //Finished process
+    CPPUNIT_ASSERT_EQUAL(false, mPtyProcessLinux->writeData("ABY"));
 }
 
 void ProcessLinuxTest::testNotifyReceivedStdout() {
-    *mProcessLinux << "/bin/echo" << "Hello World!\nBye!";
-    mProcessLinux->start();
+    //Test with ProcessLinux using pipe communication
+    *mPipeProcessLinux << "/bin/echo" << "Hello World!\nBye!";
+    mPipeProcessLinux->start();
 
     CPPUNIT_ASSERT_EQUAL(string("Hello World!\nBye!\n"),
-            mProcessObserver->getStdoutAllData());
+            mPipeProcessObserver->getStdoutAllData());
 
 
     //Test without endline in the output
     restartTestObjects();
 
-    *mProcessLinux << "echo" << "-n" << "Without endline";
-    mProcessLinux->start();
+    *mPipeProcessLinux << "echo" << "-n" << "Without endline";
+    mPipeProcessLinux->start();
 
     CPPUNIT_ASSERT_EQUAL(string("Without endline"),
-            mProcessObserver->getStdoutLastData());
+            mPipeProcessObserver->getStdoutLastData());
     CPPUNIT_ASSERT_EQUAL(string("Without endline"),
-            mProcessObserver->getStdoutAllData());
+            mPipeProcessObserver->getStdoutAllData());
 
 
     //Test with sleeping process
     restartTestObjects();
 
-    *mProcessLinux << "/bin/sh" << "-c" <<
+    *mPipeProcessLinux << "/bin/sh" << "-c" <<
                 "echo -n \"Hello World!\n\" && sleep 0.5 && echo Bye!";
-    mProcessLinux->start();
+    mPipeProcessLinux->start();
 
     CPPUNIT_ASSERT_EQUAL_MESSAGE(string("May fail if it wasn't slept for ") +
                                  string("enough time"),
             string("Bye!\n"),
-            mProcessObserver->getStdoutLastData());
+            mPipeProcessObserver->getStdoutLastData());
     CPPUNIT_ASSERT_EQUAL(string("Hello World!\nBye!\n"),
-            mProcessObserver->getStdoutAllData());
+            mPipeProcessObserver->getStdoutAllData());
+
+    //----------------------------------------------
+    //Test with ProcessLinux using pty communication
+    //----------------------------------------------
+    *mPtyProcessLinux << "/bin/echo" << "Hello World!\nBye!";
+    mPtyProcessLinux->start();
+
+    CPPUNIT_ASSERT_EQUAL(string("Hello World!\nBye!\n"),
+            mPtyProcessObserver->getStdoutAllData());
+
+
+    //Test without endline in the output
+    restartTestObjects();
+
+    *mPtyProcessLinux << "echo" << "-n" << "Without endline";
+    mPtyProcessLinux->start();
+
+    CPPUNIT_ASSERT_EQUAL(string("Without endline"),
+            mPtyProcessObserver->getStdoutLastData());
+    CPPUNIT_ASSERT_EQUAL(string("Without endline"),
+            mPtyProcessObserver->getStdoutAllData());
+
+
+    //Test with sleeping process
+    restartTestObjects();
+
+    *mPtyProcessLinux << "/bin/sh" << "-c" <<
+                "echo -n \"Hello World!\n\" && sleep 0.5 && echo Bye!";
+    mPtyProcessLinux->start();
+
+    CPPUNIT_ASSERT_EQUAL_MESSAGE(string("May fail if it wasn't slept for ") +
+                                 string("enough time"),
+            string("Bye!\n"),
+            mPtyProcessObserver->getStdoutLastData());
+    CPPUNIT_ASSERT_EQUAL(string("Hello World!\nBye!\n"),
+            mPtyProcessObserver->getStdoutAllData());
 }
 
 void ProcessLinuxTest::testNotifyReceivedStderr() {
-    *mProcessLinux << "/bin/sh" << "-c" << "echo \"Hello World!\nBye!\" >&2";
-    mProcessLinux->start();
+    //Test with ProcessLinux using pipe communication
+    *mPipeProcessLinux << "/bin/sh" << "-c" <<
+                          "echo \"Hello World!\nBye!\" >&2";
+    mPipeProcessLinux->start();
 
     CPPUNIT_ASSERT_EQUAL(string("Hello World!\nBye!\n"),
-            mProcessObserver->getStderrAllData());
+            mPipeProcessObserver->getStderrAllData());
 
 
     //Test without endline in the output
     restartTestObjects();
 
-    *mProcessLinux << "/bin/sh" << "-c" << "echo -n Without endline >&2";
-    mProcessLinux->start();
+    *mPipeProcessLinux << "/bin/sh" << "-c" << "echo -n Without endline >&2";
+    mPipeProcessLinux->start();
 
     CPPUNIT_ASSERT_EQUAL(string("Without endline"),
-            mProcessObserver->getStderrLastData());
+            mPipeProcessObserver->getStderrLastData());
     CPPUNIT_ASSERT_EQUAL(string("Without endline"),
-            mProcessObserver->getStderrAllData());
+            mPipeProcessObserver->getStderrAllData());
 
 
     //Test with sleeping process
     restartTestObjects();
 
-    *mProcessLinux << "/bin/sh" << "-c" <<
+    *mPipeProcessLinux << "/bin/sh" << "-c" <<
                 "echo -n \"Hello World!\n\" >&2 && sleep 0.5 && echo Bye! >&2";
-    mProcessLinux->start();
+    mPipeProcessLinux->start();
 
     CPPUNIT_ASSERT_EQUAL_MESSAGE(string("May fail if it wasn't slept for ") +
                                  string("enough time"),
             string("Bye!\n"),
-            mProcessObserver->getStderrLastData());
+            mPipeProcessObserver->getStderrLastData());
     CPPUNIT_ASSERT_EQUAL(string("Hello World!\nBye!\n"),
-            mProcessObserver->getStderrAllData());
+            mPipeProcessObserver->getStderrAllData());
+
+    //----------------------------------------------
+    //Test with ProcessLinux using pty communication
+    //----------------------------------------------
+    *mPtyProcessLinux << "/bin/sh" << "-c" <<
+                          "echo \"Hello World!\nBye!\" >&2";
+    mPtyProcessLinux->start();
+
+    CPPUNIT_ASSERT_EQUAL(string("Hello World!\nBye!\n"),
+            mPtyProcessObserver->getStderrAllData());
+
+
+    //Test without endline in the output
+    restartTestObjects();
+
+    *mPtyProcessLinux << "/bin/sh" << "-c" << "echo -n Without endline >&2";
+    mPtyProcessLinux->start();
+
+    CPPUNIT_ASSERT_EQUAL(string("Without endline"),
+            mPtyProcessObserver->getStderrLastData());
+    CPPUNIT_ASSERT_EQUAL(string("Without endline"),
+            mPtyProcessObserver->getStderrAllData());
+
+
+    //Test with sleeping process
+    restartTestObjects();
+
+    *mPtyProcessLinux << "/bin/sh" << "-c" <<
+                "echo -n \"Hello World!\n\" >&2 && sleep 0.5 && echo Bye! >&2";
+    mPtyProcessLinux->start();
+
+    CPPUNIT_ASSERT_EQUAL_MESSAGE(string("May fail if it wasn't slept for ") +
+                                 string("enough time"),
+            string("Bye!\n"),
+            mPtyProcessObserver->getStderrLastData());
+    CPPUNIT_ASSERT_EQUAL(string("Hello World!\nBye!\n"),
+            mPtyProcessObserver->getStderrAllData());
 }
 
 void ProcessLinuxTest::testNotifyProcessExited() {
-    *mProcessLinux << "/bin/echo" << "Hello World!";
-    mProcessLinux->start();
+    //Test with ProcessLinux using pipe communication
+    *mPipeProcessLinux << "/bin/echo" << "Hello World!";
+    mPipeProcessLinux->start();
 
-    CPPUNIT_ASSERT_EQUAL(1, mProcessObserver->getProcessExitedNumber());
+    CPPUNIT_ASSERT_EQUAL(1, mPipeProcessObserver->getProcessExitedNumber());
+
+    //----------------------------------------------
+    //Test with ProcessLinux using pty communication
+    //----------------------------------------------
+    *mPtyProcessLinux << "/bin/echo" << "Hello World!";
+    mPtyProcessLinux->start();
+
+    CPPUNIT_ASSERT_EQUAL(1, mPtyProcessObserver->getProcessExitedNumber());
 }
 
 void ProcessLinuxTest::testSetWorkingDirectory() {
-    *mProcessLinux << "/bin/pwd";
-    mProcessLinux->setWorkingDirectory("/");
-    mProcessLinux->start();
+    //Test with ProcessLinux using pipe communication
+    *mPipeProcessLinux << "/bin/pwd";
+    mPipeProcessLinux->setWorkingDirectory("/");
+    mPipeProcessLinux->start();
 
     CPPUNIT_ASSERT_EQUAL(string("/\n"),
-            mProcessObserver->getStdoutLastData());
+            mPipeProcessObserver->getStdoutLastData());
 
 
     //Test with another directory
-    mProcessLinux->setWorkingDirectory("/etc");
-    mProcessLinux->start();
+    mPipeProcessLinux->setWorkingDirectory("/etc");
+    mPipeProcessLinux->start();
 
     CPPUNIT_ASSERT_EQUAL(string("/etc\n"),
-            mProcessObserver->getStdoutLastData());
+            mPipeProcessObserver->getStdoutLastData());
+
+    //----------------------------------------------
+    //Test with ProcessLinux using pty communication
+    //----------------------------------------------
+    *mPtyProcessLinux << "/bin/pwd";
+    mPtyProcessLinux->setWorkingDirectory("/");
+    mPtyProcessLinux->start();
+
+    CPPUNIT_ASSERT_EQUAL(string("/\n"),
+            mPtyProcessObserver->getStdoutLastData());
+
+
+    //Test with another directory
+    mPtyProcessLinux->setWorkingDirectory("/etc");
+    mPtyProcessLinux->start();
+
+    CPPUNIT_ASSERT_EQUAL(string("/etc\n"),
+            mPtyProcessObserver->getStdoutLastData());
 }
 
 void ProcessLinuxTest::testStart() {
-    *mProcessLinux << "echo" << "Without path";
-    mProcessLinux->start();
+    //Test with ProcessLinux using pipe communication
+    *mPipeProcessLinux << "echo" << "Without path";
+    mPipeProcessLinux->start();
 
     CPPUNIT_ASSERT_EQUAL(string("Without path\n"),
-            mProcessObserver->getStdoutLastData());
+            mPipeProcessObserver->getStdoutLastData());
     CPPUNIT_ASSERT_EQUAL(string("Without path\n"),
-            mProcessObserver->getStdoutAllData());
-    CPPUNIT_ASSERT_EQUAL(1, mProcessObserver->getProcessExitedNumber());
+            mPipeProcessObserver->getStdoutAllData());
+    CPPUNIT_ASSERT_EQUAL(1, mPipeProcessObserver->getProcessExitedNumber());
 
 
     //Test with non existing program
     restartTestObjects();
 
-    *mProcessLinux << "someNonExistentProgram" << "--dummy args";
-    CPPUNIT_ASSERT_THROW(mProcessLinux->start(), ProcessException);
+    *mPipeProcessLinux << "someNonExistentProgram" << "--dummy args";
+    CPPUNIT_ASSERT_THROW(mPipeProcessLinux->start(), ProcessException);
 
     CPPUNIT_ASSERT_EQUAL(string(""),
-            mProcessObserver->getStdoutAllData());
+            mPipeProcessObserver->getStdoutAllData());
     CPPUNIT_ASSERT_EQUAL(string(""),
-            mProcessObserver->getStderrAllData());
-    CPPUNIT_ASSERT_EQUAL(0, mProcessObserver->getProcessExitedNumber());
+            mPipeProcessObserver->getStderrAllData());
+    CPPUNIT_ASSERT_EQUAL(0, mPipeProcessObserver->getProcessExitedNumber());
+
+    //----------------------------------------------
+    //Test with ProcessLinux using pty communication
+    //----------------------------------------------
+    *mPtyProcessLinux << "echo" << "Without path";
+    mPtyProcessLinux->start();
+
+    CPPUNIT_ASSERT_EQUAL(string("Without path\n"),
+            mPtyProcessObserver->getStdoutLastData());
+    CPPUNIT_ASSERT_EQUAL(string("Without path\n"),
+            mPtyProcessObserver->getStdoutAllData());
+    CPPUNIT_ASSERT_EQUAL(1, mPtyProcessObserver->getProcessExitedNumber());
+
+
+    //Test with non existing program
+    restartTestObjects();
+
+    *mPtyProcessLinux << "someNonExistentProgram" << "--dummy args";
+    CPPUNIT_ASSERT_THROW(mPtyProcessLinux->start(), ProcessException);
+
+    CPPUNIT_ASSERT_EQUAL(string(""),
+            mPtyProcessObserver->getStdoutAllData());
+    CPPUNIT_ASSERT_EQUAL(string(""),
+            mPtyProcessObserver->getStderrAllData());
+    CPPUNIT_ASSERT_EQUAL(0, mPtyProcessObserver->getProcessExitedNumber());
 }
 
 //private:

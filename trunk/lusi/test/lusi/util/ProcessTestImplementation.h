@@ -36,6 +36,7 @@ public:
 
     /**
      * Creates a new ProcessTestImplementation.
+     * CommunicationType is set to pipe (although it's not used).
      */
     ProcessTestImplementation();
 
@@ -48,6 +49,13 @@ public:
      * Empty implementation.
      */
     virtual void start() throw (ProcessException);
+
+    /**
+     * Returns false.
+     *
+     * @return False.
+     */
+    virtual bool writeData(const std::string& data);
 
 };
 

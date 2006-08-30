@@ -18,54 +18,50 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "ProcessRunner.h"
+#ifndef LUSI_UTIL_PTYPROCESSLINUXCOMMUNICATIONTEST_H
+#define LUSI_UTIL_PTYPROCESSLINUXCOMMUNICATIONTEST_H
 
-using std::string;
+#include "BaseProcessLinuxCommunicationTest.h"
 
-using namespace lusi::util;
+namespace lusi {
+namespace util {
 
-ProcessRunner::ProcessRunner(Process* process
-                        /*= Process::newProcess(Process::PipeCommunication)*/) {
-    mProcess = process;
-    mStdoutData = string("");
-    mStderrData = string("");
-    mProcessExitedNumber = 0;
+/**
+ * Test class for PtyProcessLinuxCommunication.
+ * Uses BasePipeProcessLinuxCommunication. The test executed are an extended
+ * version of testOpenCommunicationChannels and the base version of
+ * testCloseCommunicationChannels.
+ *
+ * @see PtyProcessLinuxCommunication
+ */
+class PtyProcessLinuxCommunicationTest:
+                public BaseProcessLinuxCommunicationTest {
+    CPPUNIT_TEST_SUITE(PtyProcessLinuxCommunicationTest);
+    CPPUNIT_TEST(testOpenCommunicationChannels);
+    CPPUNIT_TEST(testCloseCommunicationChannels);
+    CPPUNIT_TEST_SUITE_END();
 
-    mProcess->attachObserver(this);
+public:
+
+    /**
+     * Sets up context before running a test.
+     * Creates the PipeProcessLinuxCommunication.
+     */
+    virtual void setUp();
+
+    /**
+     * Cleans up after the test run.
+     */
+    virtual void tearDown();
+
+    /**
+     * Executes base tests and then checks that the file descriptors are ptys.
+     */
+    virtual void testOpenCommunicationChannels();
+
+};
+
+}
 }
 
-ProcessRunner::~ProcessRunner() {
-    delete mProcess;
-}
-
-/*
-inline void ProcessRunner::receivedStdout(Process* process,
-                                          const string& data) {
-    mStdoutData += data;
-}
-
-inline void ProcessRunner::receivedStderr(Process* process,
-                                          const string& data) {
-    mStderrData += data;
-}
-
-inline void ProcessRunner::processExited(Process* process) {
-    mProcessExitedNumber++;
-}
-
-inline Process* ProcessRunner::getProcess() {
-    return mProcess;
-}
-
-inline const std::string& ProcessRunner::getStdoutData() const {
-    return mStdoutData;
-}
-
-inline const std::string& ProcessRunner::getStderrData() const {
-    return mStderrData;
-}
-
-inline int ProcessRunner::getProcessExitedNumber() const {
-    return mProcessExitedNumber;
-}
-*/
+#endif

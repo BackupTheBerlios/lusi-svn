@@ -18,54 +18,23 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "ProcessRunner.h"
-
-using std::string;
+#include "ProcessLinuxCommunicationTestImplementation.h"
 
 using namespace lusi::util;
 
-ProcessRunner::ProcessRunner(Process* process
-                        /*= Process::newProcess(Process::PipeCommunication)*/) {
-    mProcess = process;
-    mStdoutData = string("");
-    mStderrData = string("");
-    mProcessExitedNumber = 0;
+//public:
 
-    mProcess->attachObserver(this);
+ProcessLinuxCommunicationTestImplementation::
+ProcessLinuxCommunicationTestImplementation(): ProcessLinuxCommunication() {
+     mCloseCommunicationChannelsCalled = false;
 }
 
-ProcessRunner::~ProcessRunner() {
-    delete mProcess;
+ProcessLinuxCommunicationTestImplementation::
+~ProcessLinuxCommunicationTestImplementation() {
 }
 
-/*
-inline void ProcessRunner::receivedStdout(Process* process,
-                                          const string& data) {
-    mStdoutData += data;
-}
+void ProcessLinuxCommunicationTestImplementation::closeCommunicationChannels() {
+    ProcessLinuxCommunication::closeCommunicationChannels();
 
-inline void ProcessRunner::receivedStderr(Process* process,
-                                          const string& data) {
-    mStderrData += data;
+    mCloseCommunicationChannelsCalled = true;
 }
-
-inline void ProcessRunner::processExited(Process* process) {
-    mProcessExitedNumber++;
-}
-
-inline Process* ProcessRunner::getProcess() {
-    return mProcess;
-}
-
-inline const std::string& ProcessRunner::getStdoutData() const {
-    return mStdoutData;
-}
-
-inline const std::string& ProcessRunner::getStderrData() const {
-    return mStderrData;
-}
-
-inline int ProcessRunner::getProcessExitedNumber() const {
-    return mProcessExitedNumber;
-}
-*/

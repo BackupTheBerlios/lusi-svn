@@ -18,54 +18,38 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "ProcessRunner.h"
+#include <errno.h>
+#include <termios.h>
+
+#include "PtyProcessLinuxCommunicationTest.h"
+
+#define protected public
+#define private public
+#include "PtyProcessLinuxCommunication.h"
+#undef private
+#undef protected
 
 using std::string;
 
 using namespace lusi::util;
 
-ProcessRunner::ProcessRunner(Process* process
-                        /*= Process::newProcess(Process::PipeCommunication)*/) {
-    mProcess = process;
-    mStdoutData = string("");
-    mStderrData = string("");
-    mProcessExitedNumber = 0;
+//public:
 
-    mProcess->attachObserver(this);
+void PtyProcessLinuxCommunicationTest::setUp() {
+    mProcessLinuxCommunication = new PtyProcessLinuxCommunication();
 }
 
-ProcessRunner::~ProcessRunner() {
-    delete mProcess;
+void PtyProcessLinuxCommunicationTest::tearDown() {
+    delete mProcessLinuxCommunication;
 }
 
-/*
-inline void ProcessRunner::receivedStdout(Process* process,
-                                          const string& data) {
-    mStdoutData += data;
-}
+void PtyProcessLinuxCommunicationTest::testOpenCommunicationChannels() {
+    BaseProcessLinuxCommunicationTest::testOpenCommunicationChannels();
 
-inline void ProcessRunner::receivedStderr(Process* process,
-                                          const string& data) {
-    mStderrData += data;
+    struct termios tio;
+    //If the file descriptors are from slave of a terminal, no error must occur
+    CPPUNIT_ASSERT_EQUAL(0, tcgetattr(mProcessLinuxCommunication->getChildStdout(),
+                                      &tio));
+    CPPUNIT_ASSERT_EQUAL(0, tcgetattr(mProcessLinuxCommunication->getChildStderr(),
+                                      &tio));
 }
-
-inline void ProcessRunner::processExited(Process* process) {
-    mProcessExitedNumber++;
-}
-
-inline Process* ProcessRunner::getProcess() {
-    return mProcess;
-}
-
-inline const std::string& ProcessRunner::getStdoutData() const {
-    return mStdoutData;
-}
-
-inline const std::string& ProcessRunner::getStderrData() const {
-    return mStderrData;
-}
-
-inline int ProcessRunner::getProcessExitedNumber() const {
-    return mProcessExitedNumber;
-}
-*/

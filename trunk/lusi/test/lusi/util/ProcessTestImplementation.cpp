@@ -20,16 +20,22 @@
 
 #include "ProcessTestImplementation.h"
 
+using std::string;
+
 using namespace lusi::util;
 
 //public:
 
 ProcessTestImplementation::ProcessTestImplementation():
-                                Process() {
+                                Process(Process::PipeCommunication) {
 }
 
 ProcessTestImplementation::~ProcessTestImplementation() {
 }
 
 void ProcessTestImplementation::start() throw (ProcessException) {
+}
+
+bool ProcessTestImplementation::writeData(const string& data) {
+    return false;
 }

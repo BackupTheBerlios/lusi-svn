@@ -52,11 +52,13 @@ public:
 
     /**
      * Creates a new ProcessRunner.
-     * If no Process is set, a new Process is created and set.
+     * If no Process is set, a new Process using pipe communication is created
+     * and set.
      *
      * @param process The Process to run, or a default Process if none was set.
      */
-    ProcessRunner(Process* process = Process::newProcess());
+    ProcessRunner(Process* process =
+                            Process::newProcess(Process::PipeCommunication));
 
     /**
      * Destroys this ProcessRunner.

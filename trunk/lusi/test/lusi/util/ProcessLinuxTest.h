@@ -41,6 +41,7 @@ namespace util {
 class ProcessLinuxTest: public CppUnit::TestFixture {
 public:
     CPPUNIT_TEST_SUITE(ProcessLinuxTest);
+    CPPUNIT_TEST(testWriteData);
     CPPUNIT_TEST(testNotifyReceivedStdout);
     CPPUNIT_TEST(testNotifyReceivedStderr);
     CPPUNIT_TEST(testNotifyProcessExited);
@@ -61,6 +62,14 @@ public:
      * Cleans up after the test run.
      */
     virtual void tearDown();
+
+    /**
+     * Tests if writing data to an unstarted process and a finished process
+     * returns false.
+     * TODO: test if a running process receives well the sent data (it wasn't
+     * done due to the need of threads).
+     */
+    void testWriteData();
 
     /**
      * Tests if the registered observers are notified when new data is received
@@ -93,14 +102,24 @@ public:
 private:
 
     /**
-     * ProcessLinux to be tested.
+     * ProcessLinux using pipe communication to be tested.
      */
-    ProcessLinux* mProcessLinux;
+    ProcessLinux* mPipeProcessLinux;
 
     /**
-     * ProcessObserver for updates in the ProcessLinux.
+     * ProcessLinux using pty communication to be tested.
      */
-    ProcessObserverTestImplementation* mProcessObserver;
+    ProcessLinux* mPtyProcessLinux;
+
+    /**
+     * ProcessObserver for updates in the ProcessLinux using pipe communication.
+     */
+    ProcessObserverTestImplementation* mPipeProcessObserver;
+
+    /**
+     * ProcessObserver for updates in the ProcessLinux using pty communication.
+     */
+    ProcessObserverTestImplementation* mPtyProcessObserver;
 
 
 

@@ -54,7 +54,7 @@ namespace util {
  * the interface used by the library won't change, only the implementations
  * used, so that's why it was kept.
  *
- * It also follows Factory Method Design Pattern, so new Process can be get
+ * It also follows Factory Method Design Pattern, so new Process can be got
  * through newProcess() static method. It takes care of using the right
  * implementation.
  *
@@ -65,6 +65,15 @@ class Process {
 public:
 
     /**
+     * The type of the communication with the child process.
+     * All the implementations must support those types of communication.
+     */
+    enum CommunicationType {
+        PipeCommunication,
+        PtyCommunication
+    };
+
+    /**
      * Returns a new Process.
      * The implementation of the Process returned will depend on the available
      * implementations. This method takes care of creating a new object of the
@@ -72,9 +81,11 @@ public:
      * The returned Process must be deleted when it's no longer needed.
      * This method follows Factory Method Design Pattern.
      *
+     * @param communicationType The type of the communication with the child
+     *                          process.
      * @return A Process implementation.
      */
-    static Process* newProcess();
+    static Process* newProcess(CommunicationType communicationType);
 
     /**
      * Destroys this Process.
@@ -93,6 +104,19 @@ public:
      * @throw ProcessException If the process couldn't be executed.
      */
     virtual void start() throw (ProcessException) = 0;
+
+    /**
+     * Writes the data as a string in the standard input of this Process.
+     * If the process wasn't started or it finished already, this method is
+     * useless (that is, this method can't be called before starting the process
+     * so the data written is sent to it when it started. That won't work).
+     *
+     * Must be implemented in derived classes.
+     *
+     * @param data The data to be written.
+     * @return True if the data was written, false otherwise.
+     */
+    virtual bool writeData(const std::string& data) = 0;
 
     /**
      * Returns the list of arguments of this Process.
@@ -167,6 +191,11 @@ public:
 protected:
 
     /**
+     * The type of the communication with the child process.
+     */
+    CommunicationType mCommunicationType;
+
+    /**
      * The executable and arguments list.
      * First element is the executable. The others are the arguments.
      */
@@ -183,8 +212,11 @@ protected:
      * Creates a new Process.
      * Protected to avoid classes other than derived to create Process
      * objects.
+     *
+     * @param communicationType The type of the communication with the child
+     *                          process.
      */
-    Process();
+    Process(CommunicationType communicationType);
 
     /**
      * Notifies all the observers about a received stdout.

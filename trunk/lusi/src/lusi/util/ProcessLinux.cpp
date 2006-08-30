@@ -20,11 +20,11 @@
 
 #include <errno.h>
 #include <fcntl.h>
-#include <signal.h>
 #include <unistd.h>
 #include <sys/wait.h>
 
 #include "ProcessLinux.h"
+#include "ProcessLinuxCommunication.h"
 
 using std::string;
 using std::vector;
@@ -40,7 +40,8 @@ static void sigChldHandler(int signalNumber) {
 
 //public:
 
-ProcessLinux::ProcessLinux(): Process() {
+ProcessLinux::ProcessLinux(CommunicationType communicationType):
+                Process(communicationType) {
     if (!sReferenceCount) {
         if (pipe(sExitPipe) != 0) {
             abort();
@@ -49,12 +50,15 @@ ProcessLinux::ProcessLinux(): Process() {
     }
     ++sReferenceCount;
 
-    pid = 0;
+    mPid = 0;
+    mProcessLinuxCommunication = ProcessLinuxCommunication::
+                        newProcessLinuxCommunication(communicationType);
 }
 
 ProcessLinux::~ProcessLinux() {
-    if (pid > 0 && !kill(pid, 0)) {
-        kill(pid, SIGKILL);
+    delete mProcessLinuxCommunication;
+    if (mPid > 0 && !kill(mPid, 0)) {
+        kill(mPid, SIGKILL);
     }
 
     --sReferenceCount;
@@ -69,25 +73,35 @@ void ProcessLinux::start() throw (ProcessException) {
     //Pipe for notifying a failure in the child execution
     int childExitPipe[2];
 
-    if (pipe(mStdoutPipe) != 0 ||
-            pipe(mStderrPipe) != 0 ||
-            pipe(childExitPipe) != 0) {
-        //childExitPipe is the last, so there's no need to close it, because
-        //it never was created (or it failed before creating it, or when
-        //creating it)
-        handleExecutionError(pipeError);
+    if (pipe(childExitPipe) != 0) {
+        // childExitPipe doesn't need to be closed, as it wasn't opened
+        handleExecutionError(communicationError);
     }
+    try {
+        mProcessLinuxCommunication->openCommunicationChannels();
+    } catch (OpenCommunicationChannelsException e) {
+        handleExecutionError(communicationError);
+    }
+    //Used only to shorten the access to the variables
+    int childStdin = mProcessLinuxCommunication->getChildStdin();
+    int childStdout = mProcessLinuxCommunication->getChildStdout();
+    int childStderr = mProcessLinuxCommunication->getChildStderr();
+    int parentStdin = mProcessLinuxCommunication->getParentStdin();
+    int parentStdout = mProcessLinuxCommunication->getParentStdout();
+    int parentStderr = mProcessLinuxCommunication->getParentStderr();
 
-    pid = fork();
-    if (pid == 0) {
+    mPid = fork();
+    if (mPid == 0) {
         //Child process
 
         char** arguments = newCArguments();
 
+        //Redirect stdin
+        dup2(childStdin, 0);
         //Redirect stdout
-        dup2(mStdoutPipe[1], 1);
+        dup2(childStdout, 1);
         //Redirect stderr
-        dup2(mStderrPipe[1], 2);
+        dup2(childStderr, 2);
 
         //Prepare environment
         if (!mWorkingDirectory.empty()) {
@@ -102,7 +116,7 @@ void ProcessLinux::start() throw (ProcessException) {
         //Use _exit() instead of exit() to avoid destruction of static resources
         //of the library
         _exit(1);
-    } else if (pid == -1) {
+    } else if (mPid == -1) {
         handleExecutionError(forkError);
     }
 
@@ -113,21 +127,21 @@ void ProcessLinux::start() throw (ProcessException) {
         //I'm not sure why, but this code must be into the loop
         //If put outside it, sometimes the process exit notification isn't got
         //in select call
-        int fds[3] = { mStdoutPipe[0], mStderrPipe[0], sExitPipe[0] };
+        int fds[3] = { parentStdout, parentStderr, sExitPipe[0] };
         int maxFd = prepareFileDescriptorSet(&readFdSet, fds, 3);
 
         while (select(maxFd, &readFdSet, NULL, NULL, NULL) == -1);
 
-        if (FD_ISSET(mStdoutPipe[0], &readFdSet)) {
-            notifyReceivedStdout(readStringFromFileDescriptor(mStdoutPipe[0]));
+        if (FD_ISSET(parentStdout, &readFdSet)) {
+            notifyReceivedStdout(readStringFromFileDescriptor(parentStdout));
         }
 
-        if (FD_ISSET(mStderrPipe[0], &readFdSet)) {
-            notifyReceivedStderr(readStringFromFileDescriptor(mStderrPipe[0]));
+        if (FD_ISSET(parentStderr, &readFdSet)) {
+            notifyReceivedStderr(readStringFromFileDescriptor(parentStderr));
         }
 
         if (FD_ISSET(sExitPipe[0], &readFdSet)) {
-            if (waitpid(pid, 0, WNOHANG) == pid) {
+            if (waitpid(mPid, 0, WNOHANG) == mPid) {
                 exited = true;
                 char dummy = 0;
                 while (read(sExitPipe[0], &dummy, 1) != 1);
@@ -149,9 +163,32 @@ void ProcessLinux::start() throw (ProcessException) {
 
     sendPendingData();
 
-    closeCommunicationChannels();
+    mProcessLinuxCommunication->closeCommunicationChannels();
 
     notifyProcessExited();
+}
+
+bool ProcessLinux::writeData(const string& data) {
+    //Used only to shorten the access to the variable
+    int parentStdin = mProcessLinuxCommunication->getParentStdin();
+
+    char buffer;
+    int writedSize;
+
+    int i = 0;
+    while (i < data.size()) {
+        buffer = data[i];
+        if ((writedSize = write(parentStdin, &buffer, 1)) <= 0) {
+            if (writedSize == -1 && (errno == EBADF || errno == EINVAL ||
+                                     errno == EPIPE)) {
+                return false;
+            }
+        } else {
+            ++i;
+        }
+    }
+
+    return true;
 }
 
 //private:
@@ -159,8 +196,6 @@ void ProcessLinux::start() throw (ProcessException) {
 int ProcessLinux::sReferenceCount = 0;
 
 int ProcessLinux::sExitPipe[2];
-
-struct sigaction ProcessLinux::oldSigChldSigAction;
 
 
 
@@ -171,24 +206,17 @@ void ProcessLinux::setupSigChldHandler() {
     act.sa_handler = sigChldHandler;
     act.sa_flags = SA_NOCLDSTOP;
 
-    sigaction(SIGCHLD, &act, &oldSigChldSigAction);
+    sigaction(SIGCHLD, &act, &mOldSigChldSigAction);
 
     sigaddset(&act.sa_mask, SIGCHLD);
     //KProcessController code said:
-    //Make sure we don't block this signal. gdb tends to do that :-(
+    //"Make sure we don't block this signal. gdb tends to do that :-("
     //They're clever than me, so I'll follow their advice :)
     sigprocmask(SIG_UNBLOCK, &act.sa_mask, 0);
 }
 
 void ProcessLinux::resetSigChldHandler() {
-    sigaction(SIGCHLD, &oldSigChldSigAction, 0);
-}
-
-void ProcessLinux::closeCommunicationChannels() {
-    close(mStdoutPipe[0]);
-    close(mStdoutPipe[1]);
-    close(mStderrPipe[0]);
-    close(mStderrPipe[1]);
+    sigaction(SIGCHLD, &mOldSigChldSigAction, 0);
 }
 
 char** ProcessLinux::newCArguments() {
@@ -254,27 +282,31 @@ string ProcessLinux::readStringFromFileDescriptor(int fileDescriptor) const {
 }
 
 void ProcessLinux::sendPendingData() {
+    //Used only to shorten the access to the variables
+    int parentStdout = mProcessLinuxCommunication->getParentStdout();
+    int parentStderr = mProcessLinuxCommunication->getParentStderr();
+
     fd_set readFdSet;
 
     bool pendingStdout = true;
     bool pendingStderr = true;
     while (pendingStdout || pendingStderr) {
-        int fds[2] = { mStdoutPipe[0], mStderrPipe[0] };
+        int fds[2] = { parentStdout, parentStderr };
         int maxFd = prepareFileDescriptorSet(&readFdSet, fds, 2);
 
         //Inmediate exit from select
         timeval zeroTimeout = { 0l, 0l };
         while (select(maxFd, &readFdSet, NULL, NULL, &zeroTimeout) == -1);
 
-        if (FD_ISSET(mStdoutPipe[0], &readFdSet)) {
-            notifyReceivedStdout(readStringFromFileDescriptor(mStdoutPipe[0]));
+        if (FD_ISSET(parentStdout, &readFdSet)) {
+            notifyReceivedStdout(readStringFromFileDescriptor(parentStdout));
             pendingStdout = true;
         } else {
             pendingStdout = false;
         }
 
-        if (FD_ISSET(mStderrPipe[0], &readFdSet)) {
-            notifyReceivedStderr(readStringFromFileDescriptor(mStderrPipe[0]));
+        if (FD_ISSET(parentStderr, &readFdSet)) {
+            notifyReceivedStderr(readStringFromFileDescriptor(parentStderr));
             pendingStderr = true;
         } else {
             pendingStderr = false;
@@ -284,9 +316,9 @@ void ProcessLinux::sendPendingData() {
 
 void ProcessLinux::handleExecutionError(ErrorType errorType)
                                                     throw (ProcessException) {
-    closeCommunicationChannels();
+    mProcessLinuxCommunication->closeCommunicationChannels();
     switch (errorType) {
-        case pipeError:
+        case communicationError:
             throw ProcessException("Could not create communication channels");
             break;
         case forkError:
