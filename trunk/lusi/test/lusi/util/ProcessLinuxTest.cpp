@@ -49,6 +49,7 @@ void ProcessLinuxTest::tearDown() {
     delete mPipeProcessLinux;
     delete mPtyProcessLinux;
     delete mPipeProcessObserver;
+    delete mPtyProcessObserver;
 }
 
 void ProcessLinuxTest::testWriteData() {
