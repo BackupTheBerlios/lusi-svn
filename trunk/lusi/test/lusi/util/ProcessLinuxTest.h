@@ -40,12 +40,13 @@ namespace util {
  */
 class ProcessLinuxTest: public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(ProcessLinuxTest);
-    CPPUNIT_TEST(testWriteData);
     CPPUNIT_TEST(testNotifyReceivedStdout);
     CPPUNIT_TEST(testNotifyReceivedStderr);
     CPPUNIT_TEST(testNotifyProcessExited);
     CPPUNIT_TEST(testSetWorkingDirectory);
     CPPUNIT_TEST(testStart);
+    CPPUNIT_TEST(testWriteData);
+    CPPUNIT_TEST(testGetProcessLinuxCommunication);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -61,14 +62,6 @@ public:
      * Cleans up after the test run.
      */
     virtual void tearDown();
-
-    /**
-     * Tests if writing data to an unstarted process and a finished process
-     * returns false.
-     * TODO: test if a running process receives well the sent data (it wasn't
-     * done due to the need of threads).
-     */
-    void testWriteData();
 
     /**
      * Tests if the registered observers are notified when new data is received
@@ -97,6 +90,19 @@ public:
      * Tests start method with bad process (non existent, without full path...).
      */
     void testStart();
+
+    /**
+     * Tests if writing data to an unstarted process and a finished process
+     * returns false.
+     * TODO: test if a running process receives well the sent data (it wasn't
+     * done due to the need of threads).
+     */
+    void testWriteData();
+
+    /**
+     * Tests if getProcessLinuxCommunication returns mProcessLinuxCommunication.
+     */
+    void testGetProcessLinuxCommunication();
 
 private:
 

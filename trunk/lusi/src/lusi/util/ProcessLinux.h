@@ -130,6 +130,17 @@ public:
      */
     virtual bool writeData(const std::string& data);
 
+    /**
+     * Returns the ProcessLinuxCommunication used to manage communication
+     * channels.
+     *
+     * @return The ProcessLinuxCommunication used to manage communication
+     *         channels.
+     */
+    ProcessLinuxCommunication* getProcessLinuxCommunication() {
+        return mProcessLinuxCommunication;
+    }
+
 private:
 
     /**

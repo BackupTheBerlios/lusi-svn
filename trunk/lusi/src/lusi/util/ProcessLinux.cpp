@@ -191,6 +191,12 @@ bool ProcessLinux::writeData(const string& data) {
     return true;
 }
 
+/*
+ProcessLinuxCommunication* ProcessLinux::getProcessLinuxCommunication() {
+    return mProcessLinuxCommunication;
+}
+*/
+
 //private:
 
 int ProcessLinux::sReferenceCount = 0;

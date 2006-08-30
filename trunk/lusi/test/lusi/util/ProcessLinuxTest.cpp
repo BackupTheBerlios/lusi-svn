@@ -29,6 +29,8 @@
 #undef private
 #undef protected
 
+#include "ProcessLinuxCommunicationTestImplementation.h"
+
 using std::string;
 
 using namespace lusi::util;
@@ -323,6 +325,17 @@ void ProcessLinuxTest::testStart() {
     CPPUNIT_ASSERT_EQUAL(string(""),
             mPtyProcessObserver->getStderrAllData());
     CPPUNIT_ASSERT_EQUAL(0, mPtyProcessObserver->getProcessExitedNumber());
+}
+
+void ProcessLinuxTest::testGetProcessLinuxCommunication() {
+    delete mPipeProcessLinux->mProcessLinuxCommunication;
+
+    ProcessLinuxCommunication* processLinuxCommunication =
+                            new ProcessLinuxCommunicationTestImplementation();
+    mPipeProcessLinux->mProcessLinuxCommunication = processLinuxCommunication;
+
+    CPPUNIT_ASSERT_EQUAL(processLinuxCommunication,
+                         mPipeProcessLinux->getProcessLinuxCommunication());
 }
 
 //private:
