@@ -39,7 +39,6 @@ namespace util {
  * @see ProcessLinux
  */
 class ProcessLinuxTest: public CppUnit::TestFixture {
-public:
     CPPUNIT_TEST_SUITE(ProcessLinuxTest);
     CPPUNIT_TEST(testWriteData);
     CPPUNIT_TEST(testNotifyReceivedStdout);
