@@ -34,9 +34,9 @@ namespace util {
  * child for stdin. Slave sides are set in the child for stdout and stderr, and
  * in the parent for stdin.
  *
- * It makes use of getpt, grantpt, unlockpt, ptsname, isastream, ioctl, tcgetattr,
- * tcsetattr, open and close functions. It will likely work in any system with
- * the GNU C Library.
+ * It makes use of getpt, grantpt, unlockpt, ptsname, isastream, ioctl,
+ * tcgetattr, tcsetattr, open and close functions. It will likely work in any
+ * system with the GNU C Library.
  */
 class PtyProcessLinuxCommunication: public ProcessLinuxCommunication {
 public:
@@ -120,8 +120,8 @@ private:
 
     /**
      * Prepares the terminal setting some parameters in it.
-     * The slave pseudo-terminal device must be a valid one, as no checks are made
-     * to ensure that.
+     * The slave pseudo-terminal device must be a valid one, as no checks are
+     * made to ensure that.
      * Disables the mapping of NL to CR-NL.
      */
     void preparePtySlave(int slave);
