@@ -18,32 +18,76 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "UtilTestSuite.h"
-#include "LocalUrlTest.h"
-#include "ProcessTest.h"
-#include "ProcessLinuxCommunicationTest.h"
-#include "PipeProcessLinuxCommunicationTest.h"
-#include "PtyProcessLinuxCommunicationTest.h"
-#include "ProcessLinuxTest.h"
-#include "ProcessRunnerTest.h"
-#include "SuProcessTest.h"
-#include "SuProcessLinuxTest.h"
+#ifndef LUSI_UTIL_SUPROCESSTEST_H
+#define LUSI_UTIL_SUPROCESSTEST_H
 
-using namespace lusi::util;
+#include <cppunit/extensions/HelperMacros.h>
 
-//public:
-
-UtilTestSuite::UtilTestSuite() {
-    //Own namespace Tests
-    addTest(LocalUrlTest::suite());
-    addTest(ProcessTest::suite());
-    addTest(ProcessLinuxCommunicationTest::suite());
-    addTest(PipeProcessLinuxCommunicationTest::suite());
-    addTest(PtyProcessLinuxCommunicationTest::suite());
-    addTest(ProcessLinuxTest::suite());
-    addTest(ProcessRunnerTest::suite());
-    addTest(SuProcessTest::suite());
-    addTest(SuProcessLinuxTest::suite());
-
-    //Direct child namespaces TestSuites
+namespace lusi {
+namespace util {
+class SuProcess;
 }
+}
+
+namespace lusi {
+namespace util {
+
+/**
+ * Test class for SuProcess.
+ *
+ * @see SuProcess
+ */
+class SuProcessTest: public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(SuProcessTest);
+    CPPUNIT_TEST(testConstructor);
+    CPPUNIT_TEST(testGetUserName);
+    CPPUNIT_TEST(testSetUserName);
+    CPPUNIT_TEST(testSetPassword);
+    CPPUNIT_TEST_SUITE_END();
+
+public:
+
+    /**
+     * Sets up context before running a test.
+     * Creates the SuProcess.
+     */
+    virtual void setUp();
+
+    /**
+     * Cleans up after the test run.
+     */
+    virtual void tearDown();
+
+    /**
+     * Tests if the user name and the password are set to "".
+     */
+    void testConstructor();
+
+    /**
+     * Tests if getUserName returns mUserName.
+     */
+    void testGetUserName();
+
+    /**
+     * Tests if setUserName sets mUserName.
+     */
+    void testSetUserName();
+
+    /**
+     * Tests if setPassword sets mPassword.
+     */
+    void testSetPassword();
+
+private:
+
+    /**
+     * SuProcess to be tested.
+     */
+    SuProcess* mSuProcess;
+
+};
+
+}
+}
+
+#endif

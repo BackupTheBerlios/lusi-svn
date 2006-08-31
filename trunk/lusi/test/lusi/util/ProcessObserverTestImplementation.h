@@ -154,6 +154,12 @@ public:
         return mProcessExitedNumber;
     }
 
+    /**
+     * Cleans all the received data and the number of times that processExited
+     * was called.
+     */
+    void cleanData();
+
 private:
 
     /**

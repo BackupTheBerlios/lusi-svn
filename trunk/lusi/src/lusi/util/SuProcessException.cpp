@@ -18,32 +18,14 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "UtilTestSuite.h"
-#include "LocalUrlTest.h"
-#include "ProcessTest.h"
-#include "ProcessLinuxCommunicationTest.h"
-#include "PipeProcessLinuxCommunicationTest.h"
-#include "PtyProcessLinuxCommunicationTest.h"
-#include "ProcessLinuxTest.h"
-#include "ProcessRunnerTest.h"
-#include "SuProcessTest.h"
-#include "SuProcessLinuxTest.h"
+#include "SuProcessException.h"
 
 using namespace lusi::util;
 
-//public:
+SuProcessException::SuProcessException(const std::string& errorMessage
+                        /*= std::string("ProcessException: unspecified")*/):
+            ProcessException(errorMessage) {
+}
 
-UtilTestSuite::UtilTestSuite() {
-    //Own namespace Tests
-    addTest(LocalUrlTest::suite());
-    addTest(ProcessTest::suite());
-    addTest(ProcessLinuxCommunicationTest::suite());
-    addTest(PipeProcessLinuxCommunicationTest::suite());
-    addTest(PtyProcessLinuxCommunicationTest::suite());
-    addTest(ProcessLinuxTest::suite());
-    addTest(ProcessRunnerTest::suite());
-    addTest(SuProcessTest::suite());
-    addTest(SuProcessLinuxTest::suite());
-
-    //Direct child namespaces TestSuites
+SuProcessException::~SuProcessException() throw() {
 }

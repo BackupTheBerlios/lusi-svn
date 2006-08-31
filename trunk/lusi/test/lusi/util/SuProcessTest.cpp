@@ -18,32 +18,51 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "UtilTestSuite.h"
-#include "LocalUrlTest.h"
-#include "ProcessTest.h"
-#include "ProcessLinuxCommunicationTest.h"
-#include "PipeProcessLinuxCommunicationTest.h"
-#include "PtyProcessLinuxCommunicationTest.h"
-#include "ProcessLinuxTest.h"
-#include "ProcessRunnerTest.h"
+#include <string>
+
 #include "SuProcessTest.h"
-#include "SuProcessLinuxTest.h"
+
+#define protected public
+#define private public
+#include "SuProcessTestImplementation.h"
+#undef private
+#undef protected
+
+using std::string;
 
 using namespace lusi::util;
 
 //public:
 
-UtilTestSuite::UtilTestSuite() {
-    //Own namespace Tests
-    addTest(LocalUrlTest::suite());
-    addTest(ProcessTest::suite());
-    addTest(ProcessLinuxCommunicationTest::suite());
-    addTest(PipeProcessLinuxCommunicationTest::suite());
-    addTest(PtyProcessLinuxCommunicationTest::suite());
-    addTest(ProcessLinuxTest::suite());
-    addTest(ProcessRunnerTest::suite());
-    addTest(SuProcessTest::suite());
-    addTest(SuProcessLinuxTest::suite());
+void SuProcessTest::setUp() {
+    mSuProcess = new SuProcessTestImplementation();
+}
 
-    //Direct child namespaces TestSuites
+void SuProcessTest::tearDown() {
+    delete mSuProcess;
+}
+
+void SuProcessTest::testConstructor() {
+    CPPUNIT_ASSERT_EQUAL(string(""), mSuProcess->mUserName);
+    CPPUNIT_ASSERT_EQUAL(string(""), mSuProcess->mPassword);
+}
+
+void SuProcessTest::testGetUserName() {
+    mSuProcess->mUserName = "dani";
+
+    CPPUNIT_ASSERT_EQUAL(string("dani"), mSuProcess->getUserName());
+}
+
+void SuProcessTest::testSetUserName() {
+    mSuProcess->setPassword("again me");
+
+    CPPUNIT_ASSERT_EQUAL(string("again me"),
+                         mSuProcess->mPassword);
+}
+
+void SuProcessTest::testSetPassword() {
+    mSuProcess->setPassword("not my real password, sorry :P");
+
+    CPPUNIT_ASSERT_EQUAL(string("not my real password, sorry :P"),
+                         mSuProcess->mPassword);
 }

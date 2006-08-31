@@ -18,32 +18,48 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "UtilTestSuite.h"
-#include "LocalUrlTest.h"
-#include "ProcessTest.h"
-#include "ProcessLinuxCommunicationTest.h"
-#include "PipeProcessLinuxCommunicationTest.h"
-#include "PtyProcessLinuxCommunicationTest.h"
-#include "ProcessLinuxTest.h"
-#include "ProcessRunnerTest.h"
-#include "SuProcessTest.h"
-#include "SuProcessLinuxTest.h"
+#ifndef LUSI_UTIL_SUPROCESSTESTIMPLEMENTATION_H
+#define LUSI_UTIL_SUPROCESSTESTIMPLEMENTATION_H
 
-using namespace lusi::util;
+#include <lusi/util/SuProcess.h>
 
-//public:
+namespace lusi {
+namespace util {
 
-UtilTestSuite::UtilTestSuite() {
-    //Own namespace Tests
-    addTest(LocalUrlTest::suite());
-    addTest(ProcessTest::suite());
-    addTest(ProcessLinuxCommunicationTest::suite());
-    addTest(PipeProcessLinuxCommunicationTest::suite());
-    addTest(PtyProcessLinuxCommunicationTest::suite());
-    addTest(ProcessLinuxTest::suite());
-    addTest(ProcessRunnerTest::suite());
-    addTest(SuProcessTest::suite());
-    addTest(SuProcessLinuxTest::suite());
+/**
+ * Implementation of SuProcess abstract class for testing purposes.
+ * The abstract methods have empty implementations. It's used to test the
+ * already implemented methods in SuProcess.
+ */
+class SuProcessTestImplementation: public SuProcess {
+public:
 
-    //Direct child namespaces TestSuites
+    /**
+     * Creates a new SuProcessTestImplementation.
+     * CommunicationType is set to pipe (although it's not used).
+     */
+    SuProcessTestImplementation();
+
+    /**
+     * Destroys this ProcessTestImplementation.
+     */
+    virtual ~SuProcessTestImplementation();
+
+    /**
+     * Empty implementation.
+     */
+    virtual void start() throw (ProcessException);
+
+    /**
+     * Returns false.
+     *
+     * @return False.
+     */
+    virtual bool writeData(const std::string& data);
+
+};
+
 }
+}
+
+#endif

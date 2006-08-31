@@ -18,32 +18,36 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "UtilTestSuite.h"
-#include "LocalUrlTest.h"
-#include "ProcessTest.h"
-#include "ProcessLinuxCommunicationTest.h"
-#include "PipeProcessLinuxCommunicationTest.h"
-#include "PtyProcessLinuxCommunicationTest.h"
-#include "ProcessLinuxTest.h"
-#include "ProcessRunnerTest.h"
-#include "SuProcessTest.h"
-#include "SuProcessLinuxTest.h"
+#include "SuProcess.h"
+#include "SuProcessLinux.h"
 
 using namespace lusi::util;
 
 //public:
 
-UtilTestSuite::UtilTestSuite() {
-    //Own namespace Tests
-    addTest(LocalUrlTest::suite());
-    addTest(ProcessTest::suite());
-    addTest(ProcessLinuxCommunicationTest::suite());
-    addTest(PipeProcessLinuxCommunicationTest::suite());
-    addTest(PtyProcessLinuxCommunicationTest::suite());
-    addTest(ProcessLinuxTest::suite());
-    addTest(ProcessRunnerTest::suite());
-    addTest(SuProcessTest::suite());
-    addTest(SuProcessLinuxTest::suite());
+SuProcess* SuProcess::newSuProcess(CommunicationType communicationType) {
+    return new SuProcessLinux();
+}
 
-    //Direct child namespaces TestSuites
+SuProcess::~SuProcess() {
+}
+
+/*
+inline std::string SuProcess::getUserName() {
+    return mUserName;
+}
+
+inline void SuProcesssetUserName(const std::string& userName) {
+    mUserName = userName;
+}
+
+inline void SuProcesssetPassword(const std::string& password) {
+    mPassword = password;
+}
+*/
+
+//protected:
+
+SuProcess::SuProcess(CommunicationType communicationType):
+            Process(communicationType) {
 }

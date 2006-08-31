@@ -18,32 +18,46 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "UtilTestSuite.h"
-#include "LocalUrlTest.h"
-#include "ProcessTest.h"
-#include "ProcessLinuxCommunicationTest.h"
-#include "PipeProcessLinuxCommunicationTest.h"
-#include "PtyProcessLinuxCommunicationTest.h"
-#include "ProcessLinuxTest.h"
-#include "ProcessRunnerTest.h"
-#include "SuProcessTest.h"
-#include "SuProcessLinuxTest.h"
+#ifndef LUSI_UTIL_SUPROCESSEXCEPTION_H
+#define LUSI_UTIL_SUPROCESSEXCEPTION_H
 
-using namespace lusi::util;
+#include <lusi/util/ProcessException.h>
 
-//public:
+namespace lusi {
 
-UtilTestSuite::UtilTestSuite() {
-    //Own namespace Tests
-    addTest(LocalUrlTest::suite());
-    addTest(ProcessTest::suite());
-    addTest(ProcessLinuxCommunicationTest::suite());
-    addTest(PipeProcessLinuxCommunicationTest::suite());
-    addTest(PtyProcessLinuxCommunicationTest::suite());
-    addTest(ProcessLinuxTest::suite());
-    addTest(ProcessRunnerTest::suite());
-    addTest(SuProcessTest::suite());
-    addTest(SuProcessLinuxTest::suite());
+namespace util {
 
-    //Direct child namespaces TestSuites
+/**
+ * @class SuProcessException SuProcessException.h lusi/util/SuProcessException.h
+ *
+ * Exception for errors happened when executing a process switching the user.
+ * Those exceptions are only intended for errors when switching to the new user.
+ * Errors forking and executing the child process are signaled with
+ * ProcessException. Neither SuProcessException nor ProcessException are
+ * The error message returned by what() will be "ProcessException: " followed
+ * by the error message specified when creating the exception.
+ */
+class SuProcessException: public ProcessException {
+public:
+
+    /**
+     * Creates a new SuProcessException.
+     *
+     * @param errorMessage The error message of the exception,
+     *                     "SuProcessException: unspecified" by default.
+     */
+    explicit SuProcessException(const std::string& errorMessage =
+                        std::string("SuProcessException: unspecified"));
+
+    /**
+     * Destroys this SuProcessException.
+     */
+    virtual ~SuProcessException() throw();
+
+};
+
 }
+
+}
+
+#endif

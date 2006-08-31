@@ -91,3 +91,12 @@ inline int getProcessExitedNumber() const {
     return mProcessExitedNumber;
 }
 */
+
+void ProcessObserverTestImplementation::cleanData() {
+    mStdoutLastNotification = DataNotification();
+    mStderrLastNotification = DataNotification();
+    mStdoutAllData = string();
+    mStderrAllData = string();
+    mLastProcessExited = 0;
+    mProcessExitedNumber = 0;
+}
