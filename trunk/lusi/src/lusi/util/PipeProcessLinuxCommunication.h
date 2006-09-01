@@ -83,7 +83,7 @@ private:
     /**
      * Struct to store the SIGPIPE sigaction before it's set to be ignored.
      */
-    struct sigaction oldSigPipeSigAction;
+    struct sigaction mOldSigPipeSigAction;
 
 
 

@@ -88,9 +88,9 @@ void PipeProcessLinuxCommunication::setupSigPipeHandler() {
 
     act.sa_handler = SIG_IGN;
 
-    sigaction(SIGPIPE, &act, &oldSigPipeSigAction);
+    sigaction(SIGPIPE, &act, &mOldSigPipeSigAction);
 }
 
 void PipeProcessLinuxCommunication::resetSigPipeHandler() {
-    sigaction(SIGPIPE, &oldSigPipeSigAction, 0);
+    sigaction(SIGPIPE, &mOldSigPipeSigAction, 0);
 }
