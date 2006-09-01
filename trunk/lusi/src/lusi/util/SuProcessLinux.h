@@ -148,6 +148,16 @@ private:
      */
     std::string getCurrentUserName();
 
+    /**
+     * Copy constructor disabled.
+     */
+    SuProcessLinux(const SuProcessLinux& suProcessLinux);
+
+    /**
+     * Assignment disabled.
+     */
+    SuProcessLinux& operator=(const SuProcessLinux& suProcessLinux);
+
 };
 
 }

@@ -126,6 +126,18 @@ private:
      */
     void preparePtySlave(int slave);
 
+    /**
+     * Copy constructor disabled.
+     */
+    PtyProcessLinuxCommunication(
+            const PtyProcessLinuxCommunication& ptyProcessLinuxCommunication);
+
+    /**
+     * Assignment disabled.
+     */
+    PtyProcessLinuxCommunication& operator=(
+            const PtyProcessLinuxCommunication& ptyProcessLinuxCommunication);
+
 };
 
 }

@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef LUSI_UTILPIPEPROCESSLINUXCOMMUNICATIONTEST_H
-#define LUSI_UTILPIPEPROCESSLINUXCOMMUNICATIONTEST_H
+#ifndef LUSI_UTIL_PIPEPROCESSLINUXCOMMUNICATIONTEST_H
+#define LUSI_UTIL_PIPEPROCESSLINUXCOMMUNICATIONTEST_H
 
 #include "BaseProcessLinuxCommunicationTest.h"
 

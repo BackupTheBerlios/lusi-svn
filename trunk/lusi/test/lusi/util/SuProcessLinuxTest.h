@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef LUSI_UTILSUPROCESSLINUXTEST_H
-#define LUSI_UTILSUPROCESSLINUXTEST_H
+#ifndef LUSI_UTIL_SUPROCESSLINUXTEST_H
+#define LUSI_UTIL_SUPROCESSLINUXTEST_H
 
 #include <cppunit/extensions/HelperMacros.h>
 

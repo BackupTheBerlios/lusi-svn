@@ -211,6 +211,20 @@ protected:
      */
     ProcessLinuxCommunication();
 
+private:
+
+    /**
+     * Copy constructor disabled.
+     */
+    ProcessLinuxCommunication(
+                const ProcessLinuxCommunication& processLinuxCommunication);
+
+    /**
+     * Assignment disabled.
+     */
+    ProcessLinuxCommunication& operator=(
+                const ProcessLinuxCommunication& processLinuxCommunication);
+
 };
 
 }

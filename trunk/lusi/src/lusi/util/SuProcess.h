@@ -35,6 +35,9 @@ namespace util {
  * A Process that can be executed using a different user than the current one.
  * This class abstracts the use of low level calls to execute a process as a
  * different user.
+ * If the user isn't specified, or is the same as the current user, no switching
+ * occurs and the process is executed as a normal process (so no password is
+ * used).
  *
  * This class is abstract, so different implementations can be made depending
  * on the underlying system.
@@ -135,6 +138,18 @@ protected:
      *                          process.
      */
     SuProcess(CommunicationType communicationType);
+
+private:
+
+    /**
+     * Copy constructor disabled.
+     */
+    SuProcess(const SuProcess& suProcess);
+
+    /**
+     * Assignment disabled.
+     */
+    SuProcess& operator=(const SuProcess& suProcess);
 
 };
 

@@ -180,6 +180,18 @@ private:
      */
     void waitMiliseconds(int miliseconds);
 
+    /**
+     * Copy constructor disabled.
+     */
+    SuProcessLinuxConverser(
+                    const SuProcessLinuxConverser& suProcessLinuxConverser);
+
+    /**
+     * Assignment disabled.
+     */
+    SuProcessLinuxConverser& operator=(
+                    const SuProcessLinuxConverser& suProcessLinuxConverser);
+
 };
 
 }

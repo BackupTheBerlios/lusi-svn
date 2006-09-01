@@ -99,6 +99,18 @@ private:
      */
     void resetSigPipeHandler();
 
+    /**
+     * Copy constructor disabled.
+     */
+    PipeProcessLinuxCommunication(
+            const PipeProcessLinuxCommunication& pipeProcessLinuxCommunication);
+
+    /**
+     * Assignment disabled.
+     */
+    PipeProcessLinuxCommunication& operator=(
+            const PipeProcessLinuxCommunication& pipeProcessLinuxCommunication);
+
 };
 
 }

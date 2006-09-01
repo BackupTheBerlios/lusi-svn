@@ -23,11 +23,7 @@
 
 #include <string>
 
-namespace lusi {
-namespace util {
-class Process;
-}
-}
+#include <lusi/util/Process.h>
 
 namespace lusi {
 namespace util {
