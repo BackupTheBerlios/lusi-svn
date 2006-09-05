@@ -19,6 +19,11 @@
  ***************************************************************************/
 
 #include "ConfigurationTestSuite.h"
+#include "ConfigurationParameterTest.h"
+#include "ConfigurationParameterAndTest.h"
+#include "ConfigurationParameterComposedTest.h"
+#include "ConfigurationParameterOrTest.h"
+#include "ConfigurationParameterSimpleTest.h"
 
 using namespace lusi::configuration;
 
@@ -26,6 +31,11 @@ using namespace lusi::configuration;
 
 ConfigurationTestSuite::ConfigurationTestSuite() {
     //Own namespace Tests
+    addTest(ConfigurationParameterTest::suite());
+    addTest(ConfigurationParameterAndTest::suite());
+    addTest(ConfigurationParameterComposedTest::suite());
+    addTest(ConfigurationParameterOrTest::suite());
+    addTest(ConfigurationParameterSimpleTest::suite());
 
     //Direct child namespaces TestSuites
 }

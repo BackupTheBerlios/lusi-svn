@@ -18,37 +18,68 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "ConfigurationParameterOr.h"
+#ifndef LUSI_CONFIGURATION_CONFIGURATIONPARAMETERORTEST_H
+#define LUSI_CONFIGURATION_CONFIGURATIONPARAMETERORTEST_H
 
-using std::string;
-using std::vector;
+#include <cppunit/extensions/HelperMacros.h>
 
-using namespace lusi::configuration;
-
-//public:
-
-ConfigurationParameterOr::ConfigurationParameterOr(const string& id,
-                                PriorityType priorityType,
-                                const string& information /*= 0*/):
-            ConfigurationParameterComposed(id, priorityType, information) {
+namespace lusi {
+namespace configuration {
+class ConfigurationParameterOr;
+}
 }
 
-ConfigurationParameterOr::~ConfigurationParameterOr() {
+namespace lusi {
+namespace configuration {
+
+/**
+ * Test class for ConfigurationParameterOr.
+ *
+ * @see ConfigurationParameterOr
+ */
+class ConfigurationParameterOrTest: public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(ConfigurationParameterOrTest);
+    CPPUNIT_TEST(testConstructor);
+    CPPUNIT_TEST(testIsInvalid);
+    CPPUNIT_TEST_SUITE_END();
+
+public:
+
+    /**
+     * Sets up context before running a test.
+     * Creates the ConfigurationParameterOr with id "Test", priority
+     * "required" and information "A test parameter".
+     */
+    virtual void setUp();
+
+    /**
+     * Cleans up after the test run.
+     */
+    virtual void tearDown();
+
+    /**
+     * Tests if all the values are well set in the constructor.
+     */
+    void testConstructor();
+
+    /**
+     * Test if an empty vector, a vector with a valid parameter and a vector
+     * with two valid and one invalid parameters are valid, and a vector with
+     * an invalid parameter and a vector with all the parameters invalid is
+     * invalid.
+     */
+    void testIsInvalid();
+
+private:
+
+    /**
+     * The ConfigurationParameterOr to test.
+     */
+    ConfigurationParameterOr* mConfigurationParameterOr;
+
+};
+
+}
 }
 
-bool ConfigurationParameterOr::isInvalid() {
-    vector<ConfigurationParameter*> configurationParameters =
-                                            getConfigurationParameters();
-
-    if (configurationParameters.size() == 0) {
-        return false;
-    }
-
-    for (int i=0; i<configurationParameters.size(); ++i) {
-        if (!configurationParameters[i]->isInvalid()) {
-            return false;
-        }
-    }
-
-    return true;
-}
+#endif

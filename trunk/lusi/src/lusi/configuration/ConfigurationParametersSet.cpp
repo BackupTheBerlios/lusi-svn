@@ -19,7 +19,6 @@
  ***************************************************************************/
 
 #include "ConfigurationParametersSet.h"
-#include "ConfigurationParameter.h"
 
 using std::string;
 using std::vector;
@@ -38,7 +37,7 @@ vector<ConfigurationParameter*> ConfigurationParametersSet::getAllParameters() {
 }
 
 void ConfigurationParametersSet::getParameters(
-            ConfigurationParameterPriority prority) {
+            ConfigurationParameter::PriorityType prorityType) {
 }
 
 ConfigurationParameter* ConfigurationParametersSet::getParameter(

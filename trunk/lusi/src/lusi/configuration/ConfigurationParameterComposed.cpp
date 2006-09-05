@@ -20,22 +20,33 @@
 
 #include "ConfigurationParameterComposed.h"
 
+using std::string;
+
 using namespace lusi::configuration;
 
 //public:
 
 ConfigurationParameterComposed::~ConfigurationParameterComposed() {
+    for (uint i=0; i<mConfigurationParameters.size(); ++i) {
+        delete mConfigurationParameters[i];
+    }
 }
 
-void ConfigurationParameterComposed::addConfigurationParameter(
-            ConfigurationParameter configurationParameter) {
+/*
+inline void ConfigurationParameterComposed::addConfigurationParameter(
+            ConfigurationParameter* configurationParameter) {
 }
 
-vector<ConfigurationParameter>
-        ConfigurationParameterComposed::getConfigurationParameters() {
+inline vector<ConfigurationParameter*>
+        ConfigurationParameterComposed::getConfigurationParameters() const {
 }
+*/
 
 //protected:
 
-ConfigurationParameterComposed::ConfigurationParameterComposed() {
+ConfigurationParameterComposed::ConfigurationParameterComposed(
+                                        const string& id,
+                                        PriorityType priorityType,
+                                        const string& information /*= 0*/):
+            ConfigurationParameter(id, priorityType, information) {
 }

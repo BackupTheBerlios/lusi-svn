@@ -18,37 +18,35 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "ConfigurationParameterOr.h"
+#include "ConfigurationParameterTestImplementation.h"
 
 using std::string;
-using std::vector;
 
 using namespace lusi::configuration;
 
 //public:
 
-ConfigurationParameterOr::ConfigurationParameterOr(const string& id,
-                                PriorityType priorityType,
-                                const string& information /*= 0*/):
-            ConfigurationParameterComposed(id, priorityType, information) {
+ConfigurationParameterTestImplementation::
+ConfigurationParameterTestImplementation(const string& id,
+                                        PriorityType priorityType):
+            ConfigurationParameter(id, priorityType) {
 }
 
-ConfigurationParameterOr::~ConfigurationParameterOr() {
+ConfigurationParameterTestImplementation::
+ConfigurationParameterTestImplementation(const string& id,
+                                        PriorityType priorityType,
+                                        const string& information):
+            ConfigurationParameter(id, priorityType, information) {
 }
 
-bool ConfigurationParameterOr::isInvalid() {
-    vector<ConfigurationParameter*> configurationParameters =
-                                            getConfigurationParameters();
+ConfigurationParameterTestImplementation::
+~ConfigurationParameterTestImplementation() {
+}
 
-    if (configurationParameters.size() == 0) {
-        return false;
-    }
+bool ConfigurationParameterTestImplementation::isInvalid() {
+    return mInvalid;
+}
 
-    for (int i=0; i<configurationParameters.size(); ++i) {
-        if (!configurationParameters[i]->isInvalid()) {
-            return false;
-        }
-    }
-
-    return true;
+void ConfigurationParameterTestImplementation::setInvalid(bool invalid) {
+    mInvalid = invalid;
 }

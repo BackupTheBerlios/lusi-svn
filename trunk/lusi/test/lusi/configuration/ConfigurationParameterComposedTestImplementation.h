@@ -18,37 +18,50 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "ConfigurationParameterOr.h"
+#ifndef LUSI_CONFIGURATION_CONFIGURATIONPARAMETERCOMPOSEDTESTIMPLEMENTATION_H
+#define LUSI_CONFIGURATION_CONFIGURATIONPARAMETERCOMPOSEDTESTIMPLEMENTATION_H
 
-using std::string;
-using std::vector;
+#include <lusi/configuration/ConfigurationParameterComposed.h>
 
-using namespace lusi::configuration;
+namespace lusi {
+namespace configuration {
 
-//public:
+/**
+ * Implementation of ConfigurationParameterComposed for testing purposes.
+ * This class helps testing ConfigurationParameterComposed class non-abstract
+ * methods.
+ */
+class ConfigurationParameterComposedTestImplementation:
+            public ConfigurationParameterComposed {
+public:
 
-ConfigurationParameterOr::ConfigurationParameterOr(const string& id,
-                                PriorityType priorityType,
-                                const string& information /*= 0*/):
-            ConfigurationParameterComposed(id, priorityType, information) {
+    /**
+     * Creates a new ConfigurationParameterTestImplementation.
+     *
+     * @param id The id.
+     * @param priorityType The type of priority.
+     * @param information The information about this parameter.
+     */
+    ConfigurationParameterComposedTestImplementation(
+            const std::string& id,
+            PriorityType priorityType,
+            const std::string& information);
+
+    /**
+     * Destroys this ConfigurationParameterComposedTestImplementation.
+     */
+    virtual ~ConfigurationParameterComposedTestImplementation();
+
+    /**
+     * Returns false.
+     *
+     * @return False.
+     */
+    virtual bool isInvalid();
+
+};
+
+}
 }
 
-ConfigurationParameterOr::~ConfigurationParameterOr() {
-}
-
-bool ConfigurationParameterOr::isInvalid() {
-    vector<ConfigurationParameter*> configurationParameters =
-                                            getConfigurationParameters();
-
-    if (configurationParameters.size() == 0) {
-        return false;
-    }
-
-    for (int i=0; i<configurationParameters.size(); ++i) {
-        if (!configurationParameters[i]->isInvalid()) {
-            return false;
-        }
-    }
-
-    return true;
-}
+#endif

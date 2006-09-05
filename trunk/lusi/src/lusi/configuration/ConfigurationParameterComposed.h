@@ -29,23 +29,76 @@ namespace lusi {
 namespace configuration {
 
 /**
- * @todo Documentation
+ * @class ConfigurationParameterComposed ConfigurationParameterComposed.h \
+ * lusi/configuration/ConfigurationParameterComposed.h
+ *
+ * Base class for composed configuration parameters.
+ * Composed parameters represent a group of other parameters, being them simple
+ * or composed.
+ * This base class provides the common behaviour for composed parameters. This
+ * behaviour is simply adding new parameters and getting a vector with all the
+ * parameters added already.
+ *
+ * Once a ConfigurationParameter is added, ConfigurationParameterComposed gets
+ * control over lifespan and destruction of the ConfigurationParameter.
+ * ConfigurationParameter are destroyed when this parameter is destroyed.
+ * ConfigurationParameters added to this parameter must not be deleted from
+ * outside.
  */
 class ConfigurationParameterComposed: public ConfigurationParameter {
 public:
 
+    /**
+     * Destroys this ConfigurationParameterComposed.
+     * It also destroys all the contained ConfigurationParameters.
+     */
     virtual ~ConfigurationParameterComposed();
 
+    /**
+     * Adds a new ConfigurationParameter to this ConfigurationParameterComposed.
+     * If the ConfigurationParameter added was already added, it's added again.
+     *
+     * @param configurationParameter The ConfigurationParameter to add.
+     */
     void addConfigurationParameter(
-                ConfigurationParameter configurationParameter);
+                ConfigurationParameter* configurationParameter) {
+        mConfigurationParameters.push_back(configurationParameter);
+    }
 
-    vector<ConfigurationParameter> getConfigurationParameters();
+    /**
+     * Returns a vector containing all the ConfigurationParameters added.
+     *
+     * @return A vector containing all the ConfigurationParameters added.
+     */
+    std::vector<ConfigurationParameter*> getConfigurationParameters() const {
+        return mConfigurationParameters;
+    }
 
 protected:
 
-    ConfigurationParameterComposed();
+    /**
+     * Creates a new ConfigurationParameterComposed.
+     * The information is optional, and empty by default.
+     *
+     * Protected to avoid classes other than derived to create
+     * ConfigurationParameterComposed objects.
+     *
+     * @param id The id.
+     * @param priorityType The type of priority.
+     * @param information The information about this
+     *                    ConfigurationParameterComposed.
+     */
+    ConfigurationParameterComposed(const std::string& id,
+                                   PriorityType priorityType,
+                                   const std::string& information = 0);
 
 private:
+
+    /**
+     * The vector with all the configuration parameters in this
+     * ConfigurationParameterComposed.
+     */
+    std::vector<ConfigurationParameter*> mConfigurationParameters;
 
 };
 

@@ -27,22 +27,59 @@ namespace lusi {
 namespace configuration {
 
 /**
- * @todo Documentation
+ * @class ConfigurationParameterOr ConfigurationParameterOr.h \
+ * lusi/configuration/ConfigurationParameterOr.h
+ *
+ * A ConfigurationParameterComposed with an "or" relation between its
+ * contained ConfigurationParameter.
+ * To be valid, any of the contained parameters must be valid. If all of them
+ * are invalid, the ConfigurationParameterAnd is invalid.
  */
 class ConfigurationParameterOr: public ConfigurationParameterComposed {
 public:
 
+    /**
+     * Creates a new ConfigurationParameterOr.
+     * The information is optional, and empty by default.
+     *
+     * @param id The id.
+     * @param priorityType The type of priority.
+     * @param information The information about this ConfigurationParameterOr.
+     */
     ConfigurationParameterOr(const std::string& id,
-            ConfigurationParameterPriority priority,
-            const std::string& information = 0);
+                             PriorityType priorityType,
+                             const std::string& information = 0);
 
+    /**
+     * Destroys this ConfigurationParameterOr.
+     */
     virtual ~ConfigurationParameterOr();
 
-    virtual ConfigurationParameter checkInvalidStatus();
+    /**
+     * Returns true if all the contained parameters are invalid, false
+     * otherwise.
+     * If there are no contained parameters, it's also valid.
+     *
+     * @return True if all the contained parameters are invalid, false
+     *         otherwise.
+     */
+    virtual bool isInvalid();
 
 protected:
 
 private:
+
+    /**
+     * Copy constructor disabled.
+     */
+    ConfigurationParameterOr(
+            const ConfigurationParameterOr& configurationParameterOr);
+
+    /**
+     * Assignment disabled.
+     */
+    ConfigurationParameterOr& operator=(
+            const ConfigurationParameterOr& configurationParameterOr);
 
 };
 

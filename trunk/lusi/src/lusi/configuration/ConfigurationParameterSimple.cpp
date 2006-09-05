@@ -20,32 +20,41 @@
 
 #include "ConfigurationParameterSimple.h"
 
+using std::string;
+
 using namespace lusi::configuration;
 
 //public:
 
 ConfigurationParameterSimple::ConfigurationParameterSimple(const string& id,
-                                    ConfigurationParameterPriority priority,
-                                    const string& defaultValue,
-                                    const string& information /*= 0*/) {
+                                    PriorityType priorityType,
+                                    const string& information /*= ""*/,
+                                    const string& defaultValue /*= ""*/):
+            ConfigurationParameter(id, priorityType, information) {
+    mDefaultValue = defaultValue;
 }
 
 ConfigurationParameterSimple::~ConfigurationParameterSimple() {
 }
 
-ConfigurationParameter ConfigurationParameterSimple::checkInvalidStatus() {
+bool ConfigurationParameterSimple::isInvalid() {
+    if (getPriorityType() == RequiredPriority && getValue() == "") {
+        return true;
+    }
+
+    return false;
 }
 
 /*
-inline string ConfigurationParameterSimple::getValue() {
-    return mValue;
+inline string ConfigurationParameterSimple::getValue() const {
+    return (mValue == "" && mDefaultValue != "")?mDefaultValue:mValue;
 }
 
-inline bool ConfigurationParameterSimple::isDefaultValue() {
+inline bool ConfigurationParameterSimple::isDefaultValue() const {
     return mValue == mDefaultValue;
 }
 
-inline void ConfigurationParameterSimple::setValue(string value) {
+inline void ConfigurationParameterSimple::setValue(string value) const {
     mValue = value;
 }
 */

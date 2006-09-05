@@ -18,68 +18,67 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef LUSI_CONFIGURATION_CONFIGURATIONPARAMETERAND_H
-#define LUSI_CONFIGURATION_CONFIGURATIONPARAMETERAND_H
+#ifndef LUSI_CONFIGURATION_CONFIGURATIONPARAMETERTESTIMPLEMENTATION_H
+#define LUSI_CONFIGURATION_CONFIGURATIONPARAMETERTESTIMPLEMENTATION_H
 
-#include <lusi/configuration/ConfigurationParameterComposed.h>
+#include <lusi/configuration/ConfigurationParameter.h>
 
 namespace lusi {
 namespace configuration {
 
 /**
- * @class ConfigurationParameterAnd ConfigurationParameterAnd.h \
- * lusi/configuration/ConfigurationParameterAnd.h
- *
- * A ConfigurationParameterComposed with an "and" relation between its
- * contained ConfigurationParameter.
- * To be valid, all the contained parameters must be valid. If any of them is
- * invalid, the ConfigurationParameterAnd is invalid.
+ * Implementation of ConfigurationParameter for testing purposes.
+ * This class helps testing ConfigurationParameter class non-abstract methods.
  */
-class ConfigurationParameterAnd: public ConfigurationParameterComposed {
+class ConfigurationParameterTestImplementation: public ConfigurationParameter {
 public:
 
     /**
-     * Creates a new ConfigurationParameterAnd.
-     * The information is optional, and empty by default.
+     * Creates a new ConfigurationParameterTestImplementation.
+     * It uses the default value for information.
      *
      * @param id The id.
      * @param priorityType The type of priority.
-     * @param information The information about this ConfigurationParameterAnd.
      */
-    ConfigurationParameterAnd(const std::string& id,
-                              PriorityType priorityType,
-                              const std::string& information = 0);
+    ConfigurationParameterTestImplementation(const std::string& id,
+                                             PriorityType priorityType);
 
     /**
-     * Destroys this ConfigurationParameterAnd.
-     */
-    virtual ~ConfigurationParameterAnd();
-
-    /**
-     * Returns true if any of the contained parameters is invalid, false
-     * otherwise.
-     * If there are no contained parameters, it's also valid.
+     * Creates a new ConfigurationParameterTestImplementation.
      *
-     * @return True if any of the contained parameters is invalid, false
-     *         otherwise.
+     * @param id The id.
+     * @param priorityType The type of priority.
+     * @param information The information about this parameter.
+     */
+    ConfigurationParameterTestImplementation(const std::string& id,
+                                             PriorityType priorityType,
+                                             const std::string& information);
+
+    /**
+     * Destroys this ConfigurationParameterTestImplementation.
+     */
+    virtual ~ConfigurationParameterTestImplementation();
+
+    /**
+     * Returns mInvalid.
+     *
+     * @return The value of mINvalid.
      */
     virtual bool isInvalid();
 
-protected:
+    /**
+     * Sets the value to return in isInvalid()
+     *
+     * @param invalid The value to set.
+     */
+    virtual void setInvalid(bool invald);
 
 private:
 
     /**
-     * Copy constructor disabled.
+     * The value to return in isInvalid() method.
      */
-    ConfigurationParameterAnd(
-            const ConfigurationParameterAnd& configurationParameterAnd);
-
-    /**
-     * Assignment disabled.
-     */
-    ConfigurationParameterAnd& operator=(
-            const ConfigurationParameterAnd& configurationParameterAnd);
+    bool mInvalid;
 
 };
 

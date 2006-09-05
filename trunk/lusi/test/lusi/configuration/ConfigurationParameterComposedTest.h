@@ -18,44 +18,67 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef LUSI_CONFIGURATION_CONFIGURATIONPARAMETERSSET_H
-#define LUSI_CONFIGURATION_CONFIGURATIONPARAMETERSSET_H
+#ifndef LUSI_CONFIGURATION_CONFIGURATIONPARAMETERCOMPOSEDTEST_H
+#define LUSI_CONFIGURATION_CONFIGURATIONPARAMETERCOMPOSEDTEST_H
 
-#include <string>
-#include <vector>
+#include <cppunit/extensions/HelperMacros.h>
 
-#include <lusi/configuration/ConfigurationParameter.h>
+namespace lusi {
+namespace configuration {
+class ConfigurationParameterComposed;
+}
+}
 
 namespace lusi {
 namespace configuration {
 
 /**
- * @class ConfigurationParameterSet ConfigurationParameterSet.h \
- * lusi/configuration/ConfigurationParameterSet.h
+ * Test class for ConfigurationParameterComposed.
  *
- * @todo Documentation
+ * @see ConfigurationParameterComposed
  */
-class ConfigurationParametersSet {
+class ConfigurationParameterComposedTest: public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(ConfigurationParameterComposedTest);
+    CPPUNIT_TEST(testConstructor);
+    CPPUNIT_TEST(testAddConfigurationParameter);
+    CPPUNIT_TEST(testGetConfigurationParameters);
+    CPPUNIT_TEST_SUITE_END();
+
 public:
 
-    ConfigurationParametersSet();
+    /**
+     * Sets up context before running a test.
+     * Creates the ConfigurationParameterComposed with id "Test", priority
+     * "required" and information "A test parameter".
+     */
+    virtual void setUp();
 
-    virtual ~ConfigurationParametersSet();
+    /**
+     * Cleans up after the test run.
+     */
+    virtual void tearDown();
 
-    std::vector<ConfigurationParameter*> getAllParameters();
+    /**
+     * Tests if all the values are well set in the constructor.
+     */
+    void testConstructor();
 
-    void getParameters(ConfigurationParameter::PriorityType prorityType);
+    /**
+     * Tests if the ConfigurationParameter is added.
+     */
+    void testAddConfigurationParameter();
 
-    ConfigurationParameter* getParameter(std::string parameterID);
-
-    void setParameter(ConfigurationParameter* parameter);
-
-    void merge(ConfigurationParametersSet configurationParametersSet,
-                bool override = false);
-
-protected:
+    /**
+     * Tests if mConfigurationParameters is returned.
+     */
+    void testGetConfigurationParameters();
 
 private:
+
+    /**
+     * The ConfigurationParameterComposed to test.
+     */
+    ConfigurationParameterComposed* mConfigurationParameterComposed;
 
 };
 

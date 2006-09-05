@@ -30,21 +30,25 @@ ConfigurationParameter::~ConfigurationParameter() {
 }
 
 /*
-inline std::string getId() {
+inline const std::string& ConfigurationParameter::getId() const {
     return mId;
 }
 
-inline std::string getInformation() {
+inline const std::string& ConfigurationParameter::getInformation() cosnt {
     return mInformation;
 }
-*/
 
-ConfigurationParameterPriority ConfigurationParameter::getPriority() {
+inline const PriorityType& ConfigurationParameter::getPriorityType() const {
+    return mPriorityType;
 }
+*/
 
 //protected:
 
 ConfigurationParameter::ConfigurationParameter(const string& id,
-                                ConfigurationParameterPriority priority,
-                                const string& information /*= 0*/) {
+                                PriorityType priorityType,
+                                const string& information /*= ""*/) {
+    mId = id;
+    mPriorityType = priorityType;
+    mInformation = information;
 }

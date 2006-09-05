@@ -20,17 +20,30 @@
 
 #include "ConfigurationParameterAnd.h"
 
+using std::string;
+using std::vector;
+
 using namespace lusi::configuration;
 
 //public:
 
 ConfigurationParameterAnd::ConfigurationParameterAnd(const string& id,
-                                ConfigurationParameterPriority priority,
-                                const string& information /*= 0*/) {
+                                PriorityType priorityType,
+                                const string& information /*= 0*/):
+            ConfigurationParameterComposed(id, priorityType, information) {
 }
 
 ConfigurationParameterAnd::~ConfigurationParameterAnd() {
 }
 
-ConfigurationParameter ConfigurationParameterAnd::checkInvalidStatus() {
+bool ConfigurationParameterAnd::isInvalid() {
+    vector<ConfigurationParameter*> configurationParameters =
+                                            getConfigurationParameters();
+    for (int i=0; i<configurationParameters.size(); ++i) {
+        if (configurationParameters[i]->isInvalid()) {
+            return true;
+        }
+    }
+
+    return false;
 }

@@ -18,19 +18,65 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef LUSI_CONFIGURATION_CONFIGURATIONPARAMETERPRIORITY_H
-#define LUSI_CONFIGURATION_CONFIGURATIONPARAMETERPRIORITY_H
+#ifndef LUSI_CONFIGURATION_CONFIGURATIONPARAMETERANDTEST_H
+#define LUSI_CONFIGURATION_CONFIGURATIONPARAMETERANDTEST_H
+
+#include <cppunit/extensions/HelperMacros.h>
+
+namespace lusi {
+namespace configuration {
+class ConfigurationParameterAnd;
+}
+}
 
 namespace lusi {
 namespace configuration {
 
 /**
- * @todo Documentation
+ * Test class for ConfigurationParameterAnd.
+ *
+ * @see ConfigurationParameterAnd
  */
-enum ConfigurationParameterPriority {
-    required = 0,
-    recommended,
-    optional
+class ConfigurationParameterAndTest: public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(ConfigurationParameterAndTest);
+    CPPUNIT_TEST(testConstructor);
+    CPPUNIT_TEST(testIsInvalid);
+    CPPUNIT_TEST_SUITE_END();
+
+public:
+
+    /**
+     * Sets up context before running a test.
+     * Creates the ConfigurationParameterAnd with id "Test", priority
+     * "required" and information "A test parameter".
+     */
+    virtual void setUp();
+
+    /**
+     * Cleans up after the test run.
+     */
+    virtual void tearDown();
+
+    /**
+     * Tests if all the values are well set in the constructor.
+     */
+    void testConstructor();
+
+    /**
+     * Test if an empty vector, a vector with a valid parameter and a vector
+     * with three valid parameters are valid, and a vector with an invalid
+     * parameter and a vector with two valid and one invalid parameters is
+     * invalid.
+     */
+    void testIsInvalid();
+
+private:
+
+    /**
+     * The ConfigurationParameterAnd to test.
+     */
+    ConfigurationParameterAnd* mConfigurationParameterAnd;
+
 };
 
 }
