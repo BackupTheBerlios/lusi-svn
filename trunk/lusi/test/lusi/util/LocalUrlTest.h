@@ -26,6 +26,11 @@
 namespace lusi {
 namespace util {
 
+/**
+ * Test class for LocalUrl.
+ *
+ * @see LocalUrl
+ */
 class LocalUrlTest: public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(LocalUrlTest);
     CPPUNIT_TEST(testCopyConstructor);
