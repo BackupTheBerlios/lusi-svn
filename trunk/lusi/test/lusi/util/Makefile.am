@@ -5,7 +5,7 @@ noinst_HEADERS = UtilTestSuite.h ProcessTest.h ProcessTestImplementation.h \
 	ProcessLinuxCommunicationTest.h ProcessLinuxCommunicationTestImplementation.h \
 	PipeProcessLinuxCommunicationTest.h BaseProcessLinuxCommunicationTest.h PtyProcessLinuxCommunicationTest.h \
 	SuProcessTest.h SuProcessTestImplementation.h SuProcessLinuxTest.h \
-	SuProcessLinuxConverserTest.h
+	SuProcessLinuxConverserTest.h SmartPtrTest.h
 
 if CPPUNIT
 check_LTLIBRARIES = libutiltest.la
@@ -15,6 +15,6 @@ libutiltest_la_SOURCES = UtilTestSuite.cpp ProcessTest.cpp \
 	ProcessRunnerTest.cpp LocalUrlTest.cpp ProcessLinuxCommunicationTest.cpp \
 	ProcessLinuxCommunicationTestImplementation.cpp PipeProcessLinuxCommunicationTest.cpp \
 	BaseProcessLinuxCommunicationTest.cpp PtyProcessLinuxCommunicationTest.cpp SuProcessTest.cpp \
-	SuProcessTestImplementation.cpp SuProcessLinuxTest.cpp SuProcessLinuxConverserTest.cpp
+	SuProcessTestImplementation.cpp SuProcessLinuxTest.cpp SuProcessLinuxConverserTest.cpp SmartPtrTest.cpp
 libutiltest_la_LDFLAGS = -all-static
 endif

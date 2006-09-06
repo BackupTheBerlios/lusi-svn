@@ -20,6 +20,7 @@
 
 #include "UtilTestSuite.h"
 #include "LocalUrlTest.h"
+#include "SmartPtrTest.h"
 #include "ProcessTest.h"
 #include "ProcessLinuxCommunicationTest.h"
 #include "PipeProcessLinuxCommunicationTest.h"
@@ -37,6 +38,7 @@ using namespace lusi::util;
 UtilTestSuite::UtilTestSuite() {
     //Own namespace Tests
     addTest(LocalUrlTest::suite());
+    addTest(SmartPtrTest::suite());
     addTest(ProcessTest::suite());
     addTest(ProcessLinuxCommunicationTest::suite());
     addTest(PipeProcessLinuxCommunicationTest::suite());

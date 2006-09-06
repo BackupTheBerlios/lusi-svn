@@ -2,7 +2,7 @@ INCLUDES = -I$(top_srcdir)/src
 
 liblusiincludedir = $(includedir)/lusi/util
 liblusiinclude_HEADERS = Process.h ProcessObserver.h ProcessException.h \
-	ProcessRunner.h LocalUrl.h SuProcess.h SuProcessException.h
+	ProcessRunner.h LocalUrl.h SuProcess.h SuProcessException.h SmartPtr.h
 
 noinst_HEADERS = ProcessLinux.h ProcessLinuxCommunication.h \
 	PipeProcessLinuxCommunication.h PtyProcessLinuxCommunication.h OpenCommunicationChannelsException.h \
