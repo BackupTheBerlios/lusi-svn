@@ -18,34 +18,64 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "UtilTestSuite.h"
-#include "LocalUrlTest.h"
-#include "ProcessTest.h"
-#include "ProcessLinuxCommunicationTest.h"
-#include "PipeProcessLinuxCommunicationTest.h"
-#include "PtyProcessLinuxCommunicationTest.h"
-#include "ProcessLinuxTest.h"
-#include "ProcessRunnerTest.h"
-#include "SuProcessTest.h"
-#include "SuProcessLinuxTest.h"
-#include "SuProcessLinuxConverserTest.h"
+#ifndef LUSI_UTIL_SUPROCESSLINUXCONVERSERTEST_H
+#define LUSI_UTIL_SUPROCESSLINUXCONVERSERTEST_H
 
-using namespace lusi::util;
+#include <cppunit/extensions/HelperMacros.h>
 
-//public:
-
-UtilTestSuite::UtilTestSuite() {
-    //Own namespace Tests
-    addTest(LocalUrlTest::suite());
-    addTest(ProcessTest::suite());
-    addTest(ProcessLinuxCommunicationTest::suite());
-    addTest(PipeProcessLinuxCommunicationTest::suite());
-    addTest(PtyProcessLinuxCommunicationTest::suite());
-    addTest(ProcessLinuxTest::suite());
-    addTest(ProcessRunnerTest::suite());
-    addTest(SuProcessTest::suite());
-    addTest(SuProcessLinuxTest::suite());
-    addTest(SuProcessLinuxConverserTest::suite());
-
-    //Direct child namespaces TestSuites
+namespace lusi {
+namespace util {
+class SuProcessLinux;
+class SuProcessLinuxConverser;
 }
+}
+
+namespace lusi {
+namespace util {
+
+/**
+ * Test class for SuProcessLinuxConverser.
+ *
+ * @see SuProcessLinuxConverser
+ */
+class SuProcessLinuxConverserTest: public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(SuProcessLinuxConverserTest);
+    CPPUNIT_TEST(testIsPasswordPrompt);
+    CPPUNIT_TEST_SUITE_END();
+
+public:
+
+    /**
+     * Sets up context before running a test.
+     * Creates the SuProcessLinux and SuProcessLinuxConverser.
+     */
+    virtual void setUp();
+
+    /**
+     * Cleans up after the test run.
+     */
+    virtual void tearDown();
+
+    /**
+     * Tests if right and wrong prompts are recognized as they should.
+     */
+    void testIsPasswordPrompt();
+
+private:
+
+    /**
+     * The SuProcessLinuxConverser to test.
+     */
+    SuProcessLinuxConverser* mSuProcessLinuxConverser;
+
+    /**
+     * The SuProcessLinux used with mSuProcessLinuxConverser.
+     */
+    SuProcessLinux* mSuProcessLinux;
+
+};
+
+}
+}
+
+#endif

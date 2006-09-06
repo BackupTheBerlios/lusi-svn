@@ -18,34 +18,48 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "UtilTestSuite.h"
-#include "LocalUrlTest.h"
-#include "ProcessTest.h"
-#include "ProcessLinuxCommunicationTest.h"
-#include "PipeProcessLinuxCommunicationTest.h"
-#include "PtyProcessLinuxCommunicationTest.h"
-#include "ProcessLinuxTest.h"
-#include "ProcessRunnerTest.h"
-#include "SuProcessTest.h"
-#include "SuProcessLinuxTest.h"
 #include "SuProcessLinuxConverserTest.h"
+
+#define protected public
+#define private public
+#include "SuProcessLinuxConverser.h"
+#undef private
+#undef protected
+
+#include "SuProcessLinux.h"
+
+using std::string;
 
 using namespace lusi::util;
 
 //public:
 
-UtilTestSuite::UtilTestSuite() {
-    //Own namespace Tests
-    addTest(LocalUrlTest::suite());
-    addTest(ProcessTest::suite());
-    addTest(ProcessLinuxCommunicationTest::suite());
-    addTest(PipeProcessLinuxCommunicationTest::suite());
-    addTest(PtyProcessLinuxCommunicationTest::suite());
-    addTest(ProcessLinuxTest::suite());
-    addTest(ProcessRunnerTest::suite());
-    addTest(SuProcessTest::suite());
-    addTest(SuProcessLinuxTest::suite());
-    addTest(SuProcessLinuxConverserTest::suite());
+void SuProcessLinuxConverserTest::setUp() {
+    mSuProcessLinux = new SuProcessLinux();
+    mSuProcessLinuxConverser = new SuProcessLinuxConverser(mSuProcessLinux);
+}
 
-    //Direct child namespaces TestSuites
+void SuProcessLinuxConverserTest::tearDown() {
+    delete mSuProcessLinuxConverser;
+    delete mSuProcessLinux;
+}
+
+void SuProcessLinuxConverserTest::testIsPasswordPrompt() {
+    //Tests with valid password prompts
+    CPPUNIT_ASSERT_EQUAL(true,
+            mSuProcessLinuxConverser->isPasswordPrompt("Password: "));
+    CPPUNIT_ASSERT_EQUAL(true,
+            mSuProcessLinuxConverser->isPasswordPrompt("Contraseña: "));
+    CPPUNIT_ASSERT_EQUAL(true,
+            mSuProcessLinuxConverser->isPasswordPrompt("Pallabra secreta: "));
+    CPPUNIT_ASSERT_EQUAL(true,
+            mSuProcessLinuxConverser->isPasswordPrompt("Mot de passe: "));
+
+    //Tests with data which isn't password prompt
+    CPPUNIT_ASSERT_EQUAL(false,
+                mSuProcessLinuxConverser->isPasswordPrompt("Password"));
+    CPPUNIT_ASSERT_EQUAL(false,
+                mSuProcessLinuxConverser->isPasswordPrompt("Password "));
+    CPPUNIT_ASSERT_EQUAL(false,
+                mSuProcessLinuxConverser->isPasswordPrompt("Password: pass"));
 }
