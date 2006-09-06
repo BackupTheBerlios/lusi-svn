@@ -79,6 +79,7 @@ public:
      * Returns the value.
      * If the normal value isn't set, the default value, if it exists, is
      * returned.
+     * This is an accessor method.
      *
      * @return The value.
      */
@@ -89,6 +90,7 @@ public:
     /**
      * Returns true if the value is equal to the default value, false otherwise.
      * If no default value was set (it's empty), false is returned.
+     * This is an accessor method.
      *
      * @return true if the value is equal to the default value, false otherwise.
      */

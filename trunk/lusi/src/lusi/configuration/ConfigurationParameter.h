@@ -84,6 +84,7 @@ public:
 
     /**
      * Returns the id of this ConfigurationParameter.
+     * This is an accessor method.
      *
      * @return The id of this ConfigurationParatemer.
      */
@@ -94,6 +95,7 @@ public:
     /**
      * Returns the information about this ConfigurationParameter.
      * The information is optional, so the returned string may be empty.
+     * This is an accessor method.
      *
      * @return The information about this ConfigurationParatemer.
      */
@@ -103,6 +105,7 @@ public:
 
     /**
      * Returns the type of the priority of this ConfigurationParameter.
+     * This is an accessor method.
      *
      * @return The type of the priority of this ConfigurationParameter.
      */

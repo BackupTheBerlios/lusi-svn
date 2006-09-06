@@ -67,6 +67,7 @@ public:
 
     /**
      * Returns a vector containing all the ConfigurationParameters added.
+     * This is an accessor method.
      *
      * @return A vector containing all the ConfigurationParameters added.
      */
