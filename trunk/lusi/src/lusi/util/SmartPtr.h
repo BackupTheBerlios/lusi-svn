@@ -35,18 +35,19 @@ namespace util {
  * syntax isn't available to know if it's null or not).
  * However, pointer arithmetics isn't available. Neither implicit conversion to
  * raw pointers, although the contained raw pointer can be got using the
- * function getPtr(SmartPointer).
+ * function getPtr(SmartPointer). Implicit conversion from raw pointers to smart
+ * pointers through constructor is also disabled.
  * It has no support for pointers to arrays.
  *
  * The main difference comes when deallocating the pointed element. Smart
  * pointers take care of deleting the pointed element when there are no more
  * smart pointers to them. It can't handle, however, circular references.
- * So, if you have two classes that references each other, SmartPtr can't be used
- * in both of them.
+ * So, if you have two classes that references each other, SmartPtr can't be
+ * used in both of them.
  * As a rule of thumb, you will use a SmartPtr for agregations and even
- * compositions in the container side and a raw pointer in the containment side. In
- * pure associations, two raw pointers should be fine, as they usually won't delete
- * the other part of the association.
+ * compositions in the container side and a raw pointer in the containment
+ * side. In pure associations, two raw pointers should be fine, as they usually
+ * won't delete the other part of the association.
  *
  * SmartPtrs can be stored in C++ standard library containers, but they can't
  * be used as keys in indexed containers.
@@ -89,10 +90,12 @@ public:
      * Creates a new SmartPtr.
      * The SmartPtr gets control over the lifespan of the specified pointer. It
      * will be deleted when it's no more SmartPtr referencing it.
+     * This constructor is explicit to avoid a smart pointer getting undesired
+     * control over the lifespan of the pointer.
      *
      * @param pointer The pointer to manage.
      */
-    SmartPtr(T* pointer) {
+    explicit SmartPtr(T* pointer) {
         mPointer = pointer;
         mReferenceCount = new int(1);
     }
