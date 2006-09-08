@@ -42,12 +42,14 @@ class SmartPtrTest: public CppUnit::TestFixture {
     CPPUNIT_TEST(testGetPtr);
     CPPUNIT_TEST(testConstructor);
     CPPUNIT_TEST(testCopyConstructor);
+    CPPUNIT_TEST(testIsNull);
     CPPUNIT_TEST(testOperatorAssignment);
     CPPUNIT_TEST(testOperatorPointer);
     CPPUNIT_TEST(testOperatorReference);
     CPPUNIT_TEST(testOperatorEqual);
     CPPUNIT_TEST(testOperatorNotEqual);
-    CPPUNIT_TEST(testDereference);
+    CPPUNIT_TEST(testOperatorConversion);
+    CPPUNIT_TEST(testDeletePointer);
     CPPUNIT_TEST(testStdVector);
     CPPUNIT_TEST_SUITE_END();
 
@@ -70,7 +72,7 @@ public:
 
     /**
      * Tests if the refefence count is set to one and the pointer is set to the
-     * one passed.
+     * one passed. Also it's tested if the default value is a null pointer.
      */
     void testConstructor();
 
@@ -81,6 +83,12 @@ public:
     void testCopyConstructor();
 
     /**
+     * Tests if returns true with a null pointer and false with a not null
+     * pointer.
+     */
+    void testIsNull();
+
+    /**
      * Tests if the new reference count and pointer are assigned like in copy
      * constructor.
      * @todo Check that previous values are deleted
@@ -88,13 +96,16 @@ public:
     void testOperatorAssignment();
 
     /**
-     * Tests if the pointer returned is equal to the one contained.
+     * Tests if the pointer returned is equal to the one contained and if
+     * NullPointerException is thrown with null pointers. Both tests are made
+     * in const and non const objects.
      */
     void testOperatorPointer();
 
     /**
      * Tests if the reference returned is equal to the one of the pointer
-     * contained.
+     * contained and if NullPointerException is thrown with null pointers. Both
+     * tests are made in const and non const objects.
      */
     void testOperatorReference();
 
@@ -111,11 +122,18 @@ public:
     void testOperatorNotEqual();
 
     /**
+     * Tests if a derived class is converted to a base class, if a base class
+     * is converted to a derived class and if converting a class to another
+     * unrelated one results in a null pointer.
+     */
+    void testOperatorConversion();
+
+    /**
      * Tests if the reference count is decreased by one.
-     * @todo Check that the pointer and the reference count deleted when
+     * @todo Check that the pointer and the reference count are deleted when
      * reference count reaches 0.
      */
-    void testDereference();
+    void testDeletePointer();
 
     /**
      * Tests the use of SmartPtr with std::vector.

@@ -21,8 +21,28 @@
 #ifndef LUSI_UTIL_SMARTPTR_H
 #define LUSI_UTIL_SMARTPTR_H
 
+#include <lusi/util/NullPointerException.h>
+
 namespace lusi {
 namespace util {
+
+template<typename T>
+class SmartPtr;
+
+/**
+ * Function that returns the contained pointer in a SmartPtr.
+ * This approach is used instead of implicit conversion. Enforcing the use
+ * of an explicit function may warn the programmer about something
+ * dangerous, and avoiding those operations (for example, deleting the
+ * pointer).
+ *
+ * @param smartPtr The SmartPtr to get its pointer.
+ * @return The contained pointer in the SmartPtr.
+ */
+template<typename T>
+T* getPtr(const SmartPtr<T>& smartPtr) {
+    return smartPtr.mPointer;
+}
 
 /**
  * @class SmartPtr SmartPtr.h lusi/util/SmartPtr.h
@@ -52,11 +72,21 @@ namespace util {
  * SmartPtrs can be stored in C++ standard library containers, but they can't
  * be used as keys in indexed containers.
  *
- * Null pointers can be stored in SmartPtrs. However, you're advised against
- * doing it, as it doesn't make too much sense. Pointers can't be modified
- * once they're set (apart from using assignment operator), and there are no
- * checks against null pointers in reference nor pointer operators, which will
- * probably lead to a crash.
+ * Null pointers can be stored in SmartPtrs. If no pointer is specified when
+ * creating a SmartPtr, it is set to a null pointer. Once created, the pointer
+ * can only be modified using assignment operator.
+ * A null pointer can be checked using isNull().
+ * If pointer or reference operators are used on a null pointer, a
+ * NullPointerException is thrown.
+ *
+ * A SmartPtr can be converted to another SmartPtr with a different type of the
+ * contained pointer. However, it uses dynamic_cast to do the cast of the
+ * pointers, so only the same casts are allowed (that is, between classes, but
+ * not base data types). If the classes aren't a base class and a subclass, a
+ * null pointer is returned.
+ * Although the original SmartPtr and the casted SmartPtr are from different
+ * types, the pointer is shared by both SmartPtr (if it isn't null). When the
+ * last of them is deleted, the pointer is deleted.
  *
  * Due to the use of templates, everything is implemented in the header file. No
  * source file exists for this class.
@@ -65,37 +95,23 @@ namespace util {
  * "Modern C++ Design: Generic Programming and Design Patterns Applied" book
  * by Andrei Alexandrescu. The chapter about smart pointers can be read online
  * here: http://www.informit.com/articles/article.asp?p=31529&seqNum=1&rl=1
- *
- * @todo Handle null pointers
  */
 template<typename T>
 class SmartPtr {
+template<typename Any> friend class SmartPtr;
+template<typename Any> friend Any* getPtr(const SmartPtr<Any>&);
 public:
-
-    /**
-     * Function that returns the contained pointer in a SmartPtr.
-     * This approach is used instead of implicit conversion. Enforcing the use
-     * of an explicit function may warn the programmer about something
-     * dangerous, and avoiding those operations (for example, deleting the
-     * pointer).
-     *
-     * @param smartPtr The SmartPtr to get its pointer.
-     * @return The contained pointer in the SmartPtr.
-     */
-    friend inline T* getPtr(const SmartPtr& smartPtr) {
-        return smartPtr.mPointer;
-    }
 
     /**
      * Creates a new SmartPtr.
      * The SmartPtr gets control over the lifespan of the specified pointer. It
-     * will be deleted when it's no more SmartPtr referencing it.
+     * will be deleted when there are no more SmartPtr referencing it.
      * This constructor is explicit to avoid a smart pointer getting undesired
      * control over the lifespan of the pointer.
      *
-     * @param pointer The pointer to manage.
+     * @param pointer The pointer to manage. Null by default.
      */
-    explicit SmartPtr(T* pointer) {
+    explicit SmartPtr(T* pointer = 0) {
         mPointer = pointer;
         mReferenceCount = new int(1);
     }
@@ -119,7 +135,16 @@ public:
      * deleted.
      */
     virtual ~SmartPtr() {
-        dereference();
+        deletePointer();
+    }
+
+    /**
+     * Returns true if the contained pointer is null, false otherwise.
+     *
+     * @return True if the contained pointer is null, false otherwise.
+     */
+    bool isNull() const {
+        return mPointer == 0;
     }
 
     /**
@@ -129,13 +154,14 @@ public:
      *
      * @param smartPtr The SmartPtr to copy.
      * @return A reference to this SmartPtr.
+     * @see SmartPtr(const SmartPtr&)
      */
     SmartPtr& operator=(const SmartPtr& smartPtr) {
         if (&smartPtr == this) {
             return *this;
         }
 
-        dereference();
+        deletePointer();
 
         mPointer = smartPtr.mPointer;
         mReferenceCount = smartPtr.mReferenceCount;
@@ -148,8 +174,10 @@ public:
      * Returns a pointer to the referenced element.
      *
      * @return A pointer to the referenced element.
+     * @throw NullPointerException If the pointer is null.
      */
-    T* operator->() {
+    T* operator->() throw (NullPointerException) {
+        checkNull();
         return mPointer;
     }
 
@@ -158,8 +186,10 @@ public:
      * This is an accessor method.
      *
      * @return A constant pointer to the referenced element.
+     * @throw NullPointerException If the pointer is null.
      */
-    const T* operator->() const {
+    const T* operator->() const throw (NullPointerException) {
+        checkNull();
         return mPointer;
     }
 
@@ -168,8 +198,10 @@ public:
      * This is an accessor method.
      *
      * @return A reference to the pointed element.
+     * @throw NullPointerException If the pointer is null.
      */
-    T& operator*() {
+    T& operator*() throw (NullPointerException) {
+        checkNull();
         return *mPointer;
     }
 
@@ -177,8 +209,10 @@ public:
      * Returns a constant reference to the pointed element.
      *
      * @return A constant reference to the pointed element.
+     * @throw NullPointerException If the pointer is null.
      */
-    const T& operator*() const {
+    const T& operator*() const throw (NullPointerException) {
+        checkNull();
         return *mPointer;
     }
 
@@ -260,6 +294,32 @@ public:
         return tPtr != smartPtr.mPointer;
     }
 
+    /**
+     * Converts a SmartPtr of type T to a SmartPtr of type S.
+     * The conversion is made using dynamic_cast, so it can be made only on
+     * SmartPtr containing pointers to classes.
+     * Although SmartPtr<T> and SmartPtr<S> are different types, the pointer is
+     * shared by both SmartPtr. When the last of them is deleted, the pointer
+     * is deleted.
+     * If the type T can't be converted to type S, a null pointer is returned
+     * (and, of course, it's not shared between them).
+     */
+    template<typename S>
+    operator SmartPtr<S>() const {
+        SmartPtr<S> smartPtr(0);
+        S* pointer = dynamic_cast<S*>(mPointer);
+
+        if (pointer != 0) {
+            smartPtr.deletePointer();
+
+            smartPtr.mPointer = pointer;
+            smartPtr.mReferenceCount = mReferenceCount;
+            ++(*mReferenceCount);
+        }
+
+        return smartPtr;
+    }
+
 private:
 
     /**
@@ -275,10 +335,22 @@ private:
 
 
     /**
+     * Checks if the pointer is a null pointer and throws NullPointerException
+     * in that case.
+     *
+     * @throw NullPointerException If the pointer is null.
+     */
+    void checkNull() const throw (NullPointerException) {
+        if (isNull()) {
+            throw NullPointerException();
+        }
+    }
+
+    /**
      * Removes one reference from the count and deletes it and the pointer if
      * this is the last SmartPtr managing the pointer.
      */
-    void dereference() {
+    void deletePointer() {
         --(*mReferenceCount);
 
         if (*mReferenceCount == 0) {

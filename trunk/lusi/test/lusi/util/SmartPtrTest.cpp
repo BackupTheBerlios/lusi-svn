@@ -26,6 +26,42 @@
 using std::string;
 using std::vector;
 
+namespace lusi {
+namespace util {
+
+/**
+ * Base class to test conversion.
+ */
+class Base {
+public:
+    Base(int baseInt) {
+        mBaseInt = baseInt;
+    }
+
+    /**
+     * Needed for dynamic_cast to work.
+     */
+    virtual void dummy() {
+    }
+
+    int mBaseInt;
+};
+
+/**
+ * Derived class to test conversion.
+ */
+class Derived: public Base {
+public:
+    Derived(int baseInt, int derivedInt): Base(baseInt) {
+        mDerivedInt = derivedInt;
+    }
+
+    int mDerivedInt;
+};
+
+}
+}
+
 using namespace lusi::util;
 
 //public:
@@ -46,6 +82,11 @@ void SmartPtrTest::testGetPtr() {
 void SmartPtrTest::testConstructor() {
     CPPUNIT_ASSERT_EQUAL(mInt, mSmartPtr->mPointer);
     CPPUNIT_ASSERT_EQUAL(1, *mSmartPtr->mReferenceCount);
+
+    //Test default constructor
+    SmartPtr<int> smartPtr;
+    CPPUNIT_ASSERT_EQUAL((int*)0, smartPtr.mPointer);
+    CPPUNIT_ASSERT_EQUAL(1, *smartPtr.mReferenceCount);
 }
 
 void SmartPtrTest::testCopyConstructor() {
@@ -53,6 +94,15 @@ void SmartPtrTest::testCopyConstructor() {
     CPPUNIT_ASSERT_EQUAL(mSmartPtr->mPointer, smartPtr.mPointer);
     CPPUNIT_ASSERT_EQUAL(mSmartPtr->mReferenceCount, smartPtr.mReferenceCount);
     CPPUNIT_ASSERT_EQUAL(2, *mSmartPtr->mReferenceCount);
+}
+
+void SmartPtrTest::testIsNull() {
+    //Test if the smart pointer isn't null
+    CPPUNIT_ASSERT_EQUAL(false, mSmartPtr->isNull());
+
+    //Test if the smart pointer is null
+    SmartPtr<int> smartPtr;
+    CPPUNIT_ASSERT_EQUAL(true, smartPtr.isNull());
 }
 
 void SmartPtrTest::testOperatorAssignment() {
@@ -72,14 +122,37 @@ void SmartPtrTest::testOperatorAssignment() {
 }
 
 void SmartPtrTest::testOperatorPointer() {
-    string* hello = new string("Hello");
-    SmartPtr<string> smartPtr(hello);
+    SmartPtr<string> smartPtr(new string("Hello"));
 
     CPPUNIT_ASSERT_EQUAL((size_t)5, smartPtr->size());
+
+    //Test with a null pointer
+    smartPtr = SmartPtr<string>(0);
+    CPPUNIT_ASSERT_THROW(smartPtr->size(), NullPointerException);
+
+    //Test with a const SmartPtr
+    const SmartPtr<string> smartPtrConst(new string("World"));
+    CPPUNIT_ASSERT_EQUAL((size_t)5, smartPtrConst->size());
+
+    //Test with a const null pointer
+    const SmartPtr<string> smartPtrConst2(0);
+    CPPUNIT_ASSERT_THROW(smartPtrConst2->size(), NullPointerException);
 }
 
 void SmartPtrTest::testOperatorReference() {
     CPPUNIT_ASSERT_EQUAL(*mInt, *(*mSmartPtr));
+
+    //Test with a null pointer
+    *mSmartPtr = SmartPtr<int>(0);
+    CPPUNIT_ASSERT_THROW(*(*mSmartPtr), NullPointerException);
+
+    //Test with a const SmartPtr
+    const SmartPtr<int> smartPtrConst(new int(42));
+    CPPUNIT_ASSERT_EQUAL(42, *smartPtrConst);
+
+    //Test with a const null pointer
+    const SmartPtr<int> smartPtrConst2(0);
+    CPPUNIT_ASSERT_THROW(*smartPtrConst2, NullPointerException);
 }
 
 void SmartPtrTest::testOperatorEqual() {
@@ -121,12 +194,42 @@ void SmartPtrTest::testOperatorNotEqual() {
 
 }
 
-void SmartPtrTest::testDereference() {
-    SmartPtr<int>* smartPtr = new SmartPtr<int>(*mSmartPtr);
-    CPPUNIT_ASSERT_EQUAL(2, *mSmartPtr->mReferenceCount);
-    delete smartPtr;
+void SmartPtrTest::testOperatorConversion() {
+    SmartPtr<Derived> derivedPtr(new Derived(42, 108));
 
-    CPPUNIT_ASSERT_EQUAL(1, *mSmartPtr->mReferenceCount);
+    //Test from derived type to base
+    SmartPtr<Base> basePtr = (SmartPtr<Base>)derivedPtr;
+
+    CPPUNIT_ASSERT_EQUAL((Base*)derivedPtr.mPointer, basePtr.mPointer);
+    CPPUNIT_ASSERT_EQUAL(derivedPtr.mReferenceCount, basePtr.mReferenceCount);
+    CPPUNIT_ASSERT_EQUAL(2, *derivedPtr.mReferenceCount);
+
+    //Test from base type to derived
+    SmartPtr<Derived> derivedPtr2 = (SmartPtr<Derived>)basePtr;
+
+    CPPUNIT_ASSERT_EQUAL(derivedPtr.mPointer, derivedPtr2.mPointer);
+    CPPUNIT_ASSERT_EQUAL(derivedPtr.mReferenceCount,
+                         derivedPtr2.mReferenceCount);
+    CPPUNIT_ASSERT_EQUAL(3, *derivedPtr.mReferenceCount);
+    CPPUNIT_ASSERT_EQUAL(derivedPtr->mBaseInt, derivedPtr2->mBaseInt);
+    CPPUNIT_ASSERT_EQUAL(derivedPtr->mDerivedInt, derivedPtr2->mDerivedInt);
+
+    //Test an invalid conversion
+    SmartPtr<SmartPtrTest> nullPtr = (SmartPtr<SmartPtrTest>) derivedPtr;
+    CPPUNIT_ASSERT(nullPtr.isNull());
+}
+
+void SmartPtrTest::testDeletePointer() {
+    SmartPtr<int> smartPtr(*mSmartPtr);
+    CPPUNIT_ASSERT_EQUAL(2, *smartPtr.mReferenceCount);
+    smartPtr.deletePointer();
+
+    CPPUNIT_ASSERT_EQUAL(1, *smartPtr.mReferenceCount);
+
+    //Restores values to avoid crash
+    smartPtr.mPointer = mSmartPtr->mPointer;
+    smartPtr.mReferenceCount = mSmartPtr->mPointer;
+    ++smartPtr.mReferenceCount;
 }
 
 void SmartPtrTest::testStdVector() {
