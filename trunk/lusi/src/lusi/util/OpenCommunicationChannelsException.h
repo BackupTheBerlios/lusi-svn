@@ -30,9 +30,9 @@ namespace util {
 /**
  * Exception for errors happened when opening the communication channels in
  * ProcessLinuxCommunication.
- * The error message returned by what() will be
- * "OpenCommunicationChannelsException: " followed by the error message
- * specified when creating the exception.
+ *
+ * The error message returned by what() will be the error message specified
+ * when creating the exception.
  */
 class OpenCommunicationChannelsException: public std::exception {
 public:
@@ -40,13 +40,10 @@ public:
     /**
      * Creates a new OpenCommunicationChannelsException.
      *
-     * @param errorMessage The error message of the exception,
-     *                      "OpenCommunicationChannelsException: unspecified" by
-     *                      default.
+     * @param errorMessage The error message of the exception, empty by default.
      */
     explicit OpenCommunicationChannelsException(
-            const std::string& errorMessage =
-                std::string("OpenCommunicationChannelsException: unspecified"));
+                    const std::string& errorMessage = "");
 
     /**
      * Destroys this ProcessException.

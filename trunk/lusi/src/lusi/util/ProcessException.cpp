@@ -24,17 +24,15 @@ using namespace lusi::util;
 
 //public:
 
-ProcessException::ProcessException(
-            const std::string& errorMessage
-                    /*= std::string("ProcessException: unspecified")*/) {
-    mErrorMessage = "ProcessException: " + errorMessage;
+ProcessException::ProcessException(const std::string& errorMessage /*= ""*/) {
+    mErrorMessage = errorMessage;
 }
 
 ProcessException::~ProcessException() throw() {
 }
 
 /*
-inline virtual const char* what() const throw() {
+inline const char* ProcessException::what() const throw() {
     return mErrorMessage.c_str();
 }
 */

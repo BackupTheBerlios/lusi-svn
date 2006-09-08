@@ -33,8 +33,9 @@ namespace util {
  * Exception for errors happened when executing a process.
  * Those exceptions are only intended for errors when forking and executing the
  * child process, not for child process exiting with errors.
- * The error message returned by what() will be "ProcessException: " followed
- * by the error message specified when creating the exception.
+ *
+ * The error message returned by what() will be the error message specified
+ * when creating the exception.
  */
 class ProcessException: public std::exception {
 public:
@@ -42,12 +43,9 @@ public:
     /**
      * Creates a new ProcessException.
      *
-     * @param errorMessage The error message of the exception,
-     *                     "ProcessException: unspecified" by default.
+     * @param errorMessage The error message of the exception, empty by default.
      */
-    explicit ProcessException(
-                const std::string& errorMessage =
-                        std::string("ProcessException: unspecified"));
+    explicit ProcessException(const std::string& errorMessage = "");
 
     /**
      * Destroys this ProcessException.

@@ -25,9 +25,8 @@ using namespace lusi::util;
 //public:
 
 OpenCommunicationChannelsException::OpenCommunicationChannelsException(
-            const std::string& errorMessage
-        /*= std::string("OpenCommunicationChannelsException: unspecified")*/) {
-    mErrorMessage = "OpenCommunicationChannelsException: " + errorMessage;
+            const std::string& errorMessage /*= ""*/) {
+    mErrorMessage = errorMessage;
 }
 
 OpenCommunicationChannelsException::~OpenCommunicationChannelsException()

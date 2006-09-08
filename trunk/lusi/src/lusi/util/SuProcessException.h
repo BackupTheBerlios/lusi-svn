@@ -24,7 +24,6 @@
 #include <lusi/util/ProcessException.h>
 
 namespace lusi {
-
 namespace util {
 
 /**
@@ -33,9 +32,11 @@ namespace util {
  * Exception for errors happened when executing a process switching the user.
  * Those exceptions are only intended for errors when switching to the new user.
  * Errors forking and executing the child process are signaled with
- * ProcessException. Neither SuProcessException nor ProcessException are
- * The error message returned by what() will be "ProcessException: " followed
- * by the error message specified when creating the exception.
+ * ProcessException. Neither SuProcessException nor ProcessException are used
+ * for errors in the process executed itself.
+ *
+ * The error message returned by what() will be the error message specified
+ * when creating the exception.
  */
 class SuProcessException: public ProcessException {
 public:
@@ -43,11 +44,9 @@ public:
     /**
      * Creates a new SuProcessException.
      *
-     * @param errorMessage The error message of the exception,
-     *                     "SuProcessException: unspecified" by default.
+     * @param errorMessage The error message of the exception, empty by default.
      */
-    explicit SuProcessException(const std::string& errorMessage =
-                        std::string("SuProcessException: unspecified"));
+    explicit SuProcessException(const std::string& errorMessage = "");
 
     /**
      * Destroys this SuProcessException.
@@ -57,7 +56,6 @@ public:
 };
 
 }
-
 }
 
 #endif
