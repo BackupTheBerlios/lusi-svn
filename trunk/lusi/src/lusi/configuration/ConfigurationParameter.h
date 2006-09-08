@@ -124,7 +124,8 @@ protected:
      *
      * @param id The id.
      * @param priorityType The type of priority.
-     * @param information The information about this ConfigurationParameter.
+     * @param information The information about this ConfigurationParameter,
+     *                    empty by default.
      */
     ConfigurationParameter(const std::string& id,
                            PriorityType priorityType,

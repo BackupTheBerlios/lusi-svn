@@ -53,7 +53,7 @@ void ConfigurationParameterSimpleTest::testConstructor() {
                          mConfigurationParameterSimple->mDefaultValue);
     CPPUNIT_ASSERT_EQUAL(string(""), mConfigurationParameterSimple->mValue);
 
-    //Test without setting the default value
+    //Test without setting the information and default values
     delete mConfigurationParameterSimple;
     mConfigurationParameterSimple =
                 new ConfigurationParameterSimple("Another test",

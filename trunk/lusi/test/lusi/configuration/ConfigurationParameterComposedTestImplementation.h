@@ -36,16 +36,25 @@ class ConfigurationParameterComposedTestImplementation:
 public:
 
     /**
-     * Creates a new ConfigurationParameterTestImplementation.
+     * Creates a new ConfigurationParameterComposedTestImplementation.
+     * It uses the default value for information.
+     *
+     * @param id The id.
+     * @param priorityType The type of priority.
+     */
+    ConfigurationParameterComposedTestImplementation(const std::string& id,
+                                                     PriorityType priorityType);
+
+    /**
+     * Creates a new ConfigurationParameterComposedTestImplementation.
      *
      * @param id The id.
      * @param priorityType The type of priority.
      * @param information The information about this parameter.
      */
-    ConfigurationParameterComposedTestImplementation(
-            const std::string& id,
-            PriorityType priorityType,
-            const std::string& information);
+    ConfigurationParameterComposedTestImplementation(const std::string& id,
+                                                PriorityType priorityType,
+                                                const std::string& information);
 
     /**
      * Destroys this ConfigurationParameterComposedTestImplementation.

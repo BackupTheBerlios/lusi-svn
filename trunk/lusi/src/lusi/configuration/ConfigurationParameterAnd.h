@@ -44,11 +44,12 @@ public:
      *
      * @param id The id.
      * @param priorityType The type of priority.
-     * @param information The information about this ConfigurationParameterAnd.
+     * @param information The information about this ConfigurationParameter,
+     *                    empty by default.
      */
     ConfigurationParameterAnd(const std::string& id,
                               PriorityType priorityType,
-                              const std::string& information = 0);
+                              const std::string& information = "");
 
     /**
      * Destroys this ConfigurationParameterAnd.

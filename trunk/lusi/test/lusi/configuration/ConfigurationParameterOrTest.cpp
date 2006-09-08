@@ -52,6 +52,17 @@ void ConfigurationParameterOrTest::testConstructor() {
                          mConfigurationParameterOr->mInformation);
     CPPUNIT_ASSERT_EQUAL((size_t)0,
             mConfigurationParameterOr->mConfigurationParameters.size());
+
+    //Test without setting the information
+    delete mConfigurationParameterOr;
+    mConfigurationParameterOr = new ConfigurationParameterOr("Another test",
+                                    ConfigurationParameter::OptionalPriority);
+
+    CPPUNIT_ASSERT_EQUAL(string("Another test"),
+                         mConfigurationParameterOr->mId);
+    CPPUNIT_ASSERT_EQUAL(ConfigurationParameter::OptionalPriority,
+                         mConfigurationParameterOr->mPriorityType);
+    CPPUNIT_ASSERT_EQUAL(string(""), mConfigurationParameterOr->mInformation);
 }
 
 void ConfigurationParameterOrTest::testIsInvalid() {

@@ -52,8 +52,9 @@ public:
      *
      * @param id The id.
      * @param priorityType The type of priority.
-     * @param defaultValue The default value.
-     * @param information The information about this ConfigurationParameter.
+     * @param information The information about this ConfigurationParameter,
+     *                    empty by default.
+     * @param defaultValue The default value, empty by default.
      */
     ConfigurationParameterSimple(const std::string& id,
                                  PriorityType priorityType,

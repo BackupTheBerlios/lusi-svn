@@ -29,7 +29,7 @@ using namespace lusi::configuration;
 
 ConfigurationParameterOr::ConfigurationParameterOr(const string& id,
                                 PriorityType priorityType,
-                                const string& information /*= 0*/):
+                                const string& information /*= ""*/):
             ConfigurationParameterComposed(id, priorityType, information) {
 }
 
