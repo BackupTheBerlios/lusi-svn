@@ -55,7 +55,7 @@ void PackageTest::testGetProfile() {
 
 void PackageTest::testGetResourceMap() {
     CPPUNIT_ASSERT(mPackage->getResourceMap() != 0);
-    CPPUNIT_ASSERT(mPackage->getResourceMap()->getAllResources().size() == 0);
+    CPPUNIT_ASSERT(mPackage->getResourceMap()->getAll().size() == 0);
 }
 
 void PackageTest::testGetPackageStatus() {

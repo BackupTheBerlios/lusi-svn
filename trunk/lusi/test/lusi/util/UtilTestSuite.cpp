@@ -21,6 +21,7 @@
 #include "UtilTestSuite.h"
 #include "LocalUrlTest.h"
 #include "SmartPtrTest.h"
+#include "IdSmartPtrMapTest.h"
 #include "ProcessTest.h"
 #include "ProcessLinuxCommunicationTest.h"
 #include "PipeProcessLinuxCommunicationTest.h"
@@ -39,6 +40,7 @@ UtilTestSuite::UtilTestSuite() {
     //Own namespace Tests
     addTest(LocalUrlTest::suite());
     addTest(SmartPtrTest::suite());
+    addTest(IdSmartPtrMapTest::suite());
     addTest(ProcessTest::suite());
     addTest(ProcessLinuxCommunicationTest::suite());
     addTest(PipeProcessLinuxCommunicationTest::suite());

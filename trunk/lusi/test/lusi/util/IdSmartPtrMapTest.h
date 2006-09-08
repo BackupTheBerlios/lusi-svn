@@ -18,29 +18,37 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef LUSI_PACKAGE_RESOURCEMAPTEST_H
-#define LUSI_PACKAGE_RESOURCEMAPTEST_H
+#ifndef LUSI_UTIL_IDSMARTPTRMAPTEST_H
+#define LUSI_UTIL_IDSMARTPTRMAPTEST_H
 
 #include <cppunit/extensions/HelperMacros.h>
 
+#define protected public
+#define private public
+#include <lusi/util/IdSmartPtrMap.h>
+#undef private
+#undef protected
+
 namespace lusi {
-namespace package {
-class Resource;
-class ResourceMap;
+namespace util {
+class Index;
 }
 }
 
 namespace lusi {
-namespace package {
+namespace util {
 
 /**
- * Test class for ResourceMap.
+ * Test class for IdSmartPtrMap.
  *
- * @see ResourceMap
+ * @see IdSmartPtrMap
  */
-class ResourceMapTest: public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE(ResourceMapTest);
-    CPPUNIT_TEST(testGetAllResourcesByType);
+class IdSmartPtrMapTest: public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(IdSmartPtrMapTest);
+    CPPUNIT_TEST(testAdd);
+    CPPUNIT_TEST(testGet);
+    CPPUNIT_TEST(testGetAll);
+    CPPUNIT_TEST(testRemove);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -56,32 +64,48 @@ public:
     virtual void tearDown();
 
     /**
-     * Checks if getAllResourcesByType() returns a vector with all the added
-     * elements of the specified type.
+     * Checks if add() adds the element to the map and returns the adequate
+     * boolean value.
      */
-    void testGetAllResourcesByType();
+    void testAdd();
+
+    /**
+     * Checks if get() returns an already added element, or null if it wasn't
+     * added.
+     */
+    void testGet();
+
+    /**
+     * Checks if getAll() returns a vector with all the added elements.
+     */
+    void testGetAll();
+
+    /**
+     * Checks if remove() removes an added element.
+     */
+    void testRemove();
 
 private:
 
     /**
-     * The ResourceMap to test.
+     * The IdSmartPtrMap to test.
      */
-    ResourceMap* mResourceMap;
+    IdSmartPtrMap<Index>* mIdSmartPtrMap;
 
     /**
-     * First resource.
+     * First index.
      */
-    Resource* mResource1;
+    Index* mIndex1;
 
     /**
-     * Second resource.
+     * Second index.
      */
-    Resource* mResource2;
+    Index* mIndex2;
 
     /**
-     * Third resource.
+     * Third index.
      */
-    Resource* mResource3;
+    Index* mIndex3;
 
 };
 

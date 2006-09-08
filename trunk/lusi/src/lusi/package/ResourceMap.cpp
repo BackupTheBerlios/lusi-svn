@@ -19,61 +19,27 @@
  ***************************************************************************/
 
 #include "ResourceMap.h"
-#include "Resource.h"
 
-using std::make_pair;
-using std::map;
-using std::string;
-using std::vector;
+using lusi::util::IdSmartPtrMap;
 
 using namespace lusi::package;
 
 //public:
 
-ResourceMap::ResourceMap(): mMap() {
+ResourceMap::ResourceMap(): IdSmartPtrMap<Resource>() {
 }
 
 ResourceMap::~ResourceMap() {
-    for (map<string, Resource*>::const_iterator iterator = mMap.begin();
-            iterator != mMap.end(); ++iterator) {
-        delete iterator->second;
-    }
-}
-
-bool ResourceMap::addResource(Resource* resource) {
-    //TODO assert for null pointers
-    return mMap.insert(make_pair(resource->getId(), resource)).second;
-}
-
-Resource* ResourceMap::getResource(const string& id) const {
-    map<string, Resource*>::const_iterator iterator = mMap.find(id);
-
-    if (iterator == mMap.end()) {
-        return 0;
-    }
-
-    return iterator->second;
-}
-
-vector<Resource*> ResourceMap::getAllResources() const {
-    vector<Resource*> allResources;
-
-    for (map<string, Resource*>::const_iterator iterator = mMap.begin();
-            iterator != mMap.end(); ++iterator) {
-        allResources.push_back(iterator->second);
-    }
-
-    return allResources;
 }
 
 /*
 template<typename Type>
-vector<Type*> ResourceMap::getAllResourcesByType() const {
-    vector<Type*> resourcesByType;
+vector< SmartPtr<Type> > ResourceMap::getAllResourcesByType() const {
+    vector< SmartPtr<Type> > resourcesByType;
 
-    for (map<string, Resource*>::const_iterator iterator = mMap.begin();
-            iterator != mMap.end(); ++iterator) {
-        Type* resource = dynamic_cast<Type*>(iterator->second);
+    for (MapConstIterator iterator = mMap.begin(); iterator != mMap.end();
+            ++iterator) {
+        SmartPtr<Type> resource = (SmartPtr<Type>)iterator->second;
         if (resource != 0) {
             resourcesByType.push_back(resource);
         }
@@ -82,15 +48,3 @@ vector<Type*> ResourceMap::getAllResourcesByType() const {
     return resourcesByType;
 }
 */
-
-bool ResourceMap::removeResource(const string& id) {
-    Resource* resource = getResource(id);
-    if (resource == 0) {
-        return false;
-    }
-
-    mMap.erase(id);
-    delete resource;
-
-    return true;
-}

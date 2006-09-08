@@ -21,15 +21,8 @@
 #ifndef LUSI_PACKAGE_RESOURCEMAP_H
 #define LUSI_PACKAGE_RESOURCEMAP_H
 
-#include <map>
-#include <string>
-#include <vector>
-
-namespace lusi {
-namespace package {
-    class Resource;
-}
-}
+#include <lusi/package/Resource.h>
+#include <lusi/util/IdSmartPtrMap.h>
 
 namespace lusi {
 namespace package {
@@ -38,26 +31,16 @@ namespace package {
  * @class ResourceMap ResourceMap.h lusi/package/ResourceMap.h
  *
  * Maps Resources with their ids.
- * Resources can be added using addResource(Resource). It uses the id of the
- * Resource as the key to map to. A specific Resource can be got using its id
- * with getResource(string). All the added Resources can be got as a vector
- * using getAllResources(). To remove a Resource, use removeResource(string).
+ * This is a specialized version of IdSmartPtrMap to be used with Resources.
+ * Everything that applies in IdSmartPtrMap applies here.
  *
- * Once a Resource is added, ResourceMap gets control over lifespan and
- * destruction of the Resource. Resources are destroyed when the Map is
- * destroyed or when they're removed from it.
- * Resources added to the map must not be deleted from outside.
- *
- * Only initialized Resources can be stored. The null pointer element can't be
- * added.
- *
- * This class acts as a wrapper for STL Map class, simplifying its interface to
- * be used with Resources, and also getting control over lifespan of Resources.
- * It follows Adapter Design Pattern.
+ * Moreover, this class allows getting all the Resources from a specific Type
+ * in a vector using getAllResourcesByType(). The Type can be any of the derived
+ * classes of Resource.
  *
  * @see Resource
  */
-class ResourceMap {
+class ResourceMap: public lusi::util::IdSmartPtrMap<Resource> {
 public:
 
     /**
@@ -67,68 +50,26 @@ public:
 
     /**
      * Destroys this ResourceMap.
-     * It also destroys all the contained Resources.
      */
     virtual ~ResourceMap();
 
     /**
-     * Adds a new Resource to this ResourceMap, using as key the Resource id.
-     * If the Resource (identified only by its id) is already added, nothing
-     * happens.
-     * A null pointer can't be added.
-     *
-     * @param resource The Resource to add.
-     * @return True if the Resource was added, false otherwise.
-     */
-    bool addResource(Resource* resource);
-
-    /**
-     * Returns the Resource identified by id.
-     * If there's no Resource mapped to the id, a null pointer is returned.
-     * This is an accessor method.
-     *
-     * @param id The id of the Resource to get.
-     * @return The Resource identified by the id.
-     */
-    Resource* getResource(const std::string& id) const;
-
-    /**
-     * Returns all the Resources in the Map in a vector.
-     * This is an accessor method.
-     *
-     * @return All the Resources in the Map in a vector.
-     */
-    std::vector<Resource*> getAllResources() const;
-
-    /**
      * Returns all the Resources of the specified Type in the Map in a vector.
+     * The Type is the class type of the pointer contained in the smart pointer.
+     * Only classes derived from Resource can be used.
+     * The Resources are returned also as smart pointers of the specified type,
+     * so they can be alive after the ResourceMap is deleted if needed.
+     *
      * This is an accessor method.
      *
      * @return All the Resources of the specified Type in the Map in a vector.
      */
     template<typename Type>
-    std::vector<Type*> getAllResourcesByType() const;
-
-    /**
-     * Removes the Resource identified by id from the Map, also deleting it.
-     * If there's no Resource with the specified id, nothing happens.
-     *
-     * @param id The id of the Resource to delete.
-     * @return True if the Resource was removed, false otherwise.
-     */
-    bool removeResource(const std::string& id);
+    std::vector< lusi::util::SmartPtr<Type> > getAllResourcesByType() const;
 
 protected:
 
 private:
-
-    /**
-     * The STL Map used internally to store the elements.
-     */
-    std::map<std::string, Resource*> mMap;
-
-
-
 
     /**
      * Copy constructor disabled.
@@ -143,13 +84,14 @@ private:
 };
 
 template<typename Type>
-std::vector<Type*> ResourceMap::getAllResourcesByType() const {
-    std::vector<Type*> resourcesByType;
+std::vector< lusi::util::SmartPtr<Type> > ResourceMap::getAllResourcesByType()
+                                                                        const {
+    std::vector< lusi::util::SmartPtr<Type> > resourcesByType;
 
-    for (std::map<std::string, Resource*>::const_iterator iterator =
-                    mMap.begin();
-            iterator != mMap.end(); ++iterator) {
-        Type* resource = dynamic_cast<Type*>(iterator->second);
+    for (MapConstIterator iterator = mMap.begin(); iterator != mMap.end();
+            ++iterator) {
+        lusi::util::SmartPtr<Type> resource =
+                (lusi::util::SmartPtr<Type>)iterator->second;
         if (resource != 0) {
             resourcesByType.push_back(resource);
         }
