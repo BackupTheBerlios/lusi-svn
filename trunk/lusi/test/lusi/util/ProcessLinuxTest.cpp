@@ -327,6 +327,94 @@ void ProcessLinuxTest::testStart() {
     CPPUNIT_ASSERT_EQUAL(0, mPtyProcessObserver->getProcessExitedNumber());
 }
 
+void ProcessLinuxTest::testNormalExit() {
+    //Test with ProcessLinux using pipe communication
+    CPPUNIT_ASSERT_EQUAL(false, mPipeProcessLinux->normalExit());
+
+    //Test with a failed process
+    *mPipeProcessLinux << "someNonExistentProgram";
+    CPPUNIT_ASSERT_THROW(mPipeProcessLinux->start(), ProcessException);
+
+    CPPUNIT_ASSERT_EQUAL(false, mPipeProcessLinux->normalExit());
+
+    //Test with a process finished cleanly
+    restartTestObjects();
+
+    *mPipeProcessLinux << "echo" << "Victory is mine!";
+    mPipeProcessLinux->start();
+
+    CPPUNIT_ASSERT_EQUAL(true, mPipeProcessLinux->normalExit());
+
+    //Test with a process finished with errors
+    restartTestObjects();
+
+    *mPipeProcessLinux << "/bin/sh" << "-c" << "aCommandYouWontLikelyHave";
+    mPipeProcessLinux->start();
+
+    CPPUNIT_ASSERT_EQUAL(true, mPipeProcessLinux->normalExit());
+
+    //----------------------------------------------
+    //Test with ProcessLinux using pty communication
+    //----------------------------------------------
+    CPPUNIT_ASSERT_EQUAL(false, mPtyProcessLinux->normalExit());
+
+    //Test with a failed process
+    *mPtyProcessLinux << "someNonExistentProgram";
+    CPPUNIT_ASSERT_THROW(mPtyProcessLinux->start(), ProcessException);
+
+    CPPUNIT_ASSERT_EQUAL(false, mPtyProcessLinux->normalExit());
+
+    //Test with a process finished cleanly
+    restartTestObjects();
+
+    *mPtyProcessLinux << "echo" << "Victory is mine!";
+    mPtyProcessLinux->start();
+
+    CPPUNIT_ASSERT_EQUAL(true, mPtyProcessLinux->normalExit());
+
+    //Test with a process finished with errors
+    restartTestObjects();
+
+    *mPtyProcessLinux << "/bin/sh" << "-c" << "aCommandYouWontLikelyHave";
+    mPtyProcessLinux->start();
+
+    CPPUNIT_ASSERT_EQUAL(true, mPtyProcessLinux->normalExit());
+}
+
+void ProcessLinuxTest::testGetExitStatus() {
+    //Test with ProcessLinux using pipe communication
+    //Test with a process finished cleanly
+    *mPipeProcessLinux << "echo" << "Victory is mine!";
+    mPipeProcessLinux->start();
+
+    CPPUNIT_ASSERT_EQUAL(0, mPipeProcessLinux->getExitStatus());
+
+    //Test with a process finished with errors
+    restartTestObjects();
+
+    *mPipeProcessLinux << "/bin/sh" << "-c" << "aCommandYouWontLikelyHave";
+    mPipeProcessLinux->start();
+
+    CPPUNIT_ASSERT_EQUAL(127, mPipeProcessLinux->getExitStatus());
+
+    //----------------------------------------------
+    //Test with ProcessLinux using pty communication
+    //----------------------------------------------
+    //Test with a process finished cleanly
+    *mPtyProcessLinux << "echo" << "Victory is mine!";
+    mPtyProcessLinux->start();
+
+    CPPUNIT_ASSERT_EQUAL(0, mPtyProcessLinux->getExitStatus());
+
+    //Test with a process finished with errors
+    restartTestObjects();
+
+    *mPtyProcessLinux << "/bin/sh" << "-c" << "aCommandYouWontLikelyHave";
+    mPtyProcessLinux->start();
+
+    CPPUNIT_ASSERT_EQUAL(127, mPtyProcessLinux->getExitStatus());
+}
+
 void ProcessLinuxTest::testGetProcessLinuxCommunication() {
     delete mPipeProcessLinux->mProcessLinuxCommunication;
 

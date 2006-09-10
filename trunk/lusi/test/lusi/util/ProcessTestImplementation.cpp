@@ -39,3 +39,11 @@ void ProcessTestImplementation::start() throw (ProcessException) {
 bool ProcessTestImplementation::writeData(const string& data) {
     return false;
 }
+
+bool ProcessTestImplementation::normalExit() {
+    return false;
+}
+
+int ProcessTestImplementation::getExitStatus() {
+    return -1;
+}

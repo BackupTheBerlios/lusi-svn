@@ -53,6 +53,9 @@ ProcessLinux::ProcessLinux(CommunicationType communicationType):
     mPid = 0;
     mProcessLinuxCommunication = ProcessLinuxCommunication::
                         newProcessLinuxCommunication(communicationType);
+    mRunning = false;
+    mExecutionError = false;
+    mStatus = 0;
 }
 
 ProcessLinux::~ProcessLinux() {
@@ -70,6 +73,9 @@ ProcessLinux::~ProcessLinux() {
 }
 
 void ProcessLinux::start() throw (ProcessException) {
+    mRunning = true;
+    mExecutionError = false;
+
     //Pipe for notifying a failure in the child execution
     int childExitPipe[2];
 
@@ -141,7 +147,7 @@ void ProcessLinux::start() throw (ProcessException) {
         }
 
         if (FD_ISSET(sExitPipe[0], &readFdSet)) {
-            if (waitpid(mPid, 0, WNOHANG) == mPid) {
+            if (waitpid(mPid, &mStatus, WNOHANG) == mPid) {
                 exited = true;
                 char dummy = 0;
                 while (read(sExitPipe[0], &dummy, 1) != 1);
@@ -166,6 +172,8 @@ void ProcessLinux::start() throw (ProcessException) {
     mProcessLinuxCommunication->closeCommunicationChannels();
 
     notifyProcessExited();
+
+    mRunning = false;
 }
 
 bool ProcessLinux::writeData(const string& data) {
@@ -189,6 +197,14 @@ bool ProcessLinux::writeData(const string& data) {
     }
 
     return true;
+}
+
+bool ProcessLinux::normalExit() {
+    return mPid != 0 && !mRunning && !mExecutionError && WIFEXITED(mStatus);
+}
+
+int ProcessLinux::getExitStatus() {
+    return WEXITSTATUS(mStatus);
 }
 
 /*
@@ -323,6 +339,8 @@ void ProcessLinux::sendPendingData() {
 void ProcessLinux::handleExecutionError(ErrorType errorType)
                                                     throw (ProcessException) {
     mProcessLinuxCommunication->closeCommunicationChannels();
+    mRunning = false;
+    mExecutionError = true;
     switch (errorType) {
         case communicationError:
             throw ProcessException("Could not create communication channels");

@@ -63,6 +63,9 @@ namespace util {
  * stdout and stderr in parent and child).
  * As file descriptor are used, read, write, and select operations work doesn't
  * matter which communication type is being used.
+ *
+ * The exit status of the executed process is used to know if it was a normal
+ * exit and, in that case, the exit value of the process.
  */
 class ProcessLinux: public Process {
 public:
@@ -131,6 +134,23 @@ public:
     virtual bool writeData(const std::string& data);
 
     /**
+     * Returns true if the process exited "by itself" (not due to a signal),
+     * false otherwise.
+     *
+     * @return True if the process exited "by itself" (not due to a signal),
+     *         false otherwise.
+     */
+    virtual bool normalExit();
+
+    /**
+     * Returns the exit status of the process.
+     * The returned value is valid only if the process exited normally.
+     *
+     * @return The exit status of the process.
+     */
+    virtual int getExitStatus();
+
+    /**
      * Returns the ProcessLinuxCommunication used to manage communication
      * channels.
      *
@@ -174,6 +194,21 @@ private:
      * channels.
      */
     ProcessLinuxCommunication* mProcessLinuxCommunication;
+
+    /**
+     * If the process is running.
+     */
+    bool mRunning;
+
+    /**
+     * If an error happened while trying to execute the process.
+     */
+    bool mExecutionError;
+
+    /**
+     * The exit status of the process.
+     */
+    int mStatus;
 
 
 

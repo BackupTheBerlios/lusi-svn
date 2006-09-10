@@ -57,6 +57,19 @@ public:
      */
     virtual bool writeData(const std::string& data);
 
+    /**
+     * Returns false.
+     *
+     * @return False.
+     */
+    virtual bool normalExit();
+
+    /**
+     * Returns -1.
+     * @return -1.
+     */
+    virtual int getExitStatus();
+
 };
 
 }

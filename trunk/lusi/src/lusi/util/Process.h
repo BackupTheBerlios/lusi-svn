@@ -47,6 +47,10 @@ namespace util {
  * contents of the data (like that all the notified data ends with a new
  * line).
  *
+ * The exit status of the executed process can be got with getExitStatus(),
+ * provided that the process exited normally, which can be known with
+ * normalExit().
+ *
  * Moreover, this class is abstract, so different implementations can be made.
  * This was due to the initial intended internal use of KDELibs class KProcess
  * that, finally, wasn't used.
@@ -117,6 +121,23 @@ public:
      * @return True if the data was written, false otherwise.
      */
     virtual bool writeData(const std::string& data) = 0;
+
+    /**
+     * Returns true if the process exited "by itself" (not due to a signal),
+     * false otherwise.
+     *
+     * @return True if the process exited "by itself" (not due to a signal),
+     *         false otherwise.
+     */
+    virtual bool normalExit() = 0;
+
+    /**
+     * Returns the exit status of the process.
+     * The returned value is valid only if the process exited normally.
+     *
+     * @return The exit status of the process.
+     */
+    virtual int getExitStatus() = 0;
 
     /**
      * Returns the list of arguments of this Process.

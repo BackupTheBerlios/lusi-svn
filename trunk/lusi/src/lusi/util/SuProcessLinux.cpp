@@ -76,6 +76,15 @@ bool SuProcessLinux::writeData(const string& data) {
     return mProcessLinux->writeData(data);
 }
 
+bool SuProcessLinux::normalExit() {
+    return mStateType == FinishedState && mProcessLinux != 0 &&
+            mProcessLinux->normalExit();
+}
+
+int SuProcessLinux::getExitStatus() {
+    return (normalExit())?mProcessLinux->getExitStatus():-1;
+}
+
 //private:
 
 void SuProcessLinux::checkUserName() throw (SuProcessException) {

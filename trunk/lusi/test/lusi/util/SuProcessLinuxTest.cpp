@@ -107,6 +107,116 @@ void SuProcessLinuxTest::testStart() {
     }
 }
 
+void SuProcessLinuxTest::testNormalExit() {
+    //Test a not executed process
+    CPPUNIT_ASSERT_EQUAL(false, mSuProcessLinux->normalExit());
+
+    //Test with an invalid user
+    mSuProcessLinux->setUserName("doesAnyoneHaveAUserNamedLikeThis");
+
+    CPPUNIT_ASSERT_THROW(mSuProcessLinux->start(), SuProcessException);
+    CPPUNIT_ASSERT_EQUAL(false, mSuProcessLinux->normalExit());
+
+    //Test with an invalid password
+    restartTestObjects();
+
+    mSuProcessLinux->setUserName("root");
+    mSuProcessLinux->setPassword("aRootPasswordYouWontLikelyHaveInYourSystem");
+
+    CPPUNIT_ASSERT_THROW(mSuProcessLinux->start(), SuProcessException);
+    CPPUNIT_ASSERT_EQUAL(false, mSuProcessLinux->normalExit());
+
+    //Test with current user (using empty user name)
+    //Test with a process finished cleanly
+    restartTestObjects();
+
+    mSuProcessLinux->setUserName("");
+    mSuProcessLinux->setPassword("");
+    *mSuProcessLinux << "echo" << "Victory is mine!";
+    mSuProcessLinux->start();
+
+    CPPUNIT_ASSERT_EQUAL(true, mSuProcessLinux->normalExit());
+
+    //Test with a process finished with errors
+    restartTestObjects();
+
+    mSuProcessLinux->setUserName("");
+    mSuProcessLinux->setPassword("");
+    *mSuProcessLinux << "/bin/sh" << "-c" << "aCommandYouWontLikelyHave";
+    mSuProcessLinux->start();
+
+    CPPUNIT_ASSERT_EQUAL(true, mSuProcessLinux->normalExit());
+
+    //----------------------------------------------
+    //Test with a different user
+    //----------------------------------------------
+    if (mValidUserName != "") {
+        restartTestObjects();
+
+        mSuProcessLinux->setUserName(mValidUserName);
+        mSuProcessLinux->setPassword(mValidPassword);
+        *mSuProcessLinux << "echo" << "Victory is mine!";
+        mSuProcessLinux->start();
+
+        CPPUNIT_ASSERT_EQUAL(true, mSuProcessLinux->normalExit());
+
+        //Test with a process finished with errors
+        restartTestObjects();
+
+        mSuProcessLinux->setUserName(mValidUserName);
+        mSuProcessLinux->setPassword(mValidPassword);
+        *mSuProcessLinux << "/bin/sh" << "-c" << "aCommandYouWontLikelyHave";
+        mSuProcessLinux->start();
+
+        CPPUNIT_ASSERT_EQUAL(true, mSuProcessLinux->normalExit());
+    }
+}
+
+void SuProcessLinuxTest::testGetExitStatus() {
+    //Test with current user (using empty user name)
+    //Test with a process finished cleanly
+    mSuProcessLinux->setUserName("");
+    mSuProcessLinux->setPassword("");
+    *mSuProcessLinux << "echo" << "Victory is mine!";
+    mSuProcessLinux->start();
+
+    CPPUNIT_ASSERT_EQUAL(0, mSuProcessLinux->getExitStatus());
+
+    //Test with a process finished with errors
+    restartTestObjects();
+
+    mSuProcessLinux->setUserName("");
+    mSuProcessLinux->setPassword("");
+    *mSuProcessLinux << "/bin/sh" << "-c" << "aCommandYouWontLikelyHave";
+    mSuProcessLinux->start();
+
+    CPPUNIT_ASSERT_EQUAL(127, mSuProcessLinux->getExitStatus());
+
+    //----------------------------------------------
+    //Test with a different user
+    //----------------------------------------------
+    if (mValidUserName != "") {
+        restartTestObjects();
+
+        mSuProcessLinux->setUserName(mValidUserName);
+        mSuProcessLinux->setPassword(mValidPassword);
+        *mSuProcessLinux << "echo" << "Victory is mine!";
+        mSuProcessLinux->start();
+
+        CPPUNIT_ASSERT_EQUAL(0, mSuProcessLinux->getExitStatus());
+
+        //Test with a process finished with errors
+        restartTestObjects();
+
+        mSuProcessLinux->setUserName(mValidUserName);
+        mSuProcessLinux->setPassword(mValidPassword);
+        *mSuProcessLinux << "/bin/sh" << "-c" << "aCommandYouWontLikelyHave";
+        mSuProcessLinux->start();
+
+        CPPUNIT_ASSERT_EQUAL(127, mSuProcessLinux->getExitStatus());
+    }
+}
+
 void SuProcessLinuxTest::testCheckUserName() {
     *mSuProcessLinux << "echo" << "Checking user name";
 
@@ -148,4 +258,11 @@ void SuProcessLinuxTest::testCheckPassword() {
         }
         CPPUNIT_ASSERT_EQUAL(processLinux, mSuProcessLinux->mProcessLinux);
     }
+}
+
+//private:
+
+void SuProcessLinuxTest::restartTestObjects() {
+    tearDown();
+    setUp();
 }

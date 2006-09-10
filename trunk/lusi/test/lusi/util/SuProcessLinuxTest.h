@@ -44,6 +44,8 @@ namespace util {
 class SuProcessLinuxTest: public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(SuProcessLinuxTest);
     CPPUNIT_TEST(testStart);
+    CPPUNIT_TEST(testNormalExit);
+    CPPUNIT_TEST(testGetExitStatus);
     CPPUNIT_TEST(testCheckUserName);
     CPPUNIT_TEST(testCheckPassword);
     CPPUNIT_TEST_SUITE_END();
@@ -75,6 +77,19 @@ public:
      * that there are no race conditions. It makes the whole tests very slow.
      */
     void testStart();
+
+    /**
+     * Tests if a process not executed (one not started and one not switched)
+     * returns false, and if a process exited cleanly and a process exited with
+     * errors return true (both switching and without switching).
+     */
+    void testNormalExit();
+
+    /**
+     * Tests if a process exited cleanly returns 0 and if a process exited with
+     * errors returns a status != 0 (both switching and without switching).
+     */
+    void testGetExitStatus();
 
     /**
      * Tests if a wrong user throws an exception and if a right user doesn't.
@@ -113,6 +128,13 @@ private:
      * The password to use when testing switching to a valid user.
      */
     std::string mValidPassword;
+
+
+
+    /**
+     * Calls tearDown and setUp.
+     */
+    void restartTestObjects();
 
 };
 

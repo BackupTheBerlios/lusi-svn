@@ -46,6 +46,8 @@ class ProcessLinuxTest: public CppUnit::TestFixture {
     CPPUNIT_TEST(testSetWorkingDirectory);
     CPPUNIT_TEST(testStart);
     CPPUNIT_TEST(testWriteData);
+    CPPUNIT_TEST(testNormalExit);
+    CPPUNIT_TEST(testGetExitStatus);
     CPPUNIT_TEST(testGetProcessLinuxCommunication);
     CPPUNIT_TEST_SUITE_END();
 
@@ -98,6 +100,18 @@ public:
      * done due to the need of threads).
      */
     void testWriteData();
+
+    /**
+     * Tests if a process not executed and one failed return false, and if a
+     * process exited cleanly and a process exited with errors return true.
+     */
+    void testNormalExit();
+
+    /**
+     * Tests if a process exited cleanly returns 0 and if a process exited with
+     * errors returns a status != 0.
+     */
+    void testGetExitStatus();
 
     /**
      * Tests if getProcessLinuxCommunication returns mProcessLinuxCommunication.

@@ -39,3 +39,11 @@ void SuProcessTestImplementation::start() throw (ProcessException) {
 bool SuProcessTestImplementation::writeData(const string& data) {
     return false;
 }
+
+bool SuProcessTestImplementation::normalExit() {
+    return false;
+}
+
+int SuProcessTestImplementation::getExitStatus() {
+    return -1;
+}

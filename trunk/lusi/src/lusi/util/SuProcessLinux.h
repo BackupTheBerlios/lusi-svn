@@ -45,6 +45,10 @@ namespace util {
  * successfully or when a problem changing the user happened (and an exception
  * is thrown in that case).
  *
+ * The exit status returned in getExitStatus() is always from the executed
+ * process, not su. If the process didn't got to be executed, the returned value
+ * is invalid.
+ *
  * This class is prepared to work with GNU su. Other su commands might not work.
  * Sourcecode of KDE kdesu was a great source of information about the
  * interaction with su used in this class and SuProcessLinuxConverser. Kudos to
@@ -93,6 +97,29 @@ public:
      * @return True if the data was written, false otherwise.
      */
     virtual bool writeData(const std::string& data);
+
+    /**
+     * Returns true if the process exited "by itself" (not due to a signal),
+     * false otherwise.
+     * The returned value correspond to the subshell executed by su to wrap the
+     * process, not by su itself. If the process isn't found, a normal exit
+     * happens anyway, as the subshell is executed.
+     *
+     * @return True if the process exited "by itself" (not due to a signal),
+     *         false otherwise.
+     */
+    virtual bool normalExit();
+
+    /**
+     * Returns the exit status of the process.
+     * The returned value is valid only if the process exited normally. It
+     * correspond to the subshell executed by su to wrap the process, not by su
+     * itself. This means that, if the process isn't found, a 127 exit value
+     * will be returned, as it's the value returned by the shell.
+     *
+     * @return The exit status of the process.
+     */
+    virtual int getExitStatus();
 
 private:
 
