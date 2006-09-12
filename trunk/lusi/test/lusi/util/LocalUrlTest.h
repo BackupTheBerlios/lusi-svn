@@ -39,6 +39,7 @@ class LocalUrlTest: public CppUnit::TestFixture {
     CPPUNIT_TEST(testGetDirectory);
     CPPUNIT_TEST(testGetExtension);
     CPPUNIT_TEST(testGetFileName);
+    CPPUNIT_TEST(testGetParent);
     CPPUNIT_TEST(testGetPath);
     CPPUNIT_TEST(testAppendRelativePathToDirectory);
     CPPUNIT_TEST(testOperatorAssignment);
@@ -88,6 +89,11 @@ public:
      * Tests if the string returned is the file name in the path.
      */
     void testGetFileName();
+
+    /**
+     * Tests if the string returned is the parent path.
+     */
+    void testGetParent();
 
     /**
      * Tests if the string returned is the path stored.

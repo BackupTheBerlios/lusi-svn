@@ -203,6 +203,38 @@ void LocalUrlTest::testGetFileName() {
     CPPUNIT_ASSERT_EQUAL(string(""), localUrl.getFileName());
 }
 
+void LocalUrlTest::testGetParent() {
+    //Test a file without path
+    LocalUrl localUrl("README");
+
+    CPPUNIT_ASSERT_EQUAL(string("../"), localUrl.getParent());
+
+    //Test a file in a relative self directory
+    localUrl = LocalUrl("./README");
+
+    CPPUNIT_ASSERT_EQUAL(string("../"), localUrl.getParent());
+
+    //Test a file in a nested directory
+    localUrl = LocalUrl("/usr/bin/k3b");
+
+    CPPUNIT_ASSERT_EQUAL(string("/usr/bin/"), localUrl.getParent());
+
+    //Test root directory
+    localUrl = LocalUrl("/");
+
+    CPPUNIT_ASSERT_EQUAL(string("/"), localUrl.getParent());
+
+    //Test a relative directory
+    localUrl = LocalUrl("share/");
+
+    CPPUNIT_ASSERT_EQUAL(string("../"), localUrl.getParent());
+
+    //Test a nested directory
+    localUrl = LocalUrl("/usr/bin/");
+
+    CPPUNIT_ASSERT_EQUAL(string("/usr/"), localUrl.getParent());
+}
+
 void LocalUrlTest::testGetPath() {
     LocalUrl localUrl("Photo/It's me!.png");
 

@@ -24,6 +24,8 @@ using std::string;
 
 using namespace lusi::util;
 
+//public:
+
 LocalUrl::LocalUrl(const string& path) {
     mPath = cleanPath(path);
 }
@@ -43,7 +45,7 @@ bool LocalUrl::isRelative() const {
     return mPath[0] != '/';
 }
 
-std::string LocalUrl::getDirectory() const {
+string LocalUrl::getDirectory() const {
     string::size_type separatorPosition = mPath.rfind("/");
     if (separatorPosition == string::npos) {
         return string("");
@@ -52,7 +54,7 @@ std::string LocalUrl::getDirectory() const {
     return mPath.substr(0, separatorPosition + 1);
 }
 
-std::string LocalUrl::getExtension() const {
+string LocalUrl::getExtension() const {
     string::size_type dotPosition = mPath.rfind(".");
 
     if (dotPosition == string::npos || dotPosition == 0) {
@@ -70,7 +72,7 @@ std::string LocalUrl::getExtension() const {
     return mPath.substr(dotPosition+1);
 }
 
-std::string LocalUrl::getFileName() const {
+string LocalUrl::getFileName() const {
     string::size_type separatorPosition = mPath.rfind("/");
     if (separatorPosition == string::npos) {
         return mPath;
@@ -79,8 +81,32 @@ std::string LocalUrl::getFileName() const {
     return mPath.substr(separatorPosition + 1);
 }
 
+string LocalUrl::getParent() const {
+    string directory = getDirectory();
+
+    if (!isDirectory() && directory != "") {
+        return directory;
+    }
+
+    if (!isDirectory()) {
+        return "../";
+    }
+
+    if (directory == "/") {
+        return "/";
+    }
+
+    int parentSeparator = directory.rfind("/", directory.size() - 2);
+
+    if (parentSeparator == string::npos) {
+        return "../";
+    }
+
+    return directory.substr(0, parentSeparator + 1);
+}
+
 /*
-inline std::string getPath() const {
+inline string LocalUrl::getPath() const {
     return mPath;
 }
 */
@@ -108,6 +134,8 @@ bool LocalUrl::operator==(const LocalUrl& localUrl) {
 bool LocalUrl::operator!=(const LocalUrl& localUrl) {
     return mPath != localUrl.mPath;
 }
+
+//private:
 
 string LocalUrl::cleanPath(const string& path) {
     string cleanedPath("");

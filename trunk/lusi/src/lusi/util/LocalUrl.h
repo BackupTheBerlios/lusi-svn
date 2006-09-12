@@ -54,6 +54,8 @@ namespace util {
  * leading parent reference can't be resolved.
  * Also, when appending relative LocalUrl to another LocalUrl which represents a
  * directory, the relative path appended is cleaned.
+ *
+ * The parent directory can be got using getParent().
  */
 class LocalUrl {
 public:
@@ -128,6 +130,25 @@ public:
     std::string getFileName() const;
 
     /**
+     * Returns the path to the parent directory.
+     * The directory returned also includes the last "/".
+     *
+     * If this LocalUrl is a file, the returned path will be equal to the path
+     * returned by directory (provided it's not empty. In that case, "../" is
+     * returned). If this LocalUrl is a directory, the returned path will be
+     * the parent directory of this directory.
+     *
+     * If the current directory is the root directory, this returns the root
+     * directory itself.
+     * Also, if the current directory is the base of a relative directory which
+     * can't be resolved, the current directory itself is returned (for example,
+     * "../").
+     *
+     * @return The path to the parent directory.
+     */
+    std::string getParent() const;
+
+    /**
      * Returns the full path.
      *
      * @return The full path.
@@ -183,7 +204,8 @@ private:
 
 
     /**
-     * Cleans the path as much as possible of self and parent directories syntax.
+     * Cleans the path as much as possible of self and parent directories
+     * syntax.
      * References to self ("./") are removed, and parent directories are solved,
      * if possible. Root directory is a special case, as its parent is itself.
      *
