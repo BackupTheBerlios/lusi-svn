@@ -18,44 +18,89 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "UtilTestSuite.h"
-#include "LocalUrlTest.h"
-#include "SmartPtrTest.h"
-#include "IdSmartPtrMapTest.h"
-#include "ProcessTest.h"
-#include "ProcessLinuxCommunicationTest.h"
-#include "PipeProcessLinuxCommunicationTest.h"
-#include "PtyProcessLinuxCommunicationTest.h"
-#include "ProcessLinuxTest.h"
-#include "ProcessRunnerTest.h"
-#include "SuProcessTest.h"
-#include "SuProcessLinuxTest.h"
-#include "SuProcessLinuxConverserTest.h"
-#include "GroupTest.h"
-#include "UserTest.h"
-#include "LocalFileTest.h"
+#include <pwd.h>
+
+#include "User.h"
+
+using std::string;
 
 using namespace lusi::util;
 
 //public:
 
-UtilTestSuite::UtilTestSuite() {
-    //Own namespace Tests
-    addTest(LocalUrlTest::suite());
-    addTest(SmartPtrTest::suite());
-    addTest(IdSmartPtrMapTest::suite());
-    addTest(ProcessTest::suite());
-    addTest(ProcessLinuxCommunicationTest::suite());
-    addTest(PipeProcessLinuxCommunicationTest::suite());
-    addTest(PtyProcessLinuxCommunicationTest::suite());
-    addTest(ProcessLinuxTest::suite());
-    addTest(ProcessRunnerTest::suite());
-    addTest(SuProcessTest::suite());
-    addTest(SuProcessLinuxTest::suite());
-    addTest(SuProcessLinuxConverserTest::suite());
-    addTest(GroupTest::suite());
-    addTest(UserTest::suite());
-    addTest(LocalFileTest::suite());
+User User::getCurrentUser() {
+    return User(geteuid());
+}
 
-    //Direct child namespaces TestSuites
+User::User(int id /*= -1*/) {
+    init(getpwuid(id));
+}
+
+User::User(const std::string& name) {
+    init(getpwnam(name.c_str()));
+}
+
+User::User(const User& user) {
+    mId = user.mId;
+    mName = user.mName;
+    mGroup = user.mGroup;
+}
+
+User::~User() {
+}
+
+/*
+inline bool User::exists() const {
+    return mId != -1;
+}
+
+inline const Group& User::getGroup() {
+    return mGroup;
+}
+
+inline int User::getId() const {
+    return mId;
+}
+
+inline const string& User::getName() const {
+    return mName;
+}
+
+inline bool User::isRoot() const {
+    return mId == 0;
+}
+*/
+
+User& User::operator=(const User& user) {
+    if (&user == this) {
+        return *this;
+    }
+
+    mId = user.mId;
+    mName = user.mName;
+    mGroup = user.mGroup;
+
+    return *this;
+}
+
+bool User::operator==(const User& user) const {
+    return mId == user.mId && mName == user.mName && mGroup == user.mGroup;
+}
+
+bool User::operator!=(const User& user) const {
+    return !(*this == user);
+}
+
+//private:
+
+void User::init(struct passwd* userData) {
+    if (userData == NULL) {
+        mId = -1;
+        mName = "";
+        mGroup = Group(-1);
+    } else {
+        mId = userData->pw_uid;
+        mName = userData->pw_name;
+        mGroup = Group(userData->pw_gid);
+    }
 }

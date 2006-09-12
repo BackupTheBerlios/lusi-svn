@@ -18,11 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <pwd.h>
-
 #include "SuProcessLinux.h"
 #include "ProcessLinux.h"
 #include "SuProcessLinuxConverser.h"
+#include "User.h"
 
 using std::string;
 
@@ -44,7 +43,7 @@ void SuProcessLinux::start() throw (ProcessException, SuProcessException) {
     mProcessLinux = new ProcessLinux(PtyCommunication);
     SuProcessLinuxConverser suProcessLinuxConverser(this);
 
-    if (mUserName == "" || mUserName == getCurrentUserName()) {
+    if (mUserName == "" || mUserName == User::getCurrentUser().getName()) {
         for (int i=0; i<mArguments.size(); ++i) {
             *mProcessLinux << mArguments[i];
         }
@@ -88,7 +87,7 @@ int SuProcessLinux::getExitStatus() {
 //private:
 
 void SuProcessLinux::checkUserName() throw (SuProcessException) {
-    if (getpwnam(mUserName.c_str()) == NULL) {
+    if (!User(mUserName).exists()) {
         throw SuProcessException("Invalid user name: " + mUserName);
     }
 }
@@ -110,12 +109,4 @@ void SuProcessLinux::checkPassword() throw (SuProcessException) {
     if (suProcessLinuxConverser.getStderrData() != "\n") {
         throw SuProcessException("Invalid password");
     }
-}
-
-string SuProcessLinux::getCurrentUserName() {
-    struct passwd* userData = getpwuid(getuid());
-    if (userData == NULL) {
-        return "";
-    }
-    return userData->pw_name;
 }

@@ -18,8 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <pwd.h>
-
 #include "SuProcessLinuxTest.h"
 #include "ProcessObserverTestImplementation.h"
 
@@ -28,6 +26,8 @@
 #include "SuProcessLinux.h"
 #undef private
 #undef protected
+
+#include "User.h"
 
 using std::string;
 
@@ -78,7 +78,7 @@ void SuProcessLinuxTest::testStart() {
     mProcessObserver->cleanData();
 
     //Test with current user (using real user name)
-    mSuProcessLinux->setUserName(getpwuid(getuid())->pw_name);
+    mSuProcessLinux->setUserName(User::getCurrentUser().getName());
     mSuProcessLinux->setPassword("");
 
     mSuProcessLinux->start();

@@ -18,44 +18,94 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "UtilTestSuite.h"
-#include "LocalUrlTest.h"
-#include "SmartPtrTest.h"
-#include "IdSmartPtrMapTest.h"
-#include "ProcessTest.h"
-#include "ProcessLinuxCommunicationTest.h"
-#include "PipeProcessLinuxCommunicationTest.h"
-#include "PtyProcessLinuxCommunicationTest.h"
-#include "ProcessLinuxTest.h"
-#include "ProcessRunnerTest.h"
-#include "SuProcessTest.h"
-#include "SuProcessLinuxTest.h"
-#include "SuProcessLinuxConverserTest.h"
-#include "GroupTest.h"
-#include "UserTest.h"
-#include "LocalFileTest.h"
+#include <grp.h>
+
+#include "Group.h"
+
+using std::string;
+using std::vector;
 
 using namespace lusi::util;
 
 //public:
 
-UtilTestSuite::UtilTestSuite() {
-    //Own namespace Tests
-    addTest(LocalUrlTest::suite());
-    addTest(SmartPtrTest::suite());
-    addTest(IdSmartPtrMapTest::suite());
-    addTest(ProcessTest::suite());
-    addTest(ProcessLinuxCommunicationTest::suite());
-    addTest(PipeProcessLinuxCommunicationTest::suite());
-    addTest(PtyProcessLinuxCommunicationTest::suite());
-    addTest(ProcessLinuxTest::suite());
-    addTest(ProcessRunnerTest::suite());
-    addTest(SuProcessTest::suite());
-    addTest(SuProcessLinuxTest::suite());
-    addTest(SuProcessLinuxConverserTest::suite());
-    addTest(GroupTest::suite());
-    addTest(UserTest::suite());
-    addTest(LocalFileTest::suite());
+vector<Group> Group::getCurrentGroups() {
+    vector<Group> groups;
 
-    //Direct child namespaces TestSuites
+    int numberOfGroups = getgroups(0, NULL);
+    gid_t* groupIds = new gid_t[numberOfGroups];
+    getgroups(numberOfGroups, groupIds);
+
+    for (int i=0; i<numberOfGroups; ++i) {
+        groups.push_back(Group(groupIds[i]));
+    }
+
+    delete []groupIds;
+
+    return groups;
+}
+
+Group::Group(int id /*= -1*/) {
+    init(getgrgid(id));
+}
+
+Group::Group(const std::string& name) {
+    init(getgrnam(name.c_str()));
+}
+
+Group::Group(const Group& group) {
+    mId = group.mId;
+    mName = group.mName;
+}
+
+Group::~Group() {
+}
+
+/*
+inline bool Group::exists() const {
+    return mId != -1;
+}
+
+inline int Group::getId() const {
+    return mId;
+}
+
+inline const string& Group::getName() const {
+    return mName;
+}
+
+inline bool Group::isRoot() const {
+    return mId == 0;
+}
+*/
+
+Group& Group::operator=(const Group& group) {
+    if (&group == this) {
+        return *this;
+    }
+
+    mId = group.mId;
+    mName = group.mName;
+
+    return *this;
+}
+
+bool Group::operator==(const Group& group) const {
+    return mId == group.mId && mName == group.mName;
+}
+
+bool Group::operator!=(const Group& group) const {
+    return !(*this == group);
+}
+
+//private:
+
+void Group::init(struct group* groupData) {
+    if (groupData == NULL) {
+        mId = -1;
+        mName = "";
+    } else {
+        mId = groupData->gr_gid;
+        mName = groupData->gr_name;
+    }
 }
