@@ -52,7 +52,7 @@ inline string ConfigurationParameterSimple::getValue() const {
 }
 
 inline bool ConfigurationParameterSimple::isDefaultValue() const {
-    return mValue == mDefaultValue;
+    return mDefaultValue != "" && getValue() == mDefaultValue;
 }
 
 inline void ConfigurationParameterSimple::setValue(string value) const {

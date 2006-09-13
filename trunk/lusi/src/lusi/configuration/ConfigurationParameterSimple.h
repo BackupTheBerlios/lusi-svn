@@ -93,10 +93,10 @@ public:
      * Returns true if the value is equal to the default value, false otherwise.
      * If no default value was set (it's empty), false is returned.
      *
-     * @return true if the value is equal to the default value, false otherwise.
+     * @return True if the value is equal to the default value, false otherwise.
      */
     bool isDefaultValue() const {
-        return mDefaultValue != "" && mValue == mDefaultValue;
+        return mDefaultValue != "" && getValue() == mDefaultValue;
     }
 
     /**

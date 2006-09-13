@@ -119,6 +119,12 @@ void ConfigurationParameterSimpleTest::testGetValue() {
 }
 
 void ConfigurationParameterSimpleTest::testIsDefaultValue() {
+    //Test with default value and without value
+    mConfigurationParameterSimple->mValue = "";
+
+    CPPUNIT_ASSERT_EQUAL(true,
+                         mConfigurationParameterSimple->isDefaultValue());
+
     //Test with default value
     mConfigurationParameterSimple->mValue = "Default";
 
