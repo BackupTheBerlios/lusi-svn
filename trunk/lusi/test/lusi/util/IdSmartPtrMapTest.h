@@ -45,10 +45,12 @@ namespace util {
  */
 class IdSmartPtrMapTest: public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(IdSmartPtrMapTest);
+    CPPUNIT_TEST(testCopyConstructor);
     CPPUNIT_TEST(testAdd);
     CPPUNIT_TEST(testGet);
     CPPUNIT_TEST(testGetAll);
     CPPUNIT_TEST(testRemove);
+    CPPUNIT_TEST(testOperatorAssignment);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -62,6 +64,11 @@ public:
      * Cleans up after the test run.
      */
     virtual void tearDown();
+
+    /**
+     * Checks if the pointed objects are shared by both maps.
+     */
+    void testCopyConstructor();
 
     /**
      * Checks if add() adds the element to the map and returns the adequate
@@ -84,6 +91,11 @@ public:
      * Checks if remove() removes an added element.
      */
     void testRemove();
+
+    /**
+     * Checks if the pointed objects are shared by both maps.
+     */
+    void testOperatorAssignment();
 
 private:
 

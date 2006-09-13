@@ -29,6 +29,10 @@ using namespace lusi::package;
 ResourceMap::ResourceMap(): IdSmartPtrMap<Resource>() {
 }
 
+ResourceMap::ResourceMap(const ResourceMap& resourceMap):
+                IdSmartPtrMap<Resource>(resourceMap) {
+}
+
 ResourceMap::~ResourceMap() {
 }
 
@@ -48,3 +52,9 @@ vector< SmartPtr<Type> > ResourceMap::getAllResourcesByType() const {
     return resourcesByType;
 }
 */
+
+ResourceMap& ResourceMap::operator=(const ResourceMap& resourceMap) {
+    IdSmartPtrMap<Resource>::operator=(resourceMap);
+
+    return *this;
+}

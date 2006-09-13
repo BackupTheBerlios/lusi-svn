@@ -40,7 +40,9 @@ namespace package {
  */
 class ResourceMapTest: public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(ResourceMapTest);
+    CPPUNIT_TEST(testCopyConstructor);
     CPPUNIT_TEST(testGetAllResourcesByType);
+    CPPUNIT_TEST(testOperatorAssignment);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -56,10 +58,20 @@ public:
     virtual void tearDown();
 
     /**
+     * Tests if the pointed resources are shared by both maps.
+     */
+    void testCopyConstructor();
+
+    /**
      * Checks if getAllResourcesByType() returns a vector with all the added
      * elements of the specified type.
      */
     void testGetAllResourcesByType();
+
+    /**
+     * Tests if the pointed resources are shared by both maps.
+     */
+    void testOperatorAssignment();
 
 private:
 

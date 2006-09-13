@@ -53,6 +53,20 @@ void ResourceMapTest::tearDown() {
     delete mResourceMap;
 }
 
+void ResourceMapTest::testCopyConstructor() {
+    ResourceMap resourceMap(*mResourceMap);
+
+    //Tests the original map
+    CPPUNIT_ASSERT_EQUAL(mResource1, getPtr(mResourceMap->get("1")));
+    CPPUNIT_ASSERT_EQUAL(mResource2, getPtr(mResourceMap->get("2")));
+    CPPUNIT_ASSERT_EQUAL(mResource3, getPtr(mResourceMap->get("3")));
+
+    //Tests the copied map
+    CPPUNIT_ASSERT_EQUAL(mResource1, getPtr(resourceMap.get("1")));
+    CPPUNIT_ASSERT_EQUAL(mResource2, getPtr(resourceMap.get("2")));
+    CPPUNIT_ASSERT_EQUAL(mResource3, getPtr(resourceMap.get("3")));
+}
+
 void ResourceMapTest::testGetAllResourcesByType() {
     vector< SmartPtr<ResourceTestImplementation> > allResources =
             mResourceMap->getAllResourcesByType<ResourceTestImplementation>();
@@ -69,4 +83,26 @@ void ResourceMapTest::testGetAllResourcesByType() {
     vector< SmartPtr<LocalFileResource> > allLocalFileResources =
                     mResourceMap->getAllResourcesByType<LocalFileResource>();
     CPPUNIT_ASSERT(allLocalFileResources.size() == 0);
+}
+
+void ResourceMapTest::testOperatorAssignment() {
+    ResourceMap resourceMap;
+    resourceMap = *mResourceMap;
+
+    //Tests the original map
+    CPPUNIT_ASSERT_EQUAL(mResource1, getPtr(mResourceMap->get("1")));
+    CPPUNIT_ASSERT_EQUAL(mResource2, getPtr(mResourceMap->get("2")));
+    CPPUNIT_ASSERT_EQUAL(mResource3, getPtr(mResourceMap->get("3")));
+
+    //Tests the copied map
+    CPPUNIT_ASSERT_EQUAL(mResource1, getPtr(resourceMap.get("1")));
+    CPPUNIT_ASSERT_EQUAL(mResource2, getPtr(resourceMap.get("2")));
+    CPPUNIT_ASSERT_EQUAL(mResource3, getPtr(resourceMap.get("3")));
+
+    //Test self assignment
+    resourceMap = resourceMap;
+
+    CPPUNIT_ASSERT_EQUAL(mResource1, getPtr(resourceMap.get("1")));
+    CPPUNIT_ASSERT_EQUAL(mResource2, getPtr(resourceMap.get("2")));
+    CPPUNIT_ASSERT_EQUAL(mResource3, getPtr(resourceMap.get("3")));
 }

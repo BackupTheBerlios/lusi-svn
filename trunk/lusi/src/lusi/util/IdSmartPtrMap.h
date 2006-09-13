@@ -50,6 +50,10 @@ namespace util {
  * Only initialized pointers can be stored. The null pointer element can't be
  * added.
  *
+ * When an IdSmartPtrMap is copied (using a copy constructor or an assignment
+ * operator) the contained smart pointers are copied, but not the pointed
+ * objects themselves. That is, the contained elements are shared by both maps.
+ *
  * This class acts as a wrapper for STL Map class, simplifying its interface to
  * be used with pointers, and also getting control over lifespan of pointers
  * through the use of smart pointers.
@@ -65,6 +69,15 @@ public:
      * Creates a new empty IdSmartPtrMap.
      */
     IdSmartPtrMap() {
+    }
+
+    /**
+     * Copy constructor.
+     *
+     * @param idSmartPtrMap The map to copy.
+     */
+    IdSmartPtrMap(const IdSmartPtrMap& idSmartPtrMap) {
+        mMap = idSmartPtrMap.mMap;
     }
 
     /**
@@ -142,6 +155,17 @@ public:
         return true;
     }
 
+    /**
+     * Assignment operator.
+     *
+     * @param idSmartPtrMap The map to assing.
+     */
+    IdSmartPtrMap& operator=(const IdSmartPtrMap& idSmartPtrMap) {
+        mMap = idSmartPtrMap.mMap;
+
+        return *this;
+    }
+
 protected:
 
     /**
@@ -157,16 +181,6 @@ protected:
     std::map<std::string, SmartPtr<T> > mMap;
 
 private:
-
-    /**
-     * Copy constructor disabled.
-     */
-    IdSmartPtrMap(const IdSmartPtrMap& idSmartPtrMap);
-
-    /**
-     * Assignment disabled.
-     */
-    IdSmartPtrMap& operator=(const IdSmartPtrMap& idSmartPtrMap);
 
 };
 

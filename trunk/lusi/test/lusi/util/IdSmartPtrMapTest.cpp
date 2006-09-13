@@ -71,32 +71,47 @@ void IdSmartPtrMapTest::tearDown() {
     delete mIdSmartPtrMap;
 }
 
+void IdSmartPtrMapTest::testCopyConstructor() {
+    IdSmartPtrMap<Index> idSmartPtrMap(*mIdSmartPtrMap);
+
+    //Test elements in original map
+    CPPUNIT_ASSERT_EQUAL(mIndex1,
+                getPtr(mIdSmartPtrMap->mMap.find(mIndex1->getId())->second));
+    CPPUNIT_ASSERT_EQUAL(mIndex2,
+                getPtr(mIdSmartPtrMap->mMap.find(mIndex2->getId())->second));
+    CPPUNIT_ASSERT_EQUAL(mIndex3,
+                getPtr(mIdSmartPtrMap->mMap.find(mIndex3->getId())->second));
+
+    //Test elements in copied map
+    CPPUNIT_ASSERT_EQUAL(mIndex1,
+                getPtr(idSmartPtrMap.mMap.find(mIndex1->getId())->second));
+    CPPUNIT_ASSERT_EQUAL(mIndex2,
+                getPtr(idSmartPtrMap.mMap.find(mIndex2->getId())->second));
+    CPPUNIT_ASSERT_EQUAL(mIndex3,
+                getPtr(idSmartPtrMap.mMap.find(mIndex3->getId())->second));
+}
+
 void IdSmartPtrMapTest::testAdd() {
-    CPPUNIT_ASSERT_EQUAL(
-                    getPtr(mIdSmartPtrMap->mMap.find(mIndex1->getId())->second),
-                    mIndex1);
-    CPPUNIT_ASSERT_EQUAL(
-                    getPtr(mIdSmartPtrMap->mMap.find(mIndex2->getId())->second),
-                    mIndex2);
-    CPPUNIT_ASSERT_EQUAL(
-                    getPtr(mIdSmartPtrMap->mMap.find(mIndex3->getId())->second),
-                    mIndex3);
+    CPPUNIT_ASSERT_EQUAL(mIndex1,
+                getPtr(mIdSmartPtrMap->mMap.find(mIndex1->getId())->second));
+    CPPUNIT_ASSERT_EQUAL(mIndex2,
+                getPtr(mIdSmartPtrMap->mMap.find(mIndex2->getId())->second));
+    CPPUNIT_ASSERT_EQUAL(mIndex3,
+                getPtr(mIdSmartPtrMap->mMap.find(mIndex3->getId())->second));
 
     //Test return value adding a resource
     Index* index = new Index("4");
 
     CPPUNIT_ASSERT_EQUAL(true, mIdSmartPtrMap->add(SmartPtr<Index>(index)));
-    CPPUNIT_ASSERT_EQUAL(
-                    getPtr(mIdSmartPtrMap->mMap.find(index->getId())->second),
-                    index);
+    CPPUNIT_ASSERT_EQUAL(index,
+                getPtr(mIdSmartPtrMap->mMap.find(index->getId())->second));
 
     //Test adding an element with the same key of one already added
     index = new Index(mIndex1->getId());
 
     CPPUNIT_ASSERT_EQUAL(false, mIdSmartPtrMap->add(SmartPtr<Index>(index)));
-    CPPUNIT_ASSERT_EQUAL(
-                    getPtr(mIdSmartPtrMap->mMap.find(mIndex1->getId())->second),
-                    mIndex1);
+    CPPUNIT_ASSERT_EQUAL(mIndex1,
+                getPtr(mIdSmartPtrMap->mMap.find(mIndex1->getId())->second));
 }
 
 void IdSmartPtrMapTest::testGet() {
@@ -126,4 +141,35 @@ void IdSmartPtrMapTest::testRemove() {
     CPPUNIT_ASSERT_EQUAL(true, mIdSmartPtrMap->remove(id));
     CPPUNIT_ASSERT_EQUAL(false, mIdSmartPtrMap->remove(id));
     CPPUNIT_ASSERT_EQUAL((Index*)0, getPtr(mIdSmartPtrMap->get(id)));
+}
+
+void IdSmartPtrMapTest::testOperatorAssignment() {
+    IdSmartPtrMap<Index> idSmartPtrMap;
+    idSmartPtrMap = *mIdSmartPtrMap;
+
+    //Test elements in original map
+    CPPUNIT_ASSERT_EQUAL(mIndex1,
+                getPtr(mIdSmartPtrMap->mMap.find(mIndex1->getId())->second));
+    CPPUNIT_ASSERT_EQUAL(mIndex2,
+                getPtr(mIdSmartPtrMap->mMap.find(mIndex2->getId())->second));
+    CPPUNIT_ASSERT_EQUAL(mIndex3,
+                getPtr(mIdSmartPtrMap->mMap.find(mIndex3->getId())->second));
+
+    //Test elements in copied map
+    CPPUNIT_ASSERT_EQUAL(mIndex1,
+                getPtr(idSmartPtrMap.mMap.find(mIndex1->getId())->second));
+    CPPUNIT_ASSERT_EQUAL(mIndex2,
+                getPtr(idSmartPtrMap.mMap.find(mIndex2->getId())->second));
+    CPPUNIT_ASSERT_EQUAL(mIndex3,
+                getPtr(idSmartPtrMap.mMap.find(mIndex3->getId())->second));
+
+    //Test self assignment
+    idSmartPtrMap = idSmartPtrMap;
+
+    CPPUNIT_ASSERT_EQUAL(mIndex1,
+                getPtr(idSmartPtrMap.mMap.find(mIndex1->getId())->second));
+    CPPUNIT_ASSERT_EQUAL(mIndex2,
+                getPtr(idSmartPtrMap.mMap.find(mIndex2->getId())->second));
+    CPPUNIT_ASSERT_EQUAL(mIndex3,
+                getPtr(idSmartPtrMap.mMap.find(mIndex3->getId())->second));
 }

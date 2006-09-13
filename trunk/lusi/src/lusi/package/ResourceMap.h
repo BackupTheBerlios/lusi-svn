@@ -49,6 +49,13 @@ public:
     ResourceMap();
 
     /**
+     * Copy constructor.
+     *
+     * @param resourceMap The map to copy.
+     */
+    ResourceMap(const ResourceMap& resourceMap);
+
+    /**
      * Destroys this ResourceMap.
      */
     virtual ~ResourceMap();
@@ -67,19 +74,16 @@ public:
     template<typename Type>
     std::vector< lusi::util::SmartPtr<Type> > getAllResourcesByType() const;
 
+    /**
+     * Assignment operator.
+     *
+     * @param resourceMap The map to assign.
+     */
+    ResourceMap& operator=(const ResourceMap& resourceMap);
+
 protected:
 
 private:
-
-    /**
-     * Copy constructor disabled.
-     */
-    ResourceMap(const ResourceMap& resourceMap);
-
-    /**
-     * Assignment disabled.
-     */
-    ResourceMap& operator=(const ResourceMap& resourceMap);
 
 };
 
