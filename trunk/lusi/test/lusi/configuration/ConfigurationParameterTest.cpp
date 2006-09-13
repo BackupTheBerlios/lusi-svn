@@ -34,7 +34,8 @@ using namespace lusi::configuration;
 
 void ConfigurationParameterTest::setUp() {
     mConfigurationParameter = new ConfigurationParameterTestImplementation(
-        "Test", ConfigurationParameter::RequiredPriority, "A test parameter");
+        "Test", "Test name", ConfigurationParameter::RequiredPriority,
+        "A test parameter");
 }
 
 void ConfigurationParameterTest::tearDown() {
@@ -44,6 +45,7 @@ void ConfigurationParameterTest::tearDown() {
 void ConfigurationParameterTest::testConstructor() {
     //Test with all the values
     CPPUNIT_ASSERT_EQUAL(string("Test"), mConfigurationParameter->mId);
+    CPPUNIT_ASSERT_EQUAL(string("Test name"), mConfigurationParameter->mName);
     CPPUNIT_ASSERT_EQUAL(ConfigurationParameter::RequiredPriority,
                          mConfigurationParameter->mPriorityType);
     CPPUNIT_ASSERT_EQUAL(string("A test parameter"),
@@ -52,9 +54,10 @@ void ConfigurationParameterTest::testConstructor() {
     //Test without setting the information
     delete mConfigurationParameter;
     mConfigurationParameter = new ConfigurationParameterTestImplementation(
-        "Another test", ConfigurationParameter::OptionalPriority);
+        "Another test", "Test name2", ConfigurationParameter::OptionalPriority);
 
     CPPUNIT_ASSERT_EQUAL(string("Another test"), mConfigurationParameter->mId);
+    CPPUNIT_ASSERT_EQUAL(string("Test name2"), mConfigurationParameter->mName);
     CPPUNIT_ASSERT_EQUAL(ConfigurationParameter::OptionalPriority,
                          mConfigurationParameter->mPriorityType);
     CPPUNIT_ASSERT_EQUAL(string(""), mConfigurationParameter->mInformation);
@@ -64,6 +67,13 @@ void ConfigurationParameterTest::testGetId() {
     mConfigurationParameter->mId = "SomethingUnique";
 
     CPPUNIT_ASSERT_EQUAL(string("SomethingUnique"),
+                         mConfigurationParameter->getId());
+}
+
+void ConfigurationParameterTest::testGetName() {
+    mConfigurationParameter->mId = "Only a name";
+
+    CPPUNIT_ASSERT_EQUAL(string("Only a name"),
                          mConfigurationParameter->getId());
 }
 

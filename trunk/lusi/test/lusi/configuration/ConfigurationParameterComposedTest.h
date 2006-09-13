@@ -48,8 +48,8 @@ public:
 
     /**
      * Sets up context before running a test.
-     * Creates the ConfigurationParameterComposed with id "Test", priority
-     * "required" and information "A test parameter".
+     * Creates the ConfigurationParameterComposed with id "Test", name "Test
+     * name", priority "required" and information "A test parameter".
      */
     virtual void setUp();
 

@@ -26,15 +26,17 @@ using namespace lusi::configuration;
 
 ConfigurationParameterComposedTestImplementation::
 ConfigurationParameterComposedTestImplementation(const std::string& id,
+                                                 const std::string& name,
                                                  PriorityType priorityType):
-        ConfigurationParameterComposed(id, priorityType) {
+        ConfigurationParameterComposed(id, name, priorityType) {
 }
 
 ConfigurationParameterComposedTestImplementation::
 ConfigurationParameterComposedTestImplementation(const std::string& id,
+                                    const std::string& name,
                                     PriorityType priorityType,
                                     const std::string& information):
-        ConfigurationParameterComposed(id, priorityType, information) {
+        ConfigurationParameterComposed(id, name, priorityType, information) {
 }
 
 ConfigurationParameterComposedTestImplementation::

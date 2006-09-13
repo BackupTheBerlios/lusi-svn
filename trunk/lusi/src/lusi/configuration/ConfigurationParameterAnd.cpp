@@ -28,9 +28,10 @@ using namespace lusi::configuration;
 //public:
 
 ConfigurationParameterAnd::ConfigurationParameterAnd(const string& id,
+                                const string& name,
                                 PriorityType priorityType,
                                 const string& information /*= ""*/):
-            ConfigurationParameterComposed(id, priorityType, information) {
+        ConfigurationParameterComposed(id, name, priorityType, information) {
 }
 
 ConfigurationParameterAnd::~ConfigurationParameterAnd() {

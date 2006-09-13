@@ -34,8 +34,8 @@ using namespace lusi::configuration;
 
 void ConfigurationParameterSimpleTest::setUp() {
     mConfigurationParameterSimple = new ConfigurationParameterSimple("Test",
-            ConfigurationParameter::RequiredPriority, "A test parameter",
-            "Default");
+            "Test name", ConfigurationParameter::RequiredPriority,
+            "A test parameter", "Default");
 }
 
 void ConfigurationParameterSimpleTest::tearDown() {
@@ -45,6 +45,8 @@ void ConfigurationParameterSimpleTest::tearDown() {
 void ConfigurationParameterSimpleTest::testConstructor() {
     //Test with all the values
     CPPUNIT_ASSERT_EQUAL(string("Test"), mConfigurationParameterSimple->mId);
+    CPPUNIT_ASSERT_EQUAL(string("Test name"),
+                         mConfigurationParameterSimple->mName);
     CPPUNIT_ASSERT_EQUAL(ConfigurationParameter::RequiredPriority,
                          mConfigurationParameterSimple->mPriorityType);
     CPPUNIT_ASSERT_EQUAL(string("A test parameter"),
@@ -56,11 +58,13 @@ void ConfigurationParameterSimpleTest::testConstructor() {
     //Test without setting the information and default values
     delete mConfigurationParameterSimple;
     mConfigurationParameterSimple =
-                new ConfigurationParameterSimple("Another test",
+                new ConfigurationParameterSimple("Another test", "Test name2",
                             ConfigurationParameter::OptionalPriority);
 
     CPPUNIT_ASSERT_EQUAL(string("Another test"),
                          mConfigurationParameterSimple->mId);
+    CPPUNIT_ASSERT_EQUAL(string("Test name2"),
+                         mConfigurationParameterSimple->mName);
     CPPUNIT_ASSERT_EQUAL(ConfigurationParameter::OptionalPriority,
                          mConfigurationParameterSimple->mPriorityType);
     CPPUNIT_ASSERT_EQUAL(string(""),

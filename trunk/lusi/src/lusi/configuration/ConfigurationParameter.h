@@ -45,7 +45,10 @@ namespace configuration {
  * invalid parameter depends on its concrete type.
  *
  * Each ConfigurationParameter has its own unique id, so concrete parameters can
- * be got easily in ConfigurationParameterSet if needed.
+ * be got easily in ConfigurationParameterMap if needed.
+ *
+ * Apart from the id, each parameter has a name. This name is a name in a human
+ * readable form for the parameter (so the user knows what the parameter is).
  *
  * Each parameter can also have some information explaining its purpose. It is
  * optional, although recommended.
@@ -84,7 +87,6 @@ public:
 
     /**
      * Returns the id of this ConfigurationParameter.
-     * This is an accessor method.
      *
      * @return The id of this ConfigurationParatemer.
      */
@@ -93,9 +95,17 @@ public:
     }
 
     /**
+     * Returns the name of this ConfigurationParameter.
+     *
+     * @return The id of this ConfigurationParatemer.
+     */
+    const std::string& getName() const {
+        return mName;
+    }
+
+    /**
      * Returns the information about this ConfigurationParameter.
      * The information is optional, so the returned string may be empty.
-     * This is an accessor method.
      *
      * @return The information about this ConfigurationParatemer.
      */
@@ -105,7 +115,6 @@ public:
 
     /**
      * Returns the type of the priority of this ConfigurationParameter.
-     * This is an accessor method.
      *
      * @return The type of the priority of this ConfigurationParameter.
      */
@@ -123,11 +132,13 @@ protected:
      * ConfigurationParameter objects.
      *
      * @param id The id.
+     * @param name The name.
      * @param priorityType The type of priority.
      * @param information The information about this ConfigurationParameter,
      *                    empty by default.
      */
     ConfigurationParameter(const std::string& id,
+                           const std::string& name,
                            PriorityType priorityType,
                            const std::string& information = "");
 
@@ -137,6 +148,11 @@ private:
      * The id of this ConfigurationParameter.
      */
     std::string mId;
+
+    /**
+     * The name of this ConfigurationParameter.
+     */
+    std::string mName;
 
     /**
      * The information about this ConfigurationParameter.

@@ -50,8 +50,9 @@ public:
 
     /**
      * Sets up context before running a test.
-     * Creates the ConfigurationParameterSimple with id "Test", priority
-     * "required", information "A test parameter" and default value "Default".
+     * Creates the ConfigurationParameterSimple with id "Test", name "Test
+     * name", priority "required", information "A test parameter" and default
+     * value "Default".
      */
     virtual void setUp();
 

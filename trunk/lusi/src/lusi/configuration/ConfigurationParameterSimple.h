@@ -51,12 +51,14 @@ public:
      * The value is empty.
      *
      * @param id The id.
+     * @param name The name.
      * @param priorityType The type of priority.
      * @param information The information about this ConfigurationParameter,
      *                    empty by default.
      * @param defaultValue The default value, empty by default.
      */
     ConfigurationParameterSimple(const std::string& id,
+                                 const std::string& name,
                                  PriorityType priorityType,
                                  const std::string& information = "",
                                  const std::string& defaultValue = "");
@@ -80,7 +82,6 @@ public:
      * Returns the value.
      * If the normal value isn't set, the default value, if it exists, is
      * returned.
-     * This is an accessor method.
      *
      * @return The value.
      */
@@ -91,7 +92,6 @@ public:
     /**
      * Returns true if the value is equal to the default value, false otherwise.
      * If no default value was set (it's empty), false is returned.
-     * This is an accessor method.
      *
      * @return true if the value is equal to the default value, false otherwise.
      */

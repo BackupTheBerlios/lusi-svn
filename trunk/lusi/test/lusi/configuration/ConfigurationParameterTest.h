@@ -41,6 +41,7 @@ class ConfigurationParameterTest: public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(ConfigurationParameterTest);
     CPPUNIT_TEST(testConstructor);
     CPPUNIT_TEST(testGetId);
+    CPPUNIT_TEST(testGetName);
     CPPUNIT_TEST(testGetInformation);
     CPPUNIT_TEST(testGetPriorityType);
     CPPUNIT_TEST_SUITE_END();
@@ -49,8 +50,8 @@ public:
 
     /**
      * Sets up context before running a test.
-     * Creates the ConfigurationParameter with id "Test", priority "required"
-     * and information "A test parameter".
+     * Creates the ConfigurationParameter with id "Test", name "Test name",
+     * priority "required" and information "A test parameter".
      */
     virtual void setUp();
 
@@ -68,6 +69,11 @@ public:
      * Test if it return mId.
      */
     void testGetId();
+
+    /**
+     * Test if it return mName.
+     */
+    void testGetName();
 
     /**
      * Test if it return mInformation.

@@ -67,7 +67,6 @@ public:
 
     /**
      * Returns a vector containing all the ConfigurationParameters added.
-     * This is an accessor method.
      *
      * @return A vector containing all the ConfigurationParameters added.
      */
@@ -85,11 +84,13 @@ protected:
      * ConfigurationParameterComposed objects.
      *
      * @param id The id.
+     * @param name The name.
      * @param priorityType The type of priority.
      * @param information The information about this ConfigurationParameter,
      *                    empty by default.
      */
     ConfigurationParameterComposed(const std::string& id,
+                                   const std::string& name,
                                    PriorityType priorityType,
                                    const std::string& information = "");
 

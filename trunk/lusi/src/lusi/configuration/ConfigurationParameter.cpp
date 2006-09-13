@@ -46,9 +46,11 @@ inline const PriorityType& ConfigurationParameter::getPriorityType() const {
 //protected:
 
 ConfigurationParameter::ConfigurationParameter(const string& id,
+                                const string& name,
                                 PriorityType priorityType,
                                 const string& information /*= ""*/) {
     mId = id;
+    mName = name;
     mPriorityType = priorityType;
     mInformation = information;
 }

@@ -36,7 +36,8 @@ using namespace lusi::configuration;
 
 void ConfigurationParameterAndTest::setUp() {
     mConfigurationParameterAnd = new ConfigurationParameterAnd("Test",
-                  ConfigurationParameter::RequiredPriority, "A test parameter");
+                "Test name", ConfigurationParameter::RequiredPriority,
+                "A test parameter");
 }
 
 void ConfigurationParameterAndTest::tearDown() {
@@ -46,6 +47,8 @@ void ConfigurationParameterAndTest::tearDown() {
 void ConfigurationParameterAndTest::testConstructor() {
     //Test with all the values
     CPPUNIT_ASSERT_EQUAL(string("Test"), mConfigurationParameterAnd->mId);
+    CPPUNIT_ASSERT_EQUAL(string("Test name"),
+                         mConfigurationParameterAnd->mName);
     CPPUNIT_ASSERT_EQUAL(ConfigurationParameter::RequiredPriority,
                          mConfigurationParameterAnd->mPriorityType);
     CPPUNIT_ASSERT_EQUAL(string("A test parameter"),
@@ -56,10 +59,12 @@ void ConfigurationParameterAndTest::testConstructor() {
     //Test without setting the information
     delete mConfigurationParameterAnd;
     mConfigurationParameterAnd = new ConfigurationParameterAnd("Another test",
-                                    ConfigurationParameter::OptionalPriority);
+                        "Test name2", ConfigurationParameter::OptionalPriority);
 
     CPPUNIT_ASSERT_EQUAL(string("Another test"),
                          mConfigurationParameterAnd->mId);
+    CPPUNIT_ASSERT_EQUAL(string("Test name2"),
+                         mConfigurationParameterAnd->mName);
     CPPUNIT_ASSERT_EQUAL(ConfigurationParameter::OptionalPriority,
                          mConfigurationParameterAnd->mPriorityType);
     CPPUNIT_ASSERT_EQUAL(string(""), mConfigurationParameterAnd->mInformation);
@@ -71,7 +76,7 @@ void ConfigurationParameterAndTest::testIsInvalid() {
 
     //Test with a vector with an invalid parameter
     ConfigurationParameterTestImplementation* configurationParameter1 =
-            new ConfigurationParameterTestImplementation("Test1",
+            new ConfigurationParameterTestImplementation("Test1", "Test name1",
                     ConfigurationParameter::RequiredPriority);
     configurationParameter1->setInvalid(true);
     mConfigurationParameterAnd->addConfigurationParameter(
@@ -86,14 +91,14 @@ void ConfigurationParameterAndTest::testIsInvalid() {
 
     //Test with a vector with two valid parameters and one invalid parameter
     ConfigurationParameterTestImplementation* configurationParameter2 =
-            new ConfigurationParameterTestImplementation("Test2",
+            new ConfigurationParameterTestImplementation("Test2", "Test name2",
                     ConfigurationParameter::RequiredPriority);
     configurationParameter2->setInvalid(false);
     mConfigurationParameterAnd->addConfigurationParameter(
                                                 configurationParameter2);
 
     ConfigurationParameterTestImplementation* configurationParameter3 =
-            new ConfigurationParameterTestImplementation("Test3",
+            new ConfigurationParameterTestImplementation("Test3", "Test name3",
                     ConfigurationParameter::RequiredPriority);
     configurationParameter3->setInvalid(true);
     mConfigurationParameterAnd->addConfigurationParameter(

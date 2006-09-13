@@ -37,7 +37,8 @@ using namespace lusi::configuration;
 void ConfigurationParameterComposedTest::setUp() {
     mConfigurationParameterComposed =
             new ConfigurationParameterComposedTestImplementation("Test",
-                  ConfigurationParameter::RequiredPriority, "A test parameter");
+                "Test name", ConfigurationParameter::RequiredPriority,
+                    "A test parameter");
 }
 
 void ConfigurationParameterComposedTest::tearDown() {
@@ -47,6 +48,8 @@ void ConfigurationParameterComposedTest::tearDown() {
 void ConfigurationParameterComposedTest::testConstructor() {
     //Test with all the values
     CPPUNIT_ASSERT_EQUAL(string("Test"), mConfigurationParameterComposed->mId);
+    CPPUNIT_ASSERT_EQUAL(string("Test name"),
+                         mConfigurationParameterComposed->mName);
     CPPUNIT_ASSERT_EQUAL(ConfigurationParameter::RequiredPriority,
                          mConfigurationParameterComposed->mPriorityType);
     CPPUNIT_ASSERT_EQUAL(string("A test parameter"),
@@ -58,10 +61,12 @@ void ConfigurationParameterComposedTest::testConstructor() {
     delete mConfigurationParameterComposed;
     mConfigurationParameterComposed =
             new ConfigurationParameterComposedTestImplementation("Another test",
-                    ConfigurationParameter::OptionalPriority);
+                    "Test name2", ConfigurationParameter::OptionalPriority);
 
     CPPUNIT_ASSERT_EQUAL(string("Another test"),
                          mConfigurationParameterComposed->mId);
+    CPPUNIT_ASSERT_EQUAL(string("Test name2"),
+                         mConfigurationParameterComposed->mName);
     CPPUNIT_ASSERT_EQUAL(ConfigurationParameter::OptionalPriority,
                          mConfigurationParameterComposed->mPriorityType);
     CPPUNIT_ASSERT_EQUAL(string(""),
@@ -70,7 +75,7 @@ void ConfigurationParameterComposedTest::testConstructor() {
 
 void ConfigurationParameterComposedTest::testAddConfigurationParameter() {
     ConfigurationParameter* configurationParameter =
-            new ConfigurationParameterTestImplementation("id",
+            new ConfigurationParameterTestImplementation("id", "name",
                     ConfigurationParameter::RequiredPriority);
     mConfigurationParameterComposed->addConfigurationParameter(
                                                 configurationParameter);

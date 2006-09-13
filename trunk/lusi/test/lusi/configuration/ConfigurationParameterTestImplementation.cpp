@@ -28,15 +28,17 @@ using namespace lusi::configuration;
 
 ConfigurationParameterTestImplementation::
 ConfigurationParameterTestImplementation(const string& id,
-                                        PriorityType priorityType):
-            ConfigurationParameter(id, priorityType) {
+                                         const string& name,
+                                         PriorityType priorityType):
+            ConfigurationParameter(id, name, priorityType) {
 }
 
 ConfigurationParameterTestImplementation::
 ConfigurationParameterTestImplementation(const string& id,
-                                        PriorityType priorityType,
-                                        const string& information):
-            ConfigurationParameter(id, priorityType, information) {
+                                         const string& name,
+                                         PriorityType priorityType,
+                                         const string& information):
+            ConfigurationParameter(id, name, priorityType, information) {
 }
 
 ConfigurationParameterTestImplementation::

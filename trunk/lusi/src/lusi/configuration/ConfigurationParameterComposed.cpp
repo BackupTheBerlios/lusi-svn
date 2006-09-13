@@ -46,7 +46,8 @@ inline vector<ConfigurationParameter*>
 
 ConfigurationParameterComposed::ConfigurationParameterComposed(
                                         const string& id,
+                                        const std::string& name,
                                         PriorityType priorityType,
                                         const string& information /*= ""*/):
-            ConfigurationParameter(id, priorityType, information) {
+            ConfigurationParameter(id, name, priorityType, information) {
 }

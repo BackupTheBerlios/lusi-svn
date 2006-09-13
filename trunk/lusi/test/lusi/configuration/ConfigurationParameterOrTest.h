@@ -47,8 +47,8 @@ public:
 
     /**
      * Sets up context before running a test.
-     * Creates the ConfigurationParameterOr with id "Test", priority
-     * "required" and information "A test parameter".
+     * Creates the ConfigurationParameterOr with id "Test", name "Test name",
+     * priority "required" and information "A test parameter".
      */
     virtual void setUp();
 

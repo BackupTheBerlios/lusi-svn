@@ -43,11 +43,13 @@ public:
      * The information is optional, and empty by default.
      *
      * @param id The id.
+     * @param name The name.
      * @param priorityType The type of priority.
      * @param information The information about this ConfigurationParameter,
      *                    empty by default.
      */
     ConfigurationParameterAnd(const std::string& id,
+                              const std::string& name,
                               PriorityType priorityType,
                               const std::string& information = "");
 
