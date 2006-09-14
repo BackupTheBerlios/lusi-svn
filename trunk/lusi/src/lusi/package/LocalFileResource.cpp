@@ -34,5 +34,7 @@ LocalFileResource::LocalFileResource(const string& filePath):
 LocalFileResource::~LocalFileResource() {
 }
 
+//TODO implement it
 vector<char> LocalFileResource::getData() {
+    return vector<char>();
 }

@@ -270,7 +270,7 @@ private:
      * @return True if the current user has the specified access to this file,
      *         false otherwise.
      */
-    bool LocalFile::hasAccess(int mode) const;
+    bool hasAccess(int mode) const;
 
 };
 

@@ -96,7 +96,7 @@ string LocalUrl::getParent() const {
         return "/";
     }
 
-    int parentSeparator = directory.rfind("/", directory.size() - 2);
+    uint parentSeparator = directory.rfind("/", directory.size() - 2);
 
     if (parentSeparator == string::npos) {
         return "../";

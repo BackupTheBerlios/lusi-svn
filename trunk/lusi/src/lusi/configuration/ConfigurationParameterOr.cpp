@@ -45,7 +45,7 @@ bool ConfigurationParameterOr::isInvalid() {
         return false;
     }
 
-    for (int i=0; i<configurationParameters.size(); ++i) {
+    for (uint i=0; i<configurationParameters.size(); ++i) {
         if (!configurationParameters[i]->isInvalid()) {
             return false;
         }

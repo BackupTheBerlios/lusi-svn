@@ -88,7 +88,7 @@ void SuProcessLinuxConverser::processExited(Process* process) {
 //The following regular expression was got from kdelibs/kdesu/su.cpp
 bool SuProcessLinuxConverser::isPasswordPrompt(const string& line) {
     int j = 0, colon = 0;
-    for (int i = 0; i<line.size(); ++i) {
+    for (uint i = 0; i<line.size(); ++i) {
         if (line[i] == ':') {
             j = i;
             ++colon;

@@ -38,6 +38,9 @@ public:
         mBaseInt = baseInt;
     }
 
+    virtual ~Base(){
+    }
+
     /**
      * Needed for dynamic_cast to work.
      */
@@ -54,6 +57,9 @@ class Derived: public Base {
 public:
     Derived(int baseInt, int derivedInt): Base(baseInt) {
         mDerivedInt = derivedInt;
+    }
+
+    virtual ~Derived(){
     }
 
     int mDerivedInt;

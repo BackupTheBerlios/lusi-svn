@@ -31,6 +31,10 @@ using std::vector;
 
 using namespace lusi::util;
 
+/**
+ * Hanlder for SIGCHLD signal.
+ * It simply writes a 0 in ProcessLinux::sExitPipe[1].
+ */
 extern "C" {
 static void sigChldHandler(int signalNumber) {
     char dummy = 0;
@@ -92,7 +96,6 @@ void ProcessLinux::start() throw (ProcessException) {
     int childStdin = mProcessLinuxCommunication->getChildStdin();
     int childStdout = mProcessLinuxCommunication->getChildStdout();
     int childStderr = mProcessLinuxCommunication->getChildStderr();
-    int parentStdin = mProcessLinuxCommunication->getParentStdin();
     int parentStdout = mProcessLinuxCommunication->getParentStdout();
     int parentStderr = mProcessLinuxCommunication->getParentStderr();
 
@@ -183,7 +186,7 @@ bool ProcessLinux::writeData(const string& data) {
     char buffer;
     int writedSize;
 
-    int i = 0;
+    uint i = 0;
     while (i < data.size()) {
         buffer = data[i];
         if ((writedSize = write(parentStdin, &buffer, 1)) <= 0) {
@@ -245,11 +248,11 @@ char** ProcessLinux::newCArguments() {
     char** arguments = static_cast<char **>(malloc((mArguments.size() + 1) *
                                                 sizeof(char *)));
 
-    for (int i=0; i<mArguments.size(); i++) {
+    for (uint i=0; i<mArguments.size(); i++) {
         arguments[i] = static_cast<char *>(malloc((mArguments[i].size() + 1) *
                                                 sizeof(char)));
 
-        for (int j=0; j < mArguments[i].size(); j++) {
+        for (uint j=0; j < mArguments[i].size(); j++) {
             arguments[i][j] = mArguments[i].c_str()[j];
         }
         arguments[i][mArguments[i].size()] = 0;

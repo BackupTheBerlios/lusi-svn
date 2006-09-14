@@ -44,7 +44,7 @@ void SuProcessLinux::start() throw (ProcessException, SuProcessException) {
     SuProcessLinuxConverser suProcessLinuxConverser(this);
 
     if (mUserName == "" || mUserName == User::getCurrentUser().getName()) {
-        for (int i=0; i<mArguments.size(); ++i) {
+        for (uint i=0; i<mArguments.size(); ++i) {
             *mProcessLinux << mArguments[i];
         }
         mStateType = ExecuteCurrentUserState;

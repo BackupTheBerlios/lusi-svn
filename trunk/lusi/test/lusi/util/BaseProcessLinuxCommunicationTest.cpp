@@ -97,7 +97,7 @@ bool BaseProcessLinuxCommunicationTest::writeDataToFileDescriptor(
     char buffer;
     int writedSize;
 
-    int i = 0;
+    uint i = 0;
     while (i < data.size()) {
         buffer = data[i];
         if ((writedSize = write(fileDescriptor, &buffer, 1)) <= 0) {

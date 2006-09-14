@@ -48,7 +48,7 @@ std::string Process::getArgumentsAsString() const {
     string argumentsAsString("");
 
     if (mArguments.size() > 0) {
-        int i=0;
+        uint i=0;
         for (; i<mArguments.size()-1; ++i) {
             argumentsAsString += mArguments[i] + " ";
         }

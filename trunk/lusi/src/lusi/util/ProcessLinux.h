@@ -25,14 +25,6 @@
 
 #include <lusi/util/Process.h>
 
-extern "C" {
-/**
- * Hanlder for SIGCHLD signal.
- * It simply writes a 0 in ProcessLinux::sExitPipe[1].
- */
-static void sigChldHandler(int signalNumber);
-}
-
 namespace lusi {
 namespace util {
 class ProcessLinuxCommunication;
