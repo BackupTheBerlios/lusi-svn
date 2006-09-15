@@ -78,19 +78,19 @@ void PtyProcessLinuxCommunication::openPtyPair(int& master, int& slave)
     int localMaster = getpt();
     if (localMaster < 0) {
         throw OpenCommunicationChannelsException(
-                    "Couldn't open the master pseudo-terminal device");
+                "Couldn't open the master pseudo-terminal device");
     }
 
     if (grantpt(localMaster) < 0) {
         close(localMaster);
         throw OpenCommunicationChannelsException(
-                    "Couldn't grant access to the slave pseudo-terminal device");
+                "Couldn't grant access to the slave pseudo-terminal device");
     }
 
     if (unlockpt(localMaster) < 0) {
         close(localMaster);
         throw OpenCommunicationChannelsException(
-                    "Couldn't unlock a pseudo-terminal master/slave pair");
+                "Couldn't unlock a pseudo-terminal master/slave pair");
     }
 
 
@@ -98,14 +98,14 @@ void PtyProcessLinuxCommunication::openPtyPair(int& master, int& slave)
     if (name == NULL) {
         close(localMaster);
         throw OpenCommunicationChannelsException(
-                    "Couldn't get the name of the slave pseudo-terminal device");
+                "Couldn't get the name of the slave pseudo-terminal device");
     }
 
     int localSlave = open(name, O_RDWR | O_NOCTTY);
     if (localSlave < 0) {
         close(localMaster);
         throw OpenCommunicationChannelsException(
-                    "Couldn't open the slave pseudo-terminal device");
+                "Couldn't open the slave pseudo-terminal device");
     }
 
     if (isastream(localSlave) && (ioctl(localSlave, I_PUSH, "ptem") < 0 ||
@@ -113,7 +113,7 @@ void PtyProcessLinuxCommunication::openPtyPair(int& master, int& slave)
         close(localSlave);
         close(localMaster);
         throw OpenCommunicationChannelsException(
-                    "Couldn't push ptem and ldterm modules");
+                "Couldn't push ptem and ldterm modules");
     }
 
     master = localMaster;
@@ -128,7 +128,7 @@ void PtyProcessLinuxCommunication::preparePtySlave(int slave) {
 
     tio.c_oflag &= ~ONLCR;
 
-    //The only error that can happen is EINTR (as the slave and the flags set are
-    //always valid)
+    //The only error that can happen is EINTR (as the slave and the flags set
+    //are always valid)
     while (tcsetattr(slave, TCSANOW, &tio) < 0);
 }
