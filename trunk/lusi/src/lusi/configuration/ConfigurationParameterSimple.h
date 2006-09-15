@@ -79,6 +79,13 @@ public:
     virtual bool isInvalid();
 
     /**
+     * Accepts a visitor.
+     *
+     * @param visitor The ConfigurationParameterVisitor to accept.
+     */
+    virtual void accept(ConfigurationParameterVisitor* visitor);
+
+    /**
      * Returns the value.
      * If the normal value isn't set, the default value, if it exists, is
      * returned.

@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "ConfigurationParameterAnd.h"
+#include "ConfigurationParameterVisitor.h"
 
 using std::string;
 using std::vector;
@@ -47,4 +48,8 @@ bool ConfigurationParameterAnd::isInvalid() {
     }
 
     return false;
+}
+
+void ConfigurationParameterAnd::accept(ConfigurationParameterVisitor* visitor) {
+    visitor->visit(this);
 }

@@ -25,6 +25,12 @@
 
 namespace lusi {
 namespace configuration {
+class ConfigurationParameterVisitor;
+}
+}
+
+namespace lusi {
+namespace configuration {
 
 /**
  * @class ConfigurationParameter ConfigurationParameter.h \
@@ -55,6 +61,14 @@ namespace configuration {
  *
  * Configuration is used mainly in Tasks and TaskHelpers so different parameters
  * can be used in them. Of course, it can also be used anywhere else if needed.
+ *
+ * ConfigurationParameters act as nodes in Visitor design pattern. It allows
+ * traversing the structure with ease, not needing specific checks to know the
+ * type of each parameter.
+ * Derived non abstract classes from ConfigurationParameter must implement
+ * accept method simply making the visitor to visit the node.
+ *
+ * @see ConfigurationParameterVisitor
  */
 class ConfigurationParameter {
 public:
@@ -84,6 +98,15 @@ public:
      * @return True if this ConfigurationParameter is invalid, false otherwise.
      */
     virtual bool isInvalid() = 0;
+
+    /**
+     * Accepts a visitor.
+     * Must be implemented in derived non abstract classes simply making the
+     * visitor to visit the node.
+     *
+     * @param visitor The ConfigurationParameterVisitor to accept.
+     */
+    virtual void accept(ConfigurationParameterVisitor* visitor) = 0;
 
     /**
      * Returns the id of this ConfigurationParameter.

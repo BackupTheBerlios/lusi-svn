@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "ConfigurationParameterSimple.h"
+#include "ConfigurationParameterVisitor.h"
 
 using std::string;
 
@@ -44,6 +45,11 @@ bool ConfigurationParameterSimple::isInvalid() {
     }
 
     return false;
+}
+
+void ConfigurationParameterSimple::accept(
+                                    ConfigurationParameterVisitor* visitor) {
+    visitor->visit(this);
 }
 
 /*

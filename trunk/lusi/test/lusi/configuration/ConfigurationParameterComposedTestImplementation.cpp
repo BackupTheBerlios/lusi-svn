@@ -46,3 +46,7 @@ ConfigurationParameterComposedTestImplementation::
 bool ConfigurationParameterComposedTestImplementation::isInvalid() {
     return false;
 }
+
+void ConfigurationParameterComposedTestImplementation::accept(
+                                    ConfigurationParameterVisitor* visitor) {
+}

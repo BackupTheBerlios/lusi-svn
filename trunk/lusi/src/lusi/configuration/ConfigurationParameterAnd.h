@@ -68,6 +68,13 @@ public:
      */
     virtual bool isInvalid();
 
+    /**
+     * Accepts a visitor.
+     *
+     * @param visitor The ConfigurationParameterVisitor to accept.
+     */
+    virtual void accept(ConfigurationParameterVisitor* visitor);
+
 protected:
 
 private:

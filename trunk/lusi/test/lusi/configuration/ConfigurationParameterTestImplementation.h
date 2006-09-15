@@ -71,11 +71,18 @@ public:
     virtual bool isInvalid();
 
     /**
+     * Does nothing.
+     *
+     * @param visitor Not used.
+     */
+    virtual void accept(ConfigurationParameterVisitor* visitor);
+
+    /**
      * Sets the value to return in isInvalid()
      *
      * @param invalid The value to set.
      */
-    virtual void setInvalid(bool invald);
+    void setInvalid(bool invald);
 
 private:
 

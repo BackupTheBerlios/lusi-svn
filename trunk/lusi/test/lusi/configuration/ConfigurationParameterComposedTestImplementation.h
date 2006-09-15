@@ -72,6 +72,13 @@ public:
      */
     virtual bool isInvalid();
 
+    /**
+     * Does nothing.
+     *
+     * @param visitor Not used.
+     */
+    virtual void accept(ConfigurationParameterVisitor* visitor);
+
 };
 
 }

@@ -49,6 +49,10 @@ bool ConfigurationParameterTestImplementation::isInvalid() {
     return mInvalid;
 }
 
+void ConfigurationParameterTestImplementation::accept(
+                                    ConfigurationParameterVisitor* visitor) {
+}
+
 void ConfigurationParameterTestImplementation::setInvalid(bool invalid) {
     mInvalid = invalid;
 }
