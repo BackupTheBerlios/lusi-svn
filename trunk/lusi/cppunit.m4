@@ -1,5 +1,7 @@
 dnl
 dnl Got from KMyMoney2: http://kmymoney2.sourceforge.net/
+dnl From CVS, /kmymoney2/cppunit.m4 revision 1.4
+dnl http://kmymoney2.cvs.sourceforge.net/kmymoney2/kmymoney2/cppunit.m4
 dnl
 
 dnl
