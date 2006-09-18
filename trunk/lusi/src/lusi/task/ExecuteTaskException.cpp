@@ -18,32 +18,22 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "BaseBuildTaskHelper.h"
-#include "../../configuration/ConfigurationParametersSet.h"
+#include "ExecuteTaskException.h"
 
-using std::string;
-
-using lusi::configuration::ConfigurationParametersSet;
-using lusi::task::Task;
-
-using namespace lusi::task::helper;
+using namespace lusi::task;
 
 //public:
 
-BaseBuildTaskHelper::~BaseBuildTaskHelper() {
+ExecuteTaskException::ExecuteTaskException(
+                                    const std::string& errorMessage /*= ""*/) {
+    mErrorMessage = errorMessage;
 }
 
-ConfigurationParametersSet BaseBuildTaskHelper::checkConfiguration() {
+ExecuteTaskException::~ExecuteTaskException() throw() {
 }
 
-void BaseBuildTaskHelper::execute() {
+/*
+inline const char* ExecuteTaskException::what() const throw() {
+    return mErrorMessage.c_str();
 }
-
-void BaseBuildTaskHelper::revert() {
-}
-
-//protected:
-
-BaseBuildTaskHelper::BaseBuildTaskHelper(const string& name, Task* task):
-                        TaskHelper(name, task) {
-}
+*/

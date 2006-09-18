@@ -52,14 +52,14 @@ namespace task {
  * @class TaskManager TaskManager.h lusi/task/TaskManager.h
  *
  * Manager for Tasks.
- * TaskManager handles the selection of Task to be executed or reverted. It
- * first tries with the Profile and, if that fails, it uses the PackageStatus.
+ * TaskManager handles the selection of Task to be executed. It first tries
+ * with the Profile and, if that fails, it uses the PackageStatus.
  *
- * Task shouldn't be created directly. Instead, they should always be got
+ * Tasks shouldn't be created directly. Instead, they should always be got
  * using this class.
  *
  * Taks must be registered with this class. Only registered Tasks will be taken
- * into account when getting the Tasks to redo or undo. The Task is registered
+ * into account when getting the Tasks to execute. The Task is registered
  * using its name and the PackageStatus it needs and provides.
  *
  * This class follows the Singleton Design Pattern. Only one instance is
@@ -82,24 +82,14 @@ public:
     virtual ~TaskManager();
 
     /**
-     * Returns a Task to be done over the Package.
+     * Returns a Task to be executed over the Package.
      * It first tries with the Task suggested by the Profile and, if that
      * fails, it returns a suitable Task based on the PackageStatus.
      *
-     * @param package The Package to do the Task over.
-     * @return The Task to be done.
+     * @param package The Package to execute the Task over.
+     * @return The Task to be executed.
      */
-    Task* getRedoTask(lusi::package::Package* package);
-
-    /**
-     * Returns a Task to be undone over the Package.
-     * It first tries with the Task suggested by the Profile and, if that
-     * fails, it returns a suitable Task based on the PackageStatus.
-     *
-     * @param package The Package to undo the Task over.
-     * @return The Task to be undone.
-     */
-    Task* getUndoTask(lusi::package::Package* package);
+    Task* getTask(lusi::package::Package* package);
 
     /**
      * Registers a Task in the manager.

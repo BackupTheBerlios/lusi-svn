@@ -51,8 +51,7 @@ TaskHelper* createTarExtractTaskHelper(lusi::task::Task* task);
  *
  * ExtractTaskHelper for tar command.
  * This ExtractTask implementation adds support for tar command. This command
- * extracts the contents of packed files supported by it. An optional parameter
- * is where the packed file should be extracted.
+ * extracts the contents of packed files supported by it.
  *
  * ResourceMaps that can be used with TarExtractTaskHelper are those
  * with a packed file with a format supported by tar, containing the Package.
@@ -65,6 +64,8 @@ public:
 
     /**
      * Creates a new TarExtractTaskHelper.
+     *
+     * @param task The Task to help.
      */
     TarExtractTaskHelper(lusi::task::Task* task);
 
@@ -82,17 +83,76 @@ public:
      */
     virtual bool hasValidResourceMap();
 
+    /**
+     * Called when new data is received in stdout.
+     * The output is processed to notify the base class the name of each file
+     * extracted.
+     *
+     * @param process A pointer to the process that received the data.
+     * @param data The data received.
+     * @see fileExtracted(std::string)
+     */
+    virtual void receivedStdout(lusi::util::Process* process,
+                                const std::string& data);
+
 protected:
 
     /**
-     * Extracts the Package to the specified path.
-     * The Package is extracted using "tar" command.
+     * Creates a new Process with PipeCommunication and sets the number of
+     * files to be extracted and the arguments needed to start the process.
+     * The directory to extract the files to is got from the configuration. If
+     * it doesn't exist yet, it is created (with all its needed parents). If the
+     * directory wasn't explicitly set, the parent directory of the file to
+     * extract is used.
+     * If the number of files to extract is greater than 0, the TaskProgress is
+     * set to extended.
      *
-     * @param path The full path where the package should be extracted.
+     * @return The Process to set its arguments.
+     * @see calculateNumberOfFilesToExtract()
      */
-    virtual void extract(std::string path);
+    virtual lusi::util::Process* getProcess();
 
 private:
+
+    /**
+     * The format to use when invoking the tar command.
+     * This format includes also the leading hyphen.
+     */
+    std::string mTarFormat;
+
+    /**
+     * Stores the received data in stdout.
+     * The data stored is only temporal and it's removed when a complete file
+     * name is available.
+     * This attribute is used only in receivedStdout(Process*, const string&).
+     *
+     * @see receivedStdout(Process*, const string&)
+     */
+    std::string mReceivedData;
+
+
+
+    /**
+     * Returns the format to be used when invoking the tar command.
+     * The format includes also the leading hyphen. It uses the extension of the
+     * file to unpack to infer the format used when the file was compressed,
+     * and use that same format with tar when extracting it.
+     *
+     * @return The format to be used when invoking the tar command.
+     */
+    std::string inferTarFormat();
+
+    /**
+     * Returns the total number of files to be extracted.
+     * It lists all the files in the file to be extracted and then counts the
+     * number of lines outputted.
+     * If some error happens while calculating the number of files to extract,
+     * it returns 0.
+     *
+     * @return The total number of files to be extracted, or 0 if there was an
+     *         error.
+     */
+    int calculateNumberOfFilesToExtract();
 
     /**
      * Copy constructor disabled.

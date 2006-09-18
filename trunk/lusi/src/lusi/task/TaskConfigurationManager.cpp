@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "TaskConfigurationManager.h"
+#include "TaskConfiguration.h"
 
 using lusi::package::PackageId;
 
@@ -37,9 +38,10 @@ TaskConfigurationManager* TaskConfigurationManager::getInstance() {
 TaskConfigurationManager::~TaskConfigurationManager() {
 }
 
+//TODO implement it
 TaskConfiguration* TaskConfigurationManager::getTaskConfiguration(
                         const PackageId* packageId) {
-    return 0;
+    return new TaskConfiguration();
 }
 
 //private:

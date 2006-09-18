@@ -78,6 +78,15 @@ public:
     }
 
     /**
+     * Returns all the messages received.
+     *
+     * @return All the messages received.
+     */
+    const std::string& getAllMessages() const {
+        return mAllMessages;
+    }
+
+    /**
      * Returns the type of the last event received.
      *
      * @return The type of the last event received.
@@ -97,6 +106,11 @@ private:
      * The last message received.
      */
     std::string mMessage;
+
+    /**
+     * All the messages received.
+     */
+    std::string mAllMessages;
 
     /**
      * The last type of the last event received.

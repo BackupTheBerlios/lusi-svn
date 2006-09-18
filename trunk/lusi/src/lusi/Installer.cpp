@@ -19,18 +19,25 @@
  ***************************************************************************/
 
 #include "Installer.h"
+#include "package/status/InstalledPackageStatus.h"
+#include "task/Task.h"
 
 using namespace lusi;
 
-using package::Package;
+using lusi::package::Package;
+using lusi::package::status::PackageStatus;
+using lusi::package::status::InstalledPackageStatus;
 
 //public:
 
-Installer::Installer() {
+Installer::Installer(Package* package): Module(package) {
 }
 
 Installer::~Installer() {
 }
 
-void Installer::execute(Package* package) {
+//protected:
+
+const PackageStatus* Installer::getFinalPackageStatus() {
+    return InstalledPackageStatus::getInstance();
 }

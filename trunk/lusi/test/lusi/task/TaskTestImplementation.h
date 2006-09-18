@@ -21,14 +21,19 @@
 #ifndef LUSI_TASK_TASKTESTIMPLEMENTATION_H
 #define LUSI_TASK_TASKTESTIMPLEMENTATION_H
 
+#define protected public
+#define private public
 #include <lusi/task/Task.h>
+#undef private
+#undef protected
 
 namespace lusi {
 namespace task {
 
 /**
  * Implementation of Task for testing purposes.
- * This class helps testing where Task objects are needed.
+ * This class helps testing where Task objects are needed, but there is no need
+ * to create the package, the configuration...
  */
 class TaskTestImplementation: public Task {
 public:
@@ -37,12 +42,8 @@ public:
      * Creates a new TakeTestImplementation.
      *
      * @param name The name of the Task.
-     * @param package The Package to use.
-     * @param taskConfiguration The TaskConfiguration to use.
      */
-    TaskTestImplementation(const std::string& name,
-                           lusi::package::Package* package,
-                           TaskConfiguration* taskConfiguration);
+    TaskTestImplementation(const std::string& name);
 
     /**
      * Destroys this TaskTestImplementation.

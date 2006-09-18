@@ -18,12 +18,32 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "ConfigureConfigureTaskHelper.h"
-#include "../../configuration/ConfigurationParametersSet.h"
+#include <vector>
 
-using lusi::configuration::ConfigurationParametersSet;
-using lusi::package::ResourceMap;
+#include "ConfigureConfigureTaskHelper.h"
+#include "../../configuration/ConfigurationParameterSimple.h"
+#include "../../configuration/ConfigurationParameterMap.h"
+#include "../../package/LocalFileResource.h"
+#include "../../package/Package.h"
+#include "../../package/ResourceMap.h"
+#include "../../task/Task.h"
+#include "../../util/LocalUrl.h"
+#include "../../util/Process.h"
+#include "../../util/ProcessRunner.h"
+
+using std::string;
+using std::vector;
+
+using lusi::configuration::ConfigurationParameter;
+using lusi::configuration::ConfigurationParameterMap;
+using lusi::configuration::ConfigurationParameterSimple;
+using lusi::package::LocalFileResource;
 using lusi::task::Task;
+using lusi::util::LocalUrl;
+using lusi::util::Process;
+using lusi::util::ProcessException;
+using lusi::util::ProcessRunner;
+using lusi::util::SmartPtr;
 
 using namespace lusi::task::helper;
 
@@ -35,20 +55,94 @@ TaskHelper* lusi::task::helper::createConfigureConfigureTaskHelper(
 //public:
 
 ConfigureConfigureTaskHelper::ConfigureConfigureTaskHelper(Task* task):
-                            TaskHelper("ConfigureConfigureTaskHelper", task) {
+                TaskHelperUsingProcess("ConfigureConfigureTaskHelper", task) {
+    //TODO refactor with same code in other TaskHelpers
+    vector< SmartPtr<LocalFileResource> > localFileResources = mTask->
+            getPackage()->getResourceMap()->
+                    getAllResourcesByType<LocalFileResource>();
+    if (localFileResources.size() == 0 ||
+                !LocalUrl(localFileResources[0]->getId()).isDirectory()) {
+        mPackageDirectory = new LocalUrl("");
+    } else {
+        mPackageDirectory = new LocalUrl(localFileResources[0]->getId());
+    }
 }
 
 ConfigureConfigureTaskHelper::~ConfigureConfigureTaskHelper() {
+    delete mPackageDirectory;
 }
 
+//TODO check if the script is executable. Log error information?
 bool ConfigureConfigureTaskHelper::hasValidResourceMap() {
+    if (mPackageDirectory->getPath() == "") {
+        return false;
+    }
+
+    if (mTask->getPackage()->getResourceMap()->get(
+                    mPackageDirectory->getDirectory() + "configure") == 0) {
+        return false;
+    }
+
+    return true;
 }
 
-ConfigurationParametersSet ConfigureConfigureTaskHelper::checkConfiguration() {
+void ConfigureConfigureTaskHelper::initConfigurationParameterMap() {
+    ConfigurationParameterSimple* prefix = new ConfigurationParameterSimple(
+        "prefix", "Prefix", ConfigurationParameter::RecommendedPriority,
+        "The prefix directory to install the package to", getDefaultPrefix());
+
+    if (!prefix->isDefaultValue()) {
+        prefix->setValue("/usr/local/");
+    }
+
+    mConfigurationParameterMap.add(SmartPtr<ConfigurationParameter>(prefix));
 }
 
-void ConfigureConfigureTaskHelper::execute() {
+//protected:
+
+Process* ConfigureConfigureTaskHelper::getProcess() {
+    Process* process = Process::newProcess(Process::PipeCommunication);
+    process->setWorkingDirectory(mPackageDirectory->getDirectory());
+    (*process) << "/bin/sh" << "-c" << "./configure" +
+                                            getConfigureParameters(process);
+    return process;
 }
 
-void ConfigureConfigureTaskHelper::revert() {
+//private:
+
+//TODO implement it
+string ConfigureConfigureTaskHelper::getConfigureParameters(Process* process) {
+    string configureParameters;
+
+    SmartPtr<ConfigurationParameterSimple> prefix =
+        static_cast< SmartPtr<ConfigurationParameterSimple> >(
+            mConfigurationParameterMap.get("prefix"));
+
+    if (!prefix->isDefaultValue()) {
+        configureParameters += " --" + prefix->getId() + "=" +
+                               prefix->getValue();
+    }
+
+    return configureParameters;
+}
+
+string ConfigureConfigureTaskHelper::getDefaultPrefix() {
+    ProcessRunner processRunner;
+    Process* process = processRunner.getProcess();
+
+    process->setWorkingDirectory(mPackageDirectory->getDirectory());
+    string searchPrefixCommand =
+            "sed -n \"s/^[ \\t]*ac_default_prefix=//p\" configure | tail -n 1";
+    (*process) << "/bin/sh" << "-c" << "export prefix=`" + searchPrefixCommand +
+                  "` && /bin/sh -c \"echo $prefix\"";
+
+    try {
+        process->start();
+    } catch (ProcessException e) {
+        return "";
+    }
+
+    string defaultPrefix = processRunner.getStdoutData();
+    defaultPrefix = defaultPrefix.substr(0, defaultPrefix.find('\n'));
+    return defaultPrefix;
 }

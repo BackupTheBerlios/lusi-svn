@@ -20,21 +20,27 @@
 
 #include "TaskTestImplementation.h"
 #include "../package/status/PackageStatusTestImplementation.h"
+#include "../package/Package.h"
+#include "../package/PackageId.h"
+#include "../task/TaskConfiguration.h"
 
 using lusi::package::Package;
+using lusi::package::PackageId;
+using lusi::task::TaskConfiguration;
 using lusi::package::status::PackageStatusTestImplementation;
 
 using namespace lusi::task;
 
 //public:
 
-TaskTestImplementation::TaskTestImplementation(const std::string& name,
-                                Package* package,
-                                TaskConfiguration* taskConfiguration):
-                Task(name, package, taskConfiguration,
+TaskTestImplementation::TaskTestImplementation(const std::string& name):
+                Task(name, new Package(new PackageId("testPackage")),
+                     new TaskConfiguration(),
                      PackageStatusTestImplementation::getFirstInstance(),
                      PackageStatusTestImplementation::getSecondInstance()) {
 }
 
 TaskTestImplementation::~TaskTestImplementation() {
+    delete mPackage->getPackageId();
+    delete mPackage;
 }

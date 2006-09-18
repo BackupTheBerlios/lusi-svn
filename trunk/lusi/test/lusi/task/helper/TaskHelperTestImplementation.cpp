@@ -19,11 +19,12 @@
  ***************************************************************************/
 
 #include "TaskHelperTestImplementation.h"
-#include "../../configuration/ConfigurationParametersSet.h"
+#include "../../configuration/ConfigurationParameterMap.h"
 
 using std::string;
 
-using lusi::configuration::ConfigurationParametersSet;
+using lusi::configuration::ConfigurationParameterMap;
+using lusi::configuration::InvalidConfigurationException;
 using lusi::package::ResourceMap;
 
 using namespace lusi::task::helper;
@@ -58,20 +59,5 @@ TaskHelperTestImplementation::~TaskHelperTestImplementation() {
 /*
 inline bool TaskHelperTestImplementation::hasValidResourceMap() {
     return mValidResourceMap;
-}
-*/
-
-ConfigurationParametersSet TaskHelperTestImplementation::checkConfiguration() {
-}
-
-void TaskHelperTestImplementation::execute() {
-}
-
-void TaskHelperTestImplementation::revert() {
-}
-
-/*
-inline const string& getName() const {
-    return mName;
 }
 */

@@ -30,6 +30,7 @@ TaskLoggerObserverTestImplementation::TaskLoggerObserverTestImplementation():
                                             TaskLoggerObserver() {
     mTask = 0;
     mMessage = string("");
+    mAllMessages = string("");
 }
 
 
@@ -41,21 +42,28 @@ void TaskLoggerObserverTestImplementation::event(Task* task,
                                                  LoggedEventType type) {
     mTask = task;
     mMessage = message;
+    mAllMessages += message;
     mEventType = type;
 }
 
 /*
-inline Task* getTask() {
+inline Task* TaskLoggerObserverTestImplementation::getTask() {
     Task* task = mTask;
     mTask = 0;
     return task;
 }
 
-inline const std::string& getMessage() const {
+inline const std::string& TaskLoggerObserverTestImplementation::getMessage() const {
     return mMessage;
 }
 
-inline const LoggedEventType& getEventType() const {
+inline const std::string& TaskLoggerObserverTestImplementation::getAllMessages()
+                                                                            const {
+    return mAllMessages;
+}
+
+inline const LoggedEventType& TaskLoggerObserverTestImplementation::getEventType()
+                                                                            const {
     return mEventType;
 }
 */

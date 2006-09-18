@@ -44,25 +44,24 @@ public:
 
     /**
      * Creates a new installer.
+     *
+     * @param package The package to install.
      */
-    Installer();
+    Installer(lusi::package::Package* package);
 
     /**
      * Destroys this installer.
      */
     virtual ~Installer();
 
-    /**
-     * Installs the specified package.
-     * Executes the needed tasks (through TaskManager) and updates the profile,
-     * if needed.
-     *
-     * @param package The package to install.
-     * @see task::TaskManager::getTask(lusi::package::Package*)
-     */
-    void execute(lusi::package::Package* package);
-
 protected:
+
+    /**
+     * Returns the package status which signals that the package was installed.
+     *
+     * @return The package status which signals that the package was installed.
+     */
+    virtual const lusi::package::status::PackageStatus* getFinalPackageStatus();
 
 private:
 

@@ -43,11 +43,7 @@ inline Package* Profile::getPackage() {
 }
 */
 
-Task* Profile::getRedoTask() {
-    return 0;
-}
-
-Task* Profile::getUndoTask() {
+Task* Profile::getTask() {
     return 0;
 }
 

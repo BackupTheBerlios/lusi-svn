@@ -36,12 +36,11 @@ namespace task {
  * Test class for TaskManager.
  *
  * @see TaskManager
- *
- * TODO testGetRedoTask and testGetUndoTask
  */
 class TaskManagerTest: public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(TaskManagerTest);
     CPPUNIT_TEST(testSingleton);
+    CPPUNIT_TEST(testGetTask);
     CPPUNIT_TEST(testRegisterTask);
     CPPUNIT_TEST(testGetTasksByPackageStatus);
     CPPUNIT_TEST_SUITE_END();
@@ -62,6 +61,11 @@ public:
      * Checks if getInstance() always returns the same not null reference.
      */
     void testSingleton();
+
+    /**
+     * Checks if the task returned is a suitable Task to execute.
+     */
+    void testGetTask();
 
     /**
      * Checks if the task is registered in the two internal multimaps.

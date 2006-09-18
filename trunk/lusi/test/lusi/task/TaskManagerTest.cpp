@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <memory>
+
 #include "TaskManagerTest.h"
 
 #define protected public
@@ -26,7 +28,19 @@
 #undef private
 #undef protected
 
+#define protected public
+#define private public
+#include "helper/TaskHelperManager.h"
+#undef private
+#undef protected
+
+#include "helper/TaskHelperTestImplementation.h"
+
+#include "../package/Package.h"
+#include "../package/PackageId.h"
+#include "../package/ResourceMap.h"
 #include "../package/status/PackageStatusTestImplementation.h"
+#include "../package/status/PackedPackageStatus.h"
 
 #define firstPackageStatus ((const PackageStatus*) \
                 PackageStatusTestImplementation::getFirstInstance())
@@ -35,14 +49,19 @@
 #define thirdPackageStatus ((const PackageStatus*) \
                 PackageStatusTestImplementation::getThirdInstance())
 
-
+using std::auto_ptr;
 using std::multimap;
 using std::pair;
 using std::string;
 using std::vector;
 
+using lusi::package::Package;
+using lusi::package::PackageId;
 using lusi::package::status::PackageStatus;
 using lusi::package::status::PackageStatusTestImplementation;
+using lusi::package::status::PackedPackageStatus;
+using lusi::task::helper::TaskHelperManager;
+using lusi::task::helper::createTaskHelperTestImplementation1;
 
 using namespace lusi::task;
 
@@ -59,6 +78,10 @@ void TaskManagerTest::setUp() {
     mTaskManager->registerTask("Milk the platypus",
                                secondPackageStatus,
                                thirdPackageStatus);
+
+    TaskHelperManager::getInstance()->
+            registerTaskHelper(createTaskHelperTestImplementation1,
+                               "Chew gimer stick cane");
 }
 
 void TaskManagerTest::tearDown() {
@@ -67,6 +90,9 @@ void TaskManagerTest::tearDown() {
 
     mTaskManager->mTasksByProvidedPackageStatus.erase(secondPackageStatus);
     mTaskManager->mTasksByProvidedPackageStatus.erase(thirdPackageStatus);
+
+    TaskHelperManager::getInstance()->
+                            mTaskHelperFactories.erase("Chew gimer stick cane");
 }
 
 void TaskManagerTest::testSingleton() {
@@ -74,6 +100,15 @@ void TaskManagerTest::testSingleton() {
 
     CPPUNIT_ASSERT_EQUAL(TaskManager::getInstance(),
             TaskManager::getInstance());
+}
+
+void TaskManagerTest::testGetTask() {
+    auto_ptr<PackageId> packageId(new PackageId("test"));
+    auto_ptr<Package> package(new Package(packageId.get(), firstPackageStatus));
+
+    auto_ptr<Task> task(mTaskManager->getTask(package.get()));
+    CPPUNIT_ASSERT(task.get() != 0);
+    CPPUNIT_ASSERT_EQUAL(string("Chew gimer stick cane"), task->getName());
 }
 
 void TaskManagerTest::testRegisterTask() {

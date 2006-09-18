@@ -18,47 +18,91 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef LUSI_CONFIGURATION_CONFIGURATIONPARAMETERSSET_H
-#define LUSI_CONFIGURATION_CONFIGURATIONPARAMETERSSET_H
+#ifndef LUSI_TASK_HELPER_MAKEBUILDTASKHELPERTEST_H
+#define LUSI_TASK_HELPER_MAKEBUILDTASKHELPERTEST_H
 
-#include <string>
-#include <vector>
-
-#include <lusi/configuration/ConfigurationParameter.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 namespace lusi {
-namespace configuration {
+namespace package {
+class Package;
+class PackageId;
+}
+}
+
+namespace lusi {
+namespace task {
+class Task;
+class TaskConfiguration;
+}
+}
+
+namespace lusi {
+namespace task {
+namespace helper {
+class MakeBuildTaskHelper;
+}
+}
+}
+
+namespace lusi {
+namespace task {
+namespace helper {
 
 /**
- * @class ConfigurationParameterSet ConfigurationParameterSet.h \
- * lusi/configuration/ConfigurationParameterSet.h
+ * Test class for MakeBuildTaskHelper.
  *
- * @todo Documentation
+ * @see MakeBuilderTaskHelper
  */
-class ConfigurationParametersSet {
+class MakeBuildTaskHelperTest: public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(MakeBuildTaskHelperTest);
+    CPPUNIT_TEST(testConstructor);
+    CPPUNIT_TEST(testHasValidResourceMap);
+    CPPUNIT_TEST(testGetProcess);
+    CPPUNIT_TEST_SUITE_END();
+
 public:
 
-    ConfigurationParametersSet();
+    /**
+     * Sets up context before running a test.
+     */
+    virtual void setUp();
 
-    virtual ~ConfigurationParametersSet();
+    /**
+     * Cleans up after the test run.
+     */
+    virtual void tearDown();
 
-    std::vector<ConfigurationParameter*> getAllParameters();
+    /**
+     * Checks if mPackageDirectory is set as it should.
+     */
+    void testConstructor();
 
-    void getParameters(ConfigurationParameter::PriorityType prorityType);
+    /**
+     * Checks if true is returned only if a valid Makefile is available.
+     */
+    void testHasValidResourceMap();
 
-    ConfigurationParameter* getParameter(std::string parameterID);
-
-    void setParameter(ConfigurationParameter* parameter);
-
-    void merge(ConfigurationParametersSet configurationParametersSet,
-                bool override = false);
-
-protected:
+    /**
+     * Checks if the Process arguments set are correct.
+     */
+    void testGetProcess();
 
 private:
 
+    /**
+     * The TarExtractTaskHelper to use.
+     */
+    MakeBuildTaskHelper* mMakeBuildTaskHelper;
+
+    /**
+     * The Task to use in mMakeBuildTaskHelper.
+     */
+    lusi::task::Task* mTask;
+
 };
 
+}
 }
 }
 

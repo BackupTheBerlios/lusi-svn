@@ -43,8 +43,8 @@ namespace package {
  * Profile contains all the information about the Task executed over a Package,
  * including order of execution and configuration of each Task.
  * Based on this information and the status of the Package, a Profile can
- * suggest a Task to be executed or reverted. The suggested Task isn't tested
- * to verify if it can be executed or reverted.
+ * suggest a Task to be executed. The suggested Task isn't tested to verify if
+ * it can be executed.
  *
  * New TaskConfigurations can be added using
  * addTaskConfiguration(TaskConfiguration). The order used to add them is kept
@@ -103,18 +103,7 @@ public:
      *
      * @return The suggested Task to execute.
      */
-    lusi::task::Task* getRedoTask();
-
-    /**
-     * Returns a suggested Task to be reverted based on the status of the
-     * Package.
-     * The TaskConfiguration selected is the newest version of the one for the
-     * Task that provides the current PackageStatus.
-     * If there's no suitable Task to be reverted, a null pointer is returned.
-     *
-     * @return The suggested Task to revert.
-     */
-    lusi::task::Task* getUndoTask();
+    lusi::task::Task* getTask();
 
     /**
      * Saves the profile in a persistent way.

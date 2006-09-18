@@ -59,8 +59,8 @@ TaskManager::~TaskManager() {
 }
 
 //TODO handle several valid Tasks registered with the same needed status
-Task* TaskManager::getRedoTask(Package* package) {
-    Task* task = package->getProfile()->getRedoTask();
+Task* TaskManager::getTask(Package* package) {
+    Task* task = package->getProfile()->getTask();
     if (task != 0) {
         if (task->test()) {
             return task;
@@ -71,32 +71,6 @@ Task* TaskManager::getRedoTask(Package* package) {
 
     vector<TaskData> tasks = getTasksByPackageStatus(
                     package->getPackageStatus(), mTasksByNeededPackageStatus);
-    for (vector<TaskData>::const_iterator iterator = tasks.begin();
-                iterator != tasks.end() && task == 0; ++iterator) {
-        task = new Task((*iterator).name, package,
-                TaskConfigurationManager::getInstance()->getTaskConfiguration(
-                        package->getPackageId()),
-                (*iterator).neededPackageStatus,
-                (*iterator).providedPackageStatus);
-        if (!task->test()) {
-            delete task;
-            task = 0;
-        }
-    }
-
-    return task;
-}
-
-//TODO handle several valid Tasks registered with the same provided status
-//TODO should only get UndoTask from Profile?
-Task* TaskManager::getUndoTask(Package* package) {
-    Task* task = package->getProfile()->getUndoTask();
-    if (task != 0) {
-        return task;
-    }
-
-    vector<TaskData> tasks = getTasksByPackageStatus(
-                    package->getPackageStatus(), mTasksByProvidedPackageStatus);
     for (vector<TaskData>::const_iterator iterator = tasks.begin();
                 iterator != tasks.end() && task == 0; ++iterator) {
         task = new Task((*iterator).name, package,

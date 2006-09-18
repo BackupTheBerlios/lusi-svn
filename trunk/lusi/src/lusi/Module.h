@@ -21,9 +21,27 @@
 #ifndef LUSI_MODULE_H
 #define LUSI_MODULE_H
 
+#include <string>
+
+#include <lusi/task/NoTaskAvailableException.h>
+
 namespace lusi {
 namespace package {
 class Package;
+}
+}
+
+namespace lusi {
+namespace package {
+namespace status {
+class PackageStatus;
+}
+}
+}
+
+namespace lusi {
+namespace task {
+class Task;
 }
 }
 
@@ -38,12 +56,13 @@ namespace lusi {
  * Module works over a Package provided by the application using the Module.
  * Each module has an specific mission, for example, install or uninstall a
  * Package. They follow the Strategy Design Pattern, and also resemble Façade,
- * as they abstract all the underlying execution of Tasks.
+ * as they abstract most of all the underlying execution of Tasks.
  *
- * Module is an interface which is implemented by the real classes doing all the
- * work.
- *
- * @todo operator=, copy constructor
+ * Modules return Tasks to be executed. Before executing them, the Tasks should
+ * be checked to know if all the parameters are valid.
+ * Once a Task was executed, a new Task can be got in the Module using nextTask,
+ * repeating this process until the returned Task is a null pointer, which means
+ * that all the Tasks were executed and the module has finished.
  */
 class Module {
 public:
@@ -51,28 +70,89 @@ public:
     /**
      * Destroys this Module.
      */
-    virtual ~Module() {
+    virtual ~Module();
+
+    /**
+     * Returns the package being used in this module.
+     *
+     * @return The package being used in this module.
+     */
+    lusi::package::Package* getPackage() {
+        return mPackage;
     }
 
     /**
-     * Executes this module.
-     * Must be implemented in derived classes.
+     * Returns an estimation of the number of tasks needed to finish the module.
+     * Currently returns 0.
      *
-     * @param package The Package to use.
+     * @return An estimation of the number of tasks needed to finish the module.
+     * @todo Implement it
      */
-    virtual void execute(lusi::package::Package* package) = 0;
+    int getEstimatedNumberOfTasks();
+
+    /**
+     * Returns the next Task to execute.
+     * The returned Task must be executed (although completing before the
+     * configuration of the Task). Once executed, the next one must be executed.
+     * The same must be repeated until a null pointer is returned, which means
+     * that the module finished.
+     *
+     * @return The next Task to execute.
+     * @throw NoTaskAvailableException If there are no more available tasks.
+     */
+    lusi::task::Task* nextTask() throw (lusi::task::NoTaskAvailableException);
 
 protected:
+
+    /**
+     * The Package to use.
+     */
+    lusi::package::Package* mPackage;
+
+    /**
+     * The current task.
+     */
+    lusi::task::Task* mCurrentTask;
+
+
 
     /**
      * Creates a new Module.
      * Protected to avoid classes other than derived to create Module
      * objects.
+     *
+     * @param package The Package to use.
      */
-    Module() {
-    }
+    Module(lusi::package::Package* package);
+
+    /**
+     * Returns the package status which signals that the package was installed.
+     *
+     * Must be implemented in derived classes.
+     *
+     * @return The package status which signals that the package was installed.
+     */
+    virtual const lusi::package::status::PackageStatus*
+    getFinalPackageStatus() = 0;
 
 private:
+
+    /**
+     * The initial PackageStatus of the Package.
+     */
+    const lusi::package::status::PackageStatus* mInitialPackageStatus;
+
+
+
+    /**
+     * Copy constructor disabled.
+     */
+    Module(const Module& module);
+
+    /**
+     * Assignment disabled.
+     */
+    Module& operator=(const Module& module);
 
 };
 

@@ -23,11 +23,11 @@
 
 #include <string>
 
-#include <lusi/task/helper/BaseInstallTaskHelper.h>
+#include <lusi/task/helper/TaskHelperUsingMake.h>
 
 namespace lusi {
-namespace package {
-class ResourceMap;
+namespace configuration {
+class ConfigurationParameterSimple;
 }
 }
 
@@ -53,18 +53,28 @@ TaskHelper* createMakeInstallTaskHelper(lusi::task::Task* task);
  * This InstallTask implementation adds support for make command. This command
  * reads the macros in a file called Makefile. When it's executed, it installs
  * the package or uninstalls it removing the files created when building it. It
- * uses no parameters (apart from the objetive of the Makefile to execute).
+ * uses no parameters (apart from the target of the Makefile to execute).
  *
  * ResourceMaps that can be used with MakeInstallTaskHelper are those
- * with a "Makefile" file in the base directory of the package.
+ * with a "Makefile" file in the base directory of the package. The package
+ * directory must be the first LocalFileResource in the ResourceMap.
  *
- * No configuration is needed.
+ * It may happen that the directory where the package will be installed doesn't
+ * belongs to the current user and she doesn't have write permissions on it. In
+ * those cases, the configuration includes the name and the password of the
+ * user owner of the directory to install the package to.
  */
-class MakeInstallTaskHelper: public BaseInstallTaskHelper {
+class MakeInstallTaskHelper: public TaskHelperUsingMake {
 public:
 
     /**
      * Creates a new MakeInstallTaskHelper.
+     * The package directory is the first LocalFileResource in the ResourceMap.
+     * If there's no LocalFileResource, or the first it's not a directory, an
+     * empty LocalUrl is used.
+     * No checks about, for example, more than one package directory, are made.
+     *
+     * @param task The Task to help.
      */
     MakeInstallTaskHelper(lusi::task::Task* task);
 
@@ -74,32 +84,53 @@ public:
     virtual ~MakeInstallTaskHelper();
 
     /**
-     * Returns True if the ResourceMap contains a Makefile that contains
-     * macros to be executed by make command.
-     *
-     * @return bool True if the ResourceMap contains a Makefile.
-     * @todo Check for install objective in Makefile?
+     * Inits the configuration parameters for this TaskHelper.
+     * If the current user doesn't have enough permissions to access and write
+     * in the prefix to install the package to, the configuration contains the
+     * user name and the password of the owner of the prefix directory.
+     * Otherwise, it is empty.
      */
-    virtual bool hasValidResourceMap();
+    virtual void initConfigurationParameterMap();
 
 protected:
 
     /**
-     * Returns the name of the "make install" command.
+     * Creates a new SuProcess with PtyCommunication and sets the arguments and
+     * the working directory to call make command using install target.
+     * The process switchs to a different user only if the current user doesn't
+     * have the needed permissions in the destination dir. The user name and
+     * password are got from the configuration.
      *
-     * @return The name of "make install" command to be invoked.
+     * @return The Process to be executed.
      */
-    virtual std::string installCommand();
-
-    /**
-     * Returns the name of the "make uninstall" command to invoke to revert the
-     * changes made executing this TaskHelper.
-     *
-     * @return The "make uninstall" command to be invoked.
-     */
-    virtual std::string uninstallCommand();
+    virtual lusi::util::Process* getProcess();
 
 private:
+
+    /**
+     * The configuration parameter for password.
+     * If this paremeter isn't needed, it is null.
+     */
+    lusi::configuration::ConfigurationParameterSimple* mUserName;
+
+    /**
+     * The configuration parameter for user name.
+     * If this paremeter isn't needed, it is null.
+     */
+    lusi::configuration::ConfigurationParameterSimple* mPassword;
+
+
+
+    /**
+     * Returns the path to the directory used as installation prefix for the
+     * package.
+     * The prefix is got from the Makefile, and it may not contain the ending
+     * "/".
+     *
+     * @return The path to the directory used as installation prefix for the
+     *         package.
+     */
+    std::string getInstallationPrefix();
 
     /**
      * Copy constructor disabled.

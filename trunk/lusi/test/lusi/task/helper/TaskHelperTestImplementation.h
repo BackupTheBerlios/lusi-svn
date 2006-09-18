@@ -61,6 +61,10 @@ public:
 
     /**
      * Creates a new TaskHelperTestImplementation.
+     *
+     * @param task The task to help.
+     * @param name The name of the TaskHelper.
+     * @param validResourceMap The value to return by hasValidResourceMap().
      */
     TaskHelperTestImplementation(Task* task, const std::string& name,
                                  bool validResourceMap = false);
@@ -78,21 +82,6 @@ public:
     virtual bool hasValidResourceMap() {
         return mValidResourceMap;
     }
-
-    /**
-     * Returns an empty ConfigurationParametersSet.
-     */
-    virtual lusi::configuration::ConfigurationParametersSet
-                                        checkConfiguration();
-    /**
-     * Does nothing.
-     */
-    virtual void execute();
-
-    /**
-     * Does nothing.
-     */
-    virtual void revert();
 
 private:
 

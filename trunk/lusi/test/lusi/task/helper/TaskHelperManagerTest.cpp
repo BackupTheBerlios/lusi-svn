@@ -86,7 +86,7 @@ void TaskHelperManagerTest::testRegisterTaskHelper() {
 }
 
 void TaskHelperManagerTest::testGetTaskHelpers() {
-    Task* bathTask = new TaskTestImplementation("Bath the iguana", 0, 0);
+    Task* bathTask = new TaskTestImplementation("Bath the iguana");
     vector<TaskHelper*> bathHelpers = mTaskHelperManager->getTaskHelpers(
                                             bathTask);
     CPPUNIT_ASSERT_EQUAL(string("1"),
@@ -99,8 +99,7 @@ void TaskHelperManagerTest::testGetTaskHelpers() {
     delete bathHelpers[1];
 
 
-    Task* recordTask = new TaskTestImplementation("Record Takeshi's Castle", 0,
-                                                  0);
+    Task* recordTask = new TaskTestImplementation("Record Takeshi's Castle");
     vector<TaskHelper*> recordHelpers = mTaskHelperManager->getTaskHelpers(
                                                 recordTask);
     CPPUNIT_ASSERT_EQUAL(string("3"),
@@ -112,8 +111,8 @@ void TaskHelperManagerTest::testGetTaskHelpers() {
 
 
     //Not registered TaskHelper
-    Task* unregisteredTask = new TaskTestImplementation("Clean my room", 0, 0);
-    vector<TaskHelper*> unregisteredHelpers = mTaskHelperManager->getTaskHelpers(
-                                                    unregisteredTask);
+    Task* unregisteredTask = new TaskTestImplementation("Clean my room");
+    vector<TaskHelper*> unregisteredHelpers = mTaskHelperManager->
+                                        getTaskHelpers(unregisteredTask);
     CPPUNIT_ASSERT(unregisteredHelpers.size() == 0);
 }

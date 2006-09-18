@@ -18,37 +18,22 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "ConfigurationParametersSet.h"
+#include "ExecuteTaskHelperException.h"
 
-using std::string;
-using std::vector;
-
-using namespace lusi::configuration;
+using namespace lusi::task::helper;
 
 //public:
 
-ConfigurationParametersSet::ConfigurationParametersSet() {
+ExecuteTaskHelperException::ExecuteTaskHelperException(
+                                    const std::string& errorMessage /*= ""*/) {
+    mErrorMessage = errorMessage;
 }
 
-ConfigurationParametersSet::~ConfigurationParametersSet() {
+ExecuteTaskHelperException::~ExecuteTaskHelperException() throw() {
 }
 
-vector<ConfigurationParameter*> ConfigurationParametersSet::getAllParameters() {
+/*
+inline const char* ExecuteTaskHelperException::what() const throw() {
+    return mErrorMessage.c_str();
 }
-
-void ConfigurationParametersSet::getParameters(
-            ConfigurationParameter::PriorityType prorityType) {
-}
-
-ConfigurationParameter* ConfigurationParametersSet::getParameter(
-                            string parameterID) {
-}
-
-void ConfigurationParametersSet::setParameter(
-            ConfigurationParameter* parameter) {
-}
-
-void ConfigurationParametersSet::merge(
-            ConfigurationParametersSet configurationParametersSet,
-            bool override /*= false*/) {
-}
+*/

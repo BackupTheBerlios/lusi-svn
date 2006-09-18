@@ -38,12 +38,12 @@
 
 using std::string;
 
-using lusi::task::helper::TaskHelper;
-using lusi::task::helper::TaskHelperTestImplementation;
 using lusi::package::Package;
 using lusi::package::PackageId;
 using lusi::package::status::PackageStatus;
 using lusi::package::status::PackageStatusTestImplementation;
+using lusi::task::helper::TaskHelper;
+using lusi::task::helper::TaskHelperTestImplementation;
 
 using namespace lusi::task;
 
@@ -62,7 +62,7 @@ void TaskTest::setUp() {
                                                                    true));
     mTask->mTaskHelpers.push_back(new TaskHelperTestImplementation(mTask, "3",
                                                                    true));
-    mTask->mCurrentTaskHelper = mTask->mTaskHelpers.begin();
+    mTask->mTaskHelpersIterator = mTask->mTaskHelpers.begin();
 }
 
 void TaskTest::tearDown() {
@@ -118,16 +118,18 @@ void TaskTest::testGetTaskProgress() {
     delete observer;
 }
 
-void TaskTest::testGetRedoTaskHelper() {
-    TaskHelper* taskHelper = mTask->getRedoTaskHelper();
-    CPPUNIT_ASSERT(taskHelper != 0);
-    CPPUNIT_ASSERT_EQUAL(string("2"), taskHelper->getName());
-    taskHelper = mTask->getRedoTaskHelper();
-    CPPUNIT_ASSERT(taskHelper != 0);
-    CPPUNIT_ASSERT_EQUAL(string("3"), taskHelper->getName());
-    CPPUNIT_ASSERT(mTask->getRedoTaskHelper() == 0);
+void TaskTest::testNextTaskHelper() {
+    mTask->nextTaskHelper();
+    CPPUNIT_ASSERT(mTask->mCurrentTaskHelper != 0);
+    CPPUNIT_ASSERT_EQUAL(string("2"), mTask->mCurrentTaskHelper->getName());
+    mTask->nextTaskHelper();
+    CPPUNIT_ASSERT(mTask->mCurrentTaskHelper != 0);
+    CPPUNIT_ASSERT_EQUAL(string("3"), mTask->mCurrentTaskHelper->getName());
+    mTask->nextTaskHelper();
+    CPPUNIT_ASSERT(mTask->mCurrentTaskHelper == 0);
     //Try to go out of bounds
-    CPPUNIT_ASSERT(mTask->getRedoTaskHelper() == 0);
+    mTask->nextTaskHelper();
+    CPPUNIT_ASSERT(mTask->mCurrentTaskHelper == 0);
 
     //Test with no available taskHelpers
     delete mTask;
@@ -136,6 +138,6 @@ void TaskTest::testGetRedoTaskHelper() {
                      PackageStatusTestImplementation::getFirstInstance(),
                      PackageStatusTestImplementation::getSecondInstance());
 
-    taskHelper = mTask->getRedoTaskHelper();
-    CPPUNIT_ASSERT(taskHelper == 0);
+    mTask->nextTaskHelper();
+    CPPUNIT_ASSERT(mTask->mCurrentTaskHelper == 0);
 }

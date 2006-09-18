@@ -34,7 +34,7 @@ using namespace lusi::task;
 //public:
 
 void TaskProgressTest::setUp() {
-    mTask = new TaskTestImplementation("One, two, three... testing...", 0, 0);
+    mTask = new TaskTestImplementation("One, two, three... testing...");
     mTaskProgressObserver1 = new TaskProgressObserverTestImplementation();
     mTaskProgressObserver2 = new TaskProgressObserverTestImplementation();
     mTaskProgressObserver3 = new TaskProgressObserverTestImplementation();

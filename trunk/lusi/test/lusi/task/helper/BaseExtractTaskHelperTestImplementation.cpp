@@ -18,32 +18,42 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "BaseInstallTaskHelper.h"
-#include "../../configuration/ConfigurationParametersSet.h"
+#include "BaseExtractTaskHelperTestImplementation.h"
 
 using std::string;
 
-using lusi::configuration::ConfigurationParametersSet;
 using lusi::task::Task;
+using lusi::util::Process;
 
 using namespace lusi::task::helper;
 
 //public:
 
-BaseInstallTaskHelper::~BaseInstallTaskHelper() {
+BaseExtractTaskHelperTestImplementation::
+BaseExtractTaskHelperTestImplementation(const string& name, Task* task):
+        BaseExtractTaskHelper(name, task) {
+    mExecutionPrepared = false;
 }
 
-ConfigurationParametersSet BaseInstallTaskHelper::checkConfiguration() {
+
+BaseExtractTaskHelperTestImplementation::
+~BaseExtractTaskHelperTestImplementation() {
 }
 
-void BaseInstallTaskHelper::execute() {
+/*
+inline bool BaseExtractTaskHelperTestImplementation::hasValidResourceMap() {
+    return true;
 }
 
-void BaseInstallTaskHelper::revert() {
+inline bool BaseExtractTaskHelperTestImplementation::isExecutionPrepared()
+                                                                        const {
+    return mExecutionPrepared;
 }
+*/
 
-//protected:
-
-BaseInstallTaskHelper::BaseInstallTaskHelper(const string& name, Task* task):
-                        TaskHelper(name, task) {
+Process* BaseExtractTaskHelperTestImplementation::getProcess() {
+    Process* process = Process::newProcess(Process::PipeCommunication);
+    *process << "echo" << "BaseExtractTaskHelperTestImplementation";
+    mExecutionPrepared = true;
+    return process;
 }

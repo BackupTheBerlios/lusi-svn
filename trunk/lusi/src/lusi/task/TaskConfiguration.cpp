@@ -20,13 +20,13 @@
 
 #include "TaskConfiguration.h"
 
-using lusi::configuration::ConfigurationParametersSet;
+using lusi::configuration::ConfigurationParameterMap;
 
 using namespace lusi::task;
 
 //public:
 
-TaskConfiguration::TaskConfiguration(): ConfigurationParametersSet() {
+TaskConfiguration::TaskConfiguration(): ConfigurationParameterMap() {
 }
 
 TaskConfiguration::~TaskConfiguration() {

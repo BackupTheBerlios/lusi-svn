@@ -19,11 +19,24 @@
  ***************************************************************************/
 
 #include "MakeInstallTaskHelper.h"
+#include "../../configuration/ConfigurationParameterAnd.h"
+#include "../../configuration/ConfigurationParameterSimple.h"
+#include "../../util/LocalFile.h"
+#include "../../util/ProcessRunner.h"
+#include "../../util/SuProcess.h"
+#include "../../util/User.h"
 
 using std::string;
 
-using lusi::package::ResourceMap;
-using lusi::task::Task;
+using lusi::configuration::ConfigurationParameter;
+using lusi::configuration::ConfigurationParameterAnd;
+using lusi::configuration::ConfigurationParameterSimple;
+using lusi::util::LocalFile;
+using lusi::util::Process;
+using lusi::util::ProcessException;
+using lusi::util::ProcessRunner;
+using lusi::util::SmartPtr;
+using lusi::util::SuProcess;
 
 using namespace lusi::task::helper;
 
@@ -35,19 +48,74 @@ TaskHelper* lusi::task::helper::createMakeInstallTaskHelper(
 //public:
 
 MakeInstallTaskHelper::MakeInstallTaskHelper(Task* task):
-                        BaseInstallTaskHelper("MakeInstallTaskHelper", task) {
+                        TaskHelperUsingMake("MakeInstallTaskHelper", task),
+                        mUserName(0), mPassword(0) {
 }
 
 MakeInstallTaskHelper::~MakeInstallTaskHelper() {
 }
 
-bool MakeInstallTaskHelper::hasValidResourceMap() {
+void MakeInstallTaskHelper::initConfigurationParameterMap() {
+    string prefixString = getInstallationPrefix();
+
+    if (prefixString == "") {
+        //The prefix can't be determined
+        return;
+    }
+
+    LocalFile prefix(prefixString);
+    if (prefix.isWritable() && prefix.isExecutable()) {
+        return;
+    }
+
+    mUserName = new ConfigurationParameterSimple("userName", "User name",
+        ConfigurationParameter::RequiredPriority,
+        "The name of the owner of the directory to install the package to",
+        prefix.getOwner().getName());
+    mPassword = new ConfigurationParameterSimple("password", "Password",
+        ConfigurationParameter::RequiredPriority,
+        "The password of the owner of the directory to install the package to");
+
+    ConfigurationParameterAnd* login = new ConfigurationParameterAnd("login",
+                            "Login", ConfigurationParameter::RequiredPriority,
+        "Login data of the owner of the directory to install the package to");
+    login->addConfigurationParameter(mUserName);
+    login->addConfigurationParameter(mPassword);
+
+    mConfigurationParameterMap.add(SmartPtr<ConfigurationParameter>(login));
 }
 
 //protected:
 
-string MakeInstallTaskHelper::installCommand() {
+Process* MakeInstallTaskHelper::getProcess() {
+    SuProcess* suProcess = SuProcess::newSuProcess(Process::PtyCommunication);
+    if (mUserName != 0) {
+        suProcess->setUserName(mUserName->getValue());
+        suProcess->setPassword(mPassword->getValue());
+    }
+
+    suProcess->setWorkingDirectory(mPackageDirectory->getDirectory());
+    (*suProcess) << "make" << "install";
+    return suProcess;
 }
 
-string MakeInstallTaskHelper::uninstallCommand() {
+//private:
+
+std::string MakeInstallTaskHelper::getInstallationPrefix() {
+    ProcessRunner processRunner;
+    Process* process = processRunner.getProcess();
+
+    process->setWorkingDirectory(mPackageDirectory->getDirectory());
+    (*process) << "sed" << "--posix" << "-n" << "-e" <<
+                  "s/^prefix[ \\t]*=[ \\t]*//p" << "Makefile";
+
+    try {
+        process->start();
+    } catch (ProcessException e) {
+        return "";
+    }
+
+    string installPrefix = processRunner.getStdoutData();
+    installPrefix = installPrefix.substr(0, installPrefix.find('\n'));
+    return installPrefix;
 }

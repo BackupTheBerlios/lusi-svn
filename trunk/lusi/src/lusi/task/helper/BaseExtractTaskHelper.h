@@ -21,13 +21,19 @@
 #ifndef LUSI_TASK_HELPER_BASEEXTRACTTASKHELPER_H
 #define LUSI_TASK_HELPER_BASEEXTRACTTASKHELPER_H
 
-#include <string>
+#include <lusi/task/helper/TaskHelperUsingProcess.h>
 
-#include <lusi/task/helper/TaskHelper.h>
+#include <lusi/util/SmartPtr.h>
 
 namespace lusi {
 namespace configuration {
-class ConfigurationParametersSet;
+class ConfigurationParameterMap;
+}
+}
+
+namespace lusi {
+namespace package {
+class LocalFileResource;
 }
 }
 
@@ -41,20 +47,32 @@ namespace helper {
  *
  * Base TaskHelper for ExtractTask.
  * This class provides a default behaviour for TaskHelpers that extract the
- * contents of a packed Package. Real extracting is left to derived classes
- * in method extract(string). Reverting the changes is implemented in revert()
- * (if derived classes adjust the behaviour of extract(string) to the
- * documentation), simply removing the extracted directory. However, if
- * execute() and revert() methods can be redefined if this behaviour doesn't
- * suit the needs of the derived class.
+ * contents of a packed Package. Real extracting is made by the Process created
+ * when executing the TaskHelper.
  *
  * Derived classes must define hasValidResourceMap() method, as this
- * method depends on the specific extracter command used. checkConfiguration()
- * returns a configuration that contains only the path where the package must
- * be extracted, as an optional parameter. It can also be redefined if the
- * derived class needs it.
+ * method depends on the specific extracter command used.
+ * Moreover, derived classes must call fileExtracted(string) each time a file
+ * is extracted.
+ *
+ * The configuration contains only the path where the package must be
+ * extracted, as an optional parameter. If a derived class needs a different
+ * configuration, initConfigurationParameterMap() can be redefined.
+ * getInvalidConfiguration() only checks for incomplete parameters. This
+ * behaviour can also be redefined if needed.
+ *
+ * The Progress is updated by fileExtracted(string), provided a total number of
+ * files to be extracted was set by derived class. Usually, it will be set in
+ * getProcess() method, although isn't mandatory. If the total number of files
+ * can't be known, the Progress only will be updated when extraction starts and
+ * when it finishes.
+ *
+ * Also, getProcess() method must set all the needed arguments in the Process
+ * to be executed to do the extraction.
+ *
+ * TODO set the directory to extract the files to.
  */
-class BaseExtractTaskHelper: public TaskHelper {
+class BaseExtractTaskHelper: public TaskHelperUsingProcess {
 public:
 
     /**
@@ -63,41 +81,45 @@ public:
     virtual ~BaseExtractTaskHelper();
 
     /**
-     * Returns the generic configuration needed by BaseExtractTaskHelpers.
-     * The default configuration contains only the path where the package must
-     * be extracted, as an optional parameter.
-     *
-     * @return Returns the Configuration needed by this TaskHelper.
-     */
-    virtual lusi::configuration::ConfigurationParametersSet
-                                            checkConfiguration();
-    /**
      * Extracts the package.
-     * The generic implementation for ExtractTasks is invoke the
-     * extract(string) method, which extracts the package using the Resources
-     * in the ResourceMap.
+     * The generic implementation for ExtractTasks is execute parent method,
+     * and then remove the packed file from the ResourceMap.
      *
      * Derived classes can, however, redefine this method if this default
      * implementation doesn't suit their needs.
      *
-     * @see extract(Resource, string)
+     * @throws ExecuteTaskHelperException If a problem happened when executing
+     *                                    this TaskHelper.
+     * @throws InvalidConfigurationException If the parameters are incomplete or
+     *                                       invalid.
      */
-    virtual void execute();
+    virtual void execute() throw (ExecuteTaskHelperException,
+                            lusi::configuration::InvalidConfigurationException);
 
     /**
-     * Reverts the changes made when extracting the package.
-     * The generic implementation for ExtractTasks is remove the base directory
-     * created by execute().
-     *
-     * Derived classes can, however, redefine this method if this default
-     * implementation doesn't suit their needs.
+     * Inits the configuration parameters for this TaskHelper.
+     * The configuration contains only the path where the package must be
+     * extracted, as an optional parameter, with "extractionDirectory" id.
+     * The default parameter contains the parent directory of the file to
+     * extract.
      */
-    virtual void revert();
+    virtual void initConfigurationParameterMap();
 
 protected:
 
     /**
+     * The packaged file to be unpacked.
+     */
+    lusi::util::SmartPtr<lusi::package::LocalFileResource> mFileToUnpack;
+
+
+
+    /**
      * Creates a new BaseExtractTaskHelper.
+     * The mFileToUnpack is got from the ResourceMap of the Package. The only
+     * LocalFileResource in the ResourceMap is used. If the ResourceMap doesn't
+     * contain any LocalFileResource, or more than one, a new LocalFileResource
+     * is created with an empty id.
      *
      * @param name The name of the BaseExtractTaskHelper.
      * @param task The Task to help.
@@ -105,24 +127,47 @@ protected:
     BaseExtractTaskHelper(const std::string& name, lusi::task::Task* task);
 
     /**
-     * Extracts the Package to the specified path.
-     * Extracts the Package using the ResourceMap of it. The specified path
-     * includes the base directory for the package in it. If the packed Package
-     * includes a base directory for all its files, the base directory in the
-     * path should be ignored. If there's no base directory in the packed
-     * Package, all the files should be extracted to the full specified path.
+     * Returns the number of files to be extracted.
+     * If the number of files to be extracted is unknown, 0 is returned.
      *
-     * The full name of the base directory of the Package once it was extracted
-     * should be saved the TaskConfiguration, so it can be later retrieved to
-     * be removed if needed.
-     *
-     * Must be implemented in derived classes.
-     *
-     * @param path The full path where the package should be extracted.
+     * @return The number of files to be extracted.
      */
-    virtual void extract(std::string path) = 0;
+    int getNumberOfFilesToExtract() {
+        return mNumberOfFilesToExtract;
+    }
+
+    /**
+     * Sets the total number of files to be extracted.
+     *
+     * @param numberOfFilesToExtract The total number of files to extract.
+     */
+    void setNumberOfFilesToExtract(int numberOfFilesToExtract) {
+        mNumberOfFilesToExtract = numberOfFilesToExtract;
+    }
+
+    /**
+     * Notifies the extraction progress and adds a new Resource with the file to
+     * the ResourceMap.
+     * The progress is notified only if the number of files to be extracted was
+     * set.
+     * This method must be called by child classes whenever a new file is
+     * extracted. The fileName must be the absolute path to the file.
+     */
+    void fileExtracted(const std::string& fileName);
 
 private:
+
+    /**
+     * The total number of files to extract.
+     */
+    int mNumberOfFilesToExtract;
+
+    /**
+     * The number of files currently extracted.
+     */
+    int mNumberOfFilesExtracted;
+
+
 
     /**
      * Copy constructor disabled.

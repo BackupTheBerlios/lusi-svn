@@ -21,15 +21,7 @@
 #ifndef LUSI_TASK_HELPER_MAKEBUILDTASKHELPER_H
 #define LUSI_TASK_HELPER_MAKEBUILDTASKHELPER_H
 
-#include <string>
-
-#include <lusi/task/helper/BaseBuildTaskHelper.h>
-
-namespace lusi {
-namespace package {
-class ResourceMap;
-}
-}
+#include <lusi/task/helper/TaskHelperUsingMake.h>
 
 namespace lusi {
 namespace task {
@@ -53,18 +45,25 @@ TaskHelper* createMakeBuildTaskHelper(lusi::task::Task* task);
  * This BuildTask implementation adds support for make command. This command
  * reads the macros in a file called Makefile. When it's executed, it builds
  * the package or cleans the files created when building it. It uses no
- * parameters (apart from the objetive of the Makefile to execute).
+ * parameters.
  *
  * ResourceMaps that can be used with MakeBuildTaskHelper are those
- * with a "Makefile" file in the base directory of the package.
+ * with a "Makefile" file in the base directory of the package. The package
+ * directory must be the first LocalFileResource in the ResourceMap.
  *
  * No configuration is needed.
  */
-class MakeBuildTaskHelper: public BaseBuildTaskHelper {
+class MakeBuildTaskHelper: public TaskHelperUsingMake {
 public:
 
     /**
      * Creates a new MakeBuildTaskHelper.
+     * The package directory is the first LocalFileResource in the ResourceMap.
+     * If there's no LocalFileResource, or the first it's not a directory, an
+     * empty LocalUrl is used.
+     * No checks about, for example, more than one package directory, are made.
+     *
+     * @param task The Task to help.
      */
     MakeBuildTaskHelper(lusi::task::Task* task);
 
@@ -73,30 +72,15 @@ public:
      */
     virtual ~MakeBuildTaskHelper();
 
-    /**
-     * Returns True if the ResourceMap contains a Makefile that contains
-     * macros to be executed by make command.
-     *
-     * @return bool True if the ResourceMap contains a Makefile.
-     */
-    virtual bool hasValidResourceMap();
-
 protected:
 
     /**
-     * Returns the name of the "make" command.
+     * Creates a new Process with PipeCommunication and sets the arguments and
+     * the working directory to call make command.
      *
-     * @return The name of "make" command to be invoked.
+     * @return The Process to be executed.
      */
-    virtual std::string buildCommand();
-
-    /**
-     * Returns the name of the "make clean" command to invoke to revert the
-     * changes made executing this TaskHelper.
-     *
-     * @return The "make clean" command to be invoked.
-     */
-    virtual std::string cleanCommand();
+    virtual lusi::util::Process* getProcess();
 
 private:
 

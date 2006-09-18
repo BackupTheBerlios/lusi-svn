@@ -22,6 +22,7 @@
 #include "ConfigurationParameterTest.h"
 #include "ConfigurationParameterAndTest.h"
 #include "ConfigurationParameterComposedTest.h"
+#include "ConfigurationParameterMapTest.h"
 #include "ConfigurationParameterOrTest.h"
 #include "ConfigurationParameterSimpleTest.h"
 
@@ -34,6 +35,7 @@ ConfigurationTestSuite::ConfigurationTestSuite() {
     addTest(ConfigurationParameterTest::suite());
     addTest(ConfigurationParameterAndTest::suite());
     addTest(ConfigurationParameterComposedTest::suite());
+    addTest(ConfigurationParameterMapTest::suite());
     addTest(ConfigurationParameterOrTest::suite());
     addTest(ConfigurationParameterSimpleTest::suite());
 

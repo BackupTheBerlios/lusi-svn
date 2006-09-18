@@ -21,7 +21,7 @@
 #ifndef LUSI_TASK_TASKCONFIGURATION_H
 #define LUSI_TASK_TASKCONFIGURATION_H
 
-#include <lusi/configuration/ConfigurationParametersSet.h>
+#include <lusi/configuration/ConfigurationParameterMap.h>
 
 namespace lusi {
 namespace task {
@@ -30,7 +30,7 @@ namespace task {
  * @todo Documentation
  */
 class TaskConfiguration:
-        public lusi::configuration::ConfigurationParametersSet {
+        public lusi::configuration::ConfigurationParameterMap {
 public:
 
     TaskConfiguration();

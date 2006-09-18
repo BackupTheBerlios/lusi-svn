@@ -19,10 +19,17 @@
  ***************************************************************************/
 
 #include "TaskHelper.h"
+#include "../../configuration/ConfigurationParameter.h"
+#include "../../configuration/ConfigurationParameterMap.h"
 
 using std::string;
+using std::vector;
 
+using lusi::configuration::ConfigurationParameter;
+using lusi::configuration::ConfigurationParameterMap;
+using lusi::configuration::InvalidConfigurationException;
 using lusi::task::Task;
+using lusi::util::SmartPtr;
 
 using namespace lusi::task::helper;
 
@@ -31,9 +38,40 @@ using namespace lusi::task::helper;
 TaskHelper::~TaskHelper() {
 }
 
+void TaskHelper::initConfigurationParameterMap() {
+}
+
+void TaskHelper::execute() throw (ExecuteTaskHelperException,
+                                  InvalidConfigurationException) {
+    ConfigurationParameterMap invalidConfiguration = getInvalidConfiguration();
+    if (invalidConfiguration.getAll().size() > 0) {
+        throw new InvalidConfigurationException(
+                "Invalid configuration found when executing " + mName,
+                invalidConfiguration);
+    }
+}
+
+ConfigurationParameterMap TaskHelper::getInvalidConfiguration() {
+    ConfigurationParameterMap invalidConfiguration;
+
+    vector< SmartPtr<ConfigurationParameter> > configurationParameters =
+        mConfigurationParameterMap.getAll();
+    for (uint i=0; i<configurationParameters.size(); ++i) {
+        if (configurationParameters[i]->isInvalid()) {
+            invalidConfiguration.add(configurationParameters[i]);
+        }
+    }
+
+    return invalidConfiguration;
+}
+
 /*
-inline const string& TaskHelper::getName() {
+inline const string& TaskHelper::getName() const {
     return mName;
+}
+
+inline ConfigurationParameterMap& TaskHelper::getConfigurationParameterMap() {
+    return mConfigurationParameterMap;
 }
 */
 

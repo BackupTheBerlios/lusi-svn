@@ -44,25 +44,26 @@ public:
 
     /**
      * Creates a new uninstaller.
+     *
+     * @param package The package to uninstall.
      */
-    Uninstaller();
+    Uninstaller(lusi::package::Package* package);
 
     /**
      * Destroys this uninstaller.
      */
     virtual ~Uninstaller();
 
-    /**
-     * Uninstalls the specified package.
-     * Reverts the needed tasks (through TaskManager) and updates the profile,
-     * if needed.
-     *
-     * @param package The package to uninstall.
-     * @see task::TaskManager::getUndoTask(lusi::package::Package*)
-     */
-    void execute(lusi::package::Package* package);
-
 protected:
+
+    /**
+     * Returns the package status which signals that the package was
+     * uninstalled.
+     *
+     * @return The package status which signals that the package was
+     *         uninstalled.
+     */
+    virtual const lusi::package::status::PackageStatus* getFinalPackageStatus();
 
 private:
 

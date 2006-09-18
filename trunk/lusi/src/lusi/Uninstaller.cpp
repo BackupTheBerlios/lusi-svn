@@ -22,15 +22,18 @@
 
 using namespace lusi;
 
-using package::Package;
+using lusi::package::Package;
+using lusi::package::status::PackageStatus;
 
 //public:
 
-Uninstaller::Uninstaller() {
+Uninstaller::Uninstaller(Package* package): Module(package) {
 }
 
 Uninstaller::~Uninstaller() {
 }
 
-void Uninstaller::execute(Package* package) {
+//protected:
+
+const PackageStatus* Uninstaller::getFinalPackageStatus() {
 }

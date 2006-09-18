@@ -19,11 +19,10 @@
  ***************************************************************************/
 
 #include "MakeBuildTaskHelper.h"
+#include "../../util/LocalUrl.h"
+#include "../../util/Process.h"
 
-using std::string;
-
-using lusi::package::ResourceMap;
-using lusi::task::Task;
+using lusi::util::Process;
 
 using namespace lusi::task::helper;
 
@@ -35,19 +34,17 @@ TaskHelper* lusi::task::helper::createMakeBuildTaskHelper(
 //public:
 
 MakeBuildTaskHelper::MakeBuildTaskHelper(Task* task):
-                            BaseBuildTaskHelper("MakeBuildTaskHelper", task) {
+                        TaskHelperUsingMake("MakeBuildTaskHelper", task) {
 }
 
 MakeBuildTaskHelper::~MakeBuildTaskHelper() {
 }
 
-bool MakeBuildTaskHelper::hasValidResourceMap() {
-}
-
 //protected:
 
-string MakeBuildTaskHelper::buildCommand() {
-}
-
-string MakeBuildTaskHelper::cleanCommand() {
+Process* MakeBuildTaskHelper::getProcess() {
+    Process* process = Process::newProcess(Process::PipeCommunication);
+    process->setWorkingDirectory(mPackageDirectory->getDirectory());
+    (*process) << "make";
+    return process;
 }

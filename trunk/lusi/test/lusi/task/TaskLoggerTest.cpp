@@ -36,7 +36,7 @@ using namespace lusi::task;
 //public:
 
 void TaskLoggerTest::setUp() {
-    mTask = new TaskTestImplementation("One, two, three... testing...", 0, 0);
+    mTask = new TaskTestImplementation("One, two, three... testing...");
     mTaskLoggerObserver1 = new TaskLoggerObserverTestImplementation();
     mTaskLoggerObserver2 = new TaskLoggerObserverTestImplementation();
     mTaskLoggerObserver3 = new TaskLoggerObserverTestImplementation();

@@ -29,10 +29,13 @@
 using std::string;
 using std::vector;
 
-using lusi::task::helper::TaskHelper;
-using lusi::task::helper::TaskHelperManager;
+using lusi::configuration::InvalidConfigurationException;
+using lusi::configuration::ConfigurationParameterMap;
 using lusi::package::Package;
 using lusi::package::status::PackageStatus;
+using lusi::task::helper::ExecuteTaskHelperException;
+using lusi::task::helper::TaskHelper;
+using lusi::task::helper::TaskHelperManager;
 
 using namespace lusi::task;
 
@@ -47,10 +50,12 @@ Task::Task(const string& name, Package* package,
     mTaskConfiguration = taskConfiguration;
     mNeededPackageStatus = neededPackageStatus;
     mProvidedPackageStatus = providedPackageStatus;
+    mCurrentTaskHelper = 0;
 
     //mName must be set before calling getTaskHelpers, as it uses getName()
     mTaskHelpers = TaskHelperManager::getInstance()->getTaskHelpers(this);
-    mCurrentTaskHelper = mTaskHelpers.begin();
+    mTaskHelpersIterator = mTaskHelpers.begin();
+    nextTaskHelper();
 
     mTaskLogger = new TaskLogger(this);
     mTaskProgress = new TaskProgress(this);
@@ -72,71 +77,101 @@ inline const string& Task::getName() const {
     return mName;
 }
 
-inline Package* Task::getPackage() {
+inline Package* Task::getPackage() const {
     return mPackage;
 }
 
-inline TaskConfiguration* Task::getTaskConfiguration() {
+inline TaskConfiguration* Task::getTaskConfiguration() const {
     return mTaskConfiguration;
 }
 
-inline TaskLogger* Task::getTaskLogger() {
+inline const PackageStatus* Task::getNeededPackageStatus() const {
+    return mNeededPackageStatus;
+}
+
+inline const PackageStatus* Task::getProvidedPackageStatus() const {
+    return mProvidedPackageStatus;
+}
+
+inline TaskLogger* Task::getTaskLogger() const {
     return mTaskLogger;
 }
 
-inline TaskProgress* Task::getTaskProgress() {
+inline TaskProgress* Task::getTaskProgress() const {
     return mTaskProgress;
 }
 */
 
+ConfigurationParameterMap Task::getTaskHelperConfiguration() const {
+    if (mCurrentTaskHelper != 0) {
+        return mCurrentTaskHelper->getConfigurationParameterMap();
+    }
+
+    return ConfigurationParameterMap();
+}
+
+
+ConfigurationParameterMap Task::getInvalidConfiguration() const {
+    if (mCurrentTaskHelper != 0) {
+        return mCurrentTaskHelper->getInvalidConfiguration();
+    }
+
+    return ConfigurationParameterMap();
+}
+
 //TODO implement a better test logic
-bool Task::test() {
-    return mTaskHelpers.size() > 0;
+bool Task::test() const {
+    return mTaskHelpers.size() > 0 && mCurrentTaskHelper != 0;
 }
 
-//TODO throw exception if Task couldn't be done? Return false?
-//TODO add configuration checkings
 //TODO add support for several suitable TaskHelpers
-void Task::redo() {
-    TaskHelper* taskHelper = getRedoTaskHelper();
-    if (taskHelper != 0) {
-        mTaskLogger->notifyEvent(mName + ": executing " +
-                                    taskHelper->getName() + '\n', message);
-        taskHelper->execute();
-
-        mPackage->setPackageStatus(mProvidedPackageStatus);
+void Task::execute() throw (ExecuteTaskException,
+                            InvalidConfigurationException) {
+    if (!test()) {
+        throw ExecuteTaskException("There are no available task helpers");
     }
-}
 
-//TODO throw exception if Task couldn't be undone? Return false?
-void Task::undo() {
-    TaskHelper* taskHelper = getUndoTaskHelper();
-    if (taskHelper != 0) {
-        taskHelper->revert();
+    mTaskLogger->notifyEvent(mName + ": executing " +
+                             mCurrentTaskHelper->getName() + '\n', message);
 
-        mPackage->setPackageStatus(mNeededPackageStatus);
+    try {
+        mCurrentTaskHelper->execute();
+    } catch (ExecuteTaskHelperException e) {
+        mTaskLogger->notifyEvent("An exception happened when executing " +
+            mCurrentTaskHelper->getName() + ": " + e.what() + '\n', error);
+        throw ExecuteTaskException("An exception happened when executing " +
+            mCurrentTaskHelper->getName() + ": " + e.what());
     }
+
+    mPackage->setPackageStatus(mProvidedPackageStatus);
+    mTaskConfiguration->merge(
+                        mCurrentTaskHelper->getConfigurationParameterMap());
+
+    nextTaskHelper();
+
+    mTaskProgress->setExtendedProgress(false);
 }
 
 //private:
 
-TaskHelper* Task::getRedoTaskHelper() {
+void Task::nextTaskHelper() {
+
     //TODO get TaskHelper from TaskConfiguration
 
     TaskHelper* taskHelper = 0;
     bool validTaskHelper = false;
-    for (; !validTaskHelper && mCurrentTaskHelper != mTaskHelpers.end();
-            ++mCurrentTaskHelper) {
-        taskHelper = *mCurrentTaskHelper;
+    for (; !validTaskHelper && mTaskHelpersIterator != mTaskHelpers.end();
+            ++mTaskHelpersIterator) {
+        taskHelper = *mTaskHelpersIterator;
         if (taskHelper->hasValidResourceMap()) {
             validTaskHelper = true;
         }
     }
 
-    return taskHelper;
-}
+    if (taskHelper != 0) {
+        taskHelper->initConfigurationParameterMap();
+        taskHelper->getConfigurationParameterMap().merge(*mTaskConfiguration);
+    }
 
-TaskHelper* Task::getUndoTaskHelper() {
-    //TODO get TaskHelper from TaskConfiguration
-    return 0;
+    mCurrentTaskHelper = taskHelper;
 }

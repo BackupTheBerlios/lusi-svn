@@ -21,17 +21,17 @@
 #ifndef LUSI_TASK_HELPER_CONFIGURECONFIGURETASKHELPER_H
 #define LUSI_TASK_HELPER_CONFIGURECONFIGURETASKHELPER_H
 
-#include <lusi/task/helper/TaskHelper.h>
+#include <lusi/task/helper/TaskHelperUsingProcess.h>
 
 namespace lusi {
 namespace configuration {
-class ConfigurationParametersSet;
+class ConfigurationParameterMap;
 }
 }
 
 namespace lusi {
-namespace package {
-class ResourceMap;
+namespace util {
+class LocalUrl;
 }
 }
 
@@ -57,7 +57,7 @@ TaskHelper* createConfigureConfigureTaskHelper(lusi::task::Task* task);
  * This ConfigureTask implementation adds support for configure script. This
  * script is generally created automatically by GNU autoconf from some macros
  * specified in other files. When it's executed, it checks for dependencies and
- * creates the files needed by the build system. It usually accept a set of
+ * creates the files needed by the build system. It usually accepts a set of
  * options that depends on each package.
  *
  * ResourceMaps that can be used with ConfigureConfigureTaskHelper are those
@@ -65,11 +65,8 @@ TaskHelper* createConfigureConfigureTaskHelper(lusi::task::Task* task);
  *
  * The configuration accepted includes all the parameters that the configure
  * script being used can accept.
- *
- * execute() invokes the configure script keeping track of the created files,
- * so they can be removed later using revert().
  */
-class ConfigureConfigureTaskHelper: public TaskHelper {
+class ConfigureConfigureTaskHelper: public TaskHelperUsingProcess {
 public:
 
     /**
@@ -87,36 +84,61 @@ public:
     /**
      * Returns True if the ResourceMap contains a configure script that can be
      * executed.
+     * The script is searched in the directory of the package.
      *
      * @return bool True if the ResourceMap contains a configure script.
      */
     virtual bool hasValidResourceMap();
 
     /**
-     * Returns the parameters accepted by configure script.
+     * Inits the configuration parameters for this TaskHelper.
+     * The configuration contains all the parameters accepted by configure
+     * script.
      *
-     * @return All the parameters accepted by configure script.
-     * @todo How should parameters priority be set? And default values?
+     * @todo implement configuration getting parameters from script
      */
-    virtual lusi::configuration::ConfigurationParametersSet
-                                            checkConfiguration();
-
-    /**
-     * Configures the package.
-     * It invokes the configure script, keeping track of created files so they
-     * can be removed if the Task needs to be reverted.
-     */
-    virtual void execute();
-
-    /**
-     * Reverts the configuration of the package.
-     * Removes the files created by configure script.
-     */
-    virtual void revert();
+    virtual void initConfigurationParameterMap();
 
 protected:
 
+    /**
+     * Creates a new Process with PipeCommunication and sets the arguments and
+     * the working directory to call configure script.
+     *
+     * @return The Process to be executed.
+     */
+    virtual lusi::util::Process* getProcess();
+
 private:
+
+    /**
+     * The LocalUrl with the base directory of the package.
+     * This base directory contains the configure script.
+     */
+    lusi::util::LocalUrl* mPackageDirectory;
+
+
+
+    /**
+     * Returns all the parameters for configure script in a string.
+     * The parameters are got from the configuration. All the parameters that
+     * were set are used. The returned string contains the parameters in the
+     * format used by configure script.
+     *
+     * @return All the parameters for configure script in a string.
+     */
+    std::string getConfigureParameters(lusi::util::Process* process);
+
+    /**
+     * Returns the default prefix directory used in configure script.
+     * If the default prefix can't be determined, "" is returned.
+     *
+     * This method will likely dissapear when a generic way to get the
+     * parameters from the configure script is implemented.
+     *
+     * @return The default prefix directory used in configure script.
+     */
+    std::string getDefaultPrefix();
 
     /**
      * Copy constructor disabled.

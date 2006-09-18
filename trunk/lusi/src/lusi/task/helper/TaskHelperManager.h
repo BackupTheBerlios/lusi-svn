@@ -72,7 +72,7 @@ public:
     static TaskHelperManager* getInstance();
 
     /**
-     * Destroys this TaskConfigurationManager.
+     * Destroys this TaskHelperManager.
      */
     virtual ~TaskHelperManager();
 
