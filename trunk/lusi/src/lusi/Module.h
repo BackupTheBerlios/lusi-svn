@@ -91,6 +91,15 @@ public:
     int getEstimatedNumberOfTasks();
 
     /**
+     * If the module has finished.
+     * The module finished if the current package status is equal to the final
+     * package status of the module.
+     *
+     * @return True if the module has finished, false otherwise.
+     */
+    bool finished();
+
+    /**
      * Returns the next Task to execute.
      * The returned Task must be executed (although completing before the
      * configuration of the Task). Once executed, the next one must be executed.

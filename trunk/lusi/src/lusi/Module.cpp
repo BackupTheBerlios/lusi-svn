@@ -47,8 +47,12 @@ int Module::getEstimatedNumberOfTasks() {
     return 0;
 }
 
+bool Module::finished() {
+    return mPackage->getPackageStatus() == getFinalPackageStatus();
+}
+
 Task* Module::nextTask() throw (NoTaskAvailableException) {
-    if (mPackage->getPackageStatus() == getFinalPackageStatus()) {
+    if (finished()) {
         return 0;
     }
 
