@@ -61,9 +61,12 @@ public:
     /**
      * Returns True if the ResourceMap contains a Makefile to be executed by
      * make command.
-     * The "Makefile" is searched in the directory of the package.
+     * The "Makefile" is searched in the directory of the package. If the
+     * ResourceMap doesn't contain the Makefile, but it does exist in the
+     * directory, it also returns true.
      *
-     * @return bool True if the ResourceMap contains a valid Makefile.
+     * @return True if the ResourceMap (or the actual directory) contains
+     *         a valid Makefile.
      * @todo Check for targets such as install in Makefile?
      */
     virtual bool hasValidResourceMap();
