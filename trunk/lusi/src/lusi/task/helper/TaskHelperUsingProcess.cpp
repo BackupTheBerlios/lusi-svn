@@ -57,7 +57,7 @@ void TaskHelperUsingProcess::execute() throw (ExecuteTaskHelperException,
         process->start();
     } catch (ProcessException e) {
         throw ExecuteTaskHelperException(process->getArgumentsAsString() +
-            string("couldn't be executed: ") + e.what());
+            string(" couldn't be executed: ") + e.what());
     }
 
     //Finished progress notification is sent when the process exits
