@@ -24,6 +24,7 @@
 #include "../../package/Package.h"
 #include "../../package/ResourceMap.h"
 #include "../../task/Task.h"
+#include "../../util/LocalFile.h"
 #include "../../util/LocalUrl.h"
 
 using std::string;
@@ -32,6 +33,7 @@ using std::vector;
 using lusi::configuration::ConfigurationParameterMap;
 using lusi::package::LocalFileResource;
 using lusi::task::Task;
+using lusi::util::LocalFile;
 using lusi::util::LocalUrl;
 using lusi::util::Process;
 using lusi::util::SmartPtr;
@@ -50,11 +52,15 @@ bool TaskHelperUsingMake::hasValidResourceMap() {
     }
 
     if (mTask->getPackage()->getResourceMap()->get(
-                    mPackageDirectory->getDirectory() + "Makefile") == 0) {
-        return false;
+                    mPackageDirectory->getDirectory() + "Makefile") != 0) {
+        return true;
     }
 
-    return true;
+    if (LocalFile(mPackageDirectory->getDirectory() + "Makefile").exists()) {
+        return true;
+    }
+
+    return false;
 }
 
 void TaskHelperUsingMake::receivedStderr(Process* process, const string& data) {
