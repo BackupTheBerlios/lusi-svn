@@ -31,7 +31,7 @@ namespace util {
 /**
  * @class User User.h lusi/util/User.h
  *
- * Represents a user of the file system.
+ * Represents a user of the system.
  * This is only a wrapper class for system calls to get (but not
  * change) information about system users, using an object oriented approach
  * and abstracting the interaction with the system.

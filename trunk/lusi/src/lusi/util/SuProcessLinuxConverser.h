@@ -156,7 +156,7 @@ private:
      * Password prompt depends on the version of su used. A regular expression
      * got from kdelibs/kdesu/su.cpp is used.
      *
-     * @param data The data to check.
+     * @param line The data to check.
      * @return True if it is a password prompt, false otherwise.
      */
     bool isPasswordPrompt(const std::string& line);

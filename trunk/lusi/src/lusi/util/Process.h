@@ -172,7 +172,7 @@ public:
      * Sets the current working directory of this Process.
      * This function must be called before starting this Process.
      *
-     * @param directory The directory to set the working directory to.
+     * @param workingDirectory The directory to set the working directory to.
      */
     void setWorkingDirectory(const std::string& workingDirectory) {
         mWorkingDirectory = workingDirectory;
@@ -204,7 +204,7 @@ public:
      * later calls all the needed arguments.
      * Empty arguments are ignored.
      *
-     * @param arg The executable to set or argument to add.
+     * @param argument The executable to set or argument to add.
      * @return This Process instance.
      */
     Process& operator<<(const std::string& argument);
