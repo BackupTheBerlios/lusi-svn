@@ -165,6 +165,8 @@ void Task::nextTaskHelper() {
         taskHelper = *mTaskHelpersIterator;
         if (taskHelper->hasValidResourceMap()) {
             validTaskHelper = true;
+        } else {
+            taskHelper = 0;
         }
     }
 

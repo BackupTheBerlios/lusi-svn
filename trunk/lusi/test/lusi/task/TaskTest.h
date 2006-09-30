@@ -110,7 +110,9 @@ public:
     void testGetTaskProgress();
 
     /**
-     * Checks if nextTaskHelper() sets the TaskHelpers suitable for the Package.
+     * Checks if nextTaskHelper() sets the suitable TaskHelpers for the Package
+     * using valid and invalid TaskHelpers, no TaskHelpers, and only one
+     * TaskHelper without a valid ResourceMap.
      */
     void testNextTaskHelper();
 

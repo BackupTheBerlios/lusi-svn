@@ -28,7 +28,8 @@ namespace task {
 namespace helper {
 
 /**
- * Returns a new TaskHelperTestImplementation with name "1".
+ * Returns a new TaskHelperTestImplementation with name "1" and valid resource
+ * map.
  *
  * @param task The Task to help.
  * @return The TaskHelperTestImplementation created.

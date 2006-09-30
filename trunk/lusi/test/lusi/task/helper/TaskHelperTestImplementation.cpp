@@ -31,7 +31,7 @@ using namespace lusi::task::helper;
 
 TaskHelper* lusi::task::helper::createTaskHelperTestImplementation1(
                                         Task* task) {
-    return new TaskHelperTestImplementation(task, "1");
+    return new TaskHelperTestImplementation(task, "1", true);
 }
 
 TaskHelper* lusi::task::helper::createTaskHelperTestImplementation2(

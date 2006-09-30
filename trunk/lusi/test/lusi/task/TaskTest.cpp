@@ -140,4 +140,17 @@ void TaskTest::testNextTaskHelper() {
 
     mTask->nextTaskHelper();
     CPPUNIT_ASSERT(mTask->mCurrentTaskHelper == 0);
+
+    //Test with only one available taskHelper, but without valid ResourceMap
+    delete mTask;
+    mTaskConfiguration = new TaskConfiguration();
+    mTask = new Task("Make tests", mPackage, mTaskConfiguration,
+                     PackageStatusTestImplementation::getFirstInstance(),
+                     PackageStatusTestImplementation::getSecondInstance());
+
+    mTask->mTaskHelpers.push_back(new TaskHelperTestImplementation(mTask, "1"));
+    mTask->mTaskHelpersIterator = mTask->mTaskHelpers.begin();
+
+    mTask->nextTaskHelper();
+    CPPUNIT_ASSERT(mTask->mCurrentTaskHelper == 0);
 }
