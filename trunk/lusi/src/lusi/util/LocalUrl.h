@@ -48,7 +48,7 @@ namespace util {
  * syntax ("./" and "../") can also be used. isRelative() checks if the url is
  * relative.
  *
- * LoaclUrl are cleaned of self and parent directories syntax as much as
+ * LocalUrls are cleaned of self and parent directories syntax as much as
  * possible. For example, when creating a LocalUrl using "/../usr/" only "/usr/"
  * would be stored. However, "../etc/" would be stored as "../etc/", as the
  * leading parent reference can't be resolved.
@@ -64,10 +64,10 @@ public:
      * Creates a new LocalUrl.
      * The path stored is cleaned.
      *
-     * @param path The path.
+     * @param path The path, empty by default.
      * @see cleanPath(std::string)
      */
-    LocalUrl(const std::string& path);
+    LocalUrl(const std::string& path = "");
 
     /**
      * Copy constructor.
@@ -183,7 +183,7 @@ public:
      * @param localUrl The localUrl to compare to.
      * @return True if they are equal, false otherwise.
      */
-    bool operator==(const LocalUrl& localUrl);
+    bool operator==(const LocalUrl& localUrl) const;
 
     /**
      * Checks if this LocalUrl is different to the one given.
@@ -192,7 +192,7 @@ public:
      * @param localUrl The localUrl to compare to.
      * @return True if they are different, false otherwise.
      */
-    bool operator!=(const LocalUrl& localUrl);
+    bool operator!=(const LocalUrl& localUrl) const;
 
 private:
 

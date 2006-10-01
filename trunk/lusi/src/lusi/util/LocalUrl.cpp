@@ -26,7 +26,7 @@ using namespace lusi::util;
 
 //public:
 
-LocalUrl::LocalUrl(const string& path) {
+LocalUrl::LocalUrl(const string& path /*= ""*/) {
     mPath = cleanPath(path);
 }
 
@@ -127,11 +127,11 @@ LocalUrl& LocalUrl::operator=(const LocalUrl& localUrl) {
     return *this;
 }
 
-bool LocalUrl::operator==(const LocalUrl& localUrl) {
+bool LocalUrl::operator==(const LocalUrl& localUrl) const {
     return mPath == localUrl.mPath;
 }
 
-bool LocalUrl::operator!=(const LocalUrl& localUrl) {
+bool LocalUrl::operator!=(const LocalUrl& localUrl) const {
     return mPath != localUrl.mPath;
 }
 

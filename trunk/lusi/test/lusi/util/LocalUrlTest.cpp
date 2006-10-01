@@ -68,6 +68,11 @@ void LocalUrlTest::testIsDirectory() {
     localUrl = LocalUrl("Tabs/Wrathchild.bass");
 
     CPPUNIT_ASSERT_EQUAL(false, localUrl.isDirectory());
+
+    //Test an empty url
+    localUrl = LocalUrl("");
+
+    CPPUNIT_ASSERT_EQUAL(false, localUrl.isDirectory());
 }
 
 void LocalUrlTest::testIsRelative() {
@@ -90,6 +95,11 @@ void LocalUrlTest::testIsRelative() {
     localUrl = LocalUrl("/home/dani/");
 
     CPPUNIT_ASSERT_EQUAL(false, localUrl.isRelative());
+
+    //Test an empty path
+    localUrl = LocalUrl("");
+
+    CPPUNIT_ASSERT_EQUAL(true, localUrl.isRelative());
 }
 
 void LocalUrlTest::testGetDirectory() {
@@ -120,6 +130,11 @@ void LocalUrlTest::testGetDirectory() {
 
     //Test a simple file
     localUrl = LocalUrl("README");
+
+    CPPUNIT_ASSERT_EQUAL(string(""), localUrl.getDirectory());
+
+    //Test an empty url
+    localUrl = LocalUrl("");
 
     CPPUNIT_ASSERT_EQUAL(string(""), localUrl.getDirectory());
 }
@@ -169,6 +184,11 @@ void LocalUrlTest::testGetExtension() {
     localUrl = LocalUrl(".hidden.tar");
 
     CPPUNIT_ASSERT_EQUAL(string("tar"), localUrl.getExtension());
+
+    //An empty url
+    localUrl = LocalUrl("");
+
+    CPPUNIT_ASSERT_EQUAL(string(""), localUrl.getExtension());
 }
 
 void LocalUrlTest::testGetFileName() {
@@ -199,6 +219,11 @@ void LocalUrlTest::testGetFileName() {
 
     //Test a directory
     localUrl = LocalUrl("Documents/");
+
+    CPPUNIT_ASSERT_EQUAL(string(""), localUrl.getFileName());
+
+    //Test an empty url
+    localUrl = LocalUrl("");
 
     CPPUNIT_ASSERT_EQUAL(string(""), localUrl.getFileName());
 }
@@ -233,6 +258,11 @@ void LocalUrlTest::testGetParent() {
     localUrl = LocalUrl("/usr/bin/");
 
     CPPUNIT_ASSERT_EQUAL(string("/usr/"), localUrl.getParent());
+
+    //Test an empty url
+    localUrl = LocalUrl("");
+
+    CPPUNIT_ASSERT_EQUAL(string("../"), localUrl.getParent());
 }
 
 void LocalUrlTest::testGetPath() {
@@ -284,6 +314,13 @@ void LocalUrlTest::testAppendRelativePathToDirectory() {
     localUrl.appendRelativePathToDirectory(localUrlToAppend);
 
     CPPUNIT_ASSERT_EQUAL(string("public_html/index.html"), localUrl.getPath());
+
+    //Test with an empty url and an relative file to append
+    localUrl = LocalUrl("");
+    localUrlToAppend = LocalUrl("news.html");
+    localUrl.appendRelativePathToDirectory(localUrlToAppend);
+
+    CPPUNIT_ASSERT_EQUAL(string(""), localUrl.getPath());
 }
 
 void LocalUrlTest::testOperatorAssignment() {
@@ -337,6 +374,10 @@ void LocalUrlTest::testOperatorDifferent() {
 
 void LocalUrlTest::testCleanPath() {
     LocalUrl localUrl("");
+
+    //Test with empty url
+    CPPUNIT_ASSERT_EQUAL(string(""),
+                         localUrl.cleanPath(""));
 
     //Test with simple file
     CPPUNIT_ASSERT_EQUAL(string("LocalUrlTest.h"),
