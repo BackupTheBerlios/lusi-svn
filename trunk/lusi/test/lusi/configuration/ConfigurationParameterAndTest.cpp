@@ -55,19 +55,6 @@ void ConfigurationParameterAndTest::testConstructor() {
                          mConfigurationParameterAnd->mInformation);
     CPPUNIT_ASSERT_EQUAL((size_t)0,
             mConfigurationParameterAnd->mConfigurationParameters.size());
-
-    //Test without setting the information
-    delete mConfigurationParameterAnd;
-    mConfigurationParameterAnd = new ConfigurationParameterAnd("Another test",
-                        "Test name2", ConfigurationParameter::OptionalPriority);
-
-    CPPUNIT_ASSERT_EQUAL(string("Another test"),
-                         mConfigurationParameterAnd->mId);
-    CPPUNIT_ASSERT_EQUAL(string("Test name2"),
-                         mConfigurationParameterAnd->mName);
-    CPPUNIT_ASSERT_EQUAL(ConfigurationParameter::OptionalPriority,
-                         mConfigurationParameterAnd->mPriorityType);
-    CPPUNIT_ASSERT_EQUAL(string(""), mConfigurationParameterAnd->mInformation);
 }
 
 void ConfigurationParameterAndTest::testIsInvalid() {
@@ -77,7 +64,7 @@ void ConfigurationParameterAndTest::testIsInvalid() {
     //Test with a vector with an invalid parameter
     ConfigurationParameterTestImplementation* configurationParameter1 =
             new ConfigurationParameterTestImplementation("Test1", "Test name1",
-                    ConfigurationParameter::RequiredPriority);
+                    ConfigurationParameter::RequiredPriority, "First test");
     configurationParameter1->setInvalid(true);
     mConfigurationParameterAnd->addConfigurationParameter(
                                                 configurationParameter1);
@@ -92,14 +79,14 @@ void ConfigurationParameterAndTest::testIsInvalid() {
     //Test with a vector with two valid parameters and one invalid parameter
     ConfigurationParameterTestImplementation* configurationParameter2 =
             new ConfigurationParameterTestImplementation("Test2", "Test name2",
-                    ConfigurationParameter::RequiredPriority);
+                    ConfigurationParameter::RequiredPriority, "Second test");
     configurationParameter2->setInvalid(false);
     mConfigurationParameterAnd->addConfigurationParameter(
                                                 configurationParameter2);
 
     ConfigurationParameterTestImplementation* configurationParameter3 =
             new ConfigurationParameterTestImplementation("Test3", "Test name3",
-                    ConfigurationParameter::RequiredPriority);
+                    ConfigurationParameter::RequiredPriority, "Third test");
     configurationParameter3->setInvalid(true);
     mConfigurationParameterAnd->addConfigurationParameter(
                                                 configurationParameter3);

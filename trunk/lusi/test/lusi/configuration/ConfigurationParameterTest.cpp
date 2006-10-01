@@ -50,17 +50,6 @@ void ConfigurationParameterTest::testConstructor() {
                          mConfigurationParameter->mPriorityType);
     CPPUNIT_ASSERT_EQUAL(string("A test parameter"),
                          mConfigurationParameter->mInformation);
-
-    //Test without setting the information
-    delete mConfigurationParameter;
-    mConfigurationParameter = new ConfigurationParameterTestImplementation(
-        "Another test", "Test name2", ConfigurationParameter::OptionalPriority);
-
-    CPPUNIT_ASSERT_EQUAL(string("Another test"), mConfigurationParameter->mId);
-    CPPUNIT_ASSERT_EQUAL(string("Test name2"), mConfigurationParameter->mName);
-    CPPUNIT_ASSERT_EQUAL(ConfigurationParameter::OptionalPriority,
-                         mConfigurationParameter->mPriorityType);
-    CPPUNIT_ASSERT_EQUAL(string(""), mConfigurationParameter->mInformation);
 }
 
 void ConfigurationParameterTest::testGetId() {

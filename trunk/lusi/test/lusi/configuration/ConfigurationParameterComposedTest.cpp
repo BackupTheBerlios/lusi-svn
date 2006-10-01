@@ -56,27 +56,12 @@ void ConfigurationParameterComposedTest::testConstructor() {
                          mConfigurationParameterComposed->mInformation);
     CPPUNIT_ASSERT_EQUAL((size_t)0,
             mConfigurationParameterComposed->mConfigurationParameters.size());
-
-    //Test without setting the information
-    delete mConfigurationParameterComposed;
-    mConfigurationParameterComposed =
-            new ConfigurationParameterComposedTestImplementation("Another test",
-                    "Test name2", ConfigurationParameter::OptionalPriority);
-
-    CPPUNIT_ASSERT_EQUAL(string("Another test"),
-                         mConfigurationParameterComposed->mId);
-    CPPUNIT_ASSERT_EQUAL(string("Test name2"),
-                         mConfigurationParameterComposed->mName);
-    CPPUNIT_ASSERT_EQUAL(ConfigurationParameter::OptionalPriority,
-                         mConfigurationParameterComposed->mPriorityType);
-    CPPUNIT_ASSERT_EQUAL(string(""),
-                         mConfigurationParameterComposed->mInformation);
 }
 
 void ConfigurationParameterComposedTest::testAddConfigurationParameter() {
     ConfigurationParameter* configurationParameter =
             new ConfigurationParameterTestImplementation("id", "name",
-                    ConfigurationParameter::RequiredPriority);
+                    ConfigurationParameter::RequiredPriority, "information");
     mConfigurationParameterComposed->addConfigurationParameter(
                                                 configurationParameter);
 

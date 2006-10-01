@@ -40,18 +40,16 @@ public:
 
     /**
      * Creates a new ConfigurationParameterOr.
-     * The information is optional, and empty by default.
      *
      * @param id The id.
      * @param name The name.
      * @param priorityType The type of priority.
-     * @param information The information about this ConfigurationParameter,
-     *                    empty by default.
+     * @param information The information about this ConfigurationParameter.
      */
     ConfigurationParameterOr(const std::string& id,
                              const std::string& name,
                              PriorityType priorityType,
-                             const std::string& information = "");
+                             const std::string& information);
 
     /**
      * Destroys this ConfigurationParameterOr.

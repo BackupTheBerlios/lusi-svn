@@ -35,18 +35,6 @@ public:
 
     /**
      * Creates a new ConfigurationParameterTestImplementation.
-     * It uses the default value for information.
-     *
-     * @param id The id.
-     * @param name The name.
-     * @param priorityType The type of priority.
-     */
-    ConfigurationParameterTestImplementation(const std::string& id,
-                                             const std::string& name,
-                                             PriorityType priorityType);
-
-    /**
-     * Creates a new ConfigurationParameterTestImplementation.
      *
      * @param id The id.
      * @param name The name.

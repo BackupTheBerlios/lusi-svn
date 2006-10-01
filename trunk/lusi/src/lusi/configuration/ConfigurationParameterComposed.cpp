@@ -48,6 +48,6 @@ ConfigurationParameterComposed::ConfigurationParameterComposed(
                                         const string& id,
                                         const std::string& name,
                                         PriorityType priorityType,
-                                        const string& information /*= ""*/):
+                                        const string& information):
             ConfigurationParameter(id, name, priorityType, information) {
 }

@@ -40,8 +40,9 @@ namespace configuration {
  * Configuration is made of different parameters, and each parameter can be
  * simple or composed. Simple parameters represent a single value. Composed
  * parameters represent a group of other parameters, being them simple or
- * composed. The parameters in the groups can have an "and" or an "or" relation
- * between them, that is, that all the parameters or only one are needed.
+ * composed. Configuration parameters follow Composite design pattern.
+ * The parameters in the groups can have an "and" or an "or" relation between
+ * them, that is, that all the parameters or only one are needed.
  *
  * Each parameter also has a priority. This priority represents the degree of
  * importance of it: required, recommended or optional.
@@ -56,8 +57,7 @@ namespace configuration {
  * Apart from the id, each parameter has a name. This name is a name in a human
  * readable form for the parameter (so the user knows what the parameter is).
  *
- * Each parameter can also have some information explaining its purpose. It is
- * optional, although recommended.
+ * Each parameter also has some information explaining its purpose.
  *
  * Configuration is used mainly in Tasks and TaskHelpers so different parameters
  * can be used in them. Of course, it can also be used anywhere else if needed.
@@ -128,7 +128,6 @@ public:
 
     /**
      * Returns the information about this ConfigurationParameter.
-     * The information is optional, so the returned string may be empty.
      *
      * @return The information about this ConfigurationParatemer.
      */
@@ -149,7 +148,6 @@ protected:
 
     /**
      * Creates a new ConfigurationParameter.
-     * The information is optional (if not set it will be empty).
      *
      * Protected to avoid classes other than derived to create
      * ConfigurationParameter objects.
@@ -157,13 +155,12 @@ protected:
      * @param id The id.
      * @param name The name.
      * @param priorityType The type of priority.
-     * @param information The information about this ConfigurationParameter,
-     *                    empty by default.
+     * @param information The information about this ConfigurationParameter.
      */
     ConfigurationParameter(const std::string& id,
                            const std::string& name,
                            PriorityType priorityType,
-                           const std::string& information = "");
+                           const std::string& information);
 
 private:
 
@@ -179,7 +176,6 @@ private:
 
     /**
      * The information about this ConfigurationParameter.
-     * The information is optional.
      */
     std::string mInformation;
 

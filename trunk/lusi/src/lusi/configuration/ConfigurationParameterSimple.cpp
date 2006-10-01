@@ -30,7 +30,7 @@ using namespace lusi::configuration;
 ConfigurationParameterSimple::ConfigurationParameterSimple(const string& id,
                                     const string& name,
                                     PriorityType priorityType,
-                                    const string& information /*= ""*/,
+                                    const string& information,
                                     const string& defaultValue /*= ""*/):
             ConfigurationParameter(id, name, priorityType, information) {
     mDefaultValue = defaultValue;

@@ -55,11 +55,12 @@ void ConfigurationParameterSimpleTest::testConstructor() {
                          mConfigurationParameterSimple->mDefaultValue);
     CPPUNIT_ASSERT_EQUAL(string(""), mConfigurationParameterSimple->mValue);
 
-    //Test without setting the information and default values
+    //Test without setting the default value
     delete mConfigurationParameterSimple;
     mConfigurationParameterSimple =
                 new ConfigurationParameterSimple("Another test", "Test name2",
-                            ConfigurationParameter::OptionalPriority);
+                            ConfigurationParameter::OptionalPriority,
+                            "Another test parameter");
 
     CPPUNIT_ASSERT_EQUAL(string("Another test"),
                          mConfigurationParameterSimple->mId);
@@ -67,7 +68,7 @@ void ConfigurationParameterSimpleTest::testConstructor() {
                          mConfigurationParameterSimple->mName);
     CPPUNIT_ASSERT_EQUAL(ConfigurationParameter::OptionalPriority,
                          mConfigurationParameterSimple->mPriorityType);
-    CPPUNIT_ASSERT_EQUAL(string(""),
+    CPPUNIT_ASSERT_EQUAL(string("Another test parameter"),
                          mConfigurationParameterSimple->mInformation);
     CPPUNIT_ASSERT_EQUAL(string(""),
                          mConfigurationParameterSimple->mDefaultValue);

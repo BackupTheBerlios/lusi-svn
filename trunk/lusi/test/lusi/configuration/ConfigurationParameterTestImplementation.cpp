@@ -29,13 +29,6 @@ using namespace lusi::configuration;
 ConfigurationParameterTestImplementation::
 ConfigurationParameterTestImplementation(const string& id,
                                          const string& name,
-                                         PriorityType priorityType):
-            ConfigurationParameter(id, name, priorityType) {
-}
-
-ConfigurationParameterTestImplementation::
-ConfigurationParameterTestImplementation(const string& id,
-                                         const string& name,
                                          PriorityType priorityType,
                                          const string& information):
             ConfigurationParameter(id, name, priorityType, information) {

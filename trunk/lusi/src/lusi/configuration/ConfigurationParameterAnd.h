@@ -40,18 +40,16 @@ public:
 
     /**
      * Creates a new ConfigurationParameterAnd.
-     * The information is optional, and empty by default.
      *
      * @param id The id.
      * @param name The name.
      * @param priorityType The type of priority.
-     * @param information The information about this ConfigurationParameter,
-     *                    empty by default.
+     * @param information The information about this ConfigurationParameter.
      */
     ConfigurationParameterAnd(const std::string& id,
                               const std::string& name,
                               PriorityType priorityType,
-                              const std::string& information = "");
+                              const std::string& information);
 
     /**
      * Destroys this ConfigurationParameterAnd.

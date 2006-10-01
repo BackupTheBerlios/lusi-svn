@@ -78,7 +78,6 @@ protected:
 
     /**
      * Creates a new ConfigurationParameterComposed.
-     * The information is optional, and empty by default.
      *
      * Protected to avoid classes other than derived to create
      * ConfigurationParameterComposed objects.
@@ -86,13 +85,12 @@ protected:
      * @param id The id.
      * @param name The name.
      * @param priorityType The type of priority.
-     * @param information The information about this ConfigurationParameter,
-     *                    empty by default.
+     * @param information The information about this ConfigurationParameter.
      */
     ConfigurationParameterComposed(const std::string& id,
                                    const std::string& name,
                                    PriorityType priorityType,
-                                   const std::string& information = "");
+                                   const std::string& information);
 
 private:
 

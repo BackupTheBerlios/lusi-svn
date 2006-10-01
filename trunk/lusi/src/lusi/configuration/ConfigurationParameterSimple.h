@@ -47,20 +47,19 @@ public:
 
     /**
      * Creates a new ConfigurationParameterSimple.
-     * The information and default value are optional, and empty by default.
+     * The default value is optional, and empty by default.
      * The value is empty.
      *
      * @param id The id.
      * @param name The name.
      * @param priorityType The type of priority.
-     * @param information The information about this ConfigurationParameter,
-     *                    empty by default.
+     * @param information The information about this ConfigurationParameter.
      * @param defaultValue The default value, empty by default.
      */
     ConfigurationParameterSimple(const std::string& id,
                                  const std::string& name,
                                  PriorityType priorityType,
-                                 const std::string& information = "",
+                                 const std::string& information,
                                  const std::string& defaultValue = "");
 
     /**

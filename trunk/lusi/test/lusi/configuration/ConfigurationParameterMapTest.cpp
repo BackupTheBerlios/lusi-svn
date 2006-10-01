@@ -39,11 +39,11 @@ void ConfigurationParameterMapTest::setUp() {
     mConfigurationParameterMap = new ConfigurationParameterMap();
 
     mParameter1 = new ConfigurationParameterTestImplementation("1", "1",
-                            ConfigurationParameter::RequiredPriority);
+                            ConfigurationParameter::RequiredPriority, "1");
     mParameter2 = new ConfigurationParameterTestImplementation("2", "2",
-                            ConfigurationParameter::RequiredPriority);
+                            ConfigurationParameter::RequiredPriority, "2");
     mParameter3 = new ConfigurationParameterTestImplementation("3", "3",
-                            ConfigurationParameter::RequiredPriority);
+                            ConfigurationParameter::RequiredPriority, "3");
 
     mConfigurationParameterMap->add(
                             SmartPtr<ConfigurationParameter>(mParameter1));
@@ -86,16 +86,16 @@ void ConfigurationParameterMapTest::testMerge() {
 
     SmartPtr<ConfigurationParameter> parameter1(
             new ConfigurationParameterTestImplementation("1", "1",
-                    ConfigurationParameter::RequiredPriority));
+                    ConfigurationParameter::RequiredPriority, "1"));
     SmartPtr<ConfigurationParameter> parameter2(
             new ConfigurationParameterTestImplementation("2", "2",
-                    ConfigurationParameter::RequiredPriority));
+                    ConfigurationParameter::RequiredPriority, "2"));
     SmartPtr<ConfigurationParameter> parameter3(
             new ConfigurationParameterTestImplementation("3", "3",
-                    ConfigurationParameter::RequiredPriority));
+                    ConfigurationParameter::RequiredPriority, "3a"));
     SmartPtr<ConfigurationParameter> parameter3B(
             new ConfigurationParameterTestImplementation("3", "3",
-                    ConfigurationParameter::RecommendedPriority));
+                    ConfigurationParameter::RecommendedPriority, "3b"));
 
     mConfigurationParameterMap->add(parameter1);
     mConfigurationParameterMap->add(parameter3);
@@ -117,7 +117,7 @@ void ConfigurationParameterMapTest::testMerge() {
     //Test override merge
     SmartPtr<ConfigurationParameter> parameter4(
             new ConfigurationParameterTestImplementation("4", "4",
-                    ConfigurationParameter::RequiredPriority));
+                    ConfigurationParameter::RequiredPriority, "4"));
     configurationParameterMap.add(parameter4);
 
     mConfigurationParameterMap->merge(configurationParameterMap,
