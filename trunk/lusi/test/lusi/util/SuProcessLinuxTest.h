@@ -67,8 +67,9 @@ public:
     /**
      * Tests if a wrong user or password fails when trying to execute a process,
      * if trying to execute a process with the current user doesn't need
-     * password and trying to execute a process with another user with a right
-     * password.
+     * password, also setting a different current working directory, and trying
+     * to execute a process with another user with a right password, also
+     * setting a different current working directory.
      *
      * Asserts involving another user and a right password are disabled, as the
      * user name and password to test change depending on the computer where

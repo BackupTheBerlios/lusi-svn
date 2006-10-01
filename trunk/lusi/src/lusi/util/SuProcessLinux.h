@@ -81,6 +81,12 @@ public:
      * of the user. It also handles notifying the observers of SuProcessLinux,
      * both when a user switching is needed and not.
      *
+     * The current working directory is set directly in the executed
+     * ProcessLinux if the current user is used. If the user is switched, as su
+     * executes a subshell, the executed process is preceded by a call to "cd"
+     * command to change the directory before executing the desired process in
+     * the subshell.
+     *
      * If the user or the password are invalid, a SuProcessException is thrown.
      *
      * @throw ProcessException If the process couldn't be executed.

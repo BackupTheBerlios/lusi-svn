@@ -88,10 +88,28 @@ void SuProcessLinuxTest::testStart() {
     CPPUNIT_ASSERT_EQUAL(1, mProcessObserver->getProcessExitedNumber());
     mProcessObserver->cleanData();
 
+    //Test with current user changing the current working directory (using
+    //empty user name)
+    restartTestObjects();
+
+    mSuProcessLinux->setUserName("");
+    mSuProcessLinux->setPassword("");
+    mSuProcessLinux->setWorkingDirectory("/etc");
+    *mSuProcessLinux << "pwd";
+
+    mSuProcessLinux->start();
+    CPPUNIT_ASSERT_EQUAL(string("/etc\n"),
+                         mProcessObserver->getStdoutAllData());
+    CPPUNIT_ASSERT_EQUAL(string(""), mProcessObserver->getStderrAllData());
+    CPPUNIT_ASSERT_EQUAL(1, mProcessObserver->getProcessExitedNumber());
+
     //Test with a different user
     if (mValidUserName != "") {
+        restartTestObjects();
+
         mSuProcessLinux->setUserName(mValidUserName);
         mSuProcessLinux->setPassword(mValidPassword);
+        *mSuProcessLinux << "echo" << "Casting Transfiguration Spell";
 
         //Doing so many checks can slow a lot the finish of the tests, let it
         //run for a while ;)
@@ -104,6 +122,20 @@ void SuProcessLinuxTest::testStart() {
             CPPUNIT_ASSERT_EQUAL(1, mProcessObserver->getProcessExitedNumber());
             mProcessObserver->cleanData();
         }
+
+        //Test changing the current working directory
+        restartTestObjects();
+
+        mSuProcessLinux->setUserName(mValidUserName);
+        mSuProcessLinux->setPassword(mValidPassword);
+        mSuProcessLinux->setWorkingDirectory("/etc");
+        *mSuProcessLinux << "pwd";
+
+        mSuProcessLinux->start();
+        CPPUNIT_ASSERT_EQUAL(string("/etc\n"),
+                             mProcessObserver->getStdoutAllData());
+        CPPUNIT_ASSERT_EQUAL(string(""), mProcessObserver->getStderrAllData());
+        CPPUNIT_ASSERT_EQUAL(1, mProcessObserver->getProcessExitedNumber());
     }
 }
 

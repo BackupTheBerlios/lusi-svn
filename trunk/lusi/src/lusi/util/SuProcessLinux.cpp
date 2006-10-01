@@ -47,12 +47,19 @@ void SuProcessLinux::start() throw (ProcessException, SuProcessException) {
         for (uint i=0; i<mArguments.size(); ++i) {
             *mProcessLinux << mArguments[i];
         }
+        mProcessLinux->setWorkingDirectory(mWorkingDirectory);
         mStateType = ExecuteCurrentUserState;
     } else {
         checkUserName();
         checkPassword();
-        *mProcessLinux << "su" << "-c" << getArgumentsAsString() << "-l" <<
-                          mUserName;
+
+        string command;
+        if (mWorkingDirectory != "") {
+            command += "cd " + mWorkingDirectory + " && ";
+        }
+        command += getArgumentsAsString();
+
+        *mProcessLinux << "su" << "-c" << command << "-l" << mUserName;
         mStateType = SwitchingUserState;
     }
 
