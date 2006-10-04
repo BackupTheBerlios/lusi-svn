@@ -21,7 +21,7 @@
 #include <sstream>
 
 #include "TarExtractTaskHelper.h"
-#include "../../configuration/ConfigurationParameterSimple.h"
+#include "../../configuration/ConfigurationParameterLocalUrl.h"
 #include "../../package/LocalFileResource.h"
 #include "../../util/LocalFile.h"
 #include "../../util/LocalUrl.h"
@@ -31,7 +31,7 @@
 using std::istringstream;
 using std::string;
 
-using lusi::configuration::ConfigurationParameterSimple;
+using lusi::configuration::ConfigurationParameterLocalUrl;
 using lusi::package::ResourceMap;
 using lusi::task::Task;
 using lusi::util::LocalFile;
@@ -76,8 +76,7 @@ void TarExtractTaskHelper::receivedStdout(Process* process,
         string fileName = mReceivedData.substr(0, mReceivedData.find('\n'));
         mReceivedData.erase(0, fileName.size() + 1);
 
-        fileExtracted(LocalUrl(mFileToUnpack->getId()).getDirectory() +
-                                                                fileName);
+        fileExtracted(mExtractionDirectory->getValue().getPath() + fileName);
     }
 }
 
@@ -92,18 +91,16 @@ Process* TarExtractTaskHelper::getProcess() {
 
     string extractCommand;
 
-    SmartPtr<ConfigurationParameterSimple> extractionDirectory =
-            static_cast< SmartPtr<ConfigurationParameterSimple> >(
-                    mConfigurationParameterMap.get("extractionDirectory"));
-    if (!LocalFile(extractionDirectory->getValue()).exists()) {
-        extractCommand = "mkdir -p " + extractionDirectory->getValue() + " && ";
+    if (!LocalFile(mExtractionDirectory->getValue()).exists()) {
+        extractCommand = "mkdir -p " +
+                            mExtractionDirectory->getValue().getPath() + " && ";
     }
 
     extractCommand += "tar -vx" + (mTarFormat!=""?" "+mTarFormat:"") +
                       " -f " + LocalUrl(mFileToUnpack->getId()).getFileName();
 
-    if (!extractionDirectory->isDefaultValue()) {
-        extractCommand += "-C " + extractionDirectory->getValue();
+    if (!mExtractionDirectory->isDefaultValue()) {
+        extractCommand += " -C " + mExtractionDirectory->getValue().getPath();
     }
 
     (*process) << "/bin/sh" << "-c" << extractCommand;

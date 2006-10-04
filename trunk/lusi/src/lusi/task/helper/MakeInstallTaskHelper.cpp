@@ -20,7 +20,7 @@
 
 #include "MakeInstallTaskHelper.h"
 #include "../../configuration/ConfigurationParameterAnd.h"
-#include "../../configuration/ConfigurationParameterSimple.h"
+#include "../../configuration/ConfigurationParameterString.h"
 #include "../../util/LocalFile.h"
 #include "../../util/ProcessRunner.h"
 #include "../../util/SuProcess.h"
@@ -30,7 +30,7 @@ using std::string;
 
 using lusi::configuration::ConfigurationParameter;
 using lusi::configuration::ConfigurationParameterAnd;
-using lusi::configuration::ConfigurationParameterSimple;
+using lusi::configuration::ConfigurationParameterString;
 using lusi::util::LocalFile;
 using lusi::util::Process;
 using lusi::util::ProcessException;
@@ -68,13 +68,14 @@ void MakeInstallTaskHelper::initConfigurationParameterMap() {
         return;
     }
 
-    mUserName = new ConfigurationParameterSimple("userName", "User name",
+    mUserName = new ConfigurationParameterString("userName", "User name",
         ConfigurationParameter::RequiredPriority,
         "The name of the owner of the directory to install the package to",
         prefix.getOwner().getName());
-    mPassword = new ConfigurationParameterSimple("password", "Password",
+    mPassword = new ConfigurationParameterString("password", "Password",
         ConfigurationParameter::RequiredPriority,
-        "The password of the owner of the directory to install the package to");
+        "The password of the owner of the directory to install the package to",
+        ConfigurationParameterString::PasswordType);
 
     ConfigurationParameterAnd* login = new ConfigurationParameterAnd("login",
                             "Login", ConfigurationParameter::RequiredPriority,

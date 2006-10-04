@@ -22,7 +22,7 @@
 
 #define protected public
 #define private public
-#include "ConfigurationParameterSimple.h"
+#include "ConfigurationParameterSimpleTestImplementation.h"
 #undef private
 #undef protected
 
@@ -33,9 +33,10 @@ using namespace lusi::configuration;
 //public:
 
 void ConfigurationParameterSimpleTest::setUp() {
-    mConfigurationParameterSimple = new ConfigurationParameterSimple("Test",
-            "Test name", ConfigurationParameter::RequiredPriority,
-            "A test parameter", "Default");
+    mConfigurationParameterSimple = new
+            ConfigurationParameterSimpleTestImplementation("Test", "Test name",
+                    ConfigurationParameter::RequiredPriority,
+                    "A test parameter", "Default");
 }
 
 void ConfigurationParameterSimpleTest::tearDown() {
@@ -53,14 +54,15 @@ void ConfigurationParameterSimpleTest::testConstructor() {
                          mConfigurationParameterSimple->mInformation);
     CPPUNIT_ASSERT_EQUAL(string("Default"),
                          mConfigurationParameterSimple->mDefaultValue);
-    CPPUNIT_ASSERT_EQUAL(string(""), mConfigurationParameterSimple->mValue);
+    CPPUNIT_ASSERT_EQUAL(true, mConfigurationParameterSimple->mDefaultValueSet);
+    CPPUNIT_ASSERT_EQUAL(false, mConfigurationParameterSimple->mValueSet);
 
     //Test without setting the default value
     delete mConfigurationParameterSimple;
     mConfigurationParameterSimple =
-                new ConfigurationParameterSimple("Another test", "Test name2",
-                            ConfigurationParameter::OptionalPriority,
-                            "Another test parameter");
+            new ConfigurationParameterSimpleTestImplementation("Another test",
+                    "Test name2", ConfigurationParameter::OptionalPriority,
+                    "Another test parameter");
 
     CPPUNIT_ASSERT_EQUAL(string("Another test"),
                          mConfigurationParameterSimple->mId);
@@ -70,64 +72,80 @@ void ConfigurationParameterSimpleTest::testConstructor() {
                          mConfigurationParameterSimple->mPriorityType);
     CPPUNIT_ASSERT_EQUAL(string("Another test parameter"),
                          mConfigurationParameterSimple->mInformation);
-    CPPUNIT_ASSERT_EQUAL(string(""),
-                         mConfigurationParameterSimple->mDefaultValue);
-    CPPUNIT_ASSERT_EQUAL(string(""), mConfigurationParameterSimple->mValue);
+    CPPUNIT_ASSERT_EQUAL(false,
+                         mConfigurationParameterSimple->mDefaultValueSet);
+    CPPUNIT_ASSERT_EQUAL(false, mConfigurationParameterSimple->mValueSet);
 }
 
 void ConfigurationParameterSimpleTest::testIsInvalid() {
-    //Test with a required empty value
-    mConfigurationParameterSimple->mDefaultValue = "";
+    //Test with a required priority and value and default value not set
+    mConfigurationParameterSimple->mDefaultValueSet = false;
+    mConfigurationParameterSimple->mValueSet = false;
 
     CPPUNIT_ASSERT_EQUAL(true, mConfigurationParameterSimple->isInvalid());
 
-    //Test with required empty value and default value set
-    mConfigurationParameterSimple->mDefaultValue = "Default";
+    //Test with required priority, value set and default value not set
+    mConfigurationParameterSimple->mValueSet = true;
 
     CPPUNIT_ASSERT_EQUAL(false, mConfigurationParameterSimple->isInvalid());
 
-    //Test with recommended empty values
-    mConfigurationParameterSimple->mDefaultValue = "";
+    //Test with required priority, value not set and default value set
+    mConfigurationParameterSimple->mDefaultValueSet = false;
+    mConfigurationParameterSimple->mDefaultValueSet = true;
+
+    CPPUNIT_ASSERT_EQUAL(false, mConfigurationParameterSimple->isInvalid());
+
+    //Test with recommended priority and value and default value not set
+    mConfigurationParameterSimple->mDefaultValueSet = false;
+    mConfigurationParameterSimple->mValueSet = false;
     mConfigurationParameterSimple->mPriorityType =
                             ConfigurationParameter::RecommendedPriority;
 
     CPPUNIT_ASSERT_EQUAL(false, mConfigurationParameterSimple->isInvalid());
 
-    //Test with optional empty values
+    //Test with optional priority and value and default value not set
     mConfigurationParameterSimple->mPriorityType =
                             ConfigurationParameter::OptionalPriority;
     CPPUNIT_ASSERT_EQUAL(false, mConfigurationParameterSimple->isInvalid());
 }
 
+void ConfigurationParameterSimpleTest::testGetDefaultValue() {
+    mConfigurationParameterSimple->mDefaultValue = "Some default value";
+
+    CPPUNIT_ASSERT_EQUAL(string("Some default value"),
+                         mConfigurationParameterSimple->getDefaultValue());
+}
+
 void ConfigurationParameterSimpleTest::testGetValue() {
-    //Test with a set value
+    //Test with a set value and default value
     mConfigurationParameterSimple->mValue = "Some value";
+    mConfigurationParameterSimple->mValueSet = true;
+
+    CPPUNIT_ASSERT_EQUAL(string("Some value"),
+                         mConfigurationParameterSimple->getValue());
+
+    //Test with a set value and not set default value
+    mConfigurationParameterSimple->mDefaultValueSet = false;
 
     CPPUNIT_ASSERT_EQUAL(string("Some value"),
                          mConfigurationParameterSimple->getValue());
 
     //Test with a not set value and a default value
-    mConfigurationParameterSimple->mValue = "";
+    mConfigurationParameterSimple->mValueSet = false;
+    mConfigurationParameterSimple->mDefaultValueSet = true;
 
     CPPUNIT_ASSERT_EQUAL(string("Default"),
-                         mConfigurationParameterSimple->getValue());
-
-    //Test with a not set value and a not set default value
-    mConfigurationParameterSimple->mDefaultValue = "";
-
-    CPPUNIT_ASSERT_EQUAL(string(""),
                          mConfigurationParameterSimple->getValue());
 }
 
 void ConfigurationParameterSimpleTest::testIsDefaultValue() {
     //Test with default value and without value
-    mConfigurationParameterSimple->mValue = "";
-
     CPPUNIT_ASSERT_EQUAL(true,
                          mConfigurationParameterSimple->isDefaultValue());
 
-    //Test with default value
+    //Test with default value and with value equal to the default value
     mConfigurationParameterSimple->mValue = "Default";
+    mConfigurationParameterSimple->mValueSet = true;
 
     CPPUNIT_ASSERT_EQUAL(true,
                          mConfigurationParameterSimple->isDefaultValue());
@@ -138,12 +156,37 @@ void ConfigurationParameterSimpleTest::testIsDefaultValue() {
     CPPUNIT_ASSERT_EQUAL(false,
                          mConfigurationParameterSimple->isDefaultValue());
 
-    //Test without default value and without value
-    mConfigurationParameterSimple->mDefaultValue = "";
-    mConfigurationParameterSimple->mValue = "";
+    //Test without default value
+    mConfigurationParameterSimple->mDefaultValueSet = false;
 
     CPPUNIT_ASSERT_EQUAL(false,
                          mConfigurationParameterSimple->isDefaultValue());
+}
+
+void ConfigurationParameterSimpleTest::testIsDefaultValueSet() {
+    mConfigurationParameterSimple->mDefaultValueSet = true;
+
+    CPPUNIT_ASSERT_EQUAL(true,
+                         mConfigurationParameterSimple->isDefaultValueSet());
+
+
+    mConfigurationParameterSimple->mDefaultValueSet = false;
+
+    CPPUNIT_ASSERT_EQUAL(false,
+                         mConfigurationParameterSimple->isDefaultValueSet());
+}
+
+void ConfigurationParameterSimpleTest::testIsValueSet() {
+    mConfigurationParameterSimple->mValueSet = true;
+
+    CPPUNIT_ASSERT_EQUAL(true,
+                         mConfigurationParameterSimple->isValueSet());
+
+
+    mConfigurationParameterSimple->mValueSet = false;
+
+    CPPUNIT_ASSERT_EQUAL(false,
+                         mConfigurationParameterSimple->isValueSet());
 }
 
 void ConfigurationParameterSimpleTest::testSetValue() {
@@ -151,4 +194,6 @@ void ConfigurationParameterSimpleTest::testSetValue() {
 
     CPPUNIT_ASSERT_EQUAL(string("Some value"),
                          mConfigurationParameterSimple->mValue);
+    CPPUNIT_ASSERT_EQUAL(true,
+                         mConfigurationParameterSimple->mValueSet);
 }

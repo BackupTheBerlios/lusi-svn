@@ -115,6 +115,7 @@ void TarExtractTaskHelperTest::testReceivedStdout() {
             SmartPtr<Resource>(new LocalFileResource("/package.tar.bz2")));
     delete mTarExtractTaskHelper;
     mTarExtractTaskHelper = new TarExtractTaskHelper(mTask);
+    mTarExtractTaskHelper->initConfigurationParameterMap();
 
     mTarExtractTaskHelper->receivedStdout(0, "package/File1\n");
 

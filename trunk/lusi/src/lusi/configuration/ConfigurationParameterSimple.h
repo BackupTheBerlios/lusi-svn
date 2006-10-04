@@ -34,38 +34,28 @@ namespace configuration {
  * Simple parameters represent a single value. It has no child parameters.
  * A default value can be specified when creating the simple parameter, so it's
  * used if the normal value isn't set.
- * Both the normal value and the default value are strings. A not set value is
- * an empty string.
+ * The type of both the normal value and the default value is the type of the
+ * typename used for the template.
  *
- * A ConfigurationParameterSimple is invalid if it has no default value and
- * the value isn't set.
+ * This is an abstract class. In order to use a simple parameter, a subclass
+ * using an specific type must be done. The subclass must define accept method,
+ * so it can be used with visitors.
  *
- * @TODO add boolean, int and double values
+ * A ConfigurationParameterSimple is invalid if it is required, it has no
+ * default value an the value wasn't set.
+ *
+ * Due to the use of templates, everything is implemented in the header file. No
+ * source file exists for this class.
  */
+template<typename T>
 class ConfigurationParameterSimple: public ConfigurationParameter {
 public:
 
     /**
-     * Creates a new ConfigurationParameterSimple.
-     * The default value is optional, and empty by default.
-     * The value is empty.
-     *
-     * @param id The id.
-     * @param name The name.
-     * @param priorityType The type of priority.
-     * @param information The information about this ConfigurationParameter.
-     * @param defaultValue The default value, empty by default.
-     */
-    ConfigurationParameterSimple(const std::string& id,
-                                 const std::string& name,
-                                 PriorityType priorityType,
-                                 const std::string& information,
-                                 const std::string& defaultValue = "");
-
-    /**
      * Destroys this ConfigurationParameterSimple.
      */
-    virtual ~ConfigurationParameterSimple();
+    virtual ~ConfigurationParameterSimple() {
+    }
 
     /**
      * Returns True if this ConfigurationParameter is invalid, false otherwise.
@@ -75,34 +65,63 @@ public:
      * @return True if this ConfigurationParameterSimple is invalid, false
      *         otherwise.
      */
-    virtual bool isInvalid();
+    virtual bool isInvalid() {
+        if (getPriorityType() == RequiredPriority && !mValueSet &&
+                !mDefaultValueSet) {
+            return true;
+        }
+
+        return false;
+    }
 
     /**
-     * Accepts a visitor.
+     * Returns the default value, if any.
+     * If the default value wsan't set, the value returned isn't defined.
      *
-     * @param visitor The ConfigurationParameterVisitor to accept.
+     * @return The default value, if any.
      */
-    virtual void accept(ConfigurationParameterVisitor* visitor);
+    const T& getDefaultValue() const {
+        return mDefaultValue;
+    }
 
     /**
      * Returns the value.
      * If the normal value isn't set, the default value, if it exists, is
-     * returned.
+     * returned. If the normal value nor the default value were set, the
+     * value returned isn't defined.
      *
      * @return The value.
      */
-    const std::string& getValue() const {
-        return (mValue == "" && mDefaultValue != "")? mDefaultValue: mValue;
+    const T& getValue() const {
+        return (!mValueSet && mDefaultValueSet)? mDefaultValue: mValue;
     }
 
     /**
      * Returns true if the value is equal to the default value, false otherwise.
-     * If no default value was set (it's empty), false is returned.
+     * If no default value was set, false is returned.
      *
      * @return True if the value is equal to the default value, false otherwise.
      */
     bool isDefaultValue() const {
-        return mDefaultValue != "" && getValue() == mDefaultValue;
+        return mDefaultValueSet && getValue() == mDefaultValue;
+    }
+
+    /**
+     * Returns true if the default value was set, false otherwise.
+     *
+     * @return True if the default value was set, false otherwise.
+     */
+    bool isDefaultValueSet() const {
+        return mDefaultValueSet;
+    }
+
+    /**
+     * Returns true if the value was set, false otherwise.
+     *
+     * @return True if the value was set, false otherwise.
+     */
+    bool isValueSet() const {
+        return mValueSet;
     }
 
     /**
@@ -110,11 +129,58 @@ public:
      *
      * @param value The value.
      */
-    void setValue(const std::string& value) {
+    void setValue(const T& value) {
+        mValueSet = true;
         mValue = value;
     }
 
 protected:
+
+    /**
+     * Creates a new ConfigurationParameterSimple.
+     * This constructor doesn't set the default value.
+     *
+     * Protected to avoid classes other than derived to create
+     * ConfigurationParameterSimple objects.
+     *
+     * @param id The id.
+     * @param name The name.
+     * @param priorityType The type of priority.
+     * @param information The information about this ConfigurationParameter.
+     */
+    ConfigurationParameterSimple(const std::string& id,
+                                 const std::string& name,
+                                 PriorityType priorityType,
+                                 const std::string& information):
+            ConfigurationParameter(id, name, priorityType, information) {
+        mDefaultValueSet = false;
+        mValueSet = false;
+    }
+
+    /**
+     * Creates a new ConfigurationParameterSimple.
+     * This constructor sets the default value.
+     *
+     * Protected to avoid classes other than derived to create
+     * ConfigurationParameterSimple objects.
+     *
+     * @param id The id.
+     * @param name The name.
+     * @param priorityType The type of priority.
+     * @param information The information about this ConfigurationParameter.
+     * @param defaultValue The default value.
+     */
+    ConfigurationParameterSimple(const std::string& id,
+                                 const std::string& name,
+                                 PriorityType priorityType,
+                                 const std::string& information,
+                                 const T& defaultValue):
+            ConfigurationParameter(id, name, priorityType, information) {
+        mDefaultValue = defaultValue;
+        mDefaultValueSet = true;
+        mValueSet = false;
+    }
+
 
 private:
 
@@ -122,12 +188,22 @@ private:
      * The default value of this parameter.
      * It's optional.
      */
-    std::string mDefaultValue;
+    T mDefaultValue;
 
     /**
      * The value of this parameter.
      */
-    std::string mValue;
+    T mValue;
+
+    /**
+     * If the default value was set.
+     */
+    bool mDefaultValueSet;
+
+    /**
+     * If the normal value was set.
+     */
+    bool mValueSet;
 
 
 

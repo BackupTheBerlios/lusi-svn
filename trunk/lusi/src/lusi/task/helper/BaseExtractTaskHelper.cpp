@@ -19,8 +19,8 @@
  ***************************************************************************/
 
 #include "BaseExtractTaskHelper.h"
+#include "../../configuration/ConfigurationParameterLocalUrl.h"
 #include "../../configuration/ConfigurationParameterMap.h"
-#include "../../configuration/ConfigurationParameterSimple.h"
 #include "../../package/LocalFileResource.h"
 #include "../../package/Package.h"
 #include "../../package/ResourceMap.h"
@@ -32,8 +32,8 @@ using std::string;
 using std::vector;
 
 using lusi::configuration::ConfigurationParameter;
+using lusi::configuration::ConfigurationParameterLocalUrl;
 using lusi::configuration::ConfigurationParameterMap;
-using lusi::configuration::ConfigurationParameterSimple;
 using lusi::configuration::InvalidConfigurationException;
 using lusi::package::LocalFileResource;
 using lusi::package::Resource;
@@ -59,14 +59,15 @@ void BaseExtractTaskHelper::execute() throw (ExecuteTaskHelperException,
 }
 
 void BaseExtractTaskHelper::initConfigurationParameterMap() {
-    ConfigurationParameterSimple* extractionDirectory =
-        new ConfigurationParameterSimple("extractionDirectory",
+    mExtractionDirectory =
+        new ConfigurationParameterLocalUrl("extractionDirectory",
             "Extraction directory", ConfigurationParameter::OptionalPriority,
-                "The directory to extract the package to",
-                    LocalUrl(mFileToUnpack->getId()).getParent());
+            "The directory to extract the package to",
+            LocalUrl(mFileToUnpack->getId()).getParent(),
+            ConfigurationParameterLocalUrl::DirectoryType);
 
     mConfigurationParameterMap.add(
-                    SmartPtr<ConfigurationParameter>(extractionDirectory));
+                    SmartPtr<ConfigurationParameter>(mExtractionDirectory));
 }
 
 //protected:
@@ -84,6 +85,8 @@ BaseExtractTaskHelper::BaseExtractTaskHelper(const string& name, Task* task):
 
     mNumberOfFilesToExtract = 0;
     mNumberOfFilesExtracted = 0;
+
+    mExtractionDirectory = 0;
 }
 
 /*

@@ -27,7 +27,7 @@
 
 namespace lusi {
 namespace configuration {
-class ConfigurationParameterSimple;
+class ConfigurationParameterString;
 }
 }
 
@@ -111,13 +111,13 @@ private:
      * The configuration parameter for password.
      * If this paremeter isn't needed, it is null.
      */
-    lusi::configuration::ConfigurationParameterSimple* mUserName;
+    lusi::configuration::ConfigurationParameterString* mUserName;
 
     /**
      * The configuration parameter for user name.
      * If this paremeter isn't needed, it is null.
      */
-    lusi::configuration::ConfigurationParameterSimple* mPassword;
+    lusi::configuration::ConfigurationParameterString* mPassword;
 
 
 

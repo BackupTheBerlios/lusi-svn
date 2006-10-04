@@ -21,7 +21,7 @@
 #include <vector>
 
 #include "ConfigureConfigureTaskHelper.h"
-#include "../../configuration/ConfigurationParameterSimple.h"
+#include "../../configuration/ConfigurationParameterLocalUrl.h"
 #include "../../configuration/ConfigurationParameterMap.h"
 #include "../../package/LocalFileResource.h"
 #include "../../package/Package.h"
@@ -35,8 +35,8 @@ using std::string;
 using std::vector;
 
 using lusi::configuration::ConfigurationParameter;
+using lusi::configuration::ConfigurationParameterLocalUrl;
 using lusi::configuration::ConfigurationParameterMap;
-using lusi::configuration::ConfigurationParameterSimple;
 using lusi::package::LocalFileResource;
 using lusi::task::Task;
 using lusi::util::LocalUrl;
@@ -87,12 +87,20 @@ bool ConfigureConfigureTaskHelper::hasValidResourceMap() {
 }
 
 void ConfigureConfigureTaskHelper::initConfigurationParameterMap() {
-    ConfigurationParameterSimple* prefix = new ConfigurationParameterSimple(
-        "prefix", "Prefix", ConfigurationParameter::RecommendedPriority,
-        "The prefix directory to install the package to", getDefaultPrefix());
+    ConfigurationParameterLocalUrl* prefix;
 
-    if (!prefix->isDefaultValue()) {
-        prefix->setValue("/usr/local/");
+    string defaultPrefix = getDefaultPrefix();
+    if (defaultPrefix != "") {
+        prefix = new ConfigurationParameterLocalUrl("prefix", "Prefix",
+            ConfigurationParameter::RecommendedPriority,
+            "The prefix directory to install the package to", defaultPrefix,
+            ConfigurationParameterLocalUrl::DirectoryType);
+    } else {
+        prefix = new ConfigurationParameterLocalUrl("prefix", "Prefix",
+            ConfigurationParameter::RecommendedPriority,
+            "The prefix directory to install the package to",
+            ConfigurationParameterLocalUrl::DirectoryType);
+        prefix->setValue(LocalUrl("/usr/local/"));
     }
 
     mConfigurationParameterMap.add(SmartPtr<ConfigurationParameter>(prefix));
@@ -114,13 +122,13 @@ Process* ConfigureConfigureTaskHelper::getProcess() {
 string ConfigureConfigureTaskHelper::getConfigureParameters(Process* process) {
     string configureParameters;
 
-    SmartPtr<ConfigurationParameterSimple> prefix =
-        static_cast< SmartPtr<ConfigurationParameterSimple> >(
+    SmartPtr<ConfigurationParameterLocalUrl> prefix =
+        static_cast< SmartPtr<ConfigurationParameterLocalUrl> >(
             mConfigurationParameterMap.get("prefix"));
 
     if (!prefix->isDefaultValue()) {
         configureParameters += " --" + prefix->getId() + "=" +
-                               prefix->getValue();
+                               prefix->getValue().getPath();
     }
 
     return configureParameters;

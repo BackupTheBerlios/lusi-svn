@@ -18,15 +18,14 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef LUSI_CONFIGURATION_CONFIGURATIONPARAMETERSIMPLETEST_H
-#define LUSI_CONFIGURATION_CONFIGURATIONPARAMETERSIMPLETEST_H
+#ifndef LUSI_CONFIGURATION_CONFIGURATIONPARAMETERLOCALURLTEST_H
+#define LUSI_CONFIGURATION_CONFIGURATIONPARAMETERLOCALURLTEST_H
 
 #include <cppunit/extensions/HelperMacros.h>
 
 namespace lusi {
 namespace configuration {
-template<typename T>
-class ConfigurationParameterSimple;
+class ConfigurationParameterLocalUrl;
 }
 }
 
@@ -34,29 +33,23 @@ namespace lusi {
 namespace configuration {
 
 /**
- * Test class for ConfigurationParameterSimple.
+ * Test class for ConfigurationParameterLocalUrl.
  *
- * @see ConfigurationParameterSimple
+ * @see ConfigurationParameterLocalUrl
  */
-class ConfigurationParameterSimpleTest: public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE(ConfigurationParameterSimpleTest);
+class ConfigurationParameterLocalUrlTest: public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(ConfigurationParameterLocalUrlTest);
     CPPUNIT_TEST(testConstructor);
-    CPPUNIT_TEST(testIsInvalid);
-    CPPUNIT_TEST(testGetDefaultValue);
-    CPPUNIT_TEST(testGetValue);
-    CPPUNIT_TEST(testIsDefaultValue);
-    CPPUNIT_TEST(testIsDefaultValueSet);
-    CPPUNIT_TEST(testIsValueSet);
-    CPPUNIT_TEST(testSetValue);
+    CPPUNIT_TEST(testGetUrlType);
     CPPUNIT_TEST_SUITE_END();
 
 public:
 
     /**
      * Sets up context before running a test.
-     * Creates the ConfigurationParameterSimple with id "Test", name "Test
+     * Creates the ConfigurationParameterLocalUrl with id "Test", name "Test
      * name", priority "required", information "A test parameter" and default
-     * value "Default".
+     * value "/home/".
      */
     virtual void setUp();
 
@@ -71,49 +64,16 @@ public:
     void testConstructor();
 
     /**
-     * Tests if a required simple parameter without a value is invalid and if
-     * not required simple parameter without a value and required simple
-     * parameter with a default value are valid.
+     * Tests if returns mUrlType.
      */
-    void testIsInvalid();
-
-    /**
-     * Tests if the value returned is mDefaultValue.
-     */
-    void testGetDefaultValue();
-
-    /**
-     * Tests if the value returned is mValue or mDefaultValue if normal value
-     * wasn't set.
-     */
-    void testGetValue();
-
-    /**
-     * Tests if the value is compared to default value as it should.
-     */
-    void testIsDefaultValue();
-
-    /**
-     * Tests if the value returned is mDefaultValueSet.
-     */
-    void testIsDefaultValueSet();
-
-    /**
-     * Tests if the value returned is mValueSet.
-     */
-    void testIsValueSet();
-
-    /**
-     * Tests if it sets mValue and mValueSet.
-     */
-    void testSetValue();
+    void testGetUrlType();
 
 private:
 
     /**
-     * The ConfigurationParameterSimple to test.
+     * The ConfigurationParameterLocalUrl to test.
      */
-    ConfigurationParameterSimple<std::string>* mConfigurationParameterSimple;
+    ConfigurationParameterLocalUrl* mConfigurationParameterLocalUrl;
 
 };
 

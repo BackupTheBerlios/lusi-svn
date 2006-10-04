@@ -41,6 +41,7 @@
 using std::string;
 using std::vector;
 
+using lusi::configuration::ConfigurationParameterLocalUrl;
 using lusi::package::LocalFileResource;
 using lusi::package::Package;
 using lusi::package::PackageId;
@@ -96,6 +97,8 @@ void BaseExtractTaskHelperTest::testConstructor() {
     CPPUNIT_ASSERT_EQUAL(0, mBaseExtractTaskHelper->mNumberOfFilesExtracted);
     CPPUNIT_ASSERT_EQUAL(string(""),
                          mBaseExtractTaskHelper->mFileToUnpack->getId());
+    CPPUNIT_ASSERT_EQUAL((ConfigurationParameterLocalUrl*)0,
+                         mBaseExtractTaskHelper->mExtractionDirectory);
 
     delete mBaseExtractTaskHelper;
 
@@ -107,6 +110,8 @@ void BaseExtractTaskHelperTest::testConstructor() {
 
     CPPUNIT_ASSERT_EQUAL(string("/someFile"),
                          mBaseExtractTaskHelper->mFileToUnpack->getId());
+    CPPUNIT_ASSERT_EQUAL((ConfigurationParameterLocalUrl*)0,
+                         mBaseExtractTaskHelper->mExtractionDirectory);
 }
 
 void BaseExtractTaskHelperTest::testGetNumberOfFilesToExtract() {

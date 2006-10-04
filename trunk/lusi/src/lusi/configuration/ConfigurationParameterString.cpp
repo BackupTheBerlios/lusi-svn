@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "ConfigurationParameterSimple.h"
+#include "ConfigurationParameterString.h"
 #include "ConfigurationParameterVisitor.h"
 
 using std::string;
@@ -27,41 +27,37 @@ using namespace lusi::configuration;
 
 //public:
 
-ConfigurationParameterSimple::ConfigurationParameterSimple(const string& id,
+ConfigurationParameterString::ConfigurationParameterString(const string& id,
                                     const string& name,
                                     PriorityType priorityType,
                                     const string& information,
-                                    const string& defaultValue /*= ""*/):
-            ConfigurationParameter(id, name, priorityType, information) {
-    mDefaultValue = defaultValue;
+                                    StringType stringType /*= NormalType*/):
+        ConfigurationParameterSimple<string>(id, name, priorityType,
+                                             information) {
+    mStringType = stringType;
 }
 
-ConfigurationParameterSimple::~ConfigurationParameterSimple() {
+ConfigurationParameterString::ConfigurationParameterString(const string& id,
+                                    const string& name,
+                                    PriorityType priorityType,
+                                    const string& information,
+                                    const string& defaultValue,
+                                    StringType stringType /*= NormalType*/):
+        ConfigurationParameterSimple<string>(id, name, priorityType,
+                                             information, defaultValue) {
+    mStringType = stringType;
 }
 
-bool ConfigurationParameterSimple::isInvalid() {
-    if (getPriorityType() == RequiredPriority && getValue() == "") {
-        return true;
-    }
-
-    return false;
+ConfigurationParameterString::~ConfigurationParameterString() {
 }
 
-void ConfigurationParameterSimple::accept(
+void ConfigurationParameterString::accept(
                                     ConfigurationParameterVisitor* visitor) {
     visitor->visit(this);
 }
 
 /*
-inline string ConfigurationParameterSimple::getValue() const {
-    return (mValue == "" && mDefaultValue != "")?mDefaultValue:mValue;
-}
-
-inline bool ConfigurationParameterSimple::isDefaultValue() const {
-    return mDefaultValue != "" && getValue() == mDefaultValue;
-}
-
-inline void ConfigurationParameterSimple::setValue(string value) const {
-    mValue = value;
+inline StringType ConfigurationParameterString::getStringType() const {
+    return mStringType;
 }
 */

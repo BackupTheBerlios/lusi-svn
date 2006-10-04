@@ -27,6 +27,7 @@
 
 namespace lusi {
 namespace configuration {
+class ConfigurationParameterLocalUrl;
 class ConfigurationParameterMap;
 }
 }
@@ -56,8 +57,9 @@ namespace helper {
  * is extracted.
  *
  * The configuration contains only the path where the package must be
- * extracted, as an optional parameter. If a derived class needs a different
- * configuration, initConfigurationParameterMap() can be redefined.
+ * extracted, as an optional parameter. This parameter is stored in
+ * mExtractionDirectory. If a derived class needs a different configuration,
+ * initConfigurationParameterMap() can be redefined.
  * getInvalidConfiguration() only checks for incomplete parameters. This
  * behaviour can also be redefined if needed.
  *
@@ -69,8 +71,6 @@ namespace helper {
  *
  * Also, getProcess() method must set all the needed arguments in the Process
  * to be executed to do the extraction.
- *
- * TODO set the directory to extract the files to.
  */
 class BaseExtractTaskHelper: public TaskHelperUsingProcess {
 public:
@@ -101,7 +101,7 @@ public:
      * The configuration contains only the path where the package must be
      * extracted, as an optional parameter, with "extractionDirectory" id.
      * The default parameter contains the parent directory of the file to
-     * extract.
+     * extract. This parameter is stored in mExtractionDirectory.
      */
     virtual void initConfigurationParameterMap();
 
@@ -111,6 +111,12 @@ protected:
      * The packaged file to be unpacked.
      */
     lusi::util::SmartPtr<lusi::package::LocalFileResource> mFileToUnpack;
+
+    /**
+     * The directory where the file will be extracted.
+     * If the configuration wasn't initialized yet, is is null.
+     */
+    lusi::configuration::ConfigurationParameterLocalUrl* mExtractionDirectory;
 
 
 
@@ -152,6 +158,8 @@ protected:
      * set.
      * This method must be called by child classes whenever a new file is
      * extracted. The fileName must be the absolute path to the file.
+     *
+     * @param fileName The absolute path to the extracted file.
      */
     void fileExtracted(const std::string& fileName);
 

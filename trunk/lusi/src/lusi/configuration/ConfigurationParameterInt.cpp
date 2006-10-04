@@ -18,36 +18,35 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "ConfigurationTestSuite.h"
-#include "ConfigurationParameterTest.h"
-#include "ConfigurationParameterAndTest.h"
-#include "ConfigurationParameterBoolTest.h"
-#include "ConfigurationParameterComposedTest.h"
-#include "ConfigurationParameterDoubleTest.h"
-#include "ConfigurationParameterIntTest.h"
-#include "ConfigurationParameterLocalUrlTest.h"
-#include "ConfigurationParameterMapTest.h"
-#include "ConfigurationParameterOrTest.h"
-#include "ConfigurationParameterSimpleTest.h"
-#include "ConfigurationParameterStringTest.h"
+#include "ConfigurationParameterInt.h"
+#include "ConfigurationParameterVisitor.h"
+
+using std::string;
 
 using namespace lusi::configuration;
 
 //public:
 
-ConfigurationTestSuite::ConfigurationTestSuite() {
-    //Own namespace Tests
-    addTest(ConfigurationParameterTest::suite());
-    addTest(ConfigurationParameterAndTest::suite());
-    addTest(ConfigurationParameterBoolTest::suite());
-    addTest(ConfigurationParameterComposedTest::suite());
-    addTest(ConfigurationParameterDoubleTest::suite());
-    addTest(ConfigurationParameterIntTest::suite());
-    addTest(ConfigurationParameterLocalUrlTest::suite());
-    addTest(ConfigurationParameterMapTest::suite());
-    addTest(ConfigurationParameterOrTest::suite());
-    addTest(ConfigurationParameterSimpleTest::suite());
-    addTest(ConfigurationParameterStringTest::suite());
+ConfigurationParameterInt::ConfigurationParameterInt(const string& id,
+                                    const string& name,
+                                    PriorityType priorityType,
+                                    const string& information):
+        ConfigurationParameterSimple<int>(id, name, priorityType,
+                                          information) {
+}
 
-    //Direct child namespaces TestSuites
+ConfigurationParameterInt::ConfigurationParameterInt(const string& id,
+                                    const string& name,
+                                    PriorityType priorityType,
+                                    const string& information,
+                                    int defaultValue):
+        ConfigurationParameterSimple<int>(id, name, priorityType,
+                                          information, defaultValue) {
+}
+
+ConfigurationParameterInt::~ConfigurationParameterInt() {
+}
+
+void ConfigurationParameterInt::accept(ConfigurationParameterVisitor* visitor) {
+    visitor->visit(this);
 }
