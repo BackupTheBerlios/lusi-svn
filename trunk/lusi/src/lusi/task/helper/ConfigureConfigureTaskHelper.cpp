@@ -27,6 +27,7 @@
 #include "../../package/Package.h"
 #include "../../package/ResourceMap.h"
 #include "../../task/Task.h"
+#include "../../util/i18n.h"
 #include "../../util/LocalUrl.h"
 #include "../../util/Process.h"
 #include "../../util/ProcessRunner.h"
@@ -91,14 +92,14 @@ void ConfigureConfigureTaskHelper::initConfigurationParameterMap() {
 
     string defaultPrefix = getDefaultPrefix();
     if (defaultPrefix != "") {
-        prefix = new ConfigurationParameterLocalUrl("prefix", "Prefix",
+        prefix = new ConfigurationParameterLocalUrl("prefix", _("Prefix"),
             ConfigurationParameter::RecommendedPriority,
-            "The prefix directory to install the package to", defaultPrefix,
+            _("The prefix directory to install the package to"), defaultPrefix,
             ConfigurationParameterLocalUrl::DirectoryType);
     } else {
-        prefix = new ConfigurationParameterLocalUrl("prefix", "Prefix",
+        prefix = new ConfigurationParameterLocalUrl("prefix", _("Prefix"),
             ConfigurationParameter::RecommendedPriority,
-            "The prefix directory to install the package to",
+            _("The prefix directory to install the package to"),
             ConfigurationParameterLocalUrl::DirectoryType);
         prefix->setValue(LocalUrl("/usr/local/"));
     }

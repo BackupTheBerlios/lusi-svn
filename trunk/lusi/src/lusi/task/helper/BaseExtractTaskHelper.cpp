@@ -24,6 +24,7 @@
 #include "../../package/LocalFileResource.h"
 #include "../../package/Package.h"
 #include "../../package/ResourceMap.h"
+#include "../../util/i18n.h"
 #include "../../util/LocalFile.h"
 #include "../../util/Process.h"
 #include "../../util/SmartPtr.h"
@@ -61,8 +62,8 @@ void BaseExtractTaskHelper::execute() throw (ExecuteTaskHelperException,
 void BaseExtractTaskHelper::initConfigurationParameterMap() {
     mExtractionDirectory =
         new ConfigurationParameterLocalUrl("extractionDirectory",
-            "Extraction directory", ConfigurationParameter::OptionalPriority,
-            "The directory to extract the package to",
+            _("Extraction directory"), ConfigurationParameter::OptionalPriority,
+            _("The directory to extract the package to"),
             LocalUrl(mFileToUnpack->getId()).getParent(),
             ConfigurationParameterLocalUrl::DirectoryType);
 

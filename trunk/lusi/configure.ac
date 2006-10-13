@@ -9,7 +9,12 @@ AC_PROG_CXX
 AM_PROG_LIBTOOL
 
 dnl
-dnl Add checks for cppunit
+dnl Checks for gettext
+dnl
+AM_GNU_GETTEXT([external])
+
+dnl
+dnl Checks for cppunit
 dnl
 AM_PATH_CPPUNIT(1.8.0,
                 AM_CONDITIONAL(CPPUNIT, test "x$no_cppunit" = x)
@@ -20,6 +25,7 @@ AM_PATH_CPPUNIT(1.8.0,
 )
 
 AC_OUTPUT(Makefile
+          po/Makefile.in
           src/Makefile
           src/lusi/Makefile
           src/lusi/configuration/Makefile
@@ -38,4 +44,3 @@ AC_OUTPUT(Makefile
           test/lusi/util/Makefile
           lusi.pc
 )
-

@@ -21,6 +21,7 @@
 #include "MakeInstallTaskHelper.h"
 #include "../../configuration/ConfigurationParameterAnd.h"
 #include "../../configuration/ConfigurationParameterString.h"
+#include "../../util/i18n.h"
 #include "../../util/LocalFile.h"
 #include "../../util/ProcessRunner.h"
 #include "../../util/SuProcess.h"
@@ -68,18 +69,19 @@ void MakeInstallTaskHelper::initConfigurationParameterMap() {
         return;
     }
 
-    mUserName = new ConfigurationParameterString("userName", "User name",
+    mUserName = new ConfigurationParameterString("userName", _("User name"),
         ConfigurationParameter::RequiredPriority,
-        "The name of the owner of the directory to install the package to",
+        _("The name of the owner of the directory to install the package to"),
         prefix.getOwner().getName());
-    mPassword = new ConfigurationParameterString("password", "Password",
+    mPassword = new ConfigurationParameterString("password", _("Password"),
         ConfigurationParameter::RequiredPriority,
-        "The password of the owner of the directory to install the package to",
+        _("The password of the owner of the directory to install the package to"),
         ConfigurationParameterString::PasswordType);
 
     ConfigurationParameterAnd* login = new ConfigurationParameterAnd("login",
-                            "Login", ConfigurationParameter::RequiredPriority,
-        "Login data of the owner of the directory to install the package to");
+                        _("Login"), ConfigurationParameter::RequiredPriority,
+                        _("Login data of the owner of the directory \
+to install the package to"));
     login->addConfigurationParameter(mUserName);
     login->addConfigurationParameter(mPassword);
 
