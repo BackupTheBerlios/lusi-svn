@@ -54,6 +54,8 @@ class TaskTest: public CppUnit::TestFixture {
     CPPUNIT_TEST(testGetProvidedPackageStatus);
     CPPUNIT_TEST(testGetTaskLogger);
     CPPUNIT_TEST(testGetTaskProgress);
+    CPPUNIT_TEST(testGetTaskHelperConfiguration);
+    CPPUNIT_TEST(testGetInvalidConfiguration);
     CPPUNIT_TEST(testNextTaskHelper);
     CPPUNIT_TEST_SUITE_END();
 
@@ -108,6 +110,18 @@ public:
      * constructor, and that it works as it should.
      */
     void testGetTaskProgress();
+
+    /**
+     * Checks if the configuration of the current TaskHelper is returned, or a
+     * null pointer if there is no available TaskHelper.
+     */
+    void testGetTaskHelperConfiguration();
+
+    /**
+     * Checks if the invalid configuration of the current TaskHelper is
+     * returned, or a null pointer if there is no available TaskHelper.
+     */
+    void testGetInvalidConfiguration();
 
     /**
      * Checks if nextTaskHelper() sets the suitable TaskHelpers for the Package

@@ -34,11 +34,6 @@ ConfigurationParameterMap::ConfigurationParameterMap():
             IdSmartPtrMap<ConfigurationParameter>() {
 }
 
-ConfigurationParameterMap::ConfigurationParameterMap(
-                    const ConfigurationParameterMap& configurationParameterMap):
-            IdSmartPtrMap<ConfigurationParameter>(configurationParameterMap) {
-}
-
 ConfigurationParameterMap::~ConfigurationParameterMap() {
 }
 
@@ -57,12 +52,4 @@ void ConfigurationParameterMap::merge(
             add(configurationParameters[i]);
         }
     }
-}
-
-ConfigurationParameterMap& ConfigurationParameterMap::operator=(
-            const ConfigurationParameterMap& configurationParameterMap) {
-    IdSmartPtrMap<ConfigurationParameter>::operator=(
-                                                configurationParameterMap);
-
-    return *this;
 }

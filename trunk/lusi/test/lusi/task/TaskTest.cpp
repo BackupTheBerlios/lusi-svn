@@ -38,6 +38,7 @@
 
 using std::string;
 
+using lusi::configuration::ConfigurationParameterMap;
 using lusi::package::Package;
 using lusi::package::PackageId;
 using lusi::package::status::PackageStatus;
@@ -116,6 +117,40 @@ void TaskTest::testGetTaskProgress() {
     CPPUNIT_ASSERT_EQUAL(mTask, observer->getTask());
 
     delete observer;
+}
+
+void TaskTest::testGetTaskHelperConfiguration() {
+    //TaskHelper "2"
+    mTask->nextTaskHelper();
+    CPPUNIT_ASSERT_EQUAL(
+                    &mTask->mCurrentTaskHelper->getConfigurationParameterMap(),
+                    mTask->getTaskHelperConfiguration());
+    //TaskHelper "3"
+    mTask->nextTaskHelper();
+    CPPUNIT_ASSERT_EQUAL(
+                    &mTask->mCurrentTaskHelper->getConfigurationParameterMap(),
+                    mTask->getTaskHelperConfiguration());
+    //No more TaskHelpers
+    mTask->nextTaskHelper();
+    CPPUNIT_ASSERT_EQUAL((ConfigurationParameterMap*)0,
+                         mTask->getTaskHelperConfiguration());
+}
+
+void TaskTest::testGetInvalidConfiguration() {
+    //TaskHelper "2"
+    mTask->nextTaskHelper();
+    CPPUNIT_ASSERT(
+            mTask->mCurrentTaskHelper->getInvalidConfiguration()->getAll() ==
+            mTask->getInvalidConfiguration()->getAll());
+    //TaskHelper "3"
+    mTask->nextTaskHelper();
+    CPPUNIT_ASSERT(
+            mTask->mCurrentTaskHelper->getInvalidConfiguration()->getAll() ==
+            mTask->getInvalidConfiguration()->getAll());
+    //No more TaskHelpers
+    mTask->nextTaskHelper();
+    CPPUNIT_ASSERT_EQUAL((ConfigurationParameterMap*)0,
+                         getPtr(mTask->getInvalidConfiguration()));
 }
 
 void TaskTest::testNextTaskHelper() {

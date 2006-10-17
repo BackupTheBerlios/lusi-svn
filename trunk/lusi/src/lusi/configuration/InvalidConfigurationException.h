@@ -27,6 +27,13 @@
 #include <lusi/configuration/ConfigurationParameterMap.h>
 
 namespace lusi {
+namespace util {
+template<typename T>
+class SmartPtr;
+}
+}
+
+namespace lusi {
 namespace configuration {
 
 /**
@@ -38,7 +45,7 @@ namespace configuration {
  * values not allowed... The involved configuration parameters can be got in a
  * ConfigurationParameterMap through getConfigurationParameterMap().
  *
- * The Map contains only the parameters related to the exception, If the problem
+ * The Map contains only the parameters related to the exception. If the problem
  * with the configuration signaled by this exception happened in a
  * ConfigurationParameterMap with parameters involved and other not related,
  * the whole ConfigurationParameterMap can't be added to the exception. A new
@@ -57,8 +64,9 @@ public:
      * @param configurationParameterMap The map containing the parameters
      *                                  related to the exception.
      */
-    explicit InvalidConfigurationException(const std::string& errorMessage,
-                    const ConfigurationParameterMap& configurationParameterMap);
+    InvalidConfigurationException(const std::string& errorMessage,
+            lusi::util::SmartPtr<ConfigurationParameterMap>
+                    configurationParameterMap);
 
     /**
      * Destroys this InvalidConfigurationException.
@@ -81,8 +89,8 @@ public:
      * @return The ConfigurationParameterMap containing the parameters related
      *         to the exception.
      */
-    const ConfigurationParameterMap& getConfigurationParameterMap() const
-                                                                    throw() {
+    lusi::util::SmartPtr<ConfigurationParameterMap>
+    getConfigurationParameterMap() const throw() {
         return mConfigurationParameterMap;
     }
 
@@ -97,7 +105,7 @@ private:
      * The ConfigurationParameterMap containing the parameters related to the
      * exception.
      */
-    ConfigurationParameterMap mConfigurationParameterMap;
+    lusi::util::SmartPtr<ConfigurationParameterMap> mConfigurationParameterMap;
 
 };
 

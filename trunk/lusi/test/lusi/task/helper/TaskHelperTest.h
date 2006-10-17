@@ -18,36 +18,44 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef LUSI_CONFIGURATION_CONFIGURATIONPARAMETERMAPTEST_H
-#define LUSI_CONFIGURATION_CONFIGURATIONPARAMETERMAPTEST_H
+#ifndef LUSI_TASK_HELPER_TASKHELPERTEST_H
+#define LUSI_TASK_HELPER_TASKHELPERTEST_H
 
 #include <cppunit/extensions/HelperMacros.h>
 
 namespace lusi {
-namespace configuration {
-class ConfigurationParameter;
-class ConfigurationParameterMap;
+namespace task {
+class Task;
 }
 }
 
 namespace lusi {
-namespace configuration {
+namespace task {
+namespace helper {
+class TaskHelper;
+}
+}
+}
+
+namespace lusi {
+namespace task {
+namespace helper {
 
 /**
- * Test class for ConfigurationParameterMap.
+ * Test class for TaskHelper.
  *
- * @see ConfigurationParameterMap
+ * @see TaskHelper
  */
-class ConfigurationParameterMapTest: public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE(ConfigurationParameterMapTest);
-    CPPUNIT_TEST(testMerge);
+class TaskHelperTest: public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(TaskHelperTest);
+    CPPUNIT_TEST(testExecute);
+    CPPUNIT_TEST(testGetInvalidConfiguration);
     CPPUNIT_TEST_SUITE_END();
 
 public:
 
     /**
      * Sets up context before running a test.
-     * Creates the ConfigurationParameterMap.
      */
     virtual void setUp();
 
@@ -57,35 +65,32 @@ public:
     virtual void tearDown();
 
     /**
-     * Tests if a map merged with another one with parameters with the same id
-     * are kept or overriden depending on the type of merge.
+     * Tests if an exception is thrown when executed with an invalid
+     * configuration.
      */
-    void testMerge();
+    void testExecute();
+
+    /**
+     * Tests if the ConfigurationParmeterMap returned contains all the invalid
+     * parameters of the Configuration.
+     */
+    void testGetInvalidConfiguration();
 
 private:
 
     /**
-     * The ConfigurationParameterMap to test.
+     * The TaskHelper to test.
      */
-    ConfigurationParameterMap* mConfigurationParameterMap;
+    TaskHelper* mTaskHelper;
 
     /**
-     * The first configuration parameter to add to the map.
+     * The Task to use in mTaskHelper.
      */
-    ConfigurationParameter* mParameter1;
-
-    /**
-     * The second configuration parameter to add to the map.
-     */
-    ConfigurationParameter* mParameter2;
-
-    /**
-     * The third configuration parameter to add to the map.
-     */
-    ConfigurationParameter* mParameter3;
+    lusi::task::Task* mTask;
 
 };
 
+}
 }
 }
 

@@ -61,14 +61,6 @@ public:
     ConfigurationParameterMap();
 
     /**
-     * Copy constructor.
-     *
-     * @param configurationParameterMap The map to copy.
-     */
-    ConfigurationParameterMap(
-            const ConfigurationParameterMap& configurationParameterMap);
-
-    /**
      * Destroys this ConfigurationParameterMap.
      */
     virtual ~ConfigurationParameterMap();
@@ -91,17 +83,21 @@ public:
     void merge(const ConfigurationParameterMap& configurationParameterMap,
                MergeType type = KeepParameters);
 
-    /**
-     * Assignment operator.
-     *
-     * @param configurationParameterMap The map to assign.
-     */
-    ConfigurationParameterMap& operator=(
-            const ConfigurationParameterMap& configurationParameterMap);
-
 protected:
 
 private:
+
+    /**
+     * Copy constructor disabled.
+     */
+    ConfigurationParameterMap(
+            const ConfigurationParameterMap& configurationParameterMap);
+
+    /**
+     * Assignment disabled.
+     */
+    ConfigurationParameterMap& operator=(
+            const ConfigurationParameterMap& configurationParameterMap);
 
 };
 

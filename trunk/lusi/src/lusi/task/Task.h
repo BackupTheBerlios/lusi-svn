@@ -58,6 +58,13 @@ class TaskHelper;
 }
 
 namespace lusi {
+namespace util {
+template<typename T>
+class SmartPtr;
+}
+}
+
+namespace lusi {
 namespace task {
 
 /**
@@ -230,11 +237,12 @@ public:
      * executed successfully.
      *
      * This method should be called only with Tasks that can be executed (which
-     * can be known using test()).
+     * can be known using test()). If there are no available TaskHelpers, a null
+     * pointer is returned.
      *
-     * @return The configuration parameterss needed by the current TaskHelper.
+     * @return The configuration parameters needed by the current TaskHelper.
      */
-    lusi::configuration::ConfigurationParameterMap getTaskHelperConfiguration()
+    lusi::configuration::ConfigurationParameterMap* getTaskHelperConfiguration()
                                                                         const;
 
     /**
@@ -247,12 +255,13 @@ public:
      * getTaskHelperConfiguration(). The parameters are shared by both maps.
      *
      * This method should be called only with Tasks that can be executed (which
-     * can be known using test()).
+     * can be known using test()). If there are no available TaskHelpers, a null
+     * pointer is returned.
      *
      * @return The invalid configuration parameters of this TaskHelper.
      */
-    lusi::configuration::ConfigurationParameterMap getInvalidConfiguration()
-                                                                        const;
+    lusi::util::SmartPtr<lusi::configuration::ConfigurationParameterMap>
+    getInvalidConfiguration() const;
 
     /**
      * Checks if the Task can be executed using the Package and

@@ -57,27 +57,6 @@ void ConfigurationParameterMapTest::tearDown() {
     delete mConfigurationParameterMap;
 }
 
-void ConfigurationParameterMapTest::testCopyConstructor() {
-    ConfigurationParameterMap configurationParameterMap(
-                                            *mConfigurationParameterMap);
-
-    //Tests the original map
-    CPPUNIT_ASSERT_EQUAL(mParameter1,
-                         getPtr(mConfigurationParameterMap->get("1")));
-    CPPUNIT_ASSERT_EQUAL(mParameter2,
-                         getPtr(mConfigurationParameterMap->get("2")));
-    CPPUNIT_ASSERT_EQUAL(mParameter3,
-                         getPtr(mConfigurationParameterMap->get("3")));
-
-    //Tests the copied map
-    CPPUNIT_ASSERT_EQUAL(mParameter1,
-                         getPtr(configurationParameterMap.get("1")));
-    CPPUNIT_ASSERT_EQUAL(mParameter2,
-                         getPtr(configurationParameterMap.get("2")));
-    CPPUNIT_ASSERT_EQUAL(mParameter3,
-                         getPtr(configurationParameterMap.get("3")));
-}
-
 void ConfigurationParameterMapTest::testMerge() {
     delete mConfigurationParameterMap;
     mConfigurationParameterMap = new ConfigurationParameterMap();
@@ -134,35 +113,4 @@ void ConfigurationParameterMapTest::testMerge() {
                          getPtr(mConfigurationParameterMap->get("4")));
     CPPUNIT_ASSERT_EQUAL((size_t)4,
                          mConfigurationParameterMap->getAll().size());
-}
-
-void ConfigurationParameterMapTest::testOperatorAssignment() {
-    ConfigurationParameterMap configurationParameterMap;
-    configurationParameterMap = *mConfigurationParameterMap;
-
-    //Tests the original map
-    CPPUNIT_ASSERT_EQUAL(mParameter1,
-                         getPtr(mConfigurationParameterMap->get("1")));
-    CPPUNIT_ASSERT_EQUAL(mParameter2,
-                         getPtr(mConfigurationParameterMap->get("2")));
-    CPPUNIT_ASSERT_EQUAL(mParameter3,
-                         getPtr(mConfigurationParameterMap->get("3")));
-
-    //Tests the copied map
-    CPPUNIT_ASSERT_EQUAL(mParameter1,
-                         getPtr(configurationParameterMap.get("1")));
-    CPPUNIT_ASSERT_EQUAL(mParameter2,
-                         getPtr(configurationParameterMap.get("2")));
-    CPPUNIT_ASSERT_EQUAL(mParameter3,
-                         getPtr(configurationParameterMap.get("3")));
-
-    //Test self assignment
-    configurationParameterMap = configurationParameterMap;
-
-    CPPUNIT_ASSERT_EQUAL(mParameter1,
-                         getPtr(configurationParameterMap.get("1")));
-    CPPUNIT_ASSERT_EQUAL(mParameter2,
-                         getPtr(configurationParameterMap.get("2")));
-    CPPUNIT_ASSERT_EQUAL(mParameter3,
-                         getPtr(configurationParameterMap.get("3")));
 }

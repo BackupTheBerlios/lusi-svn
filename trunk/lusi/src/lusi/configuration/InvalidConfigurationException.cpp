@@ -19,9 +19,12 @@
  ***************************************************************************/
 
 #include "InvalidConfigurationException.h"
+#include "../util/SmartPtr.h"
 
 using std::exception;
 using std::string;
+
+using lusi::util::SmartPtr;
 
 using namespace lusi::configuration;
 
@@ -29,7 +32,7 @@ using namespace lusi::configuration;
 
 InvalidConfigurationException::InvalidConfigurationException(
                 const string& errorMessage,
-                const ConfigurationParameterMap& configurationParameterMap):
+                SmartPtr<ConfigurationParameterMap> configurationParameterMap):
         exception() {
     mErrorMessage = errorMessage;
     mConfigurationParameterMap = configurationParameterMap;
@@ -43,7 +46,7 @@ inline const char* ProcessException::what() const throw() {
     return mErrorMessage.c_str();
 }
 
-inline const ConfigurationParameterMap&
+inline SmartPtr<ConfigurationParameterMap>
 InvalidConfigurationException::getConfigurationParameterMap() const throw() {
     return mConfigurationParameterMap;
 }

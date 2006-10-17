@@ -37,6 +37,13 @@ class ResourceMap;
 }
 
 namespace lusi {
+namespace util {
+template<typename T>
+class SmartPtr;
+}
+}
+
+namespace lusi {
 namespace task {
 namespace helper {
 
@@ -147,8 +154,8 @@ public:
      *
      * @return Returns the invalid configuration parameters of this TaskHelper.
      */
-    virtual lusi::configuration::ConfigurationParameterMap
-                                            getInvalidConfiguration();
+    virtual lusi::util::SmartPtr<lusi::configuration::ConfigurationParameterMap>
+    getInvalidConfiguration();
 
     /**
      * Returns the name of the TaskHelper.

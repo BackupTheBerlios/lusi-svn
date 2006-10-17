@@ -24,6 +24,7 @@
 #include "MakeBuildTaskHelperTest.h"
 #include "MakeInstallTaskHelperTest.h"
 #include "TarExtractTaskHelperTest.h"
+#include "TaskHelperTest.h"
 #include "TaskHelperManagerTest.h"
 #include "TaskHelperUsingProcessTest.h"
 
@@ -38,6 +39,7 @@ TaskHelperTestSuite::TaskHelperTestSuite() {
     addTest(MakeBuildTaskHelperTest::suite());
     addTest(MakeInstallTaskHelperTest::suite());
     addTest(TarExtractTaskHelperTest::suite());
+    addTest(TaskHelperTest::suite());
     addTest(TaskHelperManagerTest::suite());
     addTest(TaskHelperUsingProcessTest::suite());
 

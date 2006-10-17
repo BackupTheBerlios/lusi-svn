@@ -21,6 +21,7 @@
 #include "TaskHelper.h"
 #include "../../configuration/ConfigurationParameter.h"
 #include "../../configuration/ConfigurationParameterMap.h"
+#include "../../util/SmartPtr.h"
 
 using std::string;
 using std::vector;
@@ -43,22 +44,24 @@ void TaskHelper::initConfigurationParameterMap() {
 
 void TaskHelper::execute() throw (ExecuteTaskHelperException,
                                   InvalidConfigurationException) {
-    ConfigurationParameterMap invalidConfiguration = getInvalidConfiguration();
-    if (invalidConfiguration.getAll().size() > 0) {
-        throw new InvalidConfigurationException(
+    SmartPtr<ConfigurationParameterMap> invalidConfiguration =
+                                                getInvalidConfiguration();
+    if (invalidConfiguration->getAll().size() > 0) {
+        throw InvalidConfigurationException(
                 "Invalid configuration found when executing " + mName,
                 invalidConfiguration);
     }
 }
 
-ConfigurationParameterMap TaskHelper::getInvalidConfiguration() {
-    ConfigurationParameterMap invalidConfiguration;
+SmartPtr<ConfigurationParameterMap> TaskHelper::getInvalidConfiguration() {
+    SmartPtr<ConfigurationParameterMap> invalidConfiguration(
+                                            new ConfigurationParameterMap());
 
     vector< SmartPtr<ConfigurationParameter> > configurationParameters =
         mConfigurationParameterMap.getAll();
     for (uint i=0; i<configurationParameters.size(); ++i) {
         if (configurationParameters[i]->isInvalid()) {
-            invalidConfiguration.add(configurationParameters[i]);
+            invalidConfiguration->add(configurationParameters[i]);
         }
     }
 

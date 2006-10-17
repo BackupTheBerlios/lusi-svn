@@ -25,6 +25,7 @@
 #include "helper/TaskHelper.h"
 #include "helper/TaskHelperManager.h"
 #include "../package/Package.h"
+#include "../util/SmartPtr.h"
 
 using std::string;
 using std::vector;
@@ -36,6 +37,7 @@ using lusi::package::status::PackageStatus;
 using lusi::task::helper::ExecuteTaskHelperException;
 using lusi::task::helper::TaskHelper;
 using lusi::task::helper::TaskHelperManager;
+using lusi::util::SmartPtr;
 
 using namespace lusi::task;
 
@@ -102,21 +104,20 @@ inline TaskProgress* Task::getTaskProgress() const {
 }
 */
 
-ConfigurationParameterMap Task::getTaskHelperConfiguration() const {
+ConfigurationParameterMap* Task::getTaskHelperConfiguration() const {
     if (mCurrentTaskHelper != 0) {
-        return mCurrentTaskHelper->getConfigurationParameterMap();
+        return &mCurrentTaskHelper->getConfigurationParameterMap();
     }
 
-    return ConfigurationParameterMap();
+    return 0;
 }
 
-
-ConfigurationParameterMap Task::getInvalidConfiguration() const {
+SmartPtr<ConfigurationParameterMap> Task::getInvalidConfiguration() const {
     if (mCurrentTaskHelper != 0) {
         return mCurrentTaskHelper->getInvalidConfiguration();
     }
 
-    return ConfigurationParameterMap();
+    return SmartPtr<ConfigurationParameterMap>();
 }
 
 //TODO implement a better test logic
