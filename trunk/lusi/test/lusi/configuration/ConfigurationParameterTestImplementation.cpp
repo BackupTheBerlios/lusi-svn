@@ -32,6 +32,7 @@ ConfigurationParameterTestImplementation(const string& id,
                                          PriorityType priorityType,
                                          const string& information):
             ConfigurationParameter(id, name, priorityType, information) {
+    mInvalid = true;
 }
 
 ConfigurationParameterTestImplementation::

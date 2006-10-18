@@ -35,6 +35,7 @@ public:
 
     /**
      * Creates a new ConfigurationParameterTestImplementation.
+     * The ConfigurationParameterTestImplementation is set to invalid.
      *
      * @param id The id.
      * @param name The name.

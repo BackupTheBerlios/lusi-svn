@@ -61,9 +61,13 @@ namespace helper {
  * depending on the Package being used.
  *
  * As each TaskHelper does different things, each TaskHelper needs different
- * configuration parameters. The configuration of the TaskHelper is initialized
- * through initConfigurationParameterMap(). This method must be called in the
- * Task before using the TaskHelper.
+ * configuration parameters. The configuration is stored in a
+ * ConfigurationParameterMap, with id "[mName]Configuration". Name and
+ * information are empty and priority is set to recommended. Those parameters
+ * aren't used, as it is a special case for the ConfigurationParameterMap.
+ * The configuration of the TaskHelper is initialized through
+ * initConfigurationParameterMap(). This method must be called in the Task
+ * before using the TaskHelper.
  * The configuration can be checked using getInvalidConfiguration(). This method
  * returns a ConfigurationParameterMap with all the invalid parameters in the
  * configuration. A TaskHelper can't be executed if there are invalid
@@ -147,7 +151,9 @@ public:
      * set) or if its value isn't suitable for the TaskHelper.
      *
      * Default implementation returns a ConfigurationParameterMap with all the
-     * incomplete parameters.
+     * incomplete parameters. The id of the map is
+     * "[mName]InvalidConfiguration", name and information are empty, and
+     * priority is set to required.
      *
      * This method can be overriden in derived classes if default implementation
      * doesn't suit their needs.

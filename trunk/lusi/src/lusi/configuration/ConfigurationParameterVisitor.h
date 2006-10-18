@@ -23,12 +23,11 @@
 
 namespace lusi {
 namespace configuration {
-class ConfigurationParameterAnd;
-class ConfigurationParameterOr;
 class ConfigurationParameterBool;
 class ConfigurationParameterDouble;
 class ConfigurationParameterInt;
 class ConfigurationParameterLocalUrl;
+class ConfigurationParameterMap;
 class ConfigurationParameterString;
 }
 }
@@ -63,20 +62,6 @@ public:
     }
 
     /**
-     * Visits a ConfigurationParameterAnd.
-     *
-     * @param parameter The ConfigurationParameterAnd to visit.
-     */
-    virtual void visit(ConfigurationParameterAnd* parameter) = 0;
-
-    /**
-     * Visits a ConfigurationParameterOr.
-     *
-     * @param parameter The ConfigurationParameterOr to visit.
-     */
-    virtual void visit(ConfigurationParameterOr* parameter) = 0;
-
-    /**
      * Visits a ConfigurationParameterBool.
      *
      * @param parameter The ConfigurationParameterBool to visit.
@@ -103,6 +88,13 @@ public:
      * @param parameter The ConfigurationParameterLocalUrl to visit.
      */
     virtual void visit(ConfigurationParameterLocalUrl* parameter) = 0;
+
+    /**
+     * Visits a ConfigurationParameterMap.
+     *
+     * @param parameter The ConfigurationParameterMap to visit.
+     */
+    virtual void visit(ConfigurationParameterMap* parameter) = 0;
 
     /**
      * Visits a ConfigurationParameterString.

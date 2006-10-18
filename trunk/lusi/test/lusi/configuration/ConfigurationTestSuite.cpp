@@ -20,14 +20,11 @@
 
 #include "ConfigurationTestSuite.h"
 #include "ConfigurationParameterTest.h"
-#include "ConfigurationParameterAndTest.h"
 #include "ConfigurationParameterBoolTest.h"
-#include "ConfigurationParameterComposedTest.h"
 #include "ConfigurationParameterDoubleTest.h"
 #include "ConfigurationParameterIntTest.h"
 #include "ConfigurationParameterLocalUrlTest.h"
 #include "ConfigurationParameterMapTest.h"
-#include "ConfigurationParameterOrTest.h"
 #include "ConfigurationParameterSimpleTest.h"
 #include "ConfigurationParameterStringTest.h"
 
@@ -38,14 +35,11 @@ using namespace lusi::configuration;
 ConfigurationTestSuite::ConfigurationTestSuite() {
     //Own namespace Tests
     addTest(ConfigurationParameterTest::suite());
-    addTest(ConfigurationParameterAndTest::suite());
     addTest(ConfigurationParameterBoolTest::suite());
-    addTest(ConfigurationParameterComposedTest::suite());
     addTest(ConfigurationParameterDoubleTest::suite());
     addTest(ConfigurationParameterIntTest::suite());
     addTest(ConfigurationParameterLocalUrlTest::suite());
     addTest(ConfigurationParameterMapTest::suite());
-    addTest(ConfigurationParameterOrTest::suite());
     addTest(ConfigurationParameterSimpleTest::suite());
     addTest(ConfigurationParameterStringTest::suite());
 

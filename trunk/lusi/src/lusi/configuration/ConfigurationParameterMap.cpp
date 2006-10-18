@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "ConfigurationParameterMap.h"
+#include "ConfigurationParameterVisitor.h"
 
 using std::string;
 using std::vector;
@@ -30,12 +31,81 @@ using namespace lusi::configuration;
 
 //public:
 
-ConfigurationParameterMap::ConfigurationParameterMap():
-            IdSmartPtrMap<ConfigurationParameter>() {
+ConfigurationParameterMap::ConfigurationParameterMap(const string& id,
+                                const string& name,
+                                PriorityType priorityType,
+                                const string& information,
+                                InvalidPolicy invalidPolicy /*= NoPolicy*/):
+        ConfigurationParameter(id, name, priorityType, information) {
+    mInvalidPolicy = invalidPolicy;
 }
 
 ConfigurationParameterMap::~ConfigurationParameterMap() {
 }
+
+bool ConfigurationParameterMap::isInvalid() {
+    if (mInvalidPolicy == NoPolicy) {
+        return false;
+    }
+
+    vector< SmartPtr<ConfigurationParameter> > configurationParameters =
+                                            mConfigurationParameters.getAll();
+    if (configurationParameters.size() == 0) {
+        return false;
+    }
+
+    if (mInvalidPolicy == AndPolicy) {
+        for (uint i=0; i<configurationParameters.size(); ++i) {
+            if (configurationParameters[i]->isInvalid()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    if (mInvalidPolicy == OrPolicy) {
+        for (uint i=0; i<configurationParameters.size(); ++i) {
+            if (!configurationParameters[i]->isInvalid()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    //Unknown policy, shouldn't happen, but if it does...
+    return true;
+}
+
+void ConfigurationParameterMap::accept(ConfigurationParameterVisitor* visitor) {
+    visitor->visit(this);
+}
+
+/*
+inline bool ConfigurationParameterMap::add(
+                    SmartPtr<ConfigurationParameter> configurationParameter) {
+    return mConfigurationParameters.add(configurationParameter);
+}
+
+inline SmartPtr<ConfigurationParameter>
+ConfigurationParameterMap::get(const string& id) const {
+    return mConfigurationParameters.get(id);
+}
+
+inline vector< SmartPtr<ConfigurationParameter> >
+ConfigurationParameterMap::getAll() const {
+    return mConfigurationParameters.getAll();
+}
+
+inline bool ConfigurationParameterMap::remove(const string& id) {
+    return mConfigurationParameters.remove(id);
+}
+
+inline InvalidPolicy ConfigurationParameterMap::getInvalidPolicy() const {
+    return mInvalidPolicy;
+}
+*/
 
 void ConfigurationParameterMap::merge(
             const ConfigurationParameterMap& configurationParameterMap,

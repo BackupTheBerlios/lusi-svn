@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include "MakeInstallTaskHelper.h"
-#include "../../configuration/ConfigurationParameterAnd.h"
+#include "../../configuration/ConfigurationParameterMap.h"
 #include "../../configuration/ConfigurationParameterString.h"
 #include "../../util/i18n.h"
 #include "../../util/LocalFile.h"
@@ -30,7 +30,7 @@
 using std::string;
 
 using lusi::configuration::ConfigurationParameter;
-using lusi::configuration::ConfigurationParameterAnd;
+using lusi::configuration::ConfigurationParameterMap;
 using lusi::configuration::ConfigurationParameterString;
 using lusi::util::LocalFile;
 using lusi::util::Process;
@@ -75,15 +75,16 @@ void MakeInstallTaskHelper::initConfigurationParameterMap() {
         prefix.getOwner().getName());
     mPassword = new ConfigurationParameterString("password", _("Password"),
         ConfigurationParameter::RequiredPriority,
-        _("The password of the owner of the directory to install the package to"),
+        _("The password of the owner of the directory to install the package \
+to"),
         ConfigurationParameterString::PasswordType);
 
-    ConfigurationParameterAnd* login = new ConfigurationParameterAnd("login",
+    ConfigurationParameterMap* login = new ConfigurationParameterMap("login",
                         _("Login"), ConfigurationParameter::RequiredPriority,
                         _("Login data of the owner of the directory \
-to install the package to"));
-    login->addConfigurationParameter(mUserName);
-    login->addConfigurationParameter(mPassword);
+to install the package to"), ConfigurationParameterMap::AndPolicy);
+    login->add(SmartPtr<ConfigurationParameter>(mUserName));
+    login->add(SmartPtr<ConfigurationParameter>(mPassword));
 
     mConfigurationParameterMap.add(SmartPtr<ConfigurationParameter>(login));
 }

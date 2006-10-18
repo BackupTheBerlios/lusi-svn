@@ -23,9 +23,10 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
+#include <lusi/util/SmartPtr.h>
+
 namespace lusi {
 namespace configuration {
-class ConfigurationParameter;
 class ConfigurationParameterMap;
 }
 }
@@ -40,6 +41,13 @@ namespace configuration {
  */
 class ConfigurationParameterMapTest: public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(ConfigurationParameterMapTest);
+    CPPUNIT_TEST(testConstructor);
+    CPPUNIT_TEST(testIsInvalid);
+    CPPUNIT_TEST(testAdd);
+    CPPUNIT_TEST(testGet);
+    CPPUNIT_TEST(testGetAll);
+    CPPUNIT_TEST(testRemove);
+    CPPUNIT_TEST(testGetInvalidPolicy);
     CPPUNIT_TEST(testMerge);
     CPPUNIT_TEST_SUITE_END();
 
@@ -57,6 +65,42 @@ public:
     virtual void tearDown();
 
     /**
+     * Tests if all the values are well set in the constructor.
+     */
+    void testConstructor();
+
+    /**
+     * Tests if the ConfigurationParameterMap is invalid depending on the
+     * selected policy.
+     */
+    void testIsInvalid();
+
+    /**
+     * Tests if the ConfigurationParameter is added to the internal map.
+     */
+    void testAdd();
+
+    /**
+     * Tests if the ConfigurationParameter is returned.
+     */
+    void testGet();
+
+    /**
+     * Tests if all the ConfigurationParameters are returned.
+     */
+    void testGetAll();
+
+    /**
+     * Tests if the ConfigurationParameter is removed from the internal map.
+     */
+    void testRemove();
+
+    /**
+     * Tests if it returns mInvalidPolicy.
+     */
+    void testGetInvalidPolicy();
+
+    /**
      * Tests if a map merged with another one with parameters with the same id
      * are kept or overriden depending on the type of merge.
      */
@@ -68,21 +112,6 @@ private:
      * The ConfigurationParameterMap to test.
      */
     ConfigurationParameterMap* mConfigurationParameterMap;
-
-    /**
-     * The first configuration parameter to add to the map.
-     */
-    ConfigurationParameter* mParameter1;
-
-    /**
-     * The second configuration parameter to add to the map.
-     */
-    ConfigurationParameter* mParameter2;
-
-    /**
-     * The third configuration parameter to add to the map.
-     */
-    ConfigurationParameter* mParameter3;
 
 };
 

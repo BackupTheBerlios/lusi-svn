@@ -26,7 +26,10 @@ using namespace lusi::task;
 
 //public:
 
-TaskConfiguration::TaskConfiguration(): ConfigurationParameterMap() {
+//This class will be removed in the very near future, so no values were set
+//here
+TaskConfiguration::TaskConfiguration(): ConfigurationParameterMap("", "",
+                            ConfigurationParameter::RecommendedPriority, "") {
 }
 
 TaskConfiguration::~TaskConfiguration() {

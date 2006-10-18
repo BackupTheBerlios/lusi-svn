@@ -55,7 +55,8 @@ void TaskHelper::execute() throw (ExecuteTaskHelperException,
 
 SmartPtr<ConfigurationParameterMap> TaskHelper::getInvalidConfiguration() {
     SmartPtr<ConfigurationParameterMap> invalidConfiguration(
-                                            new ConfigurationParameterMap());
+            new ConfigurationParameterMap(mName + "InvalidConfiguration",
+                    "", ConfigurationParameter::RequiredPriority, ""));
 
     vector< SmartPtr<ConfigurationParameter> > configurationParameters =
         mConfigurationParameterMap.getAll();
@@ -80,7 +81,9 @@ inline ConfigurationParameterMap& TaskHelper::getConfigurationParameterMap() {
 
 //protected:
 
-TaskHelper::TaskHelper(const string& name, Task* task) {
+TaskHelper::TaskHelper(const string& name, Task* task):
+        mConfigurationParameterMap(name + "Configuration", "",
+                ConfigurationParameter::RecommendedPriority, "") {
     mName = name;
     mTask = task;
 }
