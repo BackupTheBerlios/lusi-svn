@@ -82,12 +82,18 @@ void ConfigurationParameterMap::accept(ConfigurationParameterVisitor* visitor) {
     visitor->visit(this);
 }
 
-/*
-inline bool ConfigurationParameterMap::add(
+bool ConfigurationParameterMap::add(
                     SmartPtr<ConfigurationParameter> configurationParameter) {
-    return mConfigurationParameters.add(configurationParameter);
+    if (!mConfigurationParameters.add(configurationParameter)) {
+        return false;
+    }
+
+    mConfigurationParametersVector.push_back(configurationParameter);
+
+    return true;
 }
 
+/*
 inline SmartPtr<ConfigurationParameter>
 ConfigurationParameterMap::get(const string& id) const {
     return mConfigurationParameters.get(id);
@@ -97,11 +103,28 @@ inline vector< SmartPtr<ConfigurationParameter> >
 ConfigurationParameterMap::getAll() const {
     return mConfigurationParameters.getAll();
 }
+*/
 
-inline bool ConfigurationParameterMap::remove(const string& id) {
-    return mConfigurationParameters.remove(id);
+bool ConfigurationParameterMap::remove(const string& id) {
+    if (!mConfigurationParameters.remove(id)) {
+        return false;
+    }
+
+    bool deleted = false;
+    vector< SmartPtr<ConfigurationParameter> >::iterator it =
+                                    mConfigurationParametersVector.begin();
+    while (!deleted) {
+        if ((*it)->getId() == id) {
+            mConfigurationParametersVector.erase(it);
+            deleted = true;
+        }
+        ++it;
+    }
+
+    return true;
 }
 
+/*
 inline InvalidPolicy ConfigurationParameterMap::getInvalidPolicy() const {
     return mInvalidPolicy;
 }

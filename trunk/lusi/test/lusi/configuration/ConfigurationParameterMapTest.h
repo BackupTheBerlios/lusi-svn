@@ -76,7 +76,8 @@ public:
     void testIsInvalid();
 
     /**
-     * Tests if the ConfigurationParameter is added to the internal map.
+     * Tests if the ConfigurationParameter is added to the internal map and
+     * vector.
      */
     void testAdd();
 
@@ -86,12 +87,14 @@ public:
     void testGet();
 
     /**
-     * Tests if all the ConfigurationParameters are returned.
+     * Tests if all the ConfigurationParameters are returned in the same order
+     * they were added.
      */
     void testGetAll();
 
     /**
-     * Tests if the ConfigurationParameter is removed from the internal map.
+     * Tests if the ConfigurationParameter is removed from the internal map and
+     * vector.
      */
     void testRemove();
 

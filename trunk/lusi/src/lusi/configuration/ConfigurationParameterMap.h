@@ -42,6 +42,10 @@ namespace configuration {
  * different ConfigurationParmeterMaps. It uses internally a specialized
  * version of IdSmartPtrMap to be used with ConfigurationParameters.
  *
+ * Although its main function is map the elements with their ids, it also can
+ * return a vector contanining all the elements added, in the same order they
+ * were added.
+ *
  * This class provides different policies to check wheter it is invalid or not.
  * It can be set using InvalidPolicy enumeration values when creating an object
  * of this class.
@@ -125,9 +129,7 @@ public:
      * @param configurationParameter The ConfigurationParameter to add.
      */
     bool add(lusi::util::SmartPtr<ConfigurationParameter>
-                                                    configurationParameter) {
-        return mConfigurationParameters.add(configurationParameter);
-    }
+                                                    configurationParameter);
 
     /**
      * Returns the ConfigurationParameter identified by id.
@@ -144,24 +146,24 @@ public:
 
     /**
      * Returns a vector containing all the ConfigurationParameters added.
+     * The parameters are returned in the same order they were added.
      *
      * @return A vector containing all the ConfigurationParameters added.
      */
     std::vector< lusi::util::SmartPtr<ConfigurationParameter> > getAll() const {
-        return mConfigurationParameters.getAll();
+        return mConfigurationParametersVector;
     }
 
     /**
-     * Removes the ConfigurationParameter identified by id from the Map.
+     * Removes the ConfigurationParameter identified by id from this
+     * ConfigurationParameterMap.
      * If there's no ConfigurationParameter with the specified id, nothing
      * happens.
      *
      * @param id The id of the ConfigurationParameter to remove.
      * @return True if the ConfigurationParameter was removed, false otherwise.
      */
-    bool remove(const std::string& id) {
-        return mConfigurationParameters.remove(id);
-    }
+    bool remove(const std::string& id);
 
     /**
      * Returns the policy to check if this ConfigurationParameterMap is invalid.
@@ -198,6 +200,13 @@ private:
      * The map that contains the ConfigurationParameters.
      */
     lusi::util::IdSmartPtrMap<ConfigurationParameter> mConfigurationParameters;
+
+    /**
+     * The vector that contains all the ConfigurationParameters in the same
+     * order they were added.
+     */
+    std::vector< lusi::util::SmartPtr<ConfigurationParameter> >
+    mConfigurationParametersVector;
 
     /**
      * The policy to check if this ConfigurationParameterMap is invalid.
