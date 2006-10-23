@@ -21,6 +21,8 @@
 #ifndef LUSI_UTIL_LOCALFILE_H
 #define LUSI_UTIL_LOCALFILE_H
 
+#include <vector>
+
 #include <lusi/util/LocalUrl.h>
 
 namespace lusi {
@@ -65,8 +67,13 @@ namespace util {
  * exists(const string&), and also the current working directory with
  * getCurrentWorkingDirectory().
  *
- * This class should work on any POSIX system. The functions used are stat and
- * getcwd, and the macro S_ISDIR.
+ * There are also some operations which modify the filesystem. Those are mkdirs,
+ * renameTo and remove. They create the directory this LocalFile represents,
+ * renames it to another path and removes it from the filesystem.
+ *
+ * This class should work on any POSIX system. The functions used are stat,
+ * getcwd, opendir, readdir, closedir, mkdir, rename, unlink, rmdir, and the
+ * macro S_ISDIR.
  */
 class LocalFile {
 public:
@@ -220,6 +227,58 @@ public:
      */
     bool isWritable() const;
 
+    /**
+     * Lists all the child files and directories of this directory.
+     * The returned vector contains the names of the child files and
+     * directories.
+     *
+     * If an error happens while getting the list of entries, an empty vector
+     * is returned.
+     * If this LocalFile doesn't represent a directory, or it doesn't exist, the
+     * returned value is undefined.
+     *
+     * @return A vector containing the names of all the child files an
+     *         directories of this directory.
+     */
+    std::vector<std::string> list() const;
+
+    /**
+     * Creates this directory, including all the needed parent directories.
+     * The permissions of the created directories are set to the default
+     * specified by umask.
+     *
+     * If this LocalFile doesn't represent a directory, nothing is created.
+     * It may happen that the operation isn't completed successfully, but some
+     * of the parent directories are created anyway.
+     *
+     * @return True if the directory was created, false otherwise.
+     */
+    bool mkdirs();
+
+    /**
+     * Renames this LocalFile to the specified LocalUrl.
+     * The specified LocalUrl must be absolute. This LocalFile url is set to the
+     * new absolute url.
+     *
+     * If this LocalFile doesn't exist, nothing is renamed.
+     * The current name and the new name must be of the same type (that is,
+     * file or directory). Mixing file and directory names fails.
+     *
+     * @param localUrl The LocalUrl to rename this LocalFile to.
+     * @return True if this LocalFile was renamed, false otherwise.
+     */
+    bool renameTo(const LocalUrl& localUrl);
+
+    /**
+     * Removes this LocalFile from the filesystem.
+     * If this LocalFile doesn't exist, nothing is removed.
+     * If this LocalFile represents a directory, it must be empty in order to be
+     * removed.
+     *
+     * @return True if this LocalFile was removed, false otherwise.
+     */
+    bool remove();
+
 private:
 
     /**
@@ -271,6 +330,17 @@ private:
      *         false otherwise.
      */
     bool hasAccess(int mode) const;
+
+    /**
+     * Private recursive version of mkdirs().
+     * It creates the directory if the parent exists. If not, it creates the
+     * parent and then creates the directory.
+     *
+     * @param localUrl The directory to be created.
+     * @return True if the directory was created, false otherwise.
+     * @see mkdirs()
+     */
+    bool mkdirs(const LocalUrl& localUrl);
 
 };
 

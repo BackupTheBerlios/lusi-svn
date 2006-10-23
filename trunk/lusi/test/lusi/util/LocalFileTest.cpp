@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <algorithm>
+
 #include "LocalFileTest.h"
 
 #define protected public
@@ -28,17 +30,27 @@
 
 #include "Group.h"
 #include "User.h"
+#include "Process.h"
 
 using std::string;
+using std::vector;
 
 using namespace lusi::util;
 
 //public:
 
 void LocalFileTest::setUp() {
+    mTestDirectoryPath = LocalFile::getCurrentWorkingDirectory() +
+                                                    "created for LUSI tests/";
 }
 
 void LocalFileTest::tearDown() {
+    LocalFile testDirectory(mTestDirectoryPath);
+    if (testDirectory.exists()) {
+        Process* process = Process::newProcess(Process::PipeCommunication);
+        (*process) << "rm" << "-fr" << mTestDirectoryPath;
+        process->start();
+    }
 }
 
 void LocalFileTest::testExistsString() {
@@ -254,6 +266,129 @@ void LocalFileTest::testIsWritable() {
     localFile = LocalFile(LocalUrl("/root/"));
 
     CPPUNIT_ASSERT_EQUAL(false, localFile.isWritable());
+}
+
+void LocalFileTest::testList() {
+    //Tests /etc to look for fstab, passwd, rc.local, ld.so.conf.d/, locale/,
+    //X11/
+    LocalFile etc(LocalUrl("/etc/"));
+    vector<string> list = etc.list();
+
+    vector<string>::iterator file = find(list.begin(), list.end(), "fstab");
+    if (file == list.end()) {
+        CPPUNIT_FAIL("fstab not found in /etc/");
+    }
+
+    file = find(list.begin(), list.end(), "passwd");
+    if (file == list.end()) {
+        CPPUNIT_FAIL("passwd not found in /etc/");
+    }
+
+    file = find(list.begin(), list.end(), "rc.local");
+    if (file == list.end()) {
+        CPPUNIT_FAIL("rc.local not found in /etc/");
+    }
+
+    file = find(list.begin(), list.end(), "ld.so.conf.d/");
+    if (file == list.end()) {
+        CPPUNIT_FAIL("ld.so.conf.d/ not found in /etc/");
+    }
+
+    file = find(list.begin(), list.end(), "locale/");
+    if (file == list.end()) {
+        CPPUNIT_FAIL("locale/ not found in /etc/");
+    }
+
+    file = find(list.begin(), list.end(), "X11/");
+    if (file == list.end()) {
+        CPPUNIT_FAIL("X11/ not found in /etc/");
+    }
+
+    file = find(list.begin(), list.end(), ".");
+    if (file != list.end()) {
+        CPPUNIT_FAIL("Self reference (.) is listed");
+    }
+
+    file = find(list.begin(), list.end(), "..");
+    if (file != list.end()) {
+        CPPUNIT_FAIL("Parent reference (..) is listed");
+    }
+}
+
+void LocalFileTest::testMkdirs() {
+    //Test with a non existent directory
+    LocalFile file(mTestDirectoryPath + "directory/aSubDirectory/");
+
+    CPPUNIT_ASSERT_EQUAL(true, file.mkdirs());
+    CPPUNIT_ASSERT_EQUAL(true, file.exists());
+    CPPUNIT_ASSERT_EQUAL(true, file.remove());
+
+    //Test with an existent directory
+    file = LocalFile(LocalFile::getCurrentWorkingDirectory());
+
+    CPPUNIT_ASSERT_EQUAL(false, file.mkdirs());
+    CPPUNIT_ASSERT_EQUAL(true, file.exists());
+
+    //Test with a non existent file
+    file = LocalFile(mTestDirectoryPath + "file");
+
+    CPPUNIT_ASSERT_EQUAL(false, file.mkdirs());
+    CPPUNIT_ASSERT_EQUAL(false, file.exists());
+}
+
+void LocalFileTest::testRenameTo() {
+    //Test with an existent directory
+    LocalFile file(mTestDirectoryPath + "directory/");
+
+    LocalUrl renamedUrl(mTestDirectoryPath + "anotherDirectory/");
+
+    CPPUNIT_ASSERT_EQUAL(true, file.mkdirs());
+    CPPUNIT_ASSERT_EQUAL(true, file.renameTo(renamedUrl));
+    CPPUNIT_ASSERT(renamedUrl == file.getLocalUrl());
+    CPPUNIT_ASSERT_EQUAL(true, file.exists());
+
+    //Test with an existent directory renaming to a non existent file
+    LocalUrl renamedUrl2(mTestDirectoryPath + "aFile");
+
+    CPPUNIT_ASSERT_EQUAL(false, file.renameTo(renamedUrl2));
+    CPPUNIT_ASSERT(renamedUrl == file.getLocalUrl());
+    CPPUNIT_ASSERT_EQUAL(true, file.exists());
+    CPPUNIT_ASSERT_EQUAL(true, file.remove());
+
+    //Test with a non existent file
+    file = LocalFile(mTestDirectoryPath + "aFile");
+    renamedUrl = LocalUrl(mTestDirectoryPath + "anotherFile");
+
+    CPPUNIT_ASSERT_EQUAL(false, file.renameTo(renamedUrl));
+    CPPUNIT_ASSERT(renamedUrl != file.getLocalUrl());
+    CPPUNIT_ASSERT_EQUAL(false, file.exists());
+}
+
+void LocalFileTest::testRemove() {
+    //Test with an existent empty directory
+    LocalFile file(mTestDirectoryPath + "directory/");
+
+    CPPUNIT_ASSERT_EQUAL(true, file.mkdirs());
+    CPPUNIT_ASSERT_EQUAL(true, file.remove());
+    CPPUNIT_ASSERT_EQUAL(false, file.exists());
+
+    //Test with an existent file
+    file = LocalFile(mTestDirectoryPath + "file");
+
+    Process* process = Process::newProcess(Process::PipeCommunication);
+    (*process) << "touch" << mTestDirectoryPath + "file";
+    process->start();
+
+    CPPUNIT_ASSERT_EQUAL(true, file.remove());
+    CPPUNIT_ASSERT_EQUAL(false, file.exists());
+
+    //Test with a non existent file
+    CPPUNIT_ASSERT_EQUAL(false, file.remove());
+
+    //Test with a non empty directory
+    file = LocalFile(LocalFile::getCurrentWorkingDirectory());
+
+    CPPUNIT_ASSERT_EQUAL(false, file.remove());
 }
 
 void LocalFileTest::testGetValidPath() {

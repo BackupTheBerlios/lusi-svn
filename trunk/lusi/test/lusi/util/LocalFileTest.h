@@ -43,6 +43,10 @@ class LocalFileTest: public CppUnit::TestFixture {
     CPPUNIT_TEST(testIsExecutable);
     CPPUNIT_TEST(testIsReadable);
     CPPUNIT_TEST(testIsWritable);
+    CPPUNIT_TEST(testList);
+    CPPUNIT_TEST(testMkdirs);
+    CPPUNIT_TEST(testRenameTo);
+    CPPUNIT_TEST(testRemove);
     CPPUNIT_TEST(testGetValidPath);
     CPPUNIT_TEST_SUITE_END();
 
@@ -131,12 +135,50 @@ public:
     void testIsWritable();
 
     /**
+     * Tests if the child files and directories of a directory appear in the
+     * returned list. To do this, /etc/ directory is listed to look for common
+     * directories and files in GNU/Linux systems in that directory. It is also
+     * checked that self and parent references aren't listed.
+     */
+    void testList();
+
+    /**
+     * Tests if it creates the directory and all the parent directories. It's
+     * also tested that an existent directory and a non existent file fail to
+     * be created.
+     */
+    void testMkdirs();
+
+    /**
+     * Tests if it renames the LocalFile to the specified LocalUrl. It's also
+     * tested that renaming a directory to a file and a non existent file fail
+     * to be renamed.
+     */
+    void testRenameTo();
+
+    /**
+     * Tests if it removes the file or directory. It's also tested that a non
+     * existent file and a non empty directory fail to be removed.
+     */
+    void testRemove();
+
+    /**
      * Tests if it returns the path of a file that exists, the path to the first
      * parent of a file that doesn't exist, and the path to the first accesible
      * file in a file without the needed permissions to access to it.
      * It's also tested using relative urls instead of absolute ones.
      */
     void testGetValidPath();
+
+private:
+
+    /**
+     * The path to the test directory where files will be created, renamed and
+     * removed for test.
+     * It is the current working directory followed by "created for LUSI
+     * tests/".
+     */
+    std::string mTestDirectoryPath;
 
 };
 
