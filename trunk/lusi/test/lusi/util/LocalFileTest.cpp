@@ -18,6 +18,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <sys/stat.h>
+#include <fcntl.h>
+
 #include <algorithm>
 
 #include "LocalFileTest.h"
@@ -30,7 +33,6 @@
 
 #include "Group.h"
 #include "User.h"
-#include "Process.h"
 
 using std::string;
 using std::vector;
@@ -45,11 +47,13 @@ void LocalFileTest::setUp() {
 }
 
 void LocalFileTest::tearDown() {
-    LocalFile testDirectory(mTestDirectoryPath);
-    if (testDirectory.exists()) {
-        Process* process = Process::newProcess(Process::PipeCommunication);
-        (*process) << "rm" << "-fr" << mTestDirectoryPath;
-        process->start();
+    struct stat fileStat;
+    if (!stat(mTestDirectoryPath.c_str(), &fileStat)) {
+        rmdir(string(mTestDirectoryPath + "directory/aSubDirectory/").c_str());
+        rmdir(string(mTestDirectoryPath + "directory/").c_str());
+        rmdir(string(mTestDirectoryPath + "anotherDirectory/").c_str());
+        unlink(string(mTestDirectoryPath + "file").c_str());
+        rmdir(mTestDirectoryPath.c_str());
     }
 }
 
@@ -375,10 +379,9 @@ void LocalFileTest::testRemove() {
     //Test with an existent file
     file = LocalFile(mTestDirectoryPath + "file");
 
-    Process* process = Process::newProcess(Process::PipeCommunication);
-    (*process) << "touch" << mTestDirectoryPath + "file";
-    process->start();
+    close(creat(file.getLocalUrl().getPath().c_str(), S_IRWXU));
 
+    CPPUNIT_ASSERT_EQUAL(true, file.exists());
     CPPUNIT_ASSERT_EQUAL(true, file.remove());
     CPPUNIT_ASSERT_EQUAL(false, file.exists());
 
