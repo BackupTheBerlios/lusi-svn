@@ -47,6 +47,7 @@ void UserTest::testGetCurrentUser() {
     CPPUNIT_ASSERT_EQUAL(user.mId, currentUser.mId);
     CPPUNIT_ASSERT_EQUAL(user.mName, currentUser.mName);
     CPPUNIT_ASSERT(user.mGroup == currentUser.mGroup);
+    CPPUNIT_ASSERT_EQUAL(user.mHome, currentUser.mHome);
 }
 
 void UserTest::testConstructorId() {
@@ -55,6 +56,7 @@ void UserTest::testConstructorId() {
     CPPUNIT_ASSERT_EQUAL(0, user.mId);
     CPPUNIT_ASSERT_EQUAL(string("root"), user.mName);
     CPPUNIT_ASSERT(Group(0) == user.mGroup);
+    CPPUNIT_ASSERT_EQUAL(string("/root/"), user.mHome);
 
     //Invalid user
     user = User(-273);
@@ -62,6 +64,7 @@ void UserTest::testConstructorId() {
     CPPUNIT_ASSERT_EQUAL(-1, user.mId);
     CPPUNIT_ASSERT_EQUAL(string(""), user.mName);
     CPPUNIT_ASSERT(Group(-1) == user.mGroup);
+    CPPUNIT_ASSERT_EQUAL(string(""), user.mHome);
 }
 
 void UserTest::testConstructorName() {
@@ -70,6 +73,7 @@ void UserTest::testConstructorName() {
     CPPUNIT_ASSERT_EQUAL(0, user.mId);
     CPPUNIT_ASSERT_EQUAL(string("root"), user.mName);
     CPPUNIT_ASSERT(Group(0) == user.mGroup);
+    CPPUNIT_ASSERT_EQUAL(string("/root/"), user.mHome);
 
     //Invalid user
     user = User("areYouGeekEnoughToHaveAUserCalledSpockInYourSystem?");
@@ -77,6 +81,7 @@ void UserTest::testConstructorName() {
     CPPUNIT_ASSERT_EQUAL(-1, user.mId);
     CPPUNIT_ASSERT_EQUAL(string(""), user.mName);
     CPPUNIT_ASSERT(Group(-1) == user.mGroup);
+    CPPUNIT_ASSERT_EQUAL(string(""), user.mHome);
 }
 
 void UserTest::testCopyConstructor() {
@@ -86,6 +91,7 @@ void UserTest::testCopyConstructor() {
     CPPUNIT_ASSERT_EQUAL(0, userCopy.mId);
     CPPUNIT_ASSERT_EQUAL(string("root"), userCopy.mName);
     CPPUNIT_ASSERT(Group(0) == user.mGroup);
+    CPPUNIT_ASSERT_EQUAL(string("/root/"), userCopy.mHome);
 }
 
 void UserTest::testExists() {
@@ -104,6 +110,13 @@ void UserTest::testGetGroup() {
     User user(0);
 
     CPPUNIT_ASSERT(Group(0) == user.getGroup());
+}
+
+void UserTest::testGetHome() {
+    User user(0);
+    user.mHome = "/home/Tux/";
+
+    CPPUNIT_ASSERT_EQUAL(string("/home/Tux/"), user.getHome());
 }
 
 void UserTest::testGetId() {
@@ -140,6 +153,7 @@ void UserTest::testOperatorAssignment() {
     CPPUNIT_ASSERT_EQUAL(0, rootUser.mId);
     CPPUNIT_ASSERT_EQUAL(string("root"), rootUser.mName);
     CPPUNIT_ASSERT(Group(0) == rootUser.mGroup);
+    CPPUNIT_ASSERT_EQUAL(string("/root/"), rootUser.mHome);
 
     //Test normal assignment
     User user = User(geteuid());
@@ -148,6 +162,7 @@ void UserTest::testOperatorAssignment() {
     CPPUNIT_ASSERT_EQUAL(0, user.mId);
     CPPUNIT_ASSERT_EQUAL(string("root"), user.mName);
     CPPUNIT_ASSERT(Group(0) == user.mGroup);
+    CPPUNIT_ASSERT_EQUAL(string("/root/"), user.mHome);
 }
 
 void UserTest::testOperatorEqual() {
@@ -173,6 +188,12 @@ void UserTest::testOperatorEqual() {
     user2.mGroup = Group(108);
 
     CPPUNIT_ASSERT_EQUAL(false, user1 == user2);
+
+    //Test users with different home
+    user2.mGroup = Group(0);
+    user2.mHome = "/home/root/";
+
+    CPPUNIT_ASSERT_EQUAL(false, user1 == user2);
 }
 
 void UserTest::testOperatorDifferent() {
@@ -193,6 +214,12 @@ void UserTest::testOperatorDifferent() {
     //Test users with different group
     user2.mName = "root";
     user2.mGroup = Group(108);
+
+    CPPUNIT_ASSERT_EQUAL(true, user1 != user2);
+
+    //Test users with different home
+    user2.mGroup = Group(0);
+    user2.mHome = "/home/root/)";
 
     CPPUNIT_ASSERT_EQUAL(true, user1 != user2);
 

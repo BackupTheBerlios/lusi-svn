@@ -36,13 +36,14 @@ namespace util {
  * change) information about system users, using an object oriented approach
  * and abstracting the interaction with the system.
  *
- * Each user stores its id, its name and the primary group it belongs to.
+ * Each user stores its id, its name, the primary group it belongs to and its
+ * home directory.
  *
  * Users are created using their user id or their name. When creating a user,
  * the parameters not set are got from the system. If a user doesn't exist, the
  * id and name are set to -1 and "", and the group to the invalid group (-1).
  *
- * The user currently executing LUSI can be got with getCurrentUser.
+ * The user currently executing LUSI can be got with getCurrentUser().
  *
  * This class should work on any POSIX compliant system. It uses geteuid,
  * getpwuid and getpwnam system calls.
@@ -122,6 +123,16 @@ public:
     }
 
     /**
+     * Returns the home directory of this user.
+     * If the path is not an empty string, it always ends with "/".
+     *
+     * @return The home directory of this user.
+     */
+    const std::string& getHome() const {
+        return mHome;
+    }
+
+    /**
      * Returns true if the user is root, false otherwise.
      *
      * @return True if the user is root, false otherwise.
@@ -169,13 +180,18 @@ private:
      */
     Group mGroup;
 
+    /**
+     * The home directory of the user.
+     */
+    std::string mHome;
+
 
 
     /**
      * Initializes this User using the information in the passwd structure
      * provided.
      * If the structure is NULL, the user doesn't exist. Non existent users have
-     * -1 as id and "" as name.
+     * -1 as id, "" as name and home directory, and -1 as group.
      *
      * @param userData The user information to initialize this User.
      */

@@ -44,6 +44,7 @@ User::User(const User& user) {
     mId = user.mId;
     mName = user.mName;
     mGroup = user.mGroup;
+    mHome = user.mHome;
 }
 
 User::~User() {
@@ -56,6 +57,10 @@ inline bool User::exists() const {
 
 inline const Group& User::getGroup() {
     return mGroup;
+}
+
+inline const string& User::getHome() const {
+    return mHome;
 }
 
 inline int User::getId() const {
@@ -79,12 +84,14 @@ User& User::operator=(const User& user) {
     mId = user.mId;
     mName = user.mName;
     mGroup = user.mGroup;
+    mHome = user.mHome;
 
     return *this;
 }
 
 bool User::operator==(const User& user) const {
-    return mId == user.mId && mName == user.mName && mGroup == user.mGroup;
+    return mId == user.mId && mName == user.mName && mGroup == user.mGroup &&
+                mHome == user.mHome;
 }
 
 bool User::operator!=(const User& user) const {
@@ -98,9 +105,15 @@ void User::init(struct passwd* userData) {
         mId = -1;
         mName = "";
         mGroup = Group(-1);
+        mHome = "";
     } else {
         mId = userData->pw_uid;
         mName = userData->pw_name;
         mGroup = Group(userData->pw_gid);
+        mHome = userData->pw_dir;
+
+        if (mHome.size() > 0 && mHome[mHome.size() - 1] != '/') {
+            mHome += '/';
+        }
     }
 }

@@ -39,6 +39,7 @@ class UserTest: public CppUnit::TestFixture {
     CPPUNIT_TEST(testCopyConstructor);
     CPPUNIT_TEST(testExists);
     CPPUNIT_TEST(testGetGroup);
+    CPPUNIT_TEST(testGetHome);
     CPPUNIT_TEST(testGetId);
     CPPUNIT_TEST(testGetName);
     CPPUNIT_TEST(testIsRoot);
@@ -88,6 +89,11 @@ public:
      * Tests if it returns mGroup.
      */
     void testGetGroup();
+
+    /**
+     * Tests if it returns mHome.
+     */
+    void testGetHome();
 
     /**
      * Tests if it returns mId.
