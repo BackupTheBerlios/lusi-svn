@@ -80,6 +80,9 @@ namespace util {
  * This method must be called in applications using LUSI before using other
  * resources provided by the library.
  * The directory used is $datadir/locale.
+ *
+ * The encoding of the translated strings is set to UTF-8. Untranslated strings
+ * are pure ASCII, so they can be also treated as UTF-8.
  */
 void bindLusiTextDomain();
 
