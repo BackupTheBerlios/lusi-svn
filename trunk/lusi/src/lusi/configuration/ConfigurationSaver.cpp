@@ -18,35 +18,44 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "TaskConfigurationManager.h"
-#include "TaskConfiguration.h"
+#include "ConfigurationSaver.h"
+#include "ConfigurationXmlSerializer.h"
+#include "../util/LocalFile.h"
+#include "../util/LocalUrl.h"
 
-using lusi::package::PackageId;
+using lusi::util::LocalFile;
+using lusi::util::LocalUrl;
 
-using namespace lusi::task;
+using namespace lusi::configuration;
 
 //public:
 
-TaskConfigurationManager* TaskConfigurationManager::getInstance() {
-    if (sInstance == 0) {
-        sInstance = new TaskConfigurationManager();
+ConfigurationSaver::ConfigurationSaver() {
+}
+
+ConfigurationSaver::~ConfigurationSaver() {
+}
+
+void ConfigurationSaver::save(
+                        ConfigurationParameterMap* configurationParameterMap,
+                        const LocalUrl& localUrl) throw (PersistenceException) {
+    if (localUrl.isDirectory() || localUrl.isRelative()) {
+        throw PersistenceException("Invalid url: " + localUrl.getPath());
     }
 
-    return sInstance;
-}
+    LocalFile directory(localUrl.getParent());
+    if (!directory.exists() && !directory.mkdirs()) {
+        throw PersistenceException(localUrl.getParent() +
+                                        " couldn't be created");
+    }
 
-TaskConfigurationManager::~TaskConfigurationManager() {
-}
+    xmlDocPtr doc = ConfigurationXmlSerializer().serialize(
+                                                    configurationParameterMap);
 
-//TODO implement it
-TaskConfiguration* TaskConfigurationManager::getTaskConfiguration(
-                        const PackageId* packageId) {
-    return new TaskConfiguration();
-}
+    if (xmlSaveFileEnc(localUrl.getPath().c_str(), doc, "UTF-8") == -1) {
+        xmlFreeDoc(doc);
+        throw PersistenceException(localUrl.getPath() + " couldn't be saved");
+    }
 
-//private:
-
-TaskConfigurationManager* TaskConfigurationManager::sInstance = 0;
-
-TaskConfigurationManager::TaskConfigurationManager() {
+    xmlFreeDoc(doc);
 }

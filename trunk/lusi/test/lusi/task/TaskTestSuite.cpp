@@ -20,6 +20,7 @@
 
 #include "TaskTestSuite.h"
 #include "TaskTest.h"
+#include "TaskConfigurationTest.h"
 #include "TaskLoggerTest.h"
 #include "TaskManagerTest.h"
 #include "TaskProgressTest.h"
@@ -34,6 +35,7 @@ using namespace lusi::task;
 TaskTestSuite::TaskTestSuite() {
     //Own namespace Tests
     addTest(TaskTest::suite());
+    addTest(TaskConfigurationTest::suite());
     addTest(TaskLoggerTest::suite());
     addTest(TaskManagerTest::suite());
     addTest(TaskProgressTest::suite());

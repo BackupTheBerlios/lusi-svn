@@ -50,6 +50,7 @@ void ConfigurationParameterTest::testConstructor() {
                          mConfigurationParameter->mPriorityType);
     CPPUNIT_ASSERT_EQUAL(string("A test parameter"),
                          mConfigurationParameter->mInformation);
+    CPPUNIT_ASSERT_EQUAL(true, mConfigurationParameter->mSerializable);
 }
 
 void ConfigurationParameterTest::testGetId() {
@@ -79,4 +80,16 @@ void ConfigurationParameterTest::testGetPriorityType() {
 
     CPPUNIT_ASSERT_EQUAL(ConfigurationParameter::RecommendedPriority,
                          mConfigurationParameter->getPriorityType());
+}
+
+void ConfigurationParameterTest::testIsSerializable() {
+    mConfigurationParameter->mSerializable = false;
+
+    CPPUNIT_ASSERT_EQUAL(false, mConfigurationParameter->isSerializable());
+}
+
+void ConfigurationParameterTest::testSetSerializable() {
+    mConfigurationParameter->setSerializable(false);
+
+    CPPUNIT_ASSERT_EQUAL(false, mConfigurationParameter->mSerializable);
 }

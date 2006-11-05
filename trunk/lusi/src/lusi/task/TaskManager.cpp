@@ -20,7 +20,6 @@
 
 #include "TaskManager.h"
 #include "Task.h"
-#include "TaskConfigurationManager.h"
 #include "../package/Package.h"
 #include "../package/Profile.h"
 #include "../package/status/BuiltPackageStatus.h"
@@ -74,8 +73,6 @@ Task* TaskManager::getTask(Package* package) {
     for (vector<TaskData>::const_iterator iterator = tasks.begin();
                 iterator != tasks.end() && task == 0; ++iterator) {
         task = new Task((*iterator).name, package,
-                TaskConfigurationManager::getInstance()->getTaskConfiguration(
-                        package->getPackageId()),
                 (*iterator).neededPackageStatus,
                 (*iterator).providedPackageStatus);
         if (!task->test()) {

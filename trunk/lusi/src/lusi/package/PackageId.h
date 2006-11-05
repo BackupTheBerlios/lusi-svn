@@ -40,6 +40,37 @@ class PackageId {
 public:
 
     /**
+     * Compares to package versions.
+     * The versions are expected to follow this regular expression:
+     * "[0-9]+(\.[0-9]+)*(-(alpha|beta|rc)[0-9]+)?".
+     * The versions are compared based on their subversions, not
+     * lexicographically. For example, "0.16" is greater than "0.4".
+     *
+     * If the compared versions doesn't have the same number of subversions,
+     * and the common parts are equal, the version with more subversions numbers
+     * is the greatest. For example, "0.23.4" is greater than "0.23".
+     *
+     * The non numerical part of the subversions is ordered as follows:
+     * rc > beta > alpha. The number that follows the text is also compared as
+     * numbers, not lexicographically. For example, "0.8.15" > "0.8" >
+     * "0.8-rc10" > "0.8-rc8" > "0.8-beta4" > "0.8-alpha2".
+     *
+     * If any of the specified versions doesn't follow the expected regular
+     * expression, the versions are compared as much as possible. If which
+     * version is greater can't be determined before reaching the part of the
+     * string that doesn't follows the regular expression, the first version is
+     * set as greater than the second.
+     *
+     * @param version1 The first version to compare.
+     * @param version2 The second version to compare.
+     * @return An integer less than 0 if the first version is smaller than the
+     *         second, 0 if they are equal, or an integer greater than 0 if the
+     *         first version is greater than the second.
+     */
+    static int compareVersions(const std::string& version1,
+                               const std::string& version2);
+
+    /**
      * Creates a new PackageId using the specified name and version.
      * If no version is specified, it's set to an empty string.
      */

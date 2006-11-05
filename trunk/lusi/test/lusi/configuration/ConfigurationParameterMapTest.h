@@ -48,7 +48,6 @@ class ConfigurationParameterMapTest: public CppUnit::TestFixture {
     CPPUNIT_TEST(testGetAll);
     CPPUNIT_TEST(testRemove);
     CPPUNIT_TEST(testGetInvalidPolicy);
-    CPPUNIT_TEST(testMerge);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -102,12 +101,6 @@ public:
      * Tests if it returns mInvalidPolicy.
      */
     void testGetInvalidPolicy();
-
-    /**
-     * Tests if a map merged with another one with parameters with the same id
-     * are kept or overriden depending on the type of merge.
-     */
-    void testMerge();
 
 private:
 

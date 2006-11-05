@@ -24,14 +24,16 @@
 #include "TaskProgress.h"
 #include "helper/TaskHelper.h"
 #include "helper/TaskHelperManager.h"
+#include "../configuration/ConfigurationMerger.h"
 #include "../package/Package.h"
 #include "../util/SmartPtr.h"
 
 using std::string;
 using std::vector;
 
-using lusi::configuration::InvalidConfigurationException;
 using lusi::configuration::ConfigurationParameterMap;
+using lusi::configuration::ConfigurationMerger;
+using lusi::configuration::InvalidConfigurationException;
 using lusi::package::Package;
 using lusi::package::status::PackageStatus;
 using lusi::task::helper::ExecuteTaskHelperException;
@@ -44,12 +46,11 @@ using namespace lusi::task;
 //public:
 
 Task::Task(const string& name, Package* package,
-           TaskConfiguration* taskConfiguration,
            const PackageStatus* neededPackageStatus,
            const PackageStatus* providedPackageStatus) {
     mName = name;
     mPackage = package;
-    mTaskConfiguration = taskConfiguration;
+    mTaskConfiguration = new TaskConfiguration(this);
     mNeededPackageStatus = neededPackageStatus;
     mProvidedPackageStatus = providedPackageStatus;
     mCurrentTaskHelper = 0;
@@ -61,6 +62,8 @@ Task::Task(const string& name, Package* package,
 
     mTaskLogger = new TaskLogger(this);
     mTaskProgress = new TaskProgress(this);
+
+    sortTaskHelpers();
 }
 
 Task::~Task() {
@@ -104,12 +107,12 @@ inline TaskProgress* Task::getTaskProgress() const {
 }
 */
 
-ConfigurationParameterMap* Task::getTaskHelperConfiguration() const {
+SmartPtr<ConfigurationParameterMap> Task::getTaskHelperConfiguration() const {
     if (mCurrentTaskHelper != 0) {
-        return &mCurrentTaskHelper->getConfigurationParameterMap();
+        return mCurrentTaskHelper->getConfigurationParameterMap();
     }
 
-    return 0;
+    return SmartPtr<ConfigurationParameterMap>();
 }
 
 SmartPtr<ConfigurationParameterMap> Task::getInvalidConfiguration() const {
@@ -145,8 +148,12 @@ void Task::execute() throw (ExecuteTaskException,
     }
 
     mPackage->setPackageStatus(mProvidedPackageStatus);
-    mTaskConfiguration->merge(
-                        mCurrentTaskHelper->getConfigurationParameterMap());
+    mTaskConfiguration->addTaskHelperConfiguration(
+                            mCurrentTaskHelper->getConfigurationParameterMap());
+    //If it fails to save... well, bad luck :P, as it will likely be due to
+    //external factors that can't be corrected (for example, lack of
+    //permissions in the configuration directory)
+    mTaskConfiguration->save();
 
     nextTaskHelper();
 
@@ -156,9 +163,6 @@ void Task::execute() throw (ExecuteTaskException,
 //private:
 
 void Task::nextTaskHelper() {
-
-    //TODO get TaskHelper from TaskConfiguration
-
     TaskHelper* taskHelper = 0;
     bool validTaskHelper = false;
     for (; !validTaskHelper && mTaskHelpersIterator != mTaskHelpers.end();
@@ -172,9 +176,44 @@ void Task::nextTaskHelper() {
     }
 
     if (taskHelper != 0) {
+        //The advantage of having the call to init here instead of in
+        //TaskHelperManager::getTaskHelpers() is that it is only called when
+        //the TaskHelper is going to be executed. Having it in getTaskHelpers,
+        //every TaskHelper configuration would be inited.
         taskHelper->initConfigurationParameterMap();
-        taskHelper->getConfigurationParameterMap().merge(*mTaskConfiguration);
+
+        SmartPtr<ConfigurationParameterMap> savedTaskHelperConfiguration =
+                mTaskConfiguration->getTaskHelperConfiguration(
+                        taskHelper->getName());
+        if (!savedTaskHelperConfiguration.isNull()) {
+            ConfigurationMerger().merge(
+                    getPtr(taskHelper->getConfigurationParameterMap()),
+                    getPtr(savedTaskHelperConfiguration));
+        }
     }
 
     mCurrentTaskHelper = taskHelper;
+}
+
+void Task::sortTaskHelpers() {
+    vector< SmartPtr<ConfigurationParameterMap> > loadedTaskHelpers =
+                        mTaskConfiguration->getAllTaskHelperConfigurations();
+
+    for (vector< SmartPtr<ConfigurationParameterMap> >::reverse_iterator rIt =
+                                                    loadedTaskHelpers.rbegin();
+            rIt != loadedTaskHelpers.rend(); ++rIt) {
+        bool found = false;
+        vector<TaskHelper*>::iterator it = mTaskHelpers.begin();
+
+        while (!found && it != mTaskHelpers.end()) {
+            if ((*it)->getName() == (*rIt)->getId()) {
+                TaskHelper* taskHelper = *it;
+                mTaskHelpers.erase(it);
+                mTaskHelpers.insert(mTaskHelpers.begin(), taskHelper);
+
+                found = true;
+            }
+            ++it;
+        }
+    }
 }

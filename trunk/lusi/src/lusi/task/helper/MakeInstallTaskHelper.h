@@ -62,7 +62,8 @@ TaskHelper* createMakeInstallTaskHelper(lusi::task::Task* task);
  * It may happen that the directory where the package will be installed doesn't
  * belongs to the current user and she doesn't have write permissions on it. In
  * those cases, the configuration includes the name and the password of the
- * user owner of the directory to install the package to.
+ * user owner of the directory to install the package to. The login information
+ * isn't serializable.
  */
 class MakeInstallTaskHelper: public TaskHelperUsingMake {
 public:

@@ -84,10 +84,15 @@ namespace task {
  *
  * The task executes each TaskHelper set by nextTaskHelper() method until
  * the Task is done or there are no more TaskHelpers availables. If a
- * TaskHelper is executed successfully, the type of the TaskHelper is saved in
- * the configuration, so it will be tried the first if the Task is executed
- * again with the same Package. TaskHelpers that can be undone have a
- * counterpart TaskHelper that, when executed, reverts the original TaskHelper.
+ * TaskHelper is executed successfully, the TaskHelper configuration is saved in
+ * the TaskConfiguration. TaskHelpers that can be undone have a counterpart
+ * TaskHelper that, when executed, reverts the original TaskHelper.
+ *
+ * TaskConfiguration is used to know which TaskHelpers where executed with this
+ * Task in other LUSI execution, and what configuration was used, so it can be
+ * tried instead of the default configuration of the TaskHelper. The
+ * TaskConfiguration used with this Task is also saved, so in another execution
+ * of LUSI it can be used as explained.
  *
  * TaskHelpers are registered with a task name using TaskHelperManager. A Task
  * can, therefore, know which TaskHelpers it can use.
@@ -97,19 +102,19 @@ namespace task {
  * (which follow Strategy Design Pattern).
  *
  * The task is executed using execute() method, and the changes made by that
- * method may be revertable using the UndoTask for this Task, if any. Reverting
+ * method may be revertable using the undo Task for this Task, if any. Reverting
  * a task doesn't need to be done just after it was done, other tasks can be
  * done an undone before reverting this task. In fact, it can even be undone
  * long time since when it was done (think, for example, on uninstalling an
  * installed package).
  *
- * Prior to execute a task, it can be tested if the Package and
- * TaskConfiguration to use are valid with this Task using test() method.
+ * Prior to execute a task, it can be tested if this Task is valid using test()
+ * method.
  * Moreover, the configuration to be used by the current TaskHelper (which is
  * different than the one for the Task) can be got with
  * getTaskHelperConfiguration(). Also, the invalid values in that configuration
  * can be checked using getInvalidConfiguration(). If the Task is executed with
- * an invalid task helper configuration, an exception is thrown.
+ * an invalid TaskHelper configuration, an exception is thrown.
  *
  * The Task can also notify the operations executed and the progress when
  * executing the task. There are Loggers for both events, which can be got
@@ -118,12 +123,14 @@ namespace task {
  * Tasks are identified by their name, so it must be unique. Two different tasks
  * can't both need and provide the same PackageStatus. Tasks should be
  * registered with TaskManager using the name and the needed and provided
- * PackageStatus.
+ * PackageStatus. Undo tasks are named "Undo" followed by the name of the Task
+ * they undo.
  *
  * Task shouldn't be created directly. Instead, use
  * TaskManager::getTask(lusi::package::Package*).
  *
  * @see helper::TaskHelper
+ * @see TaskConfiguration
  * @see TaskLogger
  * @see TaskManager
  * @see TaskProgress
@@ -137,20 +144,17 @@ public:
      *
      * @param name The name of the Task.
      * @param package The Package to use.
-     * @param taskConfiguration The TaskConfiguration to use.
      * @param neededPackageStatus The PackageStatus needed to execute this Task.
      * @param providedPackageStatus The PackageStatus this Task provides once
      *                              it was executed.
      */
     Task(const std::string& name, lusi::package::Package* package,
-         TaskConfiguration* taskConfiguration,
          const lusi::package::status::PackageStatus* neededPackageStatus,
          const lusi::package::status::PackageStatus* providedPackageStatus);
 
     /**
      * Destroys this Task.
-     * The Package and TaskConfiguration used aren't deleted when destroying
-     * the Task.
+     * The Package used isn't deleted when destroying the Task.
      */
     virtual ~Task();
 
@@ -225,16 +229,16 @@ public:
     }
 
     /**
-     * Returns the configuration parameterss needed by the current TaskHelper.
+     * Returns the configuration parameters needed by the current TaskHelper.
      * The parameters contain all the values that can and, in some cases, need,
      * to be customized when executing a TaskHelper (the real implementations of
      * Tasks).
      *
-     * Note that the returned parameters may also exist in this Task
-     * configuration. However, when checking the configuration before executing
-     * the Task, you must always use this method instead. This configuration
-     * is added automatically to the configuration of the Task when it is
-     * executed successfully.
+     * Note that the returned parameters may also exist in the
+     * TaskConfiguration. However, when checking the configuration before
+     * executing the Task, you must always use this method instead. This
+     * configuration is added automatically to the TaskConfiguration if the
+     * TaskHelper is executed successfully.
      *
      * This method should be called only with Tasks that can be executed (which
      * can be known using test()). If there are no available TaskHelpers, a null
@@ -242,8 +246,8 @@ public:
      *
      * @return The configuration parameters needed by the current TaskHelper.
      */
-    lusi::configuration::ConfigurationParameterMap* getTaskHelperConfiguration()
-                                                                        const;
+    lusi::util::SmartPtr<lusi::configuration::ConfigurationParameterMap>
+    getTaskHelperConfiguration() const;
 
     /**
      * Returns the invalid configuration parameters of the current TaskHelper.
@@ -264,8 +268,9 @@ public:
     getInvalidConfiguration() const;
 
     /**
-     * Checks if the Task can be executed using the Package and
-     * TaskConfiguration specified.
+     * Checks if the Task can be executed.
+     * In order to execute this Task, at least one TaskHelper must be available
+     * to be executed.
      *
      * @return True if it can be executed, false otherwise.
      */
@@ -275,8 +280,8 @@ public:
      * Executes this Task.
      * The current TaskHelper, which is the real implementation of the Task, is
      * executed. Once finished, the package status is updated and the
-     * configuration of the TaskHelper merged with the Task configuration to
-     * save the parameters used.
+     * configuration of the TaskHelper added to the TaskConfiguration to save
+     * the parameters used.
      *
      * This method can only be called when all the parameters are valid. If
      * there are any invalid parameters, an exception is thrown.
@@ -304,12 +309,12 @@ private:
     std::string mName;
 
     /**
-     * The package to use in this Task.
+     * The Package to use in this Task.
      */
     lusi::package::Package* mPackage;
 
     /**
-     * The task configuration to use in this Task.
+     * The TaskConfiguration to use in this Task.
      */
     TaskConfiguration* mTaskConfiguration;
 
@@ -363,9 +368,19 @@ private:
      * the vector of TaskHelpers. A TaskHelper is suitable if the ResourceMap
      * is valid for that TaskHelper.
      * Once the TaskHelper is set, its configuration is initialized and the
-     * TaskConfiguration merged with it.
+     * TaskHelper configuration got from TaskConfiguration merged with it.
      */
     void nextTaskHelper();
+
+    /**
+     * Sort the TaskHelpers so they will be executed in a specific order.
+     * The TaskHelpers which were executed successfully in previous LUSI
+     * executions of this Task (which are known using
+     * TaskConfiguration::getAllTaskHelperConfigurations()) have more priority
+     * than the others. If some TaskHelper was executed before but this is no
+     * longer available, it is ignored.
+     */
+    void sortTaskHelpers();
 
     /**
      * Copy constructor disabled.

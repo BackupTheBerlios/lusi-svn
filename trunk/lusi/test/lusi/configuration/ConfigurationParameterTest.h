@@ -44,6 +44,8 @@ class ConfigurationParameterTest: public CppUnit::TestFixture {
     CPPUNIT_TEST(testGetName);
     CPPUNIT_TEST(testGetInformation);
     CPPUNIT_TEST(testGetPriorityType);
+    CPPUNIT_TEST(testIsSerializable);
+    CPPUNIT_TEST(testSetSerializable);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -66,24 +68,34 @@ public:
     void testConstructor();
 
     /**
-     * Test if it return mId.
+     * Tests if it returns mId.
      */
     void testGetId();
 
     /**
-     * Test if it return mName.
+     * Tests if it returns mName.
      */
     void testGetName();
 
     /**
-     * Test if it return mInformation.
+     * Tests if it returns mInformation.
      */
     void testGetInformation();
 
     /**
-     * Test if it return mPriorityType.
+     * Tests if it returns mPriorityType.
      */
     void testGetPriorityType();
+
+    /**
+     * Tests if it returns mSerializable.
+     */
+    void testIsSerializable();
+
+    /**
+     * Tests if it sets mSerializable.
+     */
+    void testSetSerializable();
 
 private:
 

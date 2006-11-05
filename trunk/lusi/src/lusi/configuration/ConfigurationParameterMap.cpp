@@ -101,7 +101,7 @@ ConfigurationParameterMap::get(const string& id) const {
 
 inline vector< SmartPtr<ConfigurationParameter> >
 ConfigurationParameterMap::getAll() const {
-    return mConfigurationParameters.getAll();
+    return mConfigurationParametersVector;
 }
 */
 
@@ -129,20 +129,3 @@ inline InvalidPolicy ConfigurationParameterMap::getInvalidPolicy() const {
     return mInvalidPolicy;
 }
 */
-
-void ConfigurationParameterMap::merge(
-            const ConfigurationParameterMap& configurationParameterMap,
-            MergeType type /*= KeepParameters*/) {
-    vector< SmartPtr<ConfigurationParameter> > configurationParameters =
-                                            configurationParameterMap.getAll();
-
-    for (uint i=0; i<configurationParameters.size(); ++i) {
-        string id = configurationParameters[i]->getId();
-        if (get(id).isNull()) {
-            add(configurationParameters[i]);
-        } else if (type == OverrideParameters) {
-            remove(id);
-            add(configurationParameters[i]);
-        }
-    }
-}

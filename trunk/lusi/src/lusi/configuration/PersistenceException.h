@@ -18,80 +18,54 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef LUSI_TASK_TASKCONFIGURATIONMANAGER_H
-#define LUSI_TASK_TASKCONFIGURATIONMANAGER_H
+#ifndef LUSI_CONFIGURATION_PERSISTENCEEXCEPTION_H
+#define LUSI_CONFIGURATION_PERSISTENCEEXCEPTION_H
 
+#include <stdexcept>
 #include <string>
 
 namespace lusi {
-namespace package {
-    class PackageId;
-}
-}
-
-namespace lusi {
-namespace task {
-class TaskConfiguration;
-}
-}
-
-namespace lusi {
-namespace task {
+namespace configuration {
 
 /**
- * @todo Documentation
+ * @class PersistenceException PersistenceException.h
+ * lusi/configuration/PersistenceException.h
+ *
+ * Exception for errors happened when saving or loading a configuration.
+ *
+ * The error message returned by what() will be the error message specified
+ * when creating the exception.
  */
-class TaskConfigurationManager {
+class PersistenceException: public std::exception {
 public:
 
     /**
-     * Returns the instance of this class.
-     * If the instance isn't already created, this method creates it.
+     * Creates a new PersistenceException.
      *
-     * @return The only created instance of this class.
+     * @param errorMessage The error message of the exception, empty by default.
      */
-    static TaskConfigurationManager* getInstance();
+    explicit PersistenceException(const std::string& errorMessage = "");
 
     /**
-     * Destroys this TaskConfigurationManager.
+     * Destroys this PersistenceException.
      */
-    virtual ~TaskConfigurationManager();
+    virtual ~PersistenceException() throw();
 
-    lusi::task::TaskConfiguration* getTaskConfiguration(
-                            const lusi::package::PackageId* packageId);
-
-protected:
+    /**
+     * Returns the error message.
+     *
+     * @return The error message.
+     */
+    virtual const char* what() const throw() {
+        return mErrorMessage.c_str();
+    }
 
 private:
 
     /**
-     * The only created instance of this class.
-     * It's created when getInstance() is called for first time.
+     * Error message for the exception.
      */
-    static TaskConfigurationManager* sInstance;
-
-
-
-
-    /**
-     * Creates a new TaskConfigurationManager.
-     * Objects must be got with getInstance().
-     *
-     * @see getInstance()
-     */
-    TaskConfigurationManager();
-
-    /**
-     * Copy constructor disabled.
-     */
-    TaskConfigurationManager(
-            const TaskConfigurationManager& taskConfigurationManager);
-
-    /**
-     * Assignment disabled.
-     */
-    TaskConfigurationManager& operator=(
-            const TaskConfigurationManager& taskConfigurationManager);
+    std::string mErrorMessage;
 
 };
 

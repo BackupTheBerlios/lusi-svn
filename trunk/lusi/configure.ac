@@ -24,6 +24,13 @@ AM_PATH_CPPUNIT(1.8.0,
                 AC_SUBST(CPPUNIT_LIBS)
 )
 
+dnl
+dnl Checks for libxml2
+dnl
+PKG_CHECK_MODULES(LIBXML, libxml-2.0)
+AC_SUBST(LIBXML_CFLAGS)
+AC_SUBST(LIBXML_LIBS)
+
 AC_OUTPUT(Makefile
           po/Makefile.in
           src/Makefile

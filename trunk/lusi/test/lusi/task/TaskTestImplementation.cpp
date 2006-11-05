@@ -22,22 +22,21 @@
 #include "../package/status/PackageStatusTestImplementation.h"
 #include "../package/Package.h"
 #include "../package/PackageId.h"
-#include "../task/TaskConfiguration.h"
 
+using lusi::configuration::ConfigurationParameterMap;
 using lusi::package::Package;
 using lusi::package::PackageId;
-using lusi::task::TaskConfiguration;
 using lusi::package::status::PackageStatusTestImplementation;
+using lusi::util::SmartPtr;
 
 using namespace lusi::task;
 
 //public:
 
 TaskTestImplementation::TaskTestImplementation(const std::string& name):
-                Task(name, new Package(new PackageId("testPackage")),
-                     new TaskConfiguration(),
-                     PackageStatusTestImplementation::getFirstInstance(),
-                     PackageStatusTestImplementation::getSecondInstance()) {
+            Task(name, new Package(new PackageId("testPackage")),
+                 PackageStatusTestImplementation::getFirstInstance(),
+                 PackageStatusTestImplementation::getSecondInstance()) {
 }
 
 TaskTestImplementation::~TaskTestImplementation() {

@@ -59,7 +59,7 @@ SmartPtr<ConfigurationParameterMap> TaskHelper::getInvalidConfiguration() {
                     "", ConfigurationParameter::RequiredPriority, ""));
 
     vector< SmartPtr<ConfigurationParameter> > configurationParameters =
-        mConfigurationParameterMap.getAll();
+        mConfigurationParameterMap->getAll();
     for (uint i=0; i<configurationParameters.size(); ++i) {
         if (configurationParameters[i]->isInvalid()) {
             invalidConfiguration->add(configurationParameters[i]);
@@ -74,18 +74,21 @@ inline const string& TaskHelper::getName() const {
     return mName;
 }
 
-inline ConfigurationParameterMap& TaskHelper::getConfigurationParameterMap() {
+inline lusi::util::SmartPtr<lusi::configuration::ConfigurationParameterMap>
+TaskHelper::getConfigurationParameterMap() {
     return mConfigurationParameterMap;
 }
 */
 
 //protected:
 
-TaskHelper::TaskHelper(const string& name, Task* task):
-        mConfigurationParameterMap(name + "Configuration", "",
-                ConfigurationParameter::RecommendedPriority, "") {
+TaskHelper::TaskHelper(const string& name, Task* task) {
     mName = name;
     mTask = task;
+
+    mConfigurationParameterMap = SmartPtr<ConfigurationParameterMap>(
+                new ConfigurationParameterMap(name, "",
+                            ConfigurationParameter::RecommendedPriority, ""));
 }
 
 /*

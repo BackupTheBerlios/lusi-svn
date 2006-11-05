@@ -26,7 +26,6 @@
 #undef private
 #undef protected
 
-#include "../TaskConfiguration.h"
 #include "../TaskLoggerObserverTestImplementation.h"
 #include "../TaskProgressObserverTestImplementation.h"
 #include "../TaskTestImplementation.h"
@@ -38,7 +37,6 @@ using std::string;
 using lusi::package::Package;
 using lusi::package::PackageId;
 using lusi::task::TaskTestImplementation;
-using lusi::task::TaskConfiguration;
 using lusi::task::TaskLoggerObserverTestImplementation;
 using lusi::task::TaskProgressObserverTestImplementation;
 

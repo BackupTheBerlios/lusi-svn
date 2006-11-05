@@ -33,6 +33,7 @@ namespace package {
  */
 class PackageIdTest: public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(PackageIdTest);
+    CPPUNIT_TEST(testCompareVersions);
     CPPUNIT_TEST(testGetName);
     CPPUNIT_TEST(testGetVersion);
     CPPUNIT_TEST_SUITE_END();
@@ -48,6 +49,15 @@ public:
      * Cleans up after the test run.
      */
     virtual void tearDown();
+
+    /**
+     * Checks if the versions are compared as they should. That is checked with
+     * two versions with the same number of subversions and with two versions
+     * with different number of subversions. The checks are also made with
+     * a string lexicographically greater than other but smaller in version
+     * terms, and with all the non numerical values.
+     */
+    void testCompareVersions();
 
     /**
      * Checks if getName() returns the name set in the constructor.

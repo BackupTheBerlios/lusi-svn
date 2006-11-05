@@ -68,6 +68,12 @@ namespace configuration {
  * Derived non abstract classes from ConfigurationParameter must implement
  * accept method simply making the visitor to visit the node.
  *
+ * Configurations composed of ConfigurationParameters can be serialized using
+ * ConfigurationXmlSerializer. There are some ConfigurationParameters which
+ * aren't desirable to be serialized, for example, those containing sensible
+ * information such as passwords. By default, every ConfigurationParameter is
+ * serializable. This behaviour can be overriden using setSerializable(bool).
+ *
  * @see ConfigurationParameterVisitor
  */
 class ConfigurationParameter {
@@ -144,10 +150,32 @@ public:
         return mPriorityType;
     }
 
+    /**
+     * Returns true if this ConfigurationParameter can be serialized, false
+     * otherwise.
+     *
+     * @return True if this ConfigurationParameter can be serialized, false
+     *         otherwise.
+     */
+    bool isSerializable() const {
+        return mSerializable;
+    }
+
+    /**
+     * Sets whether this ConfigurationParameter can be serialized or not.
+     *
+     * @param serializable Whether this ConfigurationParameter can be serialized
+     *                     or not.
+     */
+    void setSerializable(bool serializable) {
+        mSerializable = serializable;
+    }
+
 protected:
 
     /**
      * Creates a new ConfigurationParameter.
+     * The ConfigurationParameter is serializable.
      *
      * Protected to avoid classes other than derived to create
      * ConfigurationParameter objects.
@@ -183,6 +211,11 @@ private:
      * The type of the priority of this ConfigurationParameter.
      */
     PriorityType mPriorityType;
+
+    /**
+     * Whether this ConfigurationParameter can be serialized or not.
+     */
+    bool mSerializable;
 
 
 

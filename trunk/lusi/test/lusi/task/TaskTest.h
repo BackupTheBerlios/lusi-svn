@@ -57,6 +57,7 @@ class TaskTest: public CppUnit::TestFixture {
     CPPUNIT_TEST(testGetTaskHelperConfiguration);
     CPPUNIT_TEST(testGetInvalidConfiguration);
     CPPUNIT_TEST(testNextTaskHelper);
+    CPPUNIT_TEST(testSortTaskHelpers);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -130,6 +131,17 @@ public:
      */
     void testNextTaskHelper();
 
+    /**
+     * Tests if the TaskHelpers are sorted with higher priority for those that
+     * were used before. It is tested with no TaskHelpers in the
+     * TaskConfiguration, a TaskHelper in the TaskConfiguration, two
+     * TaskHelpers in the TaskConfiguration, three TaskHelpers in the
+     * TaskConfiguration (the first of them not available in the TaskHelpers
+     * list) and three TaskHelpers in the TaskConfiguration (the last of them
+     * not available in the TaskHelpers list).
+     */
+    void testSortTaskHelpers();
+
 private:
 
     /**
@@ -147,10 +159,12 @@ private:
      */
     lusi::package::Package* mPackage;
 
+
+
     /**
-     * The TaskConfiguration for the Task.
+     * Calls tearDown and setUp.
      */
-    TaskConfiguration* mTaskConfiguration;
+    void restartTestObjects();
 
 };
 

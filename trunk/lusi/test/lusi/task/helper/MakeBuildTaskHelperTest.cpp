@@ -29,7 +29,6 @@
 #undef private
 #undef protected
 
-#include "../TaskConfiguration.h"
 #include "../TaskTestImplementation.h"
 #include "../../package/LocalFileResource.h"
 #include "../../package/Package.h"
@@ -47,7 +46,6 @@ using lusi::package::Package;
 using lusi::package::PackageId;
 using lusi::package::Resource;
 using lusi::task::TaskTestImplementation;
-using lusi::task::TaskConfiguration;
 using lusi::util::Process;
 using lusi::util::SmartPtr;
 

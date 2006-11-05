@@ -49,11 +49,6 @@ namespace configuration {
  * This class provides different policies to check wheter it is invalid or not.
  * It can be set using InvalidPolicy enumeration values when creating an object
  * of this class.
- *
- * Moreover, this class allows merging a ConfigurationParameterMap with another
- * one using merge method. Contents of the map to merge are added to the merged
- * map. If a parameter to add has the same id as another already present in the
- * merged map, the content in the merged map can be overriden or not.
  */
 class ConfigurationParameterMap: public ConfigurationParameter {
 public:
@@ -70,14 +65,6 @@ public:
         NoPolicy,
         AndPolicy,
         OrPolicy
-    };
-
-    /**
-     * The type of merge between two ConfigurationParameterMaps.
-     */
-    enum MergeType {
-        KeepParameters,
-        OverrideParameters
     };
 
     /**
@@ -173,24 +160,6 @@ public:
     InvalidPolicy getInvalidPolicy() const {
         return mInvalidPolicy;
     }
-
-    /**
-     * Merges this ConfigurationParameter with the one specified.
-     * The contents of the specified map are added to this map. If there's
-     * already a parameter with the same id to be added, the one from this map
-     * will be kept or it will be replaced, depending on the value of the type
-     * of merge.
-     * Merging happens only with the ConfigurationParameters contained directly
-     * in the map. When adding or overriding a parameter, the whole parameter
-     * is used. For example, if two composed parameters have the same id and
-     * different children, children aren't added individually. Either the
-     * composed parameter is kept as a whole, or replaced as a whole.
-     *
-     * @param configurationParameterMap The map to merge.
-     * @param type The type of merge to do.
-     */
-    void merge(const ConfigurationParameterMap& configurationParameterMap,
-               MergeType type = KeepParameters);
 
 protected:
 

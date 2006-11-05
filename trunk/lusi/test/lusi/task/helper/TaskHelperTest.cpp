@@ -54,7 +54,7 @@ void TaskHelperTest::testExecute() {
     ConfigurationParameterTestImplementation* parameter1 =
             new ConfigurationParameterTestImplementation("anchovy", "Anchovy",
                     ConfigurationParameter::RequiredPriority, "MORE!");
-    mTaskHelper->mConfigurationParameterMap.add(
+    mTaskHelper->mConfigurationParameterMap->add(
                                 SmartPtr<ConfigurationParameter>(parameter1));
 
     //Test with a valid parameter
@@ -70,20 +70,20 @@ void TaskHelperTest::testGetInvalidConfiguration() {
     ConfigurationParameterTestImplementation* parameter1 =
             new ConfigurationParameterTestImplementation("anchovy", "Anchovy",
                     ConfigurationParameter::RequiredPriority, "MORE!");
-    mTaskHelper->mConfigurationParameterMap.add(
+    mTaskHelper->mConfigurationParameterMap->add(
                                 SmartPtr<ConfigurationParameter>(parameter1));
     ConfigurationParameterTestImplementation* parameter2 =
             new ConfigurationParameterTestImplementation("moultTime",
                     "Moult time", ConfigurationParameter::OptionalPriority,
                     "Shell to use from now on");
-    mTaskHelper->mConfigurationParameterMap.add(
+    mTaskHelper->mConfigurationParameterMap->add(
                                 SmartPtr<ConfigurationParameter>(parameter2));
     ConfigurationParameterTestImplementation* parameter3 =
             new ConfigurationParameterTestImplementation(
                     "scrabbleAbbreviations", "Scrabble abbreviations",
                     ConfigurationParameter::RecommendedPriority,
                     "Do abbreviations count in Scrabble?");
-    mTaskHelper->mConfigurationParameterMap.add(
+    mTaskHelper->mConfigurationParameterMap->add(
                                 SmartPtr<ConfigurationParameter>(parameter3));
 
     //Test when all the parameters are invalid

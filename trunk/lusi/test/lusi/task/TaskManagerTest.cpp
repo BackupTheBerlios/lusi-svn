@@ -103,7 +103,7 @@ void TaskManagerTest::testSingleton() {
 }
 
 void TaskManagerTest::testGetTask() {
-    auto_ptr<PackageId> packageId(new PackageId("test"));
+    auto_ptr<PackageId> packageId(new PackageId("testPackage"));
     auto_ptr<Package> package(new Package(packageId.get(), firstPackageStatus));
 
     auto_ptr<Task> task(mTaskManager->getTask(package.get()));

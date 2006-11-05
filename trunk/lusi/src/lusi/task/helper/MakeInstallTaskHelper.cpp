@@ -85,8 +85,9 @@ to"),
 to install the package to"), ConfigurationParameterMap::AndPolicy);
     login->add(SmartPtr<ConfigurationParameter>(mUserName));
     login->add(SmartPtr<ConfigurationParameter>(mPassword));
+    login->setSerializable(false);
 
-    mConfigurationParameterMap.add(SmartPtr<ConfigurationParameter>(login));
+    mConfigurationParameterMap->add(SmartPtr<ConfigurationParameter>(login));
 }
 
 //protected:

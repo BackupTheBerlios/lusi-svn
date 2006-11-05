@@ -67,7 +67,7 @@ void BaseExtractTaskHelper::initConfigurationParameterMap() {
             LocalUrl(mFileToUnpack->getId()).getParent(),
             ConfigurationParameterLocalUrl::DirectoryType);
 
-    mConfigurationParameterMap.add(
+    mConfigurationParameterMap->add(
                     SmartPtr<ConfigurationParameter>(mExtractionDirectory));
 }
 

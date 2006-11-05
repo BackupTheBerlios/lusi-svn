@@ -41,6 +41,15 @@ inline const std::string& ConfigurationParameter::getInformation() cosnt {
 inline const PriorityType& ConfigurationParameter::getPriorityType() const {
     return mPriorityType;
 }
+
+inline bool ConfigurationParameter::isSerializable() const {
+    return mSerializable;
+}
+
+inline void ConfigurationParameter::setSerializable(bool serializable) {
+    mSerializable = serializable;
+}
+
 */
 
 //protected:
@@ -53,4 +62,5 @@ ConfigurationParameter::ConfigurationParameter(const string& id,
     mName = name;
     mPriorityType = priorityType;
     mInformation = information;
+    mSerializable = true;
 }

@@ -177,7 +177,7 @@ public:
      *
      * @return The configuration parameters for this TaskHelper.
      */
-    lusi::configuration::ConfigurationParameterMap&
+    lusi::util::SmartPtr<lusi::configuration::ConfigurationParameterMap>
     getConfigurationParameterMap() {
         return mConfigurationParameterMap;
     }
@@ -192,7 +192,8 @@ protected:
     /**
      * The configuration parameters for this TaskHelper.
      */
-    lusi::configuration::ConfigurationParameterMap mConfigurationParameterMap;
+    lusi::util::SmartPtr<lusi::configuration::ConfigurationParameterMap>
+    mConfigurationParameterMap;
 
 
 

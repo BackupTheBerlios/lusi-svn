@@ -104,7 +104,7 @@ void ConfigureConfigureTaskHelper::initConfigurationParameterMap() {
         prefix->setValue(LocalUrl("/usr/local/"));
     }
 
-    mConfigurationParameterMap.add(SmartPtr<ConfigurationParameter>(prefix));
+    mConfigurationParameterMap->add(SmartPtr<ConfigurationParameter>(prefix));
 }
 
 //protected:
@@ -125,7 +125,7 @@ string ConfigureConfigureTaskHelper::getConfigureParameters(Process* process) {
 
     SmartPtr<ConfigurationParameterLocalUrl> prefix =
         static_cast< SmartPtr<ConfigurationParameterLocalUrl> >(
-            mConfigurationParameterMap.get("prefix"));
+            mConfigurationParameterMap->get("prefix"));
 
     if (!prefix->isDefaultValue()) {
         configureParameters += " --" + prefix->getId() + "=" +
