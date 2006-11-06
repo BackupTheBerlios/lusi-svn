@@ -24,16 +24,8 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 namespace lusi {
-namespace package {
-class Package;
-class PackageId;
-}
-}
-
-namespace lusi {
 namespace task {
 class Task;
-class TaskConfiguration;
 }
 }
 
@@ -57,7 +49,6 @@ namespace helper {
 class MakeInstallTaskHelperTest: public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(MakeInstallTaskHelperTest);
     CPPUNIT_TEST(testConstructor);
-    CPPUNIT_TEST(testHasValidResourceMap);
     CPPUNIT_TEST(testGetProcess);
     CPPUNIT_TEST_SUITE_END();
 
@@ -74,24 +65,20 @@ public:
     virtual void tearDown();
 
     /**
-     * Checks if mPackageDirectory is set as it should.
+     * Checks if the name, the task and the make target are set.
      */
     void testConstructor();
 
     /**
-     * Checks if true is returned only if a valid Makefile is available.
-     */
-    void testHasValidResourceMap();
-
-    /**
-     * Checks if the Process arguments set are correct.
+     * Checks if the Process arguments set are correct. It is tested with a
+     * install and an uninstall target.
      */
     void testGetProcess();
 
 private:
 
     /**
-     * The TarExtractTaskHelper to use.
+     * The MakeInstallTaskHelper to use.
      */
     MakeInstallTaskHelper* mMakeInstallTaskHelper;
 

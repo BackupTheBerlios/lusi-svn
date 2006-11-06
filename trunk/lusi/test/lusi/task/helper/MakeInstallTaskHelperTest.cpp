@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <memory>
 #include <vector>
 
 #include "MakeInstallTaskHelperTest.h"
@@ -32,18 +31,13 @@
 #include "../TaskTestImplementation.h"
 #include "../../package/LocalFileResource.h"
 #include "../../package/Package.h"
-#include "../../package/PackageId.h"
 #include "../../package/ResourceMap.h"
-#include "../../util/LocalUrl.h"
 #include "../../util/SmartPtr.h"
 
-using std::auto_ptr;
 using std::string;
-using std::vector;
 
+using lusi::configuration::ConfigurationParameterString;
 using lusi::package::LocalFileResource;
-using lusi::package::Package;
-using lusi::package::PackageId;
 using lusi::package::Resource;
 using lusi::task::TaskTestImplementation;
 using lusi::util::Process;
@@ -55,7 +49,8 @@ using namespace lusi::task::helper;
 
 void MakeInstallTaskHelperTest::setUp() {
     mTask = new TaskTestImplementation("TaskTestImplementation");
-    mMakeInstallTaskHelper = new MakeInstallTaskHelper(mTask);
+    mMakeInstallTaskHelper = new MakeInstallTaskHelper("MakeInstallTaskHelper",
+                                                       mTask, "install");
 }
 
 void MakeInstallTaskHelperTest::tearDown() {
@@ -64,75 +59,43 @@ void MakeInstallTaskHelperTest::tearDown() {
 }
 
 void MakeInstallTaskHelperTest::testConstructor() {
-    //Test the empty ResourceMap used by default
-    CPPUNIT_ASSERT_EQUAL(string(""),
-                         mMakeInstallTaskHelper->mPackageDirectory->getPath());
-
-    //Test with a ResourceMap without a package directory
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/Makefile")));
-    delete mMakeInstallTaskHelper;
-    mMakeInstallTaskHelper = new MakeInstallTaskHelper(mTask);
-
-    CPPUNIT_ASSERT_EQUAL(string(""),
-                         mMakeInstallTaskHelper->mPackageDirectory->getPath());
-
-    //Test with a ResourceMap with a valid package directory
-    mTask->getPackage()->getResourceMap()->remove("/Makefile");
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/package/")));
-    delete mMakeInstallTaskHelper;
-    mMakeInstallTaskHelper = new MakeInstallTaskHelper(mTask);
-
-    CPPUNIT_ASSERT_EQUAL(string("/package/"),
-                         mMakeInstallTaskHelper->mPackageDirectory->getPath());
-}
-
-void MakeInstallTaskHelperTest::testHasValidResourceMap() {
-    //Test the empty ResourceMap used by default
-    CPPUNIT_ASSERT_EQUAL(false, mMakeInstallTaskHelper->hasValidResourceMap());
-
-    //Test with a ResourceMap without a package directory
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/Makefile")));
-    delete mMakeInstallTaskHelper;
-    mMakeInstallTaskHelper = new MakeInstallTaskHelper(mTask);
-
-    CPPUNIT_ASSERT_EQUAL(false, mMakeInstallTaskHelper->hasValidResourceMap());
-
-    //Test with a ResourceMap with a package directory but without a Makefile
-    mTask->getPackage()->getResourceMap()->remove("/Makefile");
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/package/")));
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/package/COPYING")));
-    delete mMakeInstallTaskHelper;
-    mMakeInstallTaskHelper = new MakeInstallTaskHelper(mTask);
-
-    CPPUNIT_ASSERT_EQUAL(false, mMakeInstallTaskHelper->hasValidResourceMap());
-
-    //Test with a ResourceMap with a Makefile in the package directory
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/package/Makefile")));
-    delete mMakeInstallTaskHelper;
-    mMakeInstallTaskHelper = new MakeInstallTaskHelper(mTask);
-
-    CPPUNIT_ASSERT_EQUAL(true, mMakeInstallTaskHelper->hasValidResourceMap());
+    CPPUNIT_ASSERT_EQUAL(string("MakeInstallTaskHelper"),
+                         mMakeInstallTaskHelper->mName);
+    CPPUNIT_ASSERT_EQUAL(mTask, mMakeInstallTaskHelper->mTask);
+    CPPUNIT_ASSERT_EQUAL(string("install"),
+                         mMakeInstallTaskHelper->mMakeTarget);
+    CPPUNIT_ASSERT_EQUAL((ConfigurationParameterString*)0,
+                         mMakeInstallTaskHelper->mUserName);
+    CPPUNIT_ASSERT_EQUAL((ConfigurationParameterString*)0,
+                         mMakeInstallTaskHelper->mPassword);
 }
 
 void MakeInstallTaskHelperTest::testGetProcess() {
+    //Test with an install make target
     mTask->getPackage()->getResourceMap()->add(
             SmartPtr<Resource>(new LocalFileResource("/package/")));
     mTask->getPackage()->getResourceMap()->add(
         SmartPtr<Resource>(new LocalFileResource("/package/subDirectory/")));
     delete mMakeInstallTaskHelper;
-    mMakeInstallTaskHelper = new MakeInstallTaskHelper(mTask);
+    mMakeInstallTaskHelper = new MakeInstallTaskHelper("MakeInstallTaskHelper",
+                                                       mTask, "install");
 
-    auto_ptr<Process> process(mMakeInstallTaskHelper->getProcess());
+    SmartPtr<Process> process(mMakeInstallTaskHelper->getProcess());
 
     CPPUNIT_ASSERT_EQUAL(string("/package/"), process->getWorkingDirectory());
     CPPUNIT_ASSERT_EQUAL(string("make"), process->getArguments()[0]);
     CPPUNIT_ASSERT_EQUAL(string("install"), process->getArguments()[1]);
-    CPPUNIT_ASSERT_EQUAL(vector<string>::size_type(2),
-                         process->getArguments().size());
+    CPPUNIT_ASSERT_EQUAL((size_t)2, process->getArguments().size());
+
+    //Test with an uninstall make target
+    delete mMakeInstallTaskHelper;
+    mMakeInstallTaskHelper = new MakeInstallTaskHelper("MakeInstallTaskHelper",
+                                                       mTask, "uninstall");
+
+    process = SmartPtr<Process>(mMakeInstallTaskHelper->getProcess());
+
+    CPPUNIT_ASSERT_EQUAL(string("/package/"), process->getWorkingDirectory());
+    CPPUNIT_ASSERT_EQUAL(string("make"), process->getArguments()[0]);
+    CPPUNIT_ASSERT_EQUAL(string("uninstall"), process->getArguments()[1]);
+    CPPUNIT_ASSERT_EQUAL((size_t)2, process->getArguments().size());
 }

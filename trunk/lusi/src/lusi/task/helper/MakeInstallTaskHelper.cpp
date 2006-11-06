@@ -43,14 +43,24 @@ using namespace lusi::task::helper;
 
 TaskHelper* lusi::task::helper::createMakeInstallTaskHelper(
                                         Task* task) {
-    return new MakeInstallTaskHelper(task);
+    return new MakeInstallTaskHelper("MakeInstallTaskHelper", task, "install");
+
+}
+
+TaskHelper* lusi::task::helper::createUndoMakeInstallTaskHelper(
+                                        Task* task) {
+    return new MakeInstallTaskHelper("UndoMakeInstallTaskHelper", task,
+                                     "uninstall");
 }
 
 //public:
 
-MakeInstallTaskHelper::MakeInstallTaskHelper(Task* task):
-                        TaskHelperUsingMake("MakeInstallTaskHelper", task),
-                        mUserName(0), mPassword(0) {
+MakeInstallTaskHelper::MakeInstallTaskHelper(const string& name, Task* task,
+                                             const string& makeTarget):
+                        TaskHelperUsingMake(name, task) {
+    mUserName = 0;
+    mPassword = 0;
+    mMakeTarget = makeTarget;
 }
 
 MakeInstallTaskHelper::~MakeInstallTaskHelper() {
@@ -100,7 +110,7 @@ Process* MakeInstallTaskHelper::getProcess() {
     }
 
     suProcess->setWorkingDirectory(mPackageDirectory->getDirectory());
-    (*suProcess) << "make" << "install";
+    (*suProcess) << "make" << mMakeTarget;
     return suProcess;
 }
 

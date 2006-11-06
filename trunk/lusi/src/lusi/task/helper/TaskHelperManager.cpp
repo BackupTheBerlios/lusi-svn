@@ -78,4 +78,5 @@ TaskHelperManager::TaskHelperManager(): mTaskHelperFactories() {
     registerTaskHelper(createMakeBuildTaskHelper, "BuildTask");
     registerTaskHelper(createMakeInstallTaskHelper, "InstallTask");
     registerTaskHelper(createTarExtractTaskHelper, "ExtractTask");
+    registerTaskHelper(createUndoMakeInstallTaskHelper, "UndoInstallTask");
 }

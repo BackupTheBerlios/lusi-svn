@@ -106,6 +106,10 @@ protected:
 
     /**
      * Creates a new TaskHelperUsingMake.
+     * The package directory is the first LocalFileResource in the ResourceMap.
+     * If there's no LocalFileResource, or the first it's not a directory, an
+     * empty LocalUrl is used.
+     * No checks about, for example, more than one package directory, are made.
      *
      * @param name The name of this TaskHelperUsingMake.
      * @param task The Task to help.

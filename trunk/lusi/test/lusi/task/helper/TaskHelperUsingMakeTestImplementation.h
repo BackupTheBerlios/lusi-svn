@@ -18,25 +18,50 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "Uninstaller.h"
-#include "package/status/BuiltPackageStatus.h"
+#ifndef LUSI_TASK_HELPER_TASKHELPERUSINGMAKETESTIMPLEMENTATION_H
+#define LUSI_TASK_HELPER_TASKHELPERUSINGMAKETESTIMPLEMENTATION_H
 
-using namespace lusi;
+#include <lusi/task/helper/TaskHelperUsingMake.h>
 
-using lusi::package::Package;
-using lusi::package::status::BuiltPackageStatus;
-using lusi::package::status::PackageStatus;
+namespace lusi {
+namespace task {
+namespace helper {
 
-//public:
+/**
+ * Implementation of TaskHelperUsingMake for testing purposes.
+ * This class helps testing TaskHelperUsingMake class non-abstract methods.
+ */
+class TaskHelperUsingMakeTestImplementation: public TaskHelperUsingMake {
+public:
 
-Uninstaller::Uninstaller(Package* package): Module(package) {
+    /**
+     * Creates a new TaskHelperUsingMakeTestImplementation.
+     * The name is set to "TaskHelperUsingMakeTestImplementation".
+     *
+     * @param task The Task to use.
+     */
+    TaskHelperUsingMakeTestImplementation(lusi::task::Task* task);
+
+    /**
+     * Destroys this TaskHelperUsingMakeTestImplementation.
+     */
+    virtual ~TaskHelperUsingMakeTestImplementation();
+
+protected:
+
+    /**
+     * Does nothing.
+     *
+     * @return A null pointer.
+     */
+    virtual lusi::util::Process* getProcess() {
+        return 0;
+    }
+
+};
+
+}
+}
 }
 
-Uninstaller::~Uninstaller() {
-}
-
-//protected:
-
-const PackageStatus* Uninstaller::getFinalPackageStatus() {
-    return BuiltPackageStatus::getInstance();
-}
+#endif

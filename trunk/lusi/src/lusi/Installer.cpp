@@ -20,13 +20,12 @@
 
 #include "Installer.h"
 #include "package/status/InstalledPackageStatus.h"
-#include "task/Task.h"
 
 using namespace lusi;
 
 using lusi::package::Package;
-using lusi::package::status::PackageStatus;
 using lusi::package::status::InstalledPackageStatus;
+using lusi::package::status::PackageStatus;
 
 //public:
 

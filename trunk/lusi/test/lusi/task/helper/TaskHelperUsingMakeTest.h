@@ -18,25 +18,80 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "Uninstaller.h"
-#include "package/status/BuiltPackageStatus.h"
+#ifndef LUSI_TASK_HELPER_TASKHELPERUSINGMAKETEST_H
+#define LUSI_TASK_HELPER_TASKHELPERUSINGMAKETEST_H
 
-using namespace lusi;
+#include <cppunit/extensions/HelperMacros.h>
 
-using lusi::package::Package;
-using lusi::package::status::BuiltPackageStatus;
-using lusi::package::status::PackageStatus;
-
-//public:
-
-Uninstaller::Uninstaller(Package* package): Module(package) {
+namespace lusi {
+namespace task {
+class Task;
+}
 }
 
-Uninstaller::~Uninstaller() {
+namespace lusi {
+namespace task {
+namespace helper {
+class TaskHelperUsingMake;
+}
+}
 }
 
-//protected:
+namespace lusi {
+namespace task {
+namespace helper {
 
-const PackageStatus* Uninstaller::getFinalPackageStatus() {
-    return BuiltPackageStatus::getInstance();
+/**
+ * Test class for TaskHelperUsingMake.
+ *
+ * @see TaskHelperUsingMake
+ */
+class TaskHelperUsingMakeTest: public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(TaskHelperUsingMakeTest);
+    CPPUNIT_TEST(testConstructor);
+    CPPUNIT_TEST(testHasValidResourceMap);
+    CPPUNIT_TEST_SUITE_END();
+
+public:
+
+    /**
+     * Sets up context before running a test.
+     */
+    virtual void setUp();
+
+    /**
+     * Cleans up after the test run.
+     */
+    virtual void tearDown();
+
+    /**
+     * Checks if mPackageDirectory is set as it should. It is tested with an
+     * empty map, a map without a package directory and a map with a valid
+     * package directory.
+     */
+    void testConstructor();
+
+    /**
+     * Checks if true is returned only if a valid Makefile is available.
+     */
+    void testHasValidResourceMap();
+
+protected:
+
+    /**
+     * The TaskHelperUsingMake to use.
+     */
+    TaskHelperUsingMake* mTaskHelperUsingMake;
+
+    /**
+     * The Task to use in mTaskHelperUsingMake.
+     */
+    lusi::task::Task* mTask;
+
+};
+
 }
+}
+}
+
+#endif

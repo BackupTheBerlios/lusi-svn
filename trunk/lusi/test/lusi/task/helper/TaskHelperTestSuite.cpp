@@ -26,6 +26,7 @@
 #include "TarExtractTaskHelperTest.h"
 #include "TaskHelperTest.h"
 #include "TaskHelperManagerTest.h"
+#include "TaskHelperUsingMakeTest.h"
 #include "TaskHelperUsingProcessTest.h"
 
 using namespace lusi::task::helper;
@@ -41,6 +42,7 @@ TaskHelperTestSuite::TaskHelperTestSuite() {
     addTest(TarExtractTaskHelperTest::suite());
     addTest(TaskHelperTest::suite());
     addTest(TaskHelperManagerTest::suite());
+    addTest(TaskHelperUsingMakeTest::suite());
     addTest(TaskHelperUsingProcessTest::suite());
 
     //Direct child namespaces TestSuites

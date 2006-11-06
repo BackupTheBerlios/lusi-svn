@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <memory>
 #include <vector>
 
 #include "MakeBuildTaskHelperTest.h"
@@ -32,18 +31,12 @@
 #include "../TaskTestImplementation.h"
 #include "../../package/LocalFileResource.h"
 #include "../../package/Package.h"
-#include "../../package/PackageId.h"
 #include "../../package/ResourceMap.h"
-#include "../../util/LocalUrl.h"
 #include "../../util/SmartPtr.h"
 
-using std::auto_ptr;
 using std::string;
-using std::vector;
 
 using lusi::package::LocalFileResource;
-using lusi::package::Package;
-using lusi::package::PackageId;
 using lusi::package::Resource;
 using lusi::task::TaskTestImplementation;
 using lusi::util::Process;
@@ -64,60 +57,9 @@ void MakeBuildTaskHelperTest::tearDown() {
 }
 
 void MakeBuildTaskHelperTest::testConstructor() {
-    //Test the empty ResourceMap used by default
-    CPPUNIT_ASSERT_EQUAL(string(""),
-                         mMakeBuildTaskHelper->mPackageDirectory->getPath());
-
-    //Test with a ResourceMap without a package directory
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/Makefile")));
-    delete mMakeBuildTaskHelper;
-    mMakeBuildTaskHelper = new MakeBuildTaskHelper(mTask);
-
-    CPPUNIT_ASSERT_EQUAL(string(""),
-                         mMakeBuildTaskHelper->mPackageDirectory->getPath());
-
-    //Test with a ResourceMap with a valid package directory
-    mTask->getPackage()->getResourceMap()->remove("/Makefile");
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/package/")));
-    delete mMakeBuildTaskHelper;
-    mMakeBuildTaskHelper = new MakeBuildTaskHelper(mTask);
-
-    CPPUNIT_ASSERT_EQUAL(string("/package/"),
-                         mMakeBuildTaskHelper->mPackageDirectory->getPath());
-}
-
-void MakeBuildTaskHelperTest::testHasValidResourceMap() {
-    //Test the empty ResourceMap used by default
-    CPPUNIT_ASSERT_EQUAL(false, mMakeBuildTaskHelper->hasValidResourceMap());
-
-    //Test with a ResourceMap without a package directory
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/Makefile")));
-    delete mMakeBuildTaskHelper;
-    mMakeBuildTaskHelper = new MakeBuildTaskHelper(mTask);
-
-    CPPUNIT_ASSERT_EQUAL(false, mMakeBuildTaskHelper->hasValidResourceMap());
-
-    //Test with a ResourceMap with a package directory but without a Makefile
-    mTask->getPackage()->getResourceMap()->remove("/Makefile");
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/package/")));
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/package/COPYING")));
-    delete mMakeBuildTaskHelper;
-    mMakeBuildTaskHelper = new MakeBuildTaskHelper(mTask);
-
-    CPPUNIT_ASSERT_EQUAL(false, mMakeBuildTaskHelper->hasValidResourceMap());
-
-    //Test with a ResourceMap with a Makefile in the package directory
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/package/Makefile")));
-    delete mMakeBuildTaskHelper;
-    mMakeBuildTaskHelper = new MakeBuildTaskHelper(mTask);
-
-    CPPUNIT_ASSERT_EQUAL(true, mMakeBuildTaskHelper->hasValidResourceMap());
+    CPPUNIT_ASSERT_EQUAL(string("MakeBuildTaskHelper"),
+                         mMakeBuildTaskHelper->mName);
+    CPPUNIT_ASSERT_EQUAL(mTask, mMakeBuildTaskHelper->mTask);
 }
 
 void MakeBuildTaskHelperTest::testGetProcess() {
@@ -128,10 +70,9 @@ void MakeBuildTaskHelperTest::testGetProcess() {
     delete mMakeBuildTaskHelper;
     mMakeBuildTaskHelper = new MakeBuildTaskHelper(mTask);
 
-    auto_ptr<Process> process(mMakeBuildTaskHelper->getProcess());
+    SmartPtr<Process> process(mMakeBuildTaskHelper->getProcess());
 
     CPPUNIT_ASSERT_EQUAL(string("/package/"), process->getWorkingDirectory());
     CPPUNIT_ASSERT_EQUAL(string("make"), process->getArguments()[0]);
-    CPPUNIT_ASSERT_EQUAL(vector<string>::size_type(1),
-                         process->getArguments().size());
+    CPPUNIT_ASSERT_EQUAL((size_t)1, process->getArguments().size());
 }

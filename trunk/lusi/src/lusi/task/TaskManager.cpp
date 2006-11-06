@@ -112,6 +112,8 @@ TaskManager::TaskManager(): mTasksByNeededPackageStatus(),
                  UnpackedPackageStatus::getInstance());
     registerTask("InstallTask", BuiltPackageStatus::getInstance(),
                  InstalledPackageStatus::getInstance());
+    registerTask("UndoInstallTask", InstalledPackageStatus::getInstance(),
+                 BuiltPackageStatus::getInstance());
 }
 
 vector<TaskManager::TaskData> TaskManager::getTasksByPackageStatus(

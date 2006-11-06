@@ -18,25 +18,29 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "Uninstaller.h"
-#include "package/status/BuiltPackageStatus.h"
+#include "TaskHelperUsingMakeTestImplementation.h"
 
-using namespace lusi;
+using std::string;
 
-using lusi::package::Package;
-using lusi::package::status::BuiltPackageStatus;
-using lusi::package::status::PackageStatus;
+using lusi::task::Task;
+
+using namespace lusi::task::helper;
 
 //public:
 
-Uninstaller::Uninstaller(Package* package): Module(package) {
+TaskHelperUsingMakeTestImplementation::
+TaskHelperUsingMakeTestImplementation(Task* task):
+            TaskHelperUsingMake("TaskHelperUsingMakeTestImplementation", task) {
 }
 
-Uninstaller::~Uninstaller() {
+TaskHelperUsingMakeTestImplementation::
+~TaskHelperUsingMakeTestImplementation() {
 }
 
 //protected:
 
-const PackageStatus* Uninstaller::getFinalPackageStatus() {
-    return BuiltPackageStatus::getInstance();
+/*
+inline Process* TaskHelperUsingMakeTestImplementation::getProcess() {
+    return 0;
 }
+*/
