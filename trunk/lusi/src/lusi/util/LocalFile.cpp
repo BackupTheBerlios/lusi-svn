@@ -175,14 +175,18 @@ std::vector<std::string> LocalFile::list() const {
 
     struct dirent* dirEntry = readdir(dir);
     while (dirEntry) {
-        string entryPath = directoryPath + dirEntry->d_name;
+        if (string(".") != dirEntry->d_name &&
+            string("..") != dirEntry->d_name) {
 
-        struct stat fileStat;
-        stat(entryPath.c_str(), &fileStat);
-        if (S_ISDIR(fileStat.st_mode)) {
-            list.push_back(string(dirEntry->d_name) + "/");
-        } else {
-            list.push_back(dirEntry->d_name);
+            string entryPath = directoryPath + dirEntry->d_name;
+
+            struct stat fileStat;
+            stat(entryPath.c_str(), &fileStat);
+            if (S_ISDIR(fileStat.st_mode)) {
+                list.push_back(string(dirEntry->d_name) + "/");
+            } else {
+                list.push_back(dirEntry->d_name);
+            }
         }
 
         dirEntry = readdir(dir);

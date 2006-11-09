@@ -313,9 +313,19 @@ void LocalFileTest::testList() {
         CPPUNIT_FAIL("Self reference (.) is listed");
     }
 
+    file = find(list.begin(), list.end(), "./");
+    if (file != list.end()) {
+        CPPUNIT_FAIL("Self reference (./) is listed");
+    }
+
     file = find(list.begin(), list.end(), "..");
     if (file != list.end()) {
         CPPUNIT_FAIL("Parent reference (..) is listed");
+    }
+
+    file = find(list.begin(), list.end(), "../");
+    if (file != list.end()) {
+        CPPUNIT_FAIL("Parent reference (../) is listed");
     }
 }
 
