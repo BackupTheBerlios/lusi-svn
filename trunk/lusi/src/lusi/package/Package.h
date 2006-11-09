@@ -135,12 +135,11 @@ public:
 
     /**
      * Sets the PackageStatus.
+     * This Package is also updated in the PackageManager.
      *
      * @param packageStatus The PackageStatus.
      */
-    void setPackageStatus(const status::PackageStatus* packageStatus) {
-        mPackageStatus = packageStatus;
-    }
+    void setPackageStatus(const status::PackageStatus* packageStatus);
 
 protected:
 

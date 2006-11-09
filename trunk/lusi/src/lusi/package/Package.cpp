@@ -20,6 +20,7 @@
 
 #include "Package.h"
 #include "PackageId.h"
+#include "PackageManager.h"
 #include "Profile.h"
 #include "ProfileManager.h"
 #include "ResourceMap.h"
@@ -87,7 +88,9 @@ inline const PackageStatus* Package::getPackageStatus() {
     return mPackageStatus;
 }
 
-inline void Package::setPackageStatus(const PackageStatus* packageStatus) {
-    mPackageStatus = packageStatus;
-}
 */
+
+void Package::setPackageStatus(const PackageStatus* packageStatus) {
+    mPackageStatus = packageStatus;
+    PackageManager::getInstance()->updatePackage(this);
+}

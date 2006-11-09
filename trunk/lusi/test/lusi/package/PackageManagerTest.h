@@ -18,40 +18,38 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef LUSI_CONFIGURATION_CONFIGURATIONPATHSTEST_H
-#define LUSI_CONFIGURATION_CONFIGURATIONPATHSTEST_H
+#ifndef LUSI_PACKAGE_PACKAGEMANAGERTEST_H
+#define LUSI_PACKAGE_PACKAGEMANAGERTEST_H
 
 #include <cppunit/extensions/HelperMacros.h>
 
 namespace lusi {
-namespace configuration {
-class ConfigurationPaths;
+namespace package {
+class PackageId;
+class PackageManager;
 }
 }
 
 namespace lusi {
-namespace configuration {
+namespace package {
 
 /**
- * Test class for ConfigurationPaths.
+ * Test class for PackageManager.
  *
- * @see ConfigurationPaths
+ * @see PackageManager
  */
-class ConfigurationPathsTest: public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE(ConfigurationPathsTest);
-    CPPUNIT_TEST(testConstructor);
-    CPPUNIT_TEST(testGetBaseDirectory);
-    CPPUNIT_TEST(testGetPackagesBaseDirectory);
-    CPPUNIT_TEST(testGetPackageDirectory);
-    CPPUNIT_TEST(testGetPackageFile);
-    CPPUNIT_TEST(testGetTaskFile);
+class PackageManagerTest: public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(PackageManagerTest);
+    CPPUNIT_TEST(testSingleton);
+    CPPUNIT_TEST(testGetPackageIds);
+    CPPUNIT_TEST(testGetPackage);
+    CPPUNIT_TEST(testUpdatePackage);
     CPPUNIT_TEST_SUITE_END();
 
 public:
 
     /**
      * Sets up context before running a test.
-     * It creates the ConfigurationPaths using the default user.
      */
     virtual void setUp();
 
@@ -61,46 +59,53 @@ public:
     virtual void tearDown();
 
     /**
-     * Tests if the constructor sets mBaseDirectory to the home directory of the
-     * specified user followed by ".lusi/".
+     * Checks if getInstance() always returns the same not null reference.
      */
-    void testConstructor();
+    void testSingleton();
 
     /**
-     * Tests if the returned directory is mBaseDirectory.
+     * Tests if all the PackageIds associated with the specified status are
+     * returned. It is tested with a status without registered PackageIds, a
+     * status with one PackageId and a status with two PackageIds.
      */
-    void testGetBaseDirectory();
+    void testGetPackageIds();
 
     /**
-     * Tests if the returned directory is mBaseDirectory followed by "package".
+     * Tests if a new Package is returned with the specified PackageId and the
+     * current PackageStatus. It is also tested that, if the PackageId isn't
+     * registered yet, it is also registered before returning the Package.
      */
-    void testGetPackagesBaseDirectory();
+    void testGetPackage();
 
     /**
-     * Tests if the returned directory is the base directory followed by
-     * "${packageName}/${packageVersion}/", or "${packageName}/" if there is no
-     * version.
+     * Tests if the saved status in mPackageDatas of the specified Package is
+     * updated with the status in the Package.
      */
-    void testGetPackageDirectory();
-
-    /**
-     * Tests if the returned file is the package directory followed by
-     * "package-data.xml".
-     */
-    void testGetPackageFile();
-
-    /**
-     * Tests if the returned file is the package directory followed by
-     * "{taskId}.xml".
-     */
-    void testGetTaskFile();
+    void testUpdatePackage();
 
 private:
 
     /**
-     * The ConfigurationPaths to test.
+     * The PackageManager to test.
+     * The tested PackageManager isn't the one got through getInstance. It's
+     * created for each test.
      */
-    ConfigurationPaths* mConfigurationPaths;
+    PackageManager* mPackageManager;
+
+    /**
+     * The first PackageId registered with mPackageManager.
+     */
+    PackageId* mPackageId1;
+
+    /**
+     * The second PackageId registered with mPackageManager.
+     */
+    PackageId* mPackageId2;
+
+    /**
+     * The third PackageId registered with mPackageManager.
+     */
+    PackageId* mPackageId3;
 
 };
 

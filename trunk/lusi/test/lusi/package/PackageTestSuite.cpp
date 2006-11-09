@@ -21,6 +21,7 @@
 #include "PackageTestSuite.h"
 #include "PackageTest.h"
 #include "PackageIdTest.h"
+#include "PackageManagerTest.h"
 #include "ProfileManagerTest.h"
 #include "ResourceTest.h"
 #include "ResourceMapTest.h"
@@ -36,6 +37,7 @@ PackageTestSuite::PackageTestSuite() {
     //Own namespace Tests
     addTest(PackageTest::suite());
     addTest(PackageIdTest::suite());
+    addTest(PackageManagerTest::suite());
     addTest(ProfileManagerTest::suite());
     addTest(ResourceTest::suite());
     addTest(ResourceMapTest::suite());

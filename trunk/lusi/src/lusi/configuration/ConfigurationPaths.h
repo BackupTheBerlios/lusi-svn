@@ -77,26 +77,49 @@ public:
     std::string getBaseDirectory();
 
     /**
+     * Returns the path to the base configuration directory for Packages.
+     * It is "$HOME/.lusi/package/".
+     * The directory isn't guaranteed to exist.
+     *
+     * @return The path to the base configuration directory for Packages.
+     */
+    std::string getPackagesBaseDirectory();
+
+    /**
      * Returns the path to the configuration directory of the specified
      * PackageId.
-     * It is "$HOME/.lusi/${packageName}/${packageVersion}/".
+     * It is "$HOME/.lusi/package/${packageName}/${packageVersion}/".
      * The directory isn't guaranteed to exist.
      *
      * @param packageId The PackageId to get the name and version from.
-     * @return The path of the configuration directory of the specified
+     * @return The path to the configuration directory of the specified
      *         PackageId.
      */
     std::string getPackageDirectory(
                             const lusi::package::PackageId& packageId);
 
     /**
+     * Returns the path to the configuration file of the Package identified by
+     * the specified PackageId.
+     * It is
+     * "$HOME/.lusi/package/${packageName}/${packageVersion}/package-data.xml".
+     * The file isn't guaranteed to exist.
+     *
+     * @param packageId The PackageId to get the name and version from.
+     * @return The path to the configuration file of the Package identified by
+     *         the specified PackageId.
+     */
+    std::string getPackageFile(const lusi::package::PackageId& packageId);
+
+    /**
      * Returns the path to the configuration file of the specified Task.
-     * It is "$HOME/.lusi/${packageName}/${packageVersion}/${taskId}.xml".
+     * It is
+     * "$HOME/.lusi/package/${packageName}/${packageVersion}/${taskId}.xml".
      * The file isn't guaranteed to exist.
      *
      * @param taskId The id of the Task to get the configuration for.
      * @param packageId The PackageId of the Task to get the configuration for.
-     * @return The path of the configuration file of the specified Task.
+     * @return The path to the configuration file of the specified Task.
      */
     std::string getTaskFile(const std::string& taskId,
                             const lusi::package::PackageId& packageId);

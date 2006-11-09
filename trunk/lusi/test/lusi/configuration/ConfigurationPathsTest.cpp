@@ -66,22 +66,38 @@ void ConfigurationPathsTest::testGetBaseDirectory() {
                          mConfigurationPaths->getBaseDirectory());
 }
 
+void ConfigurationPathsTest::testGetPackagesBaseDirectory() {
+    mConfigurationPaths->mBaseDirectory = "/home/sweetHome/.lusi/";
+
+    CPPUNIT_ASSERT_EQUAL(mConfigurationPaths->mBaseDirectory + "package/",
+                         mConfigurationPaths->getPackagesBaseDirectory());
+}
+
 void ConfigurationPathsTest::testGetPackageDirectory() {
     //Test with a PackageId with name and version
     PackageId packageId("kdevelop", "3.4");
     string packageDirectory =
                     mConfigurationPaths->getPackageDirectory(packageId);
 
-    CPPUNIT_ASSERT_EQUAL(
-                    mConfigurationPaths->getBaseDirectory() + "kdevelop/3.4/",
-                    packageDirectory);
+    CPPUNIT_ASSERT_EQUAL(mConfigurationPaths->getPackagesBaseDirectory() +
+                                                                "kdevelop/3.4/",
+                         packageDirectory);
 
     //Test with a PackageId without version
     PackageId packageId2("kdevelop");
     packageDirectory = mConfigurationPaths->getPackageDirectory(packageId2);
 
-    CPPUNIT_ASSERT_EQUAL(mConfigurationPaths->getBaseDirectory() + "kdevelop/",
+    CPPUNIT_ASSERT_EQUAL(mConfigurationPaths->getPackagesBaseDirectory() +
+                                                                "kdevelop/",
                          packageDirectory);
+}
+
+void ConfigurationPathsTest::testGetPackageFile() {
+    PackageId packageId("testPackage");
+
+    CPPUNIT_ASSERT_EQUAL(mConfigurationPaths->getPackageDirectory(packageId) +
+                                                            "package-data.xml",
+                         mConfigurationPaths->getPackageFile(packageId));
 }
 
 void ConfigurationPathsTest::testGetTaskFile() {

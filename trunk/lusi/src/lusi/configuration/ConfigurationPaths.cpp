@@ -46,15 +46,23 @@ string ConfigurationPaths::getBaseDirectory() {
     return mBaseDirectory;
 }
 
-string ConfigurationPaths::getPackageDirectory(
-                                        const PackageId& packageId) {
-    string packageDirectory = mBaseDirectory + packageId.getName() + '/';
+string ConfigurationPaths::getPackagesBaseDirectory() {
+    return mBaseDirectory + "package/";
+}
+
+string ConfigurationPaths::getPackageDirectory(const PackageId& packageId) {
+    string packageDirectory = getPackagesBaseDirectory() + packageId.getName() +
+                                                                            '/';
 
     if (packageId.getVersion() != "") {
         packageDirectory += packageId.getVersion() + '/';
     }
 
     return packageDirectory;
+}
+
+string ConfigurationPaths::getPackageFile(const PackageId& packageId) {
+    return getPackageDirectory(packageId) + "package-data.xml";
 }
 
 string ConfigurationPaths::getTaskFile(const string& taskId,
