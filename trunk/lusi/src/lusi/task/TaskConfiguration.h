@@ -225,16 +225,6 @@ private:
     bool load(const lusi::package::PackageId& packageId);
 
     /**
-     * Returns all the available versions of the Package of the Task.
-     * The available versions are the direct child directories of the root
-     * Package directory. The returned strings are the versions, not the
-     * directory names, so the ending '/' is already removed.
-     *
-     * @return All the available versions of the Package of the Task.
-     */
-    std::vector<std::string> getPackageVersions();
-
-    /**
      * Copy constructor disabled.
      */
     TaskConfiguration(const TaskConfiguration& task);

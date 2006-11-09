@@ -21,6 +21,9 @@
 #ifndef LUSI_PACKAGE_PACKAGE_H
 #define LUSI_PACKAGE_PACKAGE_H
 
+#include <string>
+#include <vector>
+
 #include <lusi/package/status/UnknownPackageStatus.h>
 
 namespace lusi {
@@ -63,6 +66,20 @@ namespace package {
  */
 class Package {
 public:
+
+    /**
+     * Returns all the available versions of the Package with the specified
+     * name.
+     * The available versions are the direct child directories of the root
+     * Package configuration directory. The returned strings are the versions,
+     * not the directory names, so the ending '/' is already removed.
+     *
+     * @param packageName The name of the package.
+     * @return All the available versions of the Package with the specified
+     *         name.
+     */
+    static std::vector<std::string> getPackageVersions(
+                                            const std::string& packageName);
 
     /**
      * Creates a new Package using the specified PackageId and PackageStatus.

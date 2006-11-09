@@ -40,6 +40,7 @@ using lusi::configuration::ConfigurationParameterMap;
 using lusi::configuration::ConfigurationPaths;
 using lusi::configuration::ConfigurationSaver;
 using lusi::configuration::PersistenceException;
+using lusi::package::Package;
 using lusi::package::PackageId;
 using lusi::util::LocalFile;
 using lusi::util::SmartPtr;
@@ -136,7 +137,8 @@ void TaskConfiguration::load() {
             return;
         }
 
-        vector<string> packageVersions = getPackageVersions();
+        vector<string> packageVersions =
+                            Package::getPackageVersions(packageId->getName());
         packageVersions.push_back(packageId->getVersion());
         sort(packageVersions.begin(), packageVersions.end(),
              versionsWeakOrdering);
@@ -199,24 +201,4 @@ bool TaskConfiguration::load(const PackageId& packageId) {
     }
 
     return false;
-}
-
-//TODO move to another class where it fits better
-vector<string> TaskConfiguration::getPackageVersions() {
-    PackageId packageIdNoVersion(
-                    mTask->getPackage()->getPackageId()->getName());
-    LocalFile packageDirectory(
-                ConfigurationPaths().getPackageDirectory(packageIdNoVersion));
-
-    vector<string> packageFiles = packageDirectory.list();
-    vector<string> packageVersions;
-
-    for (uint i=0; i<packageFiles.size(); ++i) {
-        string fileName = packageFiles[i];
-        if (fileName[fileName.size() - 1] == '/') {
-            packageVersions.push_back(fileName.substr(0, fileName.size() - 1));
-        }
-    }
-
-    return packageVersions;
 }
