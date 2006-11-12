@@ -121,6 +121,75 @@ void ConfigurationParameterStringTest::testConstructor() {
     CPPUNIT_ASSERT_EQUAL(false, mConfigurationParameterString->mValueSet);
     CPPUNIT_ASSERT_EQUAL(ConfigurationParameterString::NormalType,
                          mConfigurationParameterString->mStringType);
+
+    //Test with the id
+    delete mConfigurationParameterString;
+    mConfigurationParameterString = new ConfigurationParameterString("Test3");
+
+    CPPUNIT_ASSERT_EQUAL(string("Test3"), mConfigurationParameterString->mId);
+    CPPUNIT_ASSERT_EQUAL(string(""), mConfigurationParameterString->mName);
+    CPPUNIT_ASSERT_EQUAL(ConfigurationParameter::NoPriority,
+                         mConfigurationParameterString->mPriorityType);
+    CPPUNIT_ASSERT_EQUAL(string(""),
+                         mConfigurationParameterString->mInformation);
+    CPPUNIT_ASSERT_EQUAL(false,
+                         mConfigurationParameterString->mDefaultValueSet);
+    CPPUNIT_ASSERT_EQUAL(false, mConfigurationParameterString->mValueSet);
+    CPPUNIT_ASSERT_EQUAL(ConfigurationParameterString::NormalType,
+                         mConfigurationParameterString->mStringType);
+
+    //Test with the id and the string type
+    delete mConfigurationParameterString;
+    mConfigurationParameterString = new ConfigurationParameterString("Test3",
+                                ConfigurationParameterString::PasswordType);
+
+    CPPUNIT_ASSERT_EQUAL(string("Test3"), mConfigurationParameterString->mId);
+    CPPUNIT_ASSERT_EQUAL(string(""), mConfigurationParameterString->mName);
+    CPPUNIT_ASSERT_EQUAL(ConfigurationParameter::NoPriority,
+                         mConfigurationParameterString->mPriorityType);
+    CPPUNIT_ASSERT_EQUAL(string(""),
+                         mConfigurationParameterString->mInformation);
+    CPPUNIT_ASSERT_EQUAL(false,
+                         mConfigurationParameterString->mDefaultValueSet);
+    CPPUNIT_ASSERT_EQUAL(false, mConfigurationParameterString->mValueSet);
+    CPPUNIT_ASSERT_EQUAL(ConfigurationParameterString::PasswordType,
+                         mConfigurationParameterString->mStringType);
+
+    //Test with the id and the default value
+    delete mConfigurationParameterString;
+    mConfigurationParameterString = new ConfigurationParameterString("Test4",
+                                                                     "ALF");
+
+    CPPUNIT_ASSERT_EQUAL(string("Test4"), mConfigurationParameterString->mId);
+    CPPUNIT_ASSERT_EQUAL(string(""), mConfigurationParameterString->mName);
+    CPPUNIT_ASSERT_EQUAL(ConfigurationParameter::NoPriority,
+                         mConfigurationParameterString->mPriorityType);
+    CPPUNIT_ASSERT_EQUAL(string(""),
+                         mConfigurationParameterString->mInformation);
+    CPPUNIT_ASSERT_EQUAL(string("ALF"),
+                         mConfigurationParameterString->mDefaultValue);
+    CPPUNIT_ASSERT_EQUAL(true, mConfigurationParameterString->mDefaultValueSet);
+    CPPUNIT_ASSERT_EQUAL(false, mConfigurationParameterString->mValueSet);
+    CPPUNIT_ASSERT_EQUAL(ConfigurationParameterString::NormalType,
+                         mConfigurationParameterString->mStringType);
+
+    //Test with the id, the default value and the string type
+    delete mConfigurationParameterString;
+    mConfigurationParameterString = new ConfigurationParameterString("Test4",
+                            "ALF", ConfigurationParameterString::PasswordType);
+
+    CPPUNIT_ASSERT_EQUAL(string("Test4"), mConfigurationParameterString->mId);
+    CPPUNIT_ASSERT_EQUAL(string(""), mConfigurationParameterString->mName);
+    CPPUNIT_ASSERT_EQUAL(ConfigurationParameter::NoPriority,
+                         mConfigurationParameterString->mPriorityType);
+    CPPUNIT_ASSERT_EQUAL(string(""),
+                         mConfigurationParameterString->mInformation);
+    CPPUNIT_ASSERT_EQUAL(string("ALF"),
+                         mConfigurationParameterString->mDefaultValue);
+    CPPUNIT_ASSERT_EQUAL(true, mConfigurationParameterString->mDefaultValueSet);
+    CPPUNIT_ASSERT_EQUAL(false, mConfigurationParameterString->mValueSet);
+    CPPUNIT_ASSERT_EQUAL(ConfigurationParameterString::PasswordType,
+                         mConfigurationParameterString->mStringType);
 }
 
 void ConfigurationParameterStringTest::testGetStringType() {

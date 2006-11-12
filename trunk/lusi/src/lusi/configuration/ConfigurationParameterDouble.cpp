@@ -27,6 +27,15 @@ using namespace lusi::configuration;
 
 //public:
 
+ConfigurationParameterDouble::ConfigurationParameterDouble(const string& id):
+        ConfigurationParameterSimple<double>(id) {
+}
+
+ConfigurationParameterDouble::ConfigurationParameterDouble(const string& id,
+                                    double defaultValue):
+        ConfigurationParameterSimple<double>(id, defaultValue) {
+}
+
 ConfigurationParameterDouble::ConfigurationParameterDouble(const string& id,
                                     const string& name,
                                     PriorityType priorityType,

@@ -190,6 +190,12 @@ xmlNodePtr ConfigurationXmlSerializer::newNode(
 
     xmlNewProp(node, BAD_CAST "id", BAD_CAST parameter->getId().c_str());
 
+    if (parameter->getName() == "" &&
+            parameter->getPriorityType() == ConfigurationParameter::NoPriority &&
+            parameter->getInformation() == "") {
+        return node;
+    }
+
     xmlNewProp(node, BAD_CAST "name", BAD_CAST parameter->getName().c_str());
 
     if (parameter->getPriorityType() ==
@@ -198,8 +204,11 @@ xmlNodePtr ConfigurationXmlSerializer::newNode(
     } else if (parameter->getPriorityType() ==
                                 ConfigurationParameter::RecommendedPriority) {
         xmlNewProp(node, BAD_CAST "priorityType", BAD_CAST "recommended");
-    } else {
+    } else if (parameter->getPriorityType() ==
+                                ConfigurationParameter::OptionalPriority) {
         xmlNewProp(node, BAD_CAST "priorityType", BAD_CAST "optional");
+    } else {
+        xmlNewProp(node, BAD_CAST "priorityType", BAD_CAST "no");
     }
 
     xmlNewProp(node, BAD_CAST "information",

@@ -68,9 +68,10 @@ public:
     /**
      * Adds the XML representation of the ConfigurationParameterBool as a child
      * of mNode.
-     * The node includes the id, name, priority and information as attributes,
-     * and the value and default value (if any) as text child elements with the
-     * string representation of the bool ("true" or "false" in each case).
+     * The node includes the id and, if the parameter was created with the extended
+     * constructor, the name, priority and information, as attributes, and the value
+     * and default value (if any) as text child elements with the string
+     * representation of the bool ("true" or "false" in each case).
      *
      * @param parameter The ConfigurationParameterBool to serialize to XML.
      * @see newNode(ConfigurationParameter*, const char*)
@@ -80,9 +81,10 @@ public:
     /**
      * Adds the XML representation of the ConfigurationParameterDouble as a
      * child of mNode.
-     * The node includes the id, name, priority and information as attributes,
-     * and the value and default value (if any) as text child elements with the
-     * string representation of the double.
+     * The node includes the id and, if the parameter was created with the extended
+     * constructor, the name, priority and information, as attributes, and the value
+     * and default value (if any) as text child elements with the string
+     * representation of the double.
      *
      * @param parameter The ConfigurationParameterDouble to serialize to XML.
      * @see newNode(ConfigurationParameter*, const char*)
@@ -92,9 +94,10 @@ public:
     /**
      * Adds the XML representation of the ConfigurationParameterInt as a child
      * of mNode.
-     * The node includes the id, name, priority and information as attributes,
-     * and the value and default value (if any) as text child elements with the
-     * string representation of the int.
+     * The node includes the id and, if the parameter was created with the extended
+     * constructor, the name, priority and information, as attributes, and the value
+     * and default value (if any) as text child elements with the string
+     * representation of the int.
      *
      * @param parameter The ConfigurationParameterInt to serialize to XML.
      * @see newNode(ConfigurationParameter*, const char*)
@@ -104,9 +107,9 @@ public:
     /**
      * Adds the XML representation of the ConfigurationParameterLocalUrl as a
      * child of mNode.
-     * The node includes the id, name, priority and information as attributes,
-     * and the value and default value (if any) as text child elements with the
-     * path of the url.
+     * The node includes the id and, if the parameter was created with the extended
+     * constructor, the name, priority and information, as attributes, and the value
+     * and default value (if any) as text child elements with the path of the url.
      *
      * @param parameter The ConfigurationParameterLocalUrl to serialize to XML.
      * @see newNode(ConfigurationParameter*, const char*)
@@ -116,10 +119,11 @@ public:
     /**
      * Adds the XML representation of the ConfigurationParameterMap as a child
      * of mNode.
-     * The node includes the id, name, priority and information as attributes,
-     * and all the child parameters as child nodes (in the same order they have
-     * in the parameter). The only exception are child parameter set as not
-     * serializable, which aren't added as child nodes.
+     * The node includes the id and, if the parameter was created with the extended
+     * constructor, the name, priority and information, as attributes, and all the
+     * child parameters as child nodes (in the same order they have in the
+     * parameter). The only exception are child parameter set as not serializable,
+     * which aren't added as child nodes.
      *
      * @param parameter The ConfigurationParameterMap to serialize to XML.
      * @see newNode(ConfigurationParameter*, const char*)
@@ -129,9 +133,9 @@ public:
     /**
      * Adds the XML representation of the ConfigurationParameterString as a
      * child of mNode.
-     * The node includes the id, name, priority and information as attributes,
-     * and the value and default value (if any) as text child elements with the
-     * strings.
+     * The node includes the id and, if the parameter was created with the extended
+     * constructor, the name, priority and information, as attributes, and the value
+     * and default value (if any) as text child elements with the strings.
      *
      * @param parameter The ConfigurationParameterString to serialize to XML.
      * @see newNode(ConfigurationParameter*, const char*)
@@ -167,9 +171,10 @@ private:
     /**
      * Creates and initializes a new node with the data gathered from the
      * ConfigurationParameter.
-     * The id, name, priority and information of the parameter are set as
-     * attributes of the node. The priority is set to "required", "recommended"
-     * or "optional" depending on the type of the priority.
+     * The id and, if the parameter was created with the extended constructor, the
+     * name, priority and information of the parameter, are set as attributes of the
+     * node. The priority is set to "required", "recommended", "optional" or "no"
+     * depending on the type of the priority.
      *
      * @param parameter The ConfigurationParameter to use.
      * @param name The name of the node to create.

@@ -126,6 +126,84 @@ void ConfigurationParameterLocalUrlTest::testConstructor() {
     CPPUNIT_ASSERT_EQUAL(false, mConfigurationParameterLocalUrl->mValueSet);
     CPPUNIT_ASSERT_EQUAL(ConfigurationParameterLocalUrl::AllType,
                          mConfigurationParameterLocalUrl->mUrlType);
+
+    //Test with the id
+    delete mConfigurationParameterLocalUrl;
+    mConfigurationParameterLocalUrl =
+            new ConfigurationParameterLocalUrl("Test3");
+
+    CPPUNIT_ASSERT_EQUAL(string("Test3"),
+                         mConfigurationParameterLocalUrl->mId);
+    CPPUNIT_ASSERT_EQUAL(string(""), mConfigurationParameterLocalUrl->mName);
+    CPPUNIT_ASSERT_EQUAL(ConfigurationParameter::NoPriority,
+                         mConfigurationParameterLocalUrl->mPriorityType);
+    CPPUNIT_ASSERT_EQUAL(string(""),
+                         mConfigurationParameterLocalUrl->mInformation);
+    CPPUNIT_ASSERT_EQUAL(false,
+                         mConfigurationParameterLocalUrl->mDefaultValueSet);
+    CPPUNIT_ASSERT_EQUAL(false, mConfigurationParameterLocalUrl->mValueSet);
+    CPPUNIT_ASSERT_EQUAL(ConfigurationParameterLocalUrl::AllType,
+                         mConfigurationParameterLocalUrl->mUrlType);
+
+    //Test with the id and the url type
+    delete mConfigurationParameterLocalUrl;
+    mConfigurationParameterLocalUrl =
+            new ConfigurationParameterLocalUrl("Test3",
+                    ConfigurationParameterLocalUrl::FileType);
+
+    CPPUNIT_ASSERT_EQUAL(string("Test3"),
+                         mConfigurationParameterLocalUrl->mId);
+    CPPUNIT_ASSERT_EQUAL(string(""), mConfigurationParameterLocalUrl->mName);
+    CPPUNIT_ASSERT_EQUAL(ConfigurationParameter::NoPriority,
+                         mConfigurationParameterLocalUrl->mPriorityType);
+    CPPUNIT_ASSERT_EQUAL(string(""),
+                         mConfigurationParameterLocalUrl->mInformation);
+    CPPUNIT_ASSERT_EQUAL(false,
+                         mConfigurationParameterLocalUrl->mDefaultValueSet);
+    CPPUNIT_ASSERT_EQUAL(false, mConfigurationParameterLocalUrl->mValueSet);
+    CPPUNIT_ASSERT_EQUAL(ConfigurationParameterLocalUrl::FileType,
+                         mConfigurationParameterLocalUrl->mUrlType);
+
+    //Test with the id and the default value
+    delete mConfigurationParameterLocalUrl;
+    mConfigurationParameterLocalUrl =
+            new ConfigurationParameterLocalUrl("Test4", string("/home/"));
+
+    CPPUNIT_ASSERT_EQUAL(string("Test4"),
+                         mConfigurationParameterLocalUrl->mId);
+    CPPUNIT_ASSERT_EQUAL(string(""), mConfigurationParameterLocalUrl->mName);
+    CPPUNIT_ASSERT_EQUAL(ConfigurationParameter::NoPriority,
+                         mConfigurationParameterLocalUrl->mPriorityType);
+    CPPUNIT_ASSERT_EQUAL(string(""),
+                         mConfigurationParameterLocalUrl->mInformation);
+    CPPUNIT_ASSERT_EQUAL(string("/home/"),
+                    mConfigurationParameterLocalUrl->mDefaultValue.getPath());
+    CPPUNIT_ASSERT_EQUAL(true,
+                         mConfigurationParameterLocalUrl->mDefaultValueSet);
+    CPPUNIT_ASSERT_EQUAL(false, mConfigurationParameterLocalUrl->mValueSet);
+    CPPUNIT_ASSERT_EQUAL(ConfigurationParameterLocalUrl::AllType,
+                         mConfigurationParameterLocalUrl->mUrlType);
+
+    //Test with the id, the default value and the url type
+    delete mConfigurationParameterLocalUrl;
+    mConfigurationParameterLocalUrl =
+            new ConfigurationParameterLocalUrl("Test4", string("/home/"),
+                    ConfigurationParameterLocalUrl::FileType);
+
+    CPPUNIT_ASSERT_EQUAL(string("Test4"),
+                         mConfigurationParameterLocalUrl->mId);
+    CPPUNIT_ASSERT_EQUAL(string(""), mConfigurationParameterLocalUrl->mName);
+    CPPUNIT_ASSERT_EQUAL(ConfigurationParameter::NoPriority,
+                         mConfigurationParameterLocalUrl->mPriorityType);
+    CPPUNIT_ASSERT_EQUAL(string(""),
+                         mConfigurationParameterLocalUrl->mInformation);
+    CPPUNIT_ASSERT_EQUAL(string("/home/"),
+                    mConfigurationParameterLocalUrl->mDefaultValue.getPath());
+    CPPUNIT_ASSERT_EQUAL(true,
+                         mConfigurationParameterLocalUrl->mDefaultValueSet);
+    CPPUNIT_ASSERT_EQUAL(false, mConfigurationParameterLocalUrl->mValueSet);
+    CPPUNIT_ASSERT_EQUAL(ConfigurationParameterLocalUrl::FileType,
+                         mConfigurationParameterLocalUrl->mUrlType);
 }
 
 void ConfigurationParameterLocalUrlTest::testGetUrlType() {

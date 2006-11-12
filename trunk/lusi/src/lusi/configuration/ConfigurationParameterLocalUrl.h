@@ -63,6 +63,28 @@ public:
      * This constructor doesn't set the default value.
      *
      * @param id The id.
+     * @param urlType The type of the url, all by default.
+     */
+    ConfigurationParameterLocalUrl(const std::string& id,
+                                   UrlType urlType = AllType);
+
+    /**
+     * Creates a new ConfigurationParameterLocalUrl.
+     * This constructor sets the default value.
+     *
+     * @param id The id.
+     * @param defaultValue The default value.
+     * @param urlType The type of the url, all by default.
+     */
+    ConfigurationParameterLocalUrl(const std::string& id,
+                                   const lusi::util::LocalUrl& defaultValue,
+                                   UrlType urlType = AllType);
+
+    /**
+     * Creates a new ConfigurationParameterLocalUrl.
+     * This constructor doesn't set the default value.
+     *
+     * @param id The id.
      * @param name The name.
      * @param priorityType The type of priority.
      * @param information The information about this ConfigurationParameter.

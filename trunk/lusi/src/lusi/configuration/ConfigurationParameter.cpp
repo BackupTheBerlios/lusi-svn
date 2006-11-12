@@ -54,6 +54,14 @@ inline void ConfigurationParameter::setSerializable(bool serializable) {
 
 //protected:
 
+ConfigurationParameter::ConfigurationParameter(const string& id) {
+    mId = id;
+    mName = "";
+    mPriorityType = NoPriority;
+    mInformation = "";
+    mSerializable = true;
+}
+
 ConfigurationParameter::ConfigurationParameter(const string& id,
                                 const string& name,
                                 PriorityType priorityType,

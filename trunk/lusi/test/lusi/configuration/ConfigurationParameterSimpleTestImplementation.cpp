@@ -27,6 +27,17 @@ using namespace lusi::configuration;
 //public:
 
 ConfigurationParameterSimpleTestImplementation::
+ConfigurationParameterSimpleTestImplementation(const string& id):
+        ConfigurationParameterSimple<string>(id) {
+}
+
+ConfigurationParameterSimpleTestImplementation::
+ConfigurationParameterSimpleTestImplementation(const string& id,
+                                               const string& defaultValue):
+        ConfigurationParameterSimple<string>(id, defaultValue) {
+}
+
+ConfigurationParameterSimpleTestImplementation::
 ConfigurationParameterSimpleTestImplementation(const string& id,
                                                const string& name,
                                                PriorityType priorityType,

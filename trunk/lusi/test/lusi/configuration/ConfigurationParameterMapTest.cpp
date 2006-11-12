@@ -81,6 +81,39 @@ void ConfigurationParameterMapTest::testConstructor() {
                          mConfigurationParametersVector.size());
     CPPUNIT_ASSERT_EQUAL(ConfigurationParameterMap::NoPolicy,
                          mConfigurationParameterMap->mInvalidPolicy);
+
+    //Test with the id
+    delete mConfigurationParameterMap;
+    mConfigurationParameterMap = new ConfigurationParameterMap("Test3");
+
+    CPPUNIT_ASSERT_EQUAL(string("Test3"), mConfigurationParameterMap->mId);
+    CPPUNIT_ASSERT_EQUAL(string(""), mConfigurationParameterMap->mName);
+    CPPUNIT_ASSERT_EQUAL(ConfigurationParameter::NoPriority,
+                         mConfigurationParameterMap->mPriorityType);
+    CPPUNIT_ASSERT_EQUAL(string(""), mConfigurationParameterMap->mInformation);
+    CPPUNIT_ASSERT_EQUAL((size_t)0, mConfigurationParameterMap->
+                         mConfigurationParameters.getAll().size());
+    CPPUNIT_ASSERT_EQUAL((size_t)0, mConfigurationParameterMap->
+                         mConfigurationParametersVector.size());
+    CPPUNIT_ASSERT_EQUAL(ConfigurationParameterMap::NoPolicy,
+                         mConfigurationParameterMap->mInvalidPolicy);
+
+    //Test with the id and the invalid policy
+    delete mConfigurationParameterMap;
+    mConfigurationParameterMap = new ConfigurationParameterMap("Test4",
+                                        ConfigurationParameterMap::OrPolicy);
+
+    CPPUNIT_ASSERT_EQUAL(string("Test4"), mConfigurationParameterMap->mId);
+    CPPUNIT_ASSERT_EQUAL(string(""), mConfigurationParameterMap->mName);
+    CPPUNIT_ASSERT_EQUAL(ConfigurationParameter::NoPriority,
+                         mConfigurationParameterMap->mPriorityType);
+    CPPUNIT_ASSERT_EQUAL(string(""), mConfigurationParameterMap->mInformation);
+    CPPUNIT_ASSERT_EQUAL((size_t)0, mConfigurationParameterMap->
+                         mConfigurationParameters.getAll().size());
+    CPPUNIT_ASSERT_EQUAL((size_t)0, mConfigurationParameterMap->
+                         mConfigurationParametersVector.size());
+    CPPUNIT_ASSERT_EQUAL(ConfigurationParameterMap::OrPolicy,
+                         mConfigurationParameterMap->mInvalidPolicy);
 }
 
 void ConfigurationParameterMapTest::testIsInvalid() {

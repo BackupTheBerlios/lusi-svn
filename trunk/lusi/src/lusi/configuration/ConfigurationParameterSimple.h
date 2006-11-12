@@ -144,6 +144,38 @@ protected:
      * ConfigurationParameterSimple objects.
      *
      * @param id The id.
+     */
+    ConfigurationParameterSimple(const std::string& id):
+            ConfigurationParameter(id) {
+        mDefaultValueSet = false;
+        mValueSet = false;
+    }
+
+    /**
+     * Creates a new ConfigurationParameterSimple.
+     * This constructor sets the default value.
+     *
+     * Protected to avoid classes other than derived to create
+     * ConfigurationParameterSimple objects.
+     *
+     * @param id The id.
+     * @param defaultValue The default value.
+     */
+    ConfigurationParameterSimple(const std::string& id, const T& defaultValue):
+            ConfigurationParameter(id) {
+        mDefaultValue = defaultValue;
+        mDefaultValueSet = true;
+        mValueSet = false;
+    }
+
+    /**
+     * Creates a new ConfigurationParameterSimple.
+     * This constructor doesn't set the default value.
+     *
+     * Protected to avoid classes other than derived to create
+     * ConfigurationParameterSimple objects.
+     *
+     * @param id The id.
      * @param name The name.
      * @param priorityType The type of priority.
      * @param information The information about this ConfigurationParameter.

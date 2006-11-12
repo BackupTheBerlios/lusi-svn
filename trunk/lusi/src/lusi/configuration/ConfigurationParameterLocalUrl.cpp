@@ -30,6 +30,19 @@ using namespace lusi::configuration;
 //public:
 
 ConfigurationParameterLocalUrl::ConfigurationParameterLocalUrl(const string& id,
+                                    UrlType urlType /*= AllType*/):
+        ConfigurationParameterSimple<LocalUrl>(id) {
+    mUrlType = urlType;
+}
+
+ConfigurationParameterLocalUrl::ConfigurationParameterLocalUrl(const string& id,
+                                    const LocalUrl& defaultValue,
+                                    UrlType urlType /*= AllType*/):
+        ConfigurationParameterSimple<LocalUrl>(id, defaultValue) {
+    mUrlType = urlType;
+}
+
+ConfigurationParameterLocalUrl::ConfigurationParameterLocalUrl(const string& id,
                                     const string& name,
                                     PriorityType priorityType,
                                     const string& information,

@@ -51,6 +51,18 @@ void ConfigurationParameterTest::testConstructor() {
     CPPUNIT_ASSERT_EQUAL(string("A test parameter"),
                          mConfigurationParameter->mInformation);
     CPPUNIT_ASSERT_EQUAL(true, mConfigurationParameter->mSerializable);
+
+    //Test with the id
+    delete mConfigurationParameter;
+    mConfigurationParameter = new ConfigurationParameterTestImplementation(
+        "Test2");
+
+    CPPUNIT_ASSERT_EQUAL(string("Test2"), mConfigurationParameter->mId);
+    CPPUNIT_ASSERT_EQUAL(string(""), mConfigurationParameter->mName);
+    CPPUNIT_ASSERT_EQUAL(ConfigurationParameter::NoPriority,
+                         mConfigurationParameter->mPriorityType);
+    CPPUNIT_ASSERT_EQUAL(string(""), mConfigurationParameter->mInformation);
+    CPPUNIT_ASSERT_EQUAL(true, mConfigurationParameter->mSerializable);
 }
 
 void ConfigurationParameterTest::testGetId() {

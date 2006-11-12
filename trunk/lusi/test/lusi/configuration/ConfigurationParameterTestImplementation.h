@@ -38,6 +38,14 @@ public:
      * The ConfigurationParameterTestImplementation is set to invalid.
      *
      * @param id The id.
+     */
+    ConfigurationParameterTestImplementation(const std::string& id);
+
+    /**
+     * Creates a new ConfigurationParameterTestImplementation.
+     * The ConfigurationParameterTestImplementation is set to invalid.
+     *
+     * @param id The id.
      * @param name The name.
      * @param priorityType The type of priority.
      * @param information The information about this parameter.

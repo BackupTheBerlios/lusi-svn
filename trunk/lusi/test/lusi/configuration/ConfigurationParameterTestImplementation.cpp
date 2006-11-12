@@ -27,6 +27,12 @@ using namespace lusi::configuration;
 //public:
 
 ConfigurationParameterTestImplementation::
+ConfigurationParameterTestImplementation(const string& id):
+            ConfigurationParameter(id) {
+    mInvalid = true;
+}
+
+ConfigurationParameterTestImplementation::
 ConfigurationParameterTestImplementation(const string& id,
                                          const string& name,
                                          PriorityType priorityType,

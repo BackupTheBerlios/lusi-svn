@@ -40,6 +40,23 @@ public:
      * Creates a new ConfigurationParameterSimpleTestImplementation.
      *
      * @param id The id.
+     */
+    ConfigurationParameterSimpleTestImplementation(const std::string& id);
+
+    /**
+     * Creates a new ConfigurationParameterSimpleTestImplementation.
+     * This constructor sets the default value.
+     *
+     * @param id The id.
+     * @param defaultValue The default value.
+     */
+    ConfigurationParameterSimpleTestImplementation(const std::string& id,
+                                            const std::string& defaultValue);
+
+    /**
+     * Creates a new ConfigurationParameterSimpleTestImplementation.
+     *
+     * @param id The id.
      * @param name The name.
      * @param priorityType The type of priority.
      * @param information The information about this parameter.

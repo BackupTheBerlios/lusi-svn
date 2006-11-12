@@ -200,6 +200,31 @@ testDeserializeConfigurationParameterBool() {
     CPPUNIT_ASSERT_EQUAL(true, deserializedParameter->isValueSet());
     CPPUNIT_ASSERT_EQUAL(parameter->getValue(),
                          deserializedParameter->getValue());
+
+    //Test with a parameter created with the brief constructor and without value
+    //nor default value set
+    restartTestObjects();
+
+    parameter = SmartPtr<ConfigurationParameterBool>(
+        new ConfigurationParameterBool("boolId"));
+
+    mConfigurationXmlSerializer->visit(getPtr(parameter));
+    node = mConfigurationXmlSerializer->mNode->children;
+
+    deserializedParameter = SmartPtr<ConfigurationParameterBool>(
+        mConfigurationXmlDeserializer->deserializeConfigurationParameterBool(
+            node));
+
+    CPPUNIT_ASSERT(0 != getPtr(deserializedParameter));
+    CPPUNIT_ASSERT_EQUAL(parameter->getId(), deserializedParameter->getId());
+    CPPUNIT_ASSERT_EQUAL(parameter->getName(),
+                         deserializedParameter->getName());
+    CPPUNIT_ASSERT_EQUAL(parameter->getPriorityType(),
+                         deserializedParameter->getPriorityType());
+    CPPUNIT_ASSERT_EQUAL(parameter->getInformation(),
+                         deserializedParameter->getInformation());
+    CPPUNIT_ASSERT_EQUAL(false, deserializedParameter->isDefaultValueSet());
+    CPPUNIT_ASSERT_EQUAL(false, deserializedParameter->isValueSet());
 }
 
 void ConfigurationXmlDeserializerTest::
@@ -311,6 +336,31 @@ testDeserializeConfigurationParameterDouble() {
     CPPUNIT_ASSERT_EQUAL(true, deserializedParameter->isValueSet());
     CPPUNIT_ASSERT_EQUAL(parameter->getValue(),
                          deserializedParameter->getValue());
+
+    //Test with a parameter created with the brief constructor and without value
+    //nor default value set
+    restartTestObjects();
+
+    parameter = SmartPtr<ConfigurationParameterDouble>(
+        new ConfigurationParameterDouble("doubleId"));
+
+    mConfigurationXmlSerializer->visit(getPtr(parameter));
+    node = mConfigurationXmlSerializer->mNode->children;
+
+    deserializedParameter = SmartPtr<ConfigurationParameterDouble>(
+        mConfigurationXmlDeserializer->deserializeConfigurationParameterDouble(
+            node));
+
+    CPPUNIT_ASSERT(0 != getPtr(deserializedParameter));
+    CPPUNIT_ASSERT_EQUAL(parameter->getId(), deserializedParameter->getId());
+    CPPUNIT_ASSERT_EQUAL(parameter->getName(),
+                         deserializedParameter->getName());
+    CPPUNIT_ASSERT_EQUAL(parameter->getPriorityType(),
+                         deserializedParameter->getPriorityType());
+    CPPUNIT_ASSERT_EQUAL(parameter->getInformation(),
+                         deserializedParameter->getInformation());
+    CPPUNIT_ASSERT_EQUAL(false, deserializedParameter->isDefaultValueSet());
+    CPPUNIT_ASSERT_EQUAL(false, deserializedParameter->isValueSet());
 }
 
 void ConfigurationXmlDeserializerTest::
@@ -422,6 +472,31 @@ testDeserializeConfigurationParameterInt() {
     CPPUNIT_ASSERT_EQUAL(true, deserializedParameter->isValueSet());
     CPPUNIT_ASSERT_EQUAL(parameter->getValue(),
                          deserializedParameter->getValue());
+
+    //Test with a parameter created with the brief constructor and without value
+    //nor default value set
+    restartTestObjects();
+
+    parameter = SmartPtr<ConfigurationParameterInt>(
+        new ConfigurationParameterInt("intId"));
+
+    mConfigurationXmlSerializer->visit(getPtr(parameter));
+    node = mConfigurationXmlSerializer->mNode->children;
+
+    deserializedParameter = SmartPtr<ConfigurationParameterInt>(
+        mConfigurationXmlDeserializer->deserializeConfigurationParameterInt(
+            node));
+
+    CPPUNIT_ASSERT(0 != getPtr(deserializedParameter));
+    CPPUNIT_ASSERT_EQUAL(parameter->getId(), deserializedParameter->getId());
+    CPPUNIT_ASSERT_EQUAL(parameter->getName(),
+                         deserializedParameter->getName());
+    CPPUNIT_ASSERT_EQUAL(parameter->getPriorityType(),
+                         deserializedParameter->getPriorityType());
+    CPPUNIT_ASSERT_EQUAL(parameter->getInformation(),
+                         deserializedParameter->getInformation());
+    CPPUNIT_ASSERT_EQUAL(false, deserializedParameter->isDefaultValueSet());
+    CPPUNIT_ASSERT_EQUAL(false, deserializedParameter->isValueSet());
 }
 
 void ConfigurationXmlDeserializerTest::
@@ -534,6 +609,31 @@ testDeserializeConfigurationParameterLocalUrl() {
     CPPUNIT_ASSERT_EQUAL(true, deserializedParameter->isValueSet());
     CPPUNIT_ASSERT(parameter->getValue() ==
                    deserializedParameter->getValue());
+
+    //Test with a parameter created with the brief constructor and without value
+    //nor default value set
+    restartTestObjects();
+
+    parameter = SmartPtr<ConfigurationParameterLocalUrl>(
+        new ConfigurationParameterLocalUrl("localUrlId"));
+
+    mConfigurationXmlSerializer->visit(getPtr(parameter));
+    node = mConfigurationXmlSerializer->mNode->children;
+
+    deserializedParameter = SmartPtr<ConfigurationParameterLocalUrl>(
+        mConfigurationXmlDeserializer->deserializeConfigurationParameterLocalUrl(
+            node));
+
+    CPPUNIT_ASSERT(0 != getPtr(deserializedParameter));
+    CPPUNIT_ASSERT_EQUAL(parameter->getId(), deserializedParameter->getId());
+    CPPUNIT_ASSERT_EQUAL(parameter->getName(),
+                         deserializedParameter->getName());
+    CPPUNIT_ASSERT_EQUAL(parameter->getPriorityType(),
+                         deserializedParameter->getPriorityType());
+    CPPUNIT_ASSERT_EQUAL(parameter->getInformation(),
+                         deserializedParameter->getInformation());
+    CPPUNIT_ASSERT_EQUAL(false, deserializedParameter->isDefaultValueSet());
+    CPPUNIT_ASSERT_EQUAL(false, deserializedParameter->isValueSet());
 }
 
 void ConfigurationXmlDeserializerTest::
@@ -614,6 +714,29 @@ testDeserializeConfigurationParameterMap() {
     CPPUNIT_ASSERT_EQUAL((size_t)2, parameters.size());
     CPPUNIT_ASSERT_EQUAL(string("localUrlId"), parameters[0]->getId());
     CPPUNIT_ASSERT_EQUAL(string("doubleId"), parameters[1]->getId());
+
+    //Test with an empty map created with the brief constructor
+    restartTestObjects();
+
+    parameter = SmartPtr<ConfigurationParameterMap>(
+        new ConfigurationParameterMap("mapId"));
+
+    mConfigurationXmlSerializer->visit(getPtr(parameter));
+    node = mConfigurationXmlSerializer->mNode->children;
+
+    deserializedParameter = SmartPtr<ConfigurationParameterMap>(
+        mConfigurationXmlDeserializer->deserializeConfigurationParameterMap(
+            node));
+
+    CPPUNIT_ASSERT(0 != getPtr(deserializedParameter));
+    CPPUNIT_ASSERT_EQUAL(parameter->getId(), deserializedParameter->getId());
+    CPPUNIT_ASSERT_EQUAL(parameter->getName(),
+                         deserializedParameter->getName());
+    CPPUNIT_ASSERT_EQUAL(parameter->getPriorityType(),
+                         deserializedParameter->getPriorityType());
+    CPPUNIT_ASSERT_EQUAL(parameter->getInformation(),
+                         deserializedParameter->getInformation());
+    CPPUNIT_ASSERT_EQUAL((size_t)0, deserializedParameter->getAll().size());
 }
 
 void ConfigurationXmlDeserializerTest::
@@ -725,6 +848,31 @@ testDeserializeConfigurationParameterString() {
     CPPUNIT_ASSERT_EQUAL(true, deserializedParameter->isValueSet());
     CPPUNIT_ASSERT_EQUAL(parameter->getValue(),
                          deserializedParameter->getValue());
+
+    //Test with a parameter created with the brief constructor and without value
+    //nor default value set
+    restartTestObjects();
+
+    parameter = SmartPtr<ConfigurationParameterString>(
+        new ConfigurationParameterString("stringId"));
+
+    mConfigurationXmlSerializer->visit(getPtr(parameter));
+    node = mConfigurationXmlSerializer->mNode->children;
+
+    deserializedParameter = SmartPtr<ConfigurationParameterString>(
+        mConfigurationXmlDeserializer->deserializeConfigurationParameterString(
+            node));
+
+    CPPUNIT_ASSERT(0 != getPtr(deserializedParameter));
+    CPPUNIT_ASSERT_EQUAL(parameter->getId(), deserializedParameter->getId());
+    CPPUNIT_ASSERT_EQUAL(parameter->getName(),
+                         deserializedParameter->getName());
+    CPPUNIT_ASSERT_EQUAL(parameter->getPriorityType(),
+                         deserializedParameter->getPriorityType());
+    CPPUNIT_ASSERT_EQUAL(parameter->getInformation(),
+                         deserializedParameter->getInformation());
+    CPPUNIT_ASSERT_EQUAL(false, deserializedParameter->isDefaultValueSet());
+    CPPUNIT_ASSERT_EQUAL(false, deserializedParameter->isValueSet());
 }
 
 //private:

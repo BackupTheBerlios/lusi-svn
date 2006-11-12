@@ -56,6 +56,28 @@ public:
      * This constructor doesn't set the default value.
      *
      * @param id The id.
+     * @param stringType The type of the string, normal by default.
+     */
+    ConfigurationParameterString(const std::string& id,
+                                 StringType stringType = NormalType);
+
+    /**
+     * Creates a new ConfigurationParameterString.
+     * This constructor sets the default value.
+     *
+     * @param id The id.
+     * @param defaultValue The default value.
+     * @param stringType The type of the string, normal by default.
+     */
+    ConfigurationParameterString(const std::string& id,
+                                 const std::string& defaultValue,
+                                 StringType stringType = NormalType);
+
+    /**
+     * Creates a new ConfigurationParameterString.
+     * This constructor doesn't set the default value.
+     *
+     * @param id The id.
      * @param name The name.
      * @param priorityType The type of priority.
      * @param information The information about this ConfigurationParameter.

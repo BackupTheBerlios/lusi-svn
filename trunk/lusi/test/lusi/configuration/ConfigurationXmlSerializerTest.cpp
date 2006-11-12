@@ -162,6 +162,29 @@ void ConfigurationXmlSerializerTest::testVisitConfigurationParameterBool() {
 
     node = node->next;
     CPPUNIT_ASSERT(!node);
+
+    //Test with a parameter created with the brief constructor without a default
+    //value set and without value set
+    restartTestObjects();
+
+    parameter = SmartPtr<ConfigurationParameterBool>(
+        new ConfigurationParameterBool("boolId"));
+
+    mConfigurationXmlSerializer->visit(getPtr(parameter));
+    node = mConfigurationXmlSerializer->mNode->children;
+
+    CPPUNIT_ASSERT(0 != node);
+    CPPUNIT_ASSERT(!xmlStrcmp(BAD_CAST "bool", node->name));
+
+    attribute = node->properties;
+    CPPUNIT_ASSERT(!xmlStrcmp(BAD_CAST "id", attribute->name));
+    CPPUNIT_ASSERT(!xmlStrcmp(BAD_CAST "boolId", attribute->children->content));
+    attribute = attribute->next;
+    CPPUNIT_ASSERT_EQUAL((xmlAttrPtr)0, attribute);
+
+    node = node->children;
+
+    CPPUNIT_ASSERT(!node);
 }
 
 void ConfigurationXmlSerializerTest::testVisitConfigurationParameterDouble() {
@@ -271,6 +294,29 @@ void ConfigurationXmlSerializerTest::testVisitConfigurationParameterDouble() {
 
     node = node->next;
     CPPUNIT_ASSERT(!node);
+
+    //Test with a parameter created with the brief constructor without a default
+    //value set and without value set
+    restartTestObjects();
+
+    parameter = SmartPtr<ConfigurationParameterDouble>(
+        new ConfigurationParameterDouble("doubleId"));
+
+    mConfigurationXmlSerializer->visit(getPtr(parameter));
+    node = mConfigurationXmlSerializer->mNode->children;
+
+    CPPUNIT_ASSERT(0 != node);
+    CPPUNIT_ASSERT(!xmlStrcmp(BAD_CAST "double", node->name));
+
+    attribute = node->properties;
+    CPPUNIT_ASSERT(!xmlStrcmp(BAD_CAST "id", attribute->name));
+    CPPUNIT_ASSERT(!xmlStrcmp(BAD_CAST "doubleId", attribute->children->content));
+    attribute = attribute->next;
+    CPPUNIT_ASSERT_EQUAL((xmlAttrPtr)0, attribute);
+
+    node = node->children;
+
+    CPPUNIT_ASSERT(!node);
 }
 
 void ConfigurationXmlSerializerTest::testVisitConfigurationParameterInt() {
@@ -378,6 +424,29 @@ void ConfigurationXmlSerializerTest::testVisitConfigurationParameterInt() {
     CPPUNIT_ASSERT(!xmlStrcmp(BAD_CAST "66", node->children->content));
 
     node = node->next;
+    CPPUNIT_ASSERT(!node);
+
+    //Test with a parameter created with the brief constructor without a default
+    //value set and without value set
+    restartTestObjects();
+
+    parameter = SmartPtr<ConfigurationParameterInt>(
+        new ConfigurationParameterInt("intId"));
+
+    mConfigurationXmlSerializer->visit(getPtr(parameter));
+    node = mConfigurationXmlSerializer->mNode->children;
+
+    CPPUNIT_ASSERT(0 != node);
+    CPPUNIT_ASSERT(!xmlStrcmp(BAD_CAST "int", node->name));
+
+    attribute = node->properties;
+    CPPUNIT_ASSERT(!xmlStrcmp(BAD_CAST "id", attribute->name));
+    CPPUNIT_ASSERT(!xmlStrcmp(BAD_CAST "intId", attribute->children->content));
+    attribute = attribute->next;
+    CPPUNIT_ASSERT_EQUAL((xmlAttrPtr)0, attribute);
+
+    node = node->children;
+
     CPPUNIT_ASSERT(!node);
 }
 
@@ -490,6 +559,29 @@ void ConfigurationXmlSerializerTest::testVisitConfigurationParameterLocalUrl() {
 
     node = node->next;
     CPPUNIT_ASSERT(!node);
+
+    //Test with a parameter created with the brief constructor without a default
+    //value set and without value set
+    restartTestObjects();
+
+    parameter = SmartPtr<ConfigurationParameterLocalUrl>(
+        new ConfigurationParameterLocalUrl("localUrlId"));
+
+    mConfigurationXmlSerializer->visit(getPtr(parameter));
+    node = mConfigurationXmlSerializer->mNode->children;
+
+    CPPUNIT_ASSERT(0 != node);
+    CPPUNIT_ASSERT(!xmlStrcmp(BAD_CAST "localUrl", node->name));
+
+    attribute = node->properties;
+    CPPUNIT_ASSERT(!xmlStrcmp(BAD_CAST "id", attribute->name));
+    CPPUNIT_ASSERT(!xmlStrcmp(BAD_CAST "localUrlId", attribute->children->content));
+    attribute = attribute->next;
+    CPPUNIT_ASSERT_EQUAL((xmlAttrPtr)0, attribute);
+
+    node = node->children;
+
+    CPPUNIT_ASSERT(!node);
 }
 
 void ConfigurationXmlSerializerTest::testVisitConfigurationParameterMap() {
@@ -519,6 +611,28 @@ void ConfigurationXmlSerializerTest::testVisitConfigurationParameterMap() {
     CPPUNIT_ASSERT(!xmlStrcmp(BAD_CAST "information", attribute->name));
     CPPUNIT_ASSERT(!xmlStrcmp(BAD_CAST "A map of parameters",
                               attribute->children->content));
+    attribute = attribute->next;
+    CPPUNIT_ASSERT_EQUAL((xmlAttrPtr)0, attribute);
+
+    node = node->children;
+
+    CPPUNIT_ASSERT(!node);
+
+    //Test with an empty map using brief constructor
+    restartTestObjects();
+
+    parameter = SmartPtr<ConfigurationParameterMap>(
+        new ConfigurationParameterMap("mapId"));
+
+    mConfigurationXmlSerializer->visit(getPtr(parameter));
+    node = mConfigurationXmlSerializer->mNode->children;
+
+    CPPUNIT_ASSERT(0 != node);
+    CPPUNIT_ASSERT(!xmlStrcmp(BAD_CAST "map", node->name));
+
+    attribute = node->properties;
+    CPPUNIT_ASSERT(!xmlStrcmp(BAD_CAST "id", attribute->name));
+    CPPUNIT_ASSERT(!xmlStrcmp(BAD_CAST "mapId", attribute->children->content));
     attribute = attribute->next;
     CPPUNIT_ASSERT_EQUAL((xmlAttrPtr)0, attribute);
 
@@ -688,6 +802,29 @@ void ConfigurationXmlSerializerTest::testVisitConfigurationParameterString() {
 
     node = node->next;
     CPPUNIT_ASSERT(!node);
+
+    //Test with a parameter created with the brief constructor without a default
+    //value set and without value set
+    restartTestObjects();
+
+    parameter = SmartPtr<ConfigurationParameterString>(
+        new ConfigurationParameterString("stringId"));
+
+    mConfigurationXmlSerializer->visit(getPtr(parameter));
+    node = mConfigurationXmlSerializer->mNode->children;
+
+    CPPUNIT_ASSERT(0 != node);
+    CPPUNIT_ASSERT(!xmlStrcmp(BAD_CAST "string", node->name));
+
+    attribute = node->properties;
+    CPPUNIT_ASSERT(!xmlStrcmp(BAD_CAST "id", attribute->name));
+    CPPUNIT_ASSERT(!xmlStrcmp(BAD_CAST "stringId", attribute->children->content));
+    attribute = attribute->next;
+    CPPUNIT_ASSERT_EQUAL((xmlAttrPtr)0, attribute);
+
+    node = node->children;
+
+    CPPUNIT_ASSERT(!node);
 }
 
 void ConfigurationXmlSerializerTest::testSerialize() {
@@ -744,6 +881,27 @@ void ConfigurationXmlSerializerTest::testNewNode() {
 
     CPPUNIT_ASSERT(!node);
 
+    //Test with the brief constructor
+    restartTestObjects();
+
+    parameter = SmartPtr<ConfigurationParameterTestImplementation>(
+        new ConfigurationParameterTestImplementation("testId"));
+
+    node = mConfigurationXmlSerializer->newNode(getPtr(parameter), "test");
+    xmlAddChild(mConfigurationXmlSerializer->mNode, node);
+
+    CPPUNIT_ASSERT(!xmlStrcmp(BAD_CAST "test", node->name));
+
+    attribute = node->properties;
+    CPPUNIT_ASSERT(!xmlStrcmp(BAD_CAST "id", attribute->name));
+    CPPUNIT_ASSERT(!xmlStrcmp(BAD_CAST "testId", attribute->children->content));
+    attribute = attribute->next;
+    CPPUNIT_ASSERT_EQUAL((xmlAttrPtr)0, attribute);
+
+    node = node->children;
+
+    CPPUNIT_ASSERT(!node);
+
     //Test with a recommended priority
     restartTestObjects();
 
@@ -783,6 +941,25 @@ void ConfigurationXmlSerializerTest::testNewNode() {
     CPPUNIT_ASSERT(!xmlStrcmp(BAD_CAST "priorityType", attribute->name));
     CPPUNIT_ASSERT(!xmlStrcmp(BAD_CAST "required",
                               attribute->children->content));
+
+    //Test with no priority
+    restartTestObjects();
+
+    parameter = SmartPtr<ConfigurationParameterTestImplementation>(
+        new ConfigurationParameterTestImplementation("testId", "Test",
+            ConfigurationParameter::NoPriority, "A test"));
+
+    node = mConfigurationXmlSerializer->newNode(getPtr(parameter),
+                                                           "test");
+    xmlAddChild(mConfigurationXmlSerializer->mNode, node);
+
+    CPPUNIT_ASSERT(!xmlStrcmp(BAD_CAST "test", node->name));
+
+    attribute = node->properties;
+    attribute = attribute->next;
+    attribute = attribute->next;
+    CPPUNIT_ASSERT(!xmlStrcmp(BAD_CAST "priorityType", attribute->name));
+    CPPUNIT_ASSERT(!xmlStrcmp(BAD_CAST "no", attribute->children->content));
 }
 
 //private:

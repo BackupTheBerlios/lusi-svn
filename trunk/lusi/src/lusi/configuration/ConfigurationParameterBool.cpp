@@ -27,6 +27,15 @@ using namespace lusi::configuration;
 
 //public:
 
+ConfigurationParameterBool::ConfigurationParameterBool(const string& id):
+        ConfigurationParameterSimple<bool>(id) {
+}
+
+ConfigurationParameterBool::ConfigurationParameterBool(const string& id,
+                                    bool defaultValue):
+        ConfigurationParameterSimple<bool>(id, defaultValue) {
+}
+
 ConfigurationParameterBool::ConfigurationParameterBool(const string& id,
                                     const string& name,
                                     PriorityType priorityType,

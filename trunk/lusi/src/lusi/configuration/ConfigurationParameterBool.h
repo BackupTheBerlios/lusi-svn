@@ -43,6 +43,23 @@ public:
      * This constructor doesn't set the default value.
      *
      * @param id The id.
+     */
+    ConfigurationParameterBool(const std::string& id);
+
+    /**
+     * Creates a new ConfigurationParameterBool.
+     * This constructor sets the default value.
+     *
+     * @param id The id.
+     * @param defaultValue The default value.
+     */
+    ConfigurationParameterBool(const std::string& id, bool defaultValue);
+
+    /**
+     * Creates a new ConfigurationParameterBool.
+     * This constructor doesn't set the default value.
+     *
+     * @param id The id.
      * @param name The name.
      * @param priorityType The type of priority.
      * @param information The information about this ConfigurationParameter.

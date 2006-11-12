@@ -75,6 +75,41 @@ void ConfigurationParameterSimpleTest::testConstructor() {
     CPPUNIT_ASSERT_EQUAL(false,
                          mConfigurationParameterSimple->mDefaultValueSet);
     CPPUNIT_ASSERT_EQUAL(false, mConfigurationParameterSimple->mValueSet);
+
+    //Test with the id
+    delete mConfigurationParameterSimple;
+    mConfigurationParameterSimple =
+        new ConfigurationParameterSimpleTestImplementation("Yet another test");
+
+    CPPUNIT_ASSERT_EQUAL(string("Yet another test"),
+                         mConfigurationParameterSimple->mId);
+    CPPUNIT_ASSERT_EQUAL(string(""), mConfigurationParameterSimple->mName);
+    CPPUNIT_ASSERT_EQUAL(ConfigurationParameter::NoPriority,
+                         mConfigurationParameterSimple->mPriorityType);
+    CPPUNIT_ASSERT_EQUAL(string(""),
+                         mConfigurationParameterSimple->mInformation);
+    CPPUNIT_ASSERT_EQUAL(false,
+                         mConfigurationParameterSimple->mDefaultValueSet);
+    CPPUNIT_ASSERT_EQUAL(false, mConfigurationParameterSimple->mValueSet);
+
+    //Test with the id and the default value
+    delete mConfigurationParameterSimple;
+    mConfigurationParameterSimple =
+        new ConfigurationParameterSimpleTestImplementation(
+            "Even yet another test", "Default");
+
+    CPPUNIT_ASSERT_EQUAL(string("Even yet another test"),
+                         mConfigurationParameterSimple->mId);
+    CPPUNIT_ASSERT_EQUAL(string(""), mConfigurationParameterSimple->mName);
+    CPPUNIT_ASSERT_EQUAL(ConfigurationParameter::NoPriority,
+                         mConfigurationParameterSimple->mPriorityType);
+    CPPUNIT_ASSERT_EQUAL(string(""),
+                         mConfigurationParameterSimple->mInformation);
+    CPPUNIT_ASSERT_EQUAL(string("Default"),
+                         mConfigurationParameterSimple->mDefaultValue);
+    CPPUNIT_ASSERT_EQUAL(true,
+                         mConfigurationParameterSimple->mDefaultValueSet);
+    CPPUNIT_ASSERT_EQUAL(false, mConfigurationParameterSimple->mValueSet);
 }
 
 void ConfigurationParameterSimpleTest::testIsInvalid() {

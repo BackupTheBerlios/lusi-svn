@@ -43,6 +43,23 @@ public:
      * This constructor doesn't set the default value.
      *
      * @param id The id.
+     */
+    ConfigurationParameterInt(const std::string& id);
+
+    /**
+     * Creates a new ConfigurationParameterInt.
+     * This constructor sets the default value.
+     *
+     * @param id The id.
+     * @param defaultValue The default value.
+     */
+    ConfigurationParameterInt(const std::string& id, int defaultValue);
+
+    /**
+     * Creates a new ConfigurationParameterInt.
+     * This constructor doesn't set the default value.
+     *
+     * @param id The id.
      * @param name The name.
      * @param priorityType The type of priority.
      * @param information The information about this ConfigurationParameter.

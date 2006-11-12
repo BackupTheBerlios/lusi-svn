@@ -61,6 +61,8 @@ public:
     /**
      * Creates a new ConfigurationParameterData from an xmlNodePtr.
      * All the attributes are initialized from the attributes in the node.
+     * If name, priority and information doesn't exist, they are set to "",
+     * NoPriority and "" respectively.
      *
      * @param node The xmlNodePtr to get the attributes from.
      */
@@ -91,7 +93,18 @@ public:
 ConfigurationParameterData::ConfigurationParameterData(const xmlNodePtr node) {
     id = getStringAndFreeXmlChar(xmlGetProp(node, BAD_CAST "id"));
 
-    name = getStringAndFreeXmlChar(xmlGetProp(node, BAD_CAST "name"));
+    xmlChar* nameChar = xmlGetProp(node, BAD_CAST "name");
+
+    //If there isn't name attribute, the saved parameter was created with brief
+    //constructor, so name, priority and information weren't serialized
+    if (!nameChar) {
+        name = "";
+        priorityType = ConfigurationParameter::NoPriority;
+        information = "";
+        return;
+    }
+
+    name = getStringAndFreeXmlChar(nameChar);
 
     string priorityTypeString =
             getStringAndFreeXmlChar(xmlGetProp(node, BAD_CAST "priorityType"));
@@ -102,6 +115,8 @@ ConfigurationParameterData::ConfigurationParameterData(const xmlNodePtr node) {
         priorityType = ConfigurationParameter::RecommendedPriority;
     } else if (priorityTypeString == "optional") {
         priorityType = ConfigurationParameter::OptionalPriority;
+    } else if (priorityTypeString == "no") {
+        priorityType = ConfigurationParameter::NoPriority;
     }
 
     information =

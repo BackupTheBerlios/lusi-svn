@@ -27,6 +27,15 @@ using namespace lusi::configuration;
 
 //public:
 
+ConfigurationParameterInt::ConfigurationParameterInt(const string& id):
+        ConfigurationParameterSimple<int>(id) {
+}
+
+ConfigurationParameterInt::ConfigurationParameterInt(const string& id,
+                                    int defaultValue):
+        ConfigurationParameterSimple<int>(id, defaultValue) {
+}
+
 ConfigurationParameterInt::ConfigurationParameterInt(const string& id,
                                     const string& name,
                                     PriorityType priorityType,

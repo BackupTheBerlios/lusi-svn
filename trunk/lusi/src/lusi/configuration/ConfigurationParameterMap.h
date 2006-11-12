@@ -71,6 +71,15 @@ public:
      * Creates a new empty ConfigurationParameterMap.
      *
      * @param id The id.
+     * @param invalidPolicy The invalid policy, no policy by default.
+     */
+    ConfigurationParameterMap(const std::string& id,
+                              InvalidPolicy invalidPolicy = NoPolicy);
+
+    /**
+     * Creates a new empty ConfigurationParameterMap.
+     *
+     * @param id The id.
      * @param name The name.
      * @param priorityType The type of priority.
      * @param information The information about this ConfigurationParameter.

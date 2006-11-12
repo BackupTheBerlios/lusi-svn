@@ -44,8 +44,9 @@ namespace configuration {
  * The parameters in the groups can have an "and" or an "or" relation between
  * them, that is, that all the parameters or only one are needed.
  *
- * Each parameter also has a priority. This priority represents the degree of
- * importance of it: required, recommended or optional.
+ * Each parameter may also have a priority. This priority represents the degree
+ * of importance of it: required, recommended or optional. It can be also
+ * set to NoPriority if no priority is needed.
  *
  * Based on the type of the parameter and its priority, it can be checked if
  * this parameter is valid or invalid using isInvalid(). The meaning of an
@@ -54,13 +55,18 @@ namespace configuration {
  * Each ConfigurationParameter has its own unique id, so concrete parameters can
  * be got easily in ConfigurationParameterMap if needed.
  *
- * Apart from the id, each parameter has a name. This name is a name in a human
- * readable form for the parameter (so the user knows what the parameter is).
+ * Apart from the id, each parameter can have a name. This name is a name in a
+ * human readable form for the parameter (so the user knows what the parameter
+ * is). It isn't used when the parameter is used internally in LUSI and not
+ * shown to the user.
  *
- * Each parameter also has some information explaining its purpose.
+ * Parameters designed to be modified by users also have some information
+ * explaining their purpose.
  *
  * Configuration is used mainly in Tasks and TaskHelpers so different parameters
- * can be used in them. Of course, it can also be used anywhere else if needed.
+ * can be used in them. It is also used in the Packages, so the Tasks can know
+ * which resources (files, for example) they have. Of course, it can also be
+ * used anywhere else if needed.
  *
  * ConfigurationParameters act as nodes in Visitor design pattern. It allows
  * traversing the structure with ease, not needing specific checks to know the
@@ -85,7 +91,8 @@ public:
     enum PriorityType {
         RequiredPriority = 0,
         RecommendedPriority,
-        OptionalPriority
+        OptionalPriority,
+        NoPriority
     };
 
     /**
@@ -172,6 +179,19 @@ public:
     }
 
 protected:
+
+    /**
+     * Creates a new ConfigurationParameter.
+     * The name and information are set to an empty string. The priority is set
+     * to NoPriority.
+     * The ConfigurationParameter is serializable.
+     *
+     * Protected to avoid classes other than derived to create
+     * ConfigurationParameter objects.
+     *
+     * @param id The id.
+     */
+    ConfigurationParameter(const std::string& id);
 
     /**
      * Creates a new ConfigurationParameter.

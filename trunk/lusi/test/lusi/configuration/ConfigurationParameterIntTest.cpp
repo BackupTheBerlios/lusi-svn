@@ -72,4 +72,33 @@ void ConfigurationParameterIntTest::testConstructor() {
                          mConfigurationParameterInt->mInformation);
     CPPUNIT_ASSERT_EQUAL(false, mConfigurationParameterInt->mDefaultValueSet);
     CPPUNIT_ASSERT_EQUAL(false, mConfigurationParameterInt->mValueSet);
+
+    //Test with the id
+    delete mConfigurationParameterInt;
+    mConfigurationParameterInt =
+            new ConfigurationParameterInt("Yet another test");
+
+    CPPUNIT_ASSERT_EQUAL(string("Yet another test"),
+                         mConfigurationParameterInt->mId);
+    CPPUNIT_ASSERT_EQUAL(string(""), mConfigurationParameterInt->mName);
+    CPPUNIT_ASSERT_EQUAL(ConfigurationParameter::NoPriority,
+                         mConfigurationParameterInt->mPriorityType);
+    CPPUNIT_ASSERT_EQUAL(string(""), mConfigurationParameterInt->mInformation);
+    CPPUNIT_ASSERT_EQUAL(false, mConfigurationParameterInt->mDefaultValueSet);
+    CPPUNIT_ASSERT_EQUAL(false, mConfigurationParameterInt->mValueSet);
+
+    //Test with the id and the default value
+    delete mConfigurationParameterInt;
+    mConfigurationParameterInt =
+            new ConfigurationParameterInt("Even yet another test", 42);
+
+    CPPUNIT_ASSERT_EQUAL(string("Even yet another test"),
+                         mConfigurationParameterInt->mId);
+    CPPUNIT_ASSERT_EQUAL(string(""), mConfigurationParameterInt->mName);
+    CPPUNIT_ASSERT_EQUAL(ConfigurationParameter::NoPriority,
+                         mConfigurationParameterInt->mPriorityType);
+    CPPUNIT_ASSERT_EQUAL(string(""), mConfigurationParameterInt->mInformation);
+    CPPUNIT_ASSERT_EQUAL(42, mConfigurationParameterInt->mDefaultValue);
+    CPPUNIT_ASSERT_EQUAL(true, mConfigurationParameterInt->mDefaultValueSet);
+    CPPUNIT_ASSERT_EQUAL(false, mConfigurationParameterInt->mValueSet);
 }

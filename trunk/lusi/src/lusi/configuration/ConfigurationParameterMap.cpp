@@ -32,6 +32,12 @@ using namespace lusi::configuration;
 //public:
 
 ConfigurationParameterMap::ConfigurationParameterMap(const string& id,
+                                InvalidPolicy invalidPolicy /*= NoPolicy*/):
+        ConfigurationParameter(id) {
+    mInvalidPolicy = invalidPolicy;
+}
+
+ConfigurationParameterMap::ConfigurationParameterMap(const string& id,
                                 const string& name,
                                 PriorityType priorityType,
                                 const string& information,

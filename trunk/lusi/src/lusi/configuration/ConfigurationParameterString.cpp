@@ -28,6 +28,19 @@ using namespace lusi::configuration;
 //public:
 
 ConfigurationParameterString::ConfigurationParameterString(const string& id,
+                                    StringType stringType /*= NormalType*/):
+        ConfigurationParameterSimple<string>(id) {
+    mStringType = stringType;
+}
+
+ConfigurationParameterString::ConfigurationParameterString(const string& id,
+                                    const string& defaultValue,
+                                    StringType stringType /*= NormalType*/):
+        ConfigurationParameterSimple<string>(id, defaultValue) {
+    mStringType = stringType;
+}
+
+ConfigurationParameterString::ConfigurationParameterString(const string& id,
                                     const string& name,
                                     PriorityType priorityType,
                                     const string& information,
