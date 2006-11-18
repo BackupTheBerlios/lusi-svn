@@ -1,0 +1,367 @@
+/**********************************************************
+ *                       General
+ *********************************************************/
+.hidden {
+	display:none;
+}
+
+.lastUpdated {
+	margin-top: 2em;
+
+	text-align: right;
+	font-size: smaller;
+	font-style: italic;
+}
+
+.anchorLink, .anchorLink:hover {
+	color: inherit;
+	background-color: inherit;
+
+	text-decoration: none;
+}
+
+a {
+	color: #2B611E;
+	background-color: inherit;
+
+	text-decoration: none;
+}
+
+a:visited {
+	color: #2B611E;
+	background-color: inherit;
+}
+
+a:hover {
+	color: #81D16C;
+	background-color: inherit;
+}
+
+a img {
+	border: none;
+}
+
+h1 {
+	margin: 0em 0em 1em 0em;
+
+	border-bottom: thin solid #16300F;
+
+	color: #2B611E;
+	background-color: inherit;
+}
+
+h2 {
+	margin: 0em 0em 1em 0em;
+	padding-left: 0.5em;
+
+	border-width: 1px;
+	border-style: solid;
+	border-color: #16300F;
+
+	color: #2B611E;
+	background-color: #D5EFCE;
+}
+
+.h2Rounded {
+	margin: 0em 0em 1em 0em;
+}
+
+.h2Rounded h2 {
+	margin: 0;
+}
+
+h3 {
+	color: #2B611E;
+	background-color: inherit;
+}
+
+body {
+	margin: 0;
+	padding: 0em 2em 2em 2em;
+
+	color: #000000;
+	background-color: #E0E0E0;
+
+	text-align: justify;
+
+	font-size: small;
+}
+
+#wrap {
+	padding: 1em;
+
+	color: inherit;
+	background-color: #FFFFFF;
+}
+
+/**********************************************************
+ *                        Header
+ *********************************************************/
+#header {
+	margin-bottom: 1em;
+}
+
+#logo {
+	padding: 1.5em 2em 1em 2em;
+
+	overflow: hidden;
+
+	color: #FFFFFF;
+	background-color: #56C13B;
+}
+
+#logo a {
+	color: #FFFFFF;
+	background-color: inherit;
+}
+
+#logoAcronym {
+	text-align: center;
+
+	font: bold 4em sans-serif;
+	letter-spacing: 1em;
+}
+
+#logoCompleteName {
+	margin: 0;
+
+	text-align: right;
+
+	font-size: 0.9em;
+	font-style: italic;
+	font-variant: small-caps;
+}
+
+/**********************************************************
+ *                         Menu
+ *********************************************************/
+#menu {
+	clear: left;
+	float: left;
+
+	width: 11em;
+}
+
+#menu ul {
+	margin: 0;
+	padding: 0;
+
+	list-style: none;
+}
+
+#menu a {
+	display: block;
+
+	margin-bottom: 0.5em;
+	padding: 0.5em;
+
+	border-left: 0.6em solid #49A432;
+
+	color: #2B611E;
+	background-color: #D5EFCE;
+
+	font-size: 0.9em;
+}
+
+#menu p {
+	margin-top: 0;
+	margin-bottom: 0.5em;
+	padding:0.5em;
+
+	border-left: 0.6em solid #49A432;
+
+	color: #2B611E;
+	background-color: #D5EFCE;
+
+	font-size: 0.9em;
+	font-weight: bold;
+}
+
+#menu a:hover {
+	border-left-color: #56C13B;
+
+	color: #81D16C;
+	background-color: #EFF9EC;
+}
+
+/**********************************************************
+ *                        Content
+ *********************************************************/
+#content {
+	position: relative;
+
+	margin-left: 12em;
+	padding: 0em 2em 0em 2em;
+}
+
+#content a {
+	text-decoration: underline;
+}
+
+#content .anchorLink, .anchorLink:hover {
+	text-decoration: none;
+}
+
+/**********************************************************
+ *                       Footer
+ *********************************************************/
+#footer {
+	clear: both;
+
+	position: relative;
+
+	margin-top: 2em;
+	padding: 1em 1em 0em 1em;
+
+	border-top: medium solid #E0E0E0;
+}
+
+#footer p {
+	display: inline;
+}
+
+#validation {
+	text-align: center;
+}
+
+#logoBerliOS {
+	margin-top: 1em;
+
+	text-align: center;
+}
+
+/**********************************************************
+ *                          News
+ *********************************************************/
+#rssFeed {
+	text-align: right;
+}
+
+.new {
+	margin-bottom: 2em;
+}
+
+.newTitle {
+	margin: 0;
+	padding: 0em 0em 0em 1em;
+
+	border-width: 1px;
+	border-style: solid;
+	border-color: #16300F;
+
+	color: #16300F;
+	background-color: #D5EFCE;
+
+	font-size: larger;
+}
+
+
+.newBody {
+	margin: 0;
+
+	border-width: 1px;
+	border-style: none solid solid solid;
+	border-color: #16300F;
+
+	color: inherit;
+	background-color: #EFF9EC;
+}
+
+.newDate {
+	margin: 0;
+
+	text-align: right;
+
+	font-size: smaller;
+}
+
+.newContent {
+	padding: 0em 1em 0em 1em;
+}
+
+.newContent p {
+	margin: 0;
+	padding: 1em 0em 1em 0em;
+}
+
+/**********************************************************
+ *                          FAQ
+ *********************************************************/
+.QandAentry {
+	margin-bottom: 2em;
+}
+
+.answer {
+	margin-left: 1em;
+	padding-left: 1em;
+
+	border-left: thin solid #16300F;
+}
+
+/**********************************************************
+ *                      Screenshots
+ *********************************************************/
+
+#screenshotsList {
+	list-style-type: none;
+}
+
+#screenshotsList li {
+/* 	float: left; */
+
+	margin: 0em 2em 2em 2em;
+
+	text-align: center;
+}
+
+#screenshotsList li p {
+	margin-top: 0em;
+	margin-bottom: 0em;
+}
+
+/**********************************************************
+ *     Individual Screenshot (gallery generator script)
+ *********************************************************/
+
+#screenshot {
+	text-align: center;
+}
+
+#screenshotTitle {
+	font-size: larger;
+	font-weight: bolder;
+}
+
+#screenshotImageWrapper {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+#navigationBar {
+	border-width: 1px;
+	border-style: solid;
+	border-color: #16300F;
+
+	color: #2B611E;
+	background-color: #D5EFCE;
+}
+
+#navigationBar p {
+	display: inline;
+}
+
+#upWrapper {
+	margin-left: 4em;
+	margin-right: 4em;
+}
+
+/**********************************************************
+ *                     Foldable lists
+ *********************************************************/
+
+#content .foldLink {
+  text-decoration: none;
+
+  font-size: larger;
+  font-weight: bolder;
+}

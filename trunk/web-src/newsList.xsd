@@ -1,0 +1,155 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<xs:schema targetNamespace="http://lusi.berlios.de/namespaces/news" xmlns="http://lusi.berlios.de/namespaces/news"
+	   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+	<xs:annotation>
+		<xs:documentation>
+			XML Schema for XML documents containing news for LUSI project.
+			Each new contains a title (plain text), a summary and its date.
+			
+			The summary is a subset of elements in XHTML. It's XHTML 1.0 Strict instead of 1.1 due to
+			a problem explained in the XML comments below. Attribute "name" in "a" and "map" can't be
+			used. Use "id" instead.
+			
+			Dates must contain the date and, optionally, the time. A restricted version of base date
+			and time types is made. Restricted dates can't include a time zone, while restricted times
+			must include the time zone.
+		</xs:documentation>
+	</xs:annotation>
+<!--
+	Modularized XHTML 1.1 should be used instead of XHTML 1.0 Strict. However, I haven't found how to use the XHTML 1.1 XML Schemas,
+	so I use instead XHTML 1.0 Strict which are nearly equal, expect for a and map elements, where the name attribute has been
+	removed in favor of the id attribute.
+
+	The problem with modularized XHTML 1.1 schema were undefined types even validating pure XHTML 1.1 against the schema (that is,
+	not only when using the schema inside another schema). I've no clue of the problem nor how it can be solved, and Google didn't
+	help me out, so I decided to use XHTML 1.0 Strict for this schema.
+-->
+<!-- 	<xs:import namespace="http://www.w3.org/1999/xhtml" schemaLocation="http://www.w3.org/TR/xhtml-modularization/SCHEMA/xhtml11.xsd"/> -->
+	<xs:import namespace="http://www.w3.org/1999/xhtml" schemaLocation="http://www.w3.org/2002/08/xhtml/xhtml1-strict.xsd"/>
+	<xs:element name="news">
+		<xs:annotation>
+			<xs:documentation>
+				A list of news.
+			</xs:documentation>
+		</xs:annotation>
+		
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="new" minOccurs="1" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="new">
+		<xs:annotation>
+			<xs:documentation>
+				A new.
+				The new contains a title, a summary with the
+				description and the full date of the new.
+			</xs:documentation>
+		</xs:annotation>
+		
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="title"/>
+				<xs:element ref="summary"/>
+				<xs:element ref="fullDate"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="title" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>
+				The title of a new.
+				It's plain text.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	
+	<xs:element name="summary">
+		<xs:annotation>
+			<xs:documentation>
+				Summary contains XHTML text with the description of the new.
+				XHTML block elements (not taking into account forms and other
+				miscellanous elements) can be used, and should be a valid XHTML
+				fragment that could be appended to a body XHTML element.
+			</xs:documentation>
+		</xs:annotation>
+		
+		<xs:complexType>
+			<!--
+			    To be used when modularized XHTML 1.1 is used.
+			    As even "xhtml.body.content" didn't work, I haven't even tried more specific
+			    groups such as the used with XHTML 1.0 Strict which doesn't include every
+			    element available under body element.
+			    -->
+<!-- 			<xs:group ref="xhtml.body.content"/> -->
+			<xs:group ref="xhtml:block"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="fullDate">
+		<xs:annotation>
+			<xs:documentation>
+				A date containing a date and, optionally, a time.
+				Date must be in the format YYYY-MM-DD. It can't contain a time zone.
+				Time must be in the format HH:MM:SSTDZ
+			</xs:documentation>
+		</xs:annotation>
+		
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="date"/>
+				<xs:element ref="time" minOccurs="0"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="date" type="dateWithoutTdz">
+		<xs:annotation>
+			<xs:documentation>
+				Date in the format YYYY-MM-DD. It can't contain a time zone.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	
+	<xs:element name="time" type="timeWithTdz">
+		<xs:annotation>
+			<xs:documentation>
+				Time in the format HH:MM:SSTDZ
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	
+	<xs:simpleType name="dateWithoutTdz">
+		<xs:annotation>
+			<xs:documentation>
+				Date in the format YYYY-MM-DD. It can't contain a time zone.
+				It restricts the base type date using a pattern so only dates with
+				YYYY-MM-DD format are allowed. The base type itself takes into account
+				the number of days in a month and so on.
+			</xs:documentation>
+		</xs:annotation>
+		
+		<xs:restriction base="xs:date">
+			<xs:pattern value="[0-9]{4}-[0-9]{2}-[0-9]{2}"/>
+		  </xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="timeWithTdz">
+		<xs:annotation>
+			<xs:documentation>
+				Time in the format HH:MM:SSTDZ
+				It restricts the base type date using a pattern so onlytimes without
+				time and data zone aren't allowed. The base type itself takes into account
+				the range of values for hours, minutes...
+			</xs:documentation>
+		</xs:annotation>
+		
+		<xs:restriction base="xs:time">
+			<xs:pattern value="[0-9]{2}:[0-9]{2}:[0-9]{2}(Z|[+-][0-9]{2}:[0-9]{2})"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

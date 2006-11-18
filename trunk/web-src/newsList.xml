@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<news xmlns="http://lusi.berlios.de/namespaces/news" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="newsList.xsd">
+	<new>
+		<title>Web created!</title>
+		<summary>
+			<p xmlns="http://www.w3.org/1999/xhtml">The web for LUSI project was created.</p>
+		</summary>
+		<fullDate>
+			<date>2006-05-04</date>
+		</fullDate>
+	</new>
+	<new>
+		<title>Mockups added</title>
+		<summary>
+			<p xmlns="http://www.w3.org/1999/xhtml">Some mockups of the KDE GUI were added to <a href="screenshots.html" title="Mockups and screenhosts of the GUI">screenshots section</a>.</p>
+		</summary>
+		<fullDate>
+			<date>2006-06-29</date>
+			<time>04:25:38+01:00</time>
+		</fullDate>
+	</new>
+</news>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<page xmlns="http://lusi.berlios.de/namespaces/page" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="page.xsd">
+	<variables>
+		<pageId>Download</pageId>
+	</variables>
+	
+	<page:content xmlns:page="http://lusi.berlios.de/namespaces/page" xmlns="http://www.w3.org/1999/xhtml">
+		<h1>Download</h1>
+		
+		<ul>
+			<li><a href="#releases">Releases</a></li>
+			<li><a href="#svnDownload">Downloading from <acronym title="Subversion">SVN</acronym></a></li>
+			<li><a href="#svnBuild">Building from <acronym title="Subversion">SVN</acronym></a></li>
+			<li><a href="#dependentPackages">Making <acronym title="Library for sourcecode install">LUSI</acronym> available to other packages</a></li>
+		</ul>
+		
+		<div class="h2Rounded">
+			<h2><a id="releases" class="anchorLink">Releases</a></h2>
+		</div>
+		<p>There's nothing to download yet.</p>
+		<p>Meanwhile, maybe you'll like to checkout the sources from <acronym title="Subversion">SVN</acronym> repository. Go on reading to know how to do it.</p>
+		
+		<div class="h2Rounded">
+			<h2><a id="svnDownload" class="anchorLink">Downloading from <acronym title="Subversion">SVN</acronym></a></h2>
+		</div>
+		<p>In order to download the sourcecode from <acronym title="Subversion">SVN</acronym>, you'll need a <acronym title="Subversion">SVN</acronym> client.</p>
+		<p>You can check out the sourcecode anonymously in two ways, as you prefer:</p>
+		<ul>
+			<li>Via SVN: <strong>svn checkout svn://svn.berlios.de/lusi/trunk/lusi</strong></li>
+			<li>Via HTTP: <strong>svn checkout http://svn.berlios.de/svnroot/repos/lusi/trunk/lusi</strong></li>
+		</ul>
+		<p>Each command, typed in a terminal, will download the sourcecode in the directory it was executed.</p>
+		
+		<div class="h2Rounded">
+			<h2><a id="svnBuild" class="anchorLink">Building from <acronym title="Subversion">SVN</acronym></a></h2>
+		</div>
+		<p>To build the sources checked out from <acronym title="Subversion">SVN</acronym> you'll need GNU Autotools (<a href="http://www.gnu.org/software/autoconf/" title="Autoconf project page">Autoconf</a>, <a href="http://www.gnu.org/software/automake/automake.html" title="Automake project page">Automake</a>, <a href="http://www.gnu.org/software/libtool/libtool.html" title="Libtool project page">Libtool</a> and so on).</p>
+		<p>You must execute <strong>make -f Makefile.dist</strong> in the base directory of the project (where <em>Makefile.dist</em> dwells). It will bootstrap the GNU build system and create the needed files.</p>
+		<p>Once the build system is ready,  you can execute the typical routine <strong>./configure; make; make install</strong> to install the library.</p>
+		<p>You can also execute the unit tests using <strong>./configure; make check</strong>, provided you have <a href="http://cppunit.sourceforge.net/cppunit-wiki" title="CppUnit project wiki">CppUnit</a> installed in your system.</p>
+		
+		<div class="h2Rounded">
+			<h2><a id="dependentPackages" class="anchorLink">Making <acronym title="Library for sourcecode install">LUSI</acronym> available to other packages</a></h2>
+		</div>
+		<p>By default, the library built from sourcecode will be installed to <em>/usr/local/</em>. When a package that depends on <acronym title="Library for sourcecode install">LUSI</acronym> is configured to be built, it must know where <acronym title="Library for sourcecode install">LUSI</acronym> is installed. Depending on the configuration of your system, <strong>pkg-config</strong> may not to be able to find <acronym title="Library for sourcecode install">LUSI</acronym>.</p>
+		<p>The easiest way to check it is executing this command in a terminal: <strong>pkg-config --list-all | grep lusi</strong>. If <acronym title="Library for sourcecode install">LUSI</acronym> is found, it will show information about <acronym title="Library for sourcecode install">LUSI</acronym>. If it is not found, it won't show anything.</p>
+		<p>In case that <acronym title="Library for sourcecode install">LUSI</acronym> isn't found, you'll have to set the environment variable $PKG_CONFIG_PATH to <em>/usr/local/lib/pkgconfig/</em> (substitute <em>/usr/local/</em> with the path you used to install <acronym title="Library for sourcecode install">LUSI</acronym> if it wasn't in the default path) before executing the <strong>configure</strong> script of the package to install.</p>
+		<p>You can also set the variable in your shell configuration file, so you doesn't need to take care of setting it before configuring the packages. In Bash, you can do it (for all the users in the system) creating the script <em>/etc/profile.d/pkg-config.sh</em> (remember to give it execution permissions) with this content:</p>
+<pre>
+# Set PKG_CONFIG_PATH for Bash shell
+export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig/"
+</pre>
+		<p>If you are using <acronym title="K Desktop Environment">KDE</acronym>, you will likely have to close your user session and open it again for changes to take effect.</p>
+		
+		<p class="lastUpdated">Last updated: 2006-11-18</p>
+	</page:content>
+</page>

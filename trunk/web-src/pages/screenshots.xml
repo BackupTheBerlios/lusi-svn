@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://lusi.berlios.de/namespaces/page" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="page.xsd">
+	<variables>
+		<pageId>Screenshots</pageId>
+		<page:headElements xmlns:page="http://lusi.berlios.de/namespaces/page" xmlns="http://www.w3.org/1999/xhtml">
+			<script src="script/galleryGenerator.js" type="text/javascript">/*Empty*/</script>
+		</page:headElements>
+		<scriptOnLoad>generateGallery();</scriptOnLoad>
+	</variables>
+	<page:content xmlns:page="http://lusi.berlios.de/namespaces/page" xmlns="http://www.w3.org/1999/xhtml">
+		<h1>Screenshots</h1>
+		<ul id="screenshotsList">
+			<li>
+				<p>[Mockup] Installer with hidden details</p>
+				<a href="images/screenshots/MockupHiddenDetails.png" title="Click for full size">
+					<img src="images/screenshots/MockupHiddenDetails-192.png" alt="Mockup, installer with hidden details" width="192" height="144"/>
+				</a>
+			</li>
+			<li>
+				<p>[Mockup] Installer with hidden documentation</p>
+				<a href="images/screenshots/MockupHiddenDocumentation.png" title="Click for full size">
+					<img src="images/screenshots/MockupHiddenDocumentation-192.png" alt="Mockup, installer with hidden documentation" width="192" height="144"/>
+				</a>
+			</li>
+			<li>
+				<p>[Mockup] Installer showing documentation and details</p>
+				<a href="images/screenshots/MockupAllShown.png" title="Click for full size">
+					<img src="images/screenshots/MockupAllShown-192.png" alt="Mockup, installer with all shown" width="192" height="144"/>
+				</a>
+			</li>
+		</ul>
+	</page:content>
+</page>

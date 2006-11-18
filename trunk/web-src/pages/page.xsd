@@ -1,0 +1,134 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<xs:schema targetNamespace="http://lusi.berlios.de/namespaces/page" xmlns="http://lusi.berlios.de/namespaces/page"
+	   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+	<xs:annotation>
+		<xs:documentation>
+			XML Schema for XML documents containing pages for LUSI project.
+			Those pages are processed with XSLT to create the XHTML pages.
+			The only function of those pages is customize the template for pages in LUSI project.
+			They're not made to store generic information that could be transformed in different
+			XML applications, only the XHTML one.
+		</xs:documentation>
+	</xs:annotation>
+<!--
+	Modularized XHTML 1.1 should be used instead of XHTML 1.0 Strict. However, I haven't found how to use the XHTML 1.1 XML Schemas,
+	so I use instead XHTML 1.0 Strict which are nearly equal, expect for a and map elements, where the name attribute has been
+	removed in favor of the id attribute.
+-->
+<!-- 	<xs:import namespace="http://www.w3.org/1999/xhtml" schemaLocation="http://www.w3.org/TR/xhtml-modularization/SCHEMA/xhtml11.xsd"/> -->
+	<xs:import namespace="http://www.w3.org/1999/xhtml" schemaLocation="http://www.w3.org/2002/08/xhtml/xhtml1-strict.xsd"/>
+	
+	<xs:element name="page">
+		<xs:annotation>
+			<xs:documentation>
+				A page contains specific variables for this page and its content.
+			</xs:documentation>
+		</xs:annotation>
+		
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="variables"/>
+				<xs:element ref="content"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="variables">
+		<xs:annotation>
+			<xs:documentation>
+				The variables are special values that should be used when generating the XHTML
+				representation of the page.
+			</xs:documentation>
+		</xs:annotation>
+		
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="pageId"/>
+				<xs:element ref="headElements" minOccurs="0"/>
+				<xs:element ref="scriptOnLoad" minOccurs="0"/>
+				<xs:element ref="validationButtons" minOccurs="0"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="pageId" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>
+				PageId is plain text with the identifier of the page (News, Download...)
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+		
+	<xs:element name="headElements">
+		<xs:annotation>
+			<xs:documentation>
+				Head elements are added to the head of the generated XHTML pages.
+				Only links and scripts can be added, and at least one of them
+				must exist if headElements is used.
+			</xs:documentation>
+		</xs:annotation>
+
+		<xs:complexType>
+			<xs:sequence>
+				<xs:choice minOccurs="1">
+					<xs:element ref="xhtml:link" maxOccurs="unbounded"/>
+					<xs:element ref="xhtml:script" maxOccurs="unbounded"/>
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="scriptOnLoad" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>
+				Text to be added in the onLoad javascript function before
+				the default actions (round the corners).
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	
+	<xs:element name="validationButtons">
+		<xs:annotation>
+			<xs:documentation>
+				Adds other validation buttons to the footer, apart from the default XHTML, CSS and WAI-AAA.
+				The buttons have a fixed structure: a paragraph containing a link and a link containing the
+				image of the button.
+				I have no idea, however, of how can that fixed structure can be enforced. I don't know how
+				a named element defined previously can be redefined (as far as I know, redefine XSD element
+				only works with types, and only those from the same namespace, and XHTML elements belong to
+				a different namespace than the target one of this Schema) so their contents can be restricted
+				(as far as I know, using a previously used name for an element is an error. Moreover, the
+				namespaces of named elements is the one of the Schema, so it won't belong to XHTML)
+			</xs:documentation>
+		</xs:annotation>
+		
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="xhtml:p" minOccurs="1" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="content" type="xhtml:Block">
+		<xs:annotation>
+			<xs:documentation>
+				Content includes the content of the page.
+				The content is the "genuine" content of the page, that is, the elements
+				which form the body of the page not taking into account the header, menu
+				and footer.
+			</xs:documentation>
+		</xs:annotation>
+
+		<!--
+		    To be used when modularized XHTML 1.1 is used.
+		    As even "xhtml.body.content" didn't work, I haven't even tried more specific
+		    groups such as the used with XHTML 1.0 Strict which doesn't include every
+		    element available under body element.
+		    -->
+<!--		<xs:complexType>
+ 			<xs:group ref="xhtml.body.content"/>
+		</xs:complexType>-->
+	</xs:element>
+
+</xs:schema>

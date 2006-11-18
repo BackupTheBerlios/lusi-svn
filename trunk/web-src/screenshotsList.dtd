@@ -1,0 +1,17 @@
+<!ELEMENT ul (li*)>
+<!ATTLIST ul id CDATA #FIXED "screenshotsList"
+             xmlns CDATA #FIXED "http://www.w3.org/1999/xhtml">
+
+<!ELEMENT li (p, a)>
+
+<!ELEMENT p (#PCDATA)>
+
+<!ELEMENT a (img)>
+<!ATTLIST a href CDATA #REQUIRED
+            title CDATA #REQUIRED>
+
+<!ELEMENT img EMPTY>
+<!ATTLIST img src CDATA #IMPLIED
+              alt CDATA #REQUIRED
+              width CDATA #IMPLIED
+              height CDATA #IMPLIED>

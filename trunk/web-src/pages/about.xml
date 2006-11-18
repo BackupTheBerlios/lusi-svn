@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<page xmlns="http://lusi.berlios.de/namespaces/page" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="page.xsd">
+	<variables>
+		<pageId>About</pageId>
+	</variables>
+	
+	<page:content xmlns:page="http://lusi.berlios.de/namespaces/page" xmlns="http://www.w3.org/1999/xhtml">
+		<h1>About</h1>
+	
+		<ul>
+			<li><a href="#project">Project overview</a></li>
+			<li><a href="#author">Author</a></li>
+		</ul>
+	
+		<div class="h2Rounded">
+			<h2><a id="project" class="anchorLink">Project overview</a></h2>
+		</div>
+		<p>LUSI (Library for Sourcecode Install) is a library to install/uninstall/update sourcecode packages. The intention is automatize as much as possible the configure/build/install routine and future uninstallations or updates.</p>
+		<p>It is licensed under the <a href="http://www.gnu.org/copyleft/gpl.html" title="GNU General Public License page">GNU GPL license</a>. It is also free as in "free beer".</p>
+	
+		<p>Maybe you're thinking that this is another <a href="http://en.wikipedia.org/wiki/Portage_%28software%29" title="English Wikipedia Portage page">Portage</a> clone which again only reinvents the wheel. Ok, it's not ;) In fact, it's more similar to <a href="http://www.kde-apps.org/content/show.php?content=30223" title="Kompile page in KDE-Apps">Kompile</a>, for example.</p>
+		<p>The idea behind LUSI isn't to create another package management system. Instead, its purpose is help installing a sourcecode package: simplify the "./configure; make; make install" process.</p>
+	
+		<p>"True, it's sooo complex...". Well, it isn't very complex, but... it can be repetitive. And boring. Think about it: most of free software packages source releases follow the old yet effective "./configure; make; make install" sequence.</p>
+		<p>However, some use newer build systems as jam. Perhaps you lack some dependencies and have to install them. And you must check for newer source releases to update. Or maybe you want to uninstall them (which can be a pain). Have you updated your distro? Maybe you need to recompile those source installed apps. And what about doing menu entries?</p>
+		<p>Sure, all those things can be handled manually, and, as said, it isn't very complex. But it'd be a lot better if the mechanical part of it was made automatically. And here's where LUSI enters.</p>
+		<p>It'll be an extensible library designed for installing, updating and uninstalling packages. Human actions will still be necessary at some points, but, even still having to help the program to fulfill its mission, it'll simplify a lot the installing from source package process. Or I hope so :)</p>
+		<p>You can read here the <a href="files/proposal.pdf" title="Brief article about sourcecode software installation in Linux">proposal which originated this project</a>.</p>
+	
+		<div class="h2Rounded">
+			<h2><a id="author" class="anchorLink">Author</a></h2>
+		</div>
+		<p>LUSI is being developed by me, Daniel Calviño Sánchez, as my final year's project in computer science (I think is said that way in English, but I'm not really sure :P ).</p>
+		<p>If you want, you can contact me using this e-mail address: kalvy at users.berlios.de Please, begin the subject with "LUSI" (without quotes). It will help me to keep my inbox organized :) Thanks ;)</p>
+		<p>Please note that I can understand only Spanish, Asturian and English, so if you send me a message in other language I won't be able to understand it ;)</p>
+	
+		<p class="lastUpdated">Last updated: 2006-05-04</p>
+	</page:content>
+</page>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+	Contains the menu for the pages.
+	Links text must be equal to the id of each page.
+-->
+<menu:menu xmlns:menu="http://lusi.berlios.de/namespaces/menu" xmlns="http://www.w3.org/1999/xhtml">
+	<li><a href="index.html" title="News about the project">News</a></li>
+	<li><a href="screenshots.html" title="Mockups and screenshots of LUSI KDE graphical user interface">Screenshots</a></li>
+	<li><a href="download.html" title="Download releases">Download</a></li>
+	<li><a href="faq.html" title="Questions and answers about the project"><acronym title="Frequently Asked Questions">F.A.Q.</acronym></a></li>
+	<li><a href="development.html" title="Development information, documentation...">Development</a></li>
+	<li><a href="about.html" title="Project general information">About</a></li>
+	<li><a href="aboutWeb.html" title="Web general information">About web</a></li>
+</menu:menu>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://lusi.berlios.de/namespaces/page" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="page.xsd">
+	<variables>
+		<pageId>News</pageId>
+		<headElements>
+			<link xmlns="http://www.w3.org/1999/xhtml" rel="alternate" type="application/atom+xml" href="feed/atom/news.xml" title="Atom feed for LUSI project news"/>
+		</headElements>
+		<validationButtons>
+			<p xmlns="http://www.w3.org/1999/xhtml">
+				<a href="http://feedvalidator.org/check.cgi?url=http%3A//lusi.berlios.de/feed/atom/news.xml" title="Check Atom feed">
+					<img src="images/valid-atom.png" alt="Valid Atom 1.0!" height="15" width="80"/>
+				</a>
+			</p>
+		</validationButtons>
+	</variables>
+	<page:content xmlns:page="http://lusi.berlios.de/namespaces/page" xmlns="http://www.w3.org/1999/xhtml">
+		<h1>Main</h1>
+		<p>LUSI (Library for Sourcecode Install) is a library to install/uninstall/update sourcecode packages. The intention is automatize as much as possible the configure/build/install routine and future uninstallations or updates.</p>
+		<p>It is licensed under the <a href="http://www.gnu.org/copyleft/gpl.html" title="GNU General Public License page">GNU GPL license</a>. It is also free as in "free beer".</p>
+		<h1>News</h1>
+		<p id="rssFeed">
+			<a href="feed/atom/news.xml" type="application/atom+xml" title="Atom feed">
+				<img src="images/icon-atom.png" alt="Atom feed" height="16" width="16"/>
+			</a>
+		</p>
+		<div id="news">
+			<div class="new">
+				<h2 class="newTitle">
+					<a id="newId2" class="anchorLink">Mockups added</a>
+				</h2>
+				<div class="newBody">
+					<p class="newDate">2006-06-29, 04:25</p>
+					<div class="newContent">
+						<p>Some mockups of the KDE GUI were added to <a href="screenshots.html" title="Mockups and screenhosts of the GUI">screenshots section</a>.</p>
+					</div>
+				</div>
+			</div>
+			<div class="new">
+				<h2 class="newTitle">
+					<a id="newId1" class="anchorLink">Web created!</a>
+				</h2>
+				<div class="newBody">
+					<p class="newDate">2006-05-04</p>
+					<div class="newContent">
+						<p>The web for LUSI project was created.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<p>Here you can see the <a href="news.html" title="All the news for LUSI project">full list of news</a>.</p>
+	</page:content>
+</page>

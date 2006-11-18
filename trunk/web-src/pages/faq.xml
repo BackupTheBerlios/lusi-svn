@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<page xmlns="http://lusi.berlios.de/namespaces/page" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="page.xsd">
+	<variables>
+		<pageId>F.A.Q.</pageId>
+	</variables>
+	
+	<page:content xmlns:page="http://lusi.berlios.de/namespaces/page" xmlns="http://www.w3.org/1999/xhtml">
+		<h1>F.A.Q.</h1>
+		<ul>
+			<li>
+				<a href="#generalQuestions">General questions</a>
+				<ul>
+					<li><a href="#whenRelease">When will a working version be released?</a></li>
+					<li><a href="#whatGUI">Will a <acronym title="Graphic User Interface">GUI</acronym> be developed as part of the project?</a></li>
+					<li><a href="#whenRelease">Why did you choose <acronym title="GNU General Public License">GPL</acronym> license being a library?</a></li>
+					<li><a href="#whenRelease">Are these really frequently asked questions?</a></li>
+				</ul>
+			</li>
+		</ul>
+	
+		<div class="h2Rounded">
+			<h2><a id="generalQuestions" class="anchorLink">General questions</a></h2>
+		</div>
+		<div class="QandAentry">
+			<h3 class="question"><a id="whenRelease" class="anchorLink">When will a working version be released?</a></h3>
+			<div class="answer">
+				<p>A full working version will be possibly out for September 2006. Meanwhile, some prototypes will be released which will gain functionality over releases. I hope I'll be able to follow the <a href="http://www.free-soft.org/literature/papers/esr/cathedral-bazaar/cathedral-bazaar-4.html" title="The Cathedral and the Bazaar: Release early, release often">Release early, release often</a> model. I can't promise it, however ;)</p>
+			</div>
+		</div>
+		<div class="QandAentry">
+			<h3 class="question"><a id="whatGUI" class="anchorLink">Will a <acronym title="Graphic User Interface">GUI</acronym> be developed as part of the project?</a></h3>
+			<div class="answer">
+				<p>Yes, it'll be a KDE based one. However, being a library, other GUI can be developed for it, although I'll only develop the KDE one.</p>
+			</div>
+		</div>
+		<div class="QandAentry">
+			<h3 class="question"><a id="whyGPL" class="anchorLink">Why did you choose <acronym title="GNU General Public License">GPL</acronym> license being a library?</a></h3>
+			<div class="answer">
+				<p>Why not? Oh, wait, do you mean why I didn't choose the <a href="" title="GNU Lesser General Public License"><acronym title="Lesser General Public License">LGPL</acronym></a> instead? Well, because I prefer its "even if you're only linking against GPL code without modifying it the code where it's being used must be GPL" viral property. However, if you need a special license for LUSI, <a href="about.html#author">contact me</a>. Maybe you can convince me ;)</p>
+			</div>
+		</div>
+		<div class="QandAentry">
+			<h3 class="question"><a id="aboutFaq" class="anchorLink">Are these really frequently asked questions?</a></h3>
+			<div class="answer">
+				<p>No, these aren't frequently asked questions. In fact, they weren't even asked :P</p>
+			</div>
+		</div>
+	
+		<p class="lastUpdated">Last updated: 2006-05-05</p>
+	</page:content>
+</page>

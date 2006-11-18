@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<page xmlns="http://lusi.berlios.de/namespaces/page" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="page.xsd">
+	<variables>
+		<pageId>Development</pageId>
+		<headElements>
+			<script xmlns="http://www.w3.org/1999/xhtml" src="script/foldableList.js" type="text/javascript">/*Empty*/</script>
+		</headElements>
+		<scriptOnLoad>makeListsFoldable();</scriptOnLoad>
+	</variables>
+	
+	<page:content xmlns:page="http://lusi.berlios.de/namespaces/page" xmlns="http://www.w3.org/1999/xhtml">
+		<h1>Development</h1>
+	
+		<ul>
+			<li><a href="#documentation">Documentation</a></li>
+			<li><a href="#status">Status</a></li>
+			<li><a href="#roadmap">Roadmap</a></li>
+		</ul>
+	
+		<div class="h2Rounded">
+			<h2><a id="documentation" class="anchorLink">Documentation</a></h2>
+		</div>
+		<p>At this moment, there's no English development documentation. If you speak Spanish, you can take a look to the <a href="http://lusi.berlios.de/dokuwiki/es/start" hreflang="es" title="Spanish development docs in Dokuwiki for LUSI">Spanish development documentation</a> in the wiki.</p>
+		<p>It'll pass some time before some English documentation exists (apart from API documentation). This is due to the fact that this project is being developed as my final year project and, sadly, I must do the documentation in Spanish. I have no time to make the English documentation at the same time I do the Spanish one, but when I've some free time, I'll begin to translate it (at least, the most important parts).</p>
+	
+		<div class="h2Rounded">
+			<h2><a id="status" class="anchorLink">Status</a></h2>
+		</div>
+		<p>Still in planning stage. However, coding will begin very soon.</p>
+		<p>You can check UML Diagrams in the wiki. They're in the Spanish section, but as code is made in English, you'll be able to understand them (I hope so ;) ).</p>
+		<ul>
+			<li><a href="http://lusi.berlios.de/dokuwiki/es/docbook/diagramasActividad" title="Activity UML diagrams in documentation wiki">Activity diagrams</a></li>
+			<li><a href="http://lusi.berlios.de/dokuwiki/es/docbook/diagramasClases" title="Class UML diagrams in documentation wiki">Class diagrams</a></li>
+			<li><a href="http://lusi.berlios.de/dokuwiki/es/docbook/diagramasColaboracion" title="Collaboration UML diagrams in documentation wiki">Collaboration diagrams</a></li>
+			<li><a href="http://lusi.berlios.de/dokuwiki/es/docbook/diagramasComponentes" title="Components UML diagrams in documentation wiki">Components diagrams</a></li>
+			<li><a href="http://lusi.berlios.de/dokuwiki/es/docbook/diagramasEstado" title="State UML diagrams in documentation wiki">State diagrams</a></li>
+			<li><a href="http://lusi.berlios.de/dokuwiki/es/docbook/diagramasSecuencia" title="Sequence UML diagrams in documentation wiki">Sequence diagrams</a></li>
+		</ul>
+	
+		<div class="h2Rounded">
+			<h2><a id="roadmap" class="anchorLink">Roadmap</a></h2>
+		</div>
+		<p>Please, note that this roadmap can (and, in fact, I bet you that it will) change over time. It's only an orientation for myself, and it's not written in stone, so it'll likely evolve as needed.</p>
+		<ul class="foldableList">
+			<li>
+				0.1:
+				<ul>
+					<li>Resource implementation for local files.</li>
+					<li>Basic package status.</li>
+					<li>
+						Very basic working tasks: extract, configure, build and install.
+						<ul>
+							<li>Implementations: zip/gz/bz2, GNU configure, Make, Make install.</li>
+							<li>They won't use even the configuration.</li>
+							<li>Take only default parameters.</li>
+						</ul>
+					</li>
+					<li>Install and uninstall modules.</li>
+					<li>Simple console interface for installer.</li>
+				</ul>
+			</li>
+			<li>
+				0.2:
+				<ul>
+					<li>TaskLogger and TaskProgress.</li>
+					<li>TaskLogger observers.</li>
+					<li>TaskProgress observers.</li>
+					<li>Simple KDE GUI for installer.</li>
+				</ul>
+			</li>
+			<li>
+				0.3:
+				<ul>
+					<li>Working configuration parameter set.</li>
+					<li>Saving and loading configuration from XML.</li>
+					<li>Add types to configuration parameters (boolean, int, float, string, path).</li>
+					<li>
+						Add configuration to tasks.
+						<ul>
+							<li>Use given configuration.</li>
+							<li>Tasks must provide information of their needed parameters.</li>
+						</ul>
+					</li>
+					<li>Generic widget for configuration.</li>
+				</ul>
+			</li>
+			<li>
+				0.4:
+				<ul>
+					<li>Add working package profiles.</li>
+					<li>Auto-registering of tasks and task implementations.</li>
+					<li>KDE Manager GUI to install and uninstall packages.</li>
+				</ul>
+			</li>
+			<li>
+				0.5:
+				<ul>
+					<li>Update module.</li>
+					<li>Add updates support to KDE Manager GUI.</li>
+				</ul>
+			</li>
+			<li>
+				0.6:
+				<ul>
+					<li>Overridable default configuration for tasks.</li>
+					<li>Set default configuration for tasks.</li>
+				</ul>
+			</li>
+			<li>
+				0.7:
+				<ul>
+					<li>
+						Add new tasks: check for updates, create menu entries, download package from internet.
+						<ul>
+							<li>Implementations: sf.net RSS/berlios.de RSS, freedesktop specification, url/page of project.</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+			<li>
+				0.8:
+				<ul>
+					<li>
+						Add new task: dependency solve.
+						<ul>
+							<li>Implementations: urpmi.</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	
+		<p class="lastUpdated">Last updated: 2006-06-01</p>
+	</page:content>
+</page>
