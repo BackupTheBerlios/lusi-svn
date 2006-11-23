@@ -40,7 +40,7 @@ namespace package {
 /**
  * @class Profile Profile.h lusi/package/Profile.h
  *
- * Profile contains all the information about the Task executed over a Package,
+ * Profile contains all the information about the Tasks executed over a Package,
  * including order of execution and configuration of each Task.
  * Based on this information and the status of the Package, a Profile can
  * suggest a Task to be executed. The suggested Task isn't tested to verify if
@@ -52,8 +52,8 @@ namespace package {
  *
  * Profiles can be saved in a persistent way, so they can be later retrieved
  * for future use. Due to this, Profiles should be got through
- * ProfileManager::getProfile(PackageId*). This method takes care of adding
- * the needed TaskConfigurations.
+ * ProfileManager::getProfile(const PackageId&). This method takes care of
+ * adding the needed TaskConfigurations.
  *
  * @see ProfileManager
  */
@@ -62,7 +62,7 @@ public:
 
     /**
      * Creates a new Profile of the specified Package.
-     * ProfileManager::getProfile(PackageId*) should be used instead of
+     * ProfileManager::getProfile(const PackageId&) should be used instead of
      * creating a new Profile explicitly.
      *
      * @param package The Package of this Profile.

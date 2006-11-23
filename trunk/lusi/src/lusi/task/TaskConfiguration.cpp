@@ -116,11 +116,11 @@ void TaskConfiguration::addTaskHelperConfiguration(
 
 bool TaskConfiguration::save() {
     const string taskId = mTask->getName();
-    const PackageId* packageId = mTask->getPackage()->getPackageId();
+    PackageId packageId = mTask->getPackage()->getPackageId();
 
     try {
         ConfigurationSaver().save(mConfigurationToSave,
-                        ConfigurationPaths().getTaskFile(taskId, *packageId));
+                        ConfigurationPaths().getTaskFile(taskId, packageId));
         return true;
     } catch (PersistenceException e) {
         return false;
@@ -130,16 +130,16 @@ bool TaskConfiguration::save() {
 //private:
 
 void TaskConfiguration::load() {
-    const PackageId* packageId = mTask->getPackage()->getPackageId();
+    PackageId packageId = mTask->getPackage()->getPackageId();
 
-    if (packageId->getVersion() != "") {
-        if (load(*packageId)) {
+    if (packageId.getVersion() != "") {
+        if (load(packageId)) {
             return;
         }
 
         vector<string> packageVersions =
-                            Package::getPackageVersions(packageId->getName());
-        packageVersions.push_back(packageId->getVersion());
+                            Package::getPackageVersions(packageId.getName());
+        packageVersions.push_back(packageId.getVersion());
         sort(packageVersions.begin(), packageVersions.end(),
              versionsWeakOrdering);
 
@@ -151,14 +151,14 @@ void TaskConfiguration::load() {
         //See http://gcc.gnu.org/bugzilla/show_bug.cgi?id=11729
         vector<string>::reverse_iterator rIt = find(packageVersions.rbegin(),
                                                     packageVersions.rend(),
-                                                    packageId->getVersion());
+                                                    packageId.getVersion());
         if ((++rIt) != packageVersions.rend()) {
             previousVersion = *rIt;
         }
 
         if (previousVersion != "" &&
-                previousVersion != packageId->getVersion()) {
-            PackageId previousPackageId(packageId->getName(), previousVersion);
+                previousVersion != packageId.getVersion()) {
+            PackageId previousPackageId(packageId.getName(), previousVersion);
             if (load(previousPackageId)) {
                 return;
             }
@@ -168,20 +168,20 @@ void TaskConfiguration::load() {
         string nextVersion;
 
         vector<string>::const_iterator it = find(packageVersions.begin(),
-                                packageVersions.end(), packageId->getVersion());
+                                packageVersions.end(), packageId.getVersion());
         if ((++it) != packageVersions.end()) {
             nextVersion = *it;
         }
 
-        if (nextVersion != "" && nextVersion != packageId->getVersion()) {
-            PackageId nextPackageId(packageId->getName(), nextVersion);
+        if (nextVersion != "" && nextVersion != packageId.getVersion()) {
+            PackageId nextPackageId(packageId.getName(), nextVersion);
             if (load(nextPackageId)) {
                 return;
             }
         }
     }
 
-    PackageId noVersionPackageId(packageId->getName());
+    PackageId noVersionPackageId(packageId.getName());
     if (load(noVersionPackageId)) {
         return;
     }

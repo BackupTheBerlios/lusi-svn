@@ -19,7 +19,12 @@
  ***************************************************************************/
 
 #include "PackageIdTest.h"
+
+#define protected public
+#define private public
 #include "PackageId.h"
+#undef private
+#undef protected
 
 using std::string;
 
@@ -28,9 +33,11 @@ using namespace lusi::package;
 //public:
 
 void PackageIdTest::setUp() {
+    mPackageId = new PackageId("wesnoth", "1.0");
 }
 
 void PackageIdTest::tearDown() {
+    delete mPackageId;
 }
 
 void PackageIdTest::testCompareVersions() {
@@ -123,15 +130,65 @@ void PackageIdTest::testCompareVersions() {
     CPPUNIT_ASSERT(0 < PackageId::compareVersions("2.0.0", "2.0.-gamma1"));
 }
 
+void PackageIdTest::testConstructor() {
+    CPPUNIT_ASSERT_EQUAL(string("wesnoth"), mPackageId->mName);
+    CPPUNIT_ASSERT_EQUAL(string("1.0"), mPackageId->mVersion);
+
+    //Test with default value for version
+    delete mPackageId;
+    mPackageId = new PackageId("widelands");
+
+    CPPUNIT_ASSERT_EQUAL(string("widelands"), mPackageId->mName);
+    CPPUNIT_ASSERT_EQUAL(string(""), mPackageId->mVersion);
+}
+
+void PackageIdTest::testCopyConstructor() {
+    PackageId packageId(*mPackageId);
+
+    CPPUNIT_ASSERT_EQUAL(string("wesnoth"), packageId.mName);
+    CPPUNIT_ASSERT_EQUAL(string("1.0"), packageId.mVersion);
+}
+
 void PackageIdTest::testGetName() {
-    PackageId packageId("wesnoth");
-    CPPUNIT_ASSERT_EQUAL(string("wesnoth"), packageId.getName());
+    mPackageId->mName = "supertux";
+
+    CPPUNIT_ASSERT_EQUAL(string("supertux"), mPackageId->getName());
 }
 
 void PackageIdTest::testGetVersion() {
-    PackageId packageIdDefault("wesnoth");
-    CPPUNIT_ASSERT_EQUAL(string(""), packageIdDefault.getVersion());
+    mPackageId->mVersion = "3.1416";
 
+    CPPUNIT_ASSERT_EQUAL(string("3.1416"), mPackageId->getVersion());
+}
+
+void PackageIdTest::testOperatorAssignment() {
+    //Test self assignment
+    PackageId packageId("lincity-ng", "1.0.3");
+
+    CPPUNIT_ASSERT_EQUAL(&packageId, &(packageId = packageId));
+    CPPUNIT_ASSERT_EQUAL(string("lincity-ng"), packageId.mName);
+    CPPUNIT_ASSERT_EQUAL(string("1.0.3"), packageId.mVersion);
+
+    //Test normal assignment
+    CPPUNIT_ASSERT_EQUAL(&packageId, &(packageId = *mPackageId));
+    CPPUNIT_ASSERT_EQUAL(string("wesnoth"), packageId.mName);
+    CPPUNIT_ASSERT_EQUAL(string("1.0"), packageId.mVersion);
+}
+
+void PackageIdTest::testOperatorEqual() {
+    //Test equal packages
     PackageId packageId("wesnoth", "1.0");
-    CPPUNIT_ASSERT_EQUAL(string("1.0"), packageId.getVersion());
+
+    CPPUNIT_ASSERT_EQUAL(true, packageId == *mPackageId);
+
+    //Test packages with different names
+    packageId.mName = "foobillard";
+
+    CPPUNIT_ASSERT_EQUAL(false, packageId == *mPackageId);
+
+    //Test packages with different versions
+    packageId.mName = "wesnoth";
+    packageId.mVersion = "3.0";
+
+    CPPUNIT_ASSERT_EQUAL(false, packageId == *mPackageId);
 }

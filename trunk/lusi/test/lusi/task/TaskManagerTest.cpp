@@ -95,8 +95,8 @@ void TaskManagerTest::testSingleton() {
 }
 
 void TaskManagerTest::testGetTask() {
-    auto_ptr<PackageId> packageId(new PackageId("testPackage"));
-    auto_ptr<Package> package(new Package(packageId.get(), firstPackageStatus));
+    PackageId packageId("testPackage");
+    auto_ptr<Package> package(new Package(packageId, firstPackageStatus));
 
     auto_ptr<Task> task(mTaskManager->getTask(package.get()));
     CPPUNIT_ASSERT(task.get() != 0);

@@ -40,7 +40,7 @@ class PackageId {
 public:
 
     /**
-     * Compares to package versions.
+     * Compares two package versions.
      * The versions are expected to follow this regular expression:
      * "[0-9]+(\.[0-9]+)*(-(alpha|beta|rc)[0-9]+)?".
      * The versions are compared based on their subversions, not
@@ -73,9 +73,19 @@ public:
     /**
      * Creates a new PackageId using the specified name and version.
      * If no version is specified, it's set to an empty string.
+     *
+     * @param name The name of the PackageId.
+     * @param version The version of the PackageId, empty by default.
      */
     PackageId(const std::string& name,
             const std::string& version = std::string());
+
+    /**
+     * Copy constructor.
+     *
+     * @param packageId The PackageId to copy.
+     */
+    PackageId(const PackageId& packageId);
 
     /**
      * Destroys this PackageId.
@@ -84,7 +94,6 @@ public:
 
     /**
      * Returns the name of this PackageId.
-     * The name is read only, and this is an accessor method.
      *
      * @return The name of this PackageId.
      */
@@ -94,13 +103,30 @@ public:
 
     /**
      * Returns the version of this PackageId.
-     * The version is read only, and this is an accessor method.
      *
      * @return The name of this PackageId.
      */
     const std::string& getVersion() const {
         return mVersion;
     }
+
+    /**
+     * Assignment operator.
+     *
+     * @param packageId The PackageId to assign.
+     * @return A reference to this PackageId.
+     */
+    PackageId& operator=(const PackageId& packageId);
+
+    /**
+     * Returns true if the PackageId is equal to this PackageId, false
+     * otherwise.
+     *
+     * @param packageId The PackageId to compare to.
+     * @return True if the PackageId is equal to this PackageId, false
+     *         otherwise.
+     */
+    bool operator==(const PackageId& packageId);
 
 protected:
 
@@ -115,19 +141,6 @@ private:
      * The version of the PackageId.
      */
     std::string mVersion;
-
-
-
-
-    /**
-     * Copy constructor disabled.
-     */
-    PackageId(const PackageId& packageId);
-
-    /**
-     * Assignment disabled.
-     */
-    PackageId& operator=(const PackageId& packageId);
 
 };
 

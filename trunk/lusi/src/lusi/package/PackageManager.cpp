@@ -86,14 +86,11 @@ vector<string> PackageManager::getPackageNames() {
 }
 
 PackageManager::~PackageManager() {
-    for (uint i=0; i<mPackageDatas.size(); ++i) {
-        delete mPackageDatas[i].packageId;
-    }
 }
 
-vector<PackageId*> PackageManager::getPackageIds(
+vector<PackageId> PackageManager::getPackageIds(
                                         const PackageStatus* packageStatus) {
-    vector<PackageId*> packageIds;
+    vector<PackageId> packageIds;
 
     for (uint i=0; i<mPackageDatas.size(); ++i) {
         if (mPackageDatas[i].packageStatus == packageStatus) {
@@ -104,7 +101,7 @@ vector<PackageId*> PackageManager::getPackageIds(
     return packageIds;
 }
 
-SmartPtr<Package> PackageManager::getPackage(PackageId* packageId) {
+SmartPtr<Package> PackageManager::getPackage(const PackageId& packageId) {
     for (uint i=0; i<mPackageDatas.size(); ++i) {
         if (mPackageDatas[i].packageId == packageId) {
             return SmartPtr<Package>(
@@ -151,24 +148,23 @@ void PackageManager::load() {
                             Package::getPackageVersions(packageNames[i]);
 
         for (uint j=0; j<packageVersions.size(); ++j) {
-            PackageId* packageId = new PackageId(packageNames[i],
-                                                 packageVersions[j]);
+            PackageId packageId(packageNames[i], packageVersions[j]);
             loadPackage(packageId);
         }
 
         //Loads the package without version data, if any
-        PackageId* packageId = new PackageId(packageNames[i]);
+        PackageId packageId(packageNames[i]);
         loadPackage(packageId);
     }
 }
 
-bool PackageManager::loadPackage(PackageId* packageId) {
+bool PackageManager::loadPackage(const PackageId& packageId) {
     SmartPtr<ConfigurationParameterMap> configuration;
 
     try {
         configuration = SmartPtr<ConfigurationParameterMap>(
             ConfigurationLoader().load(
-                ConfigurationPaths().getPackageFile(*packageId)));
+                ConfigurationPaths().getPackageFile(packageId)));
     } catch (PersistenceException e) {
         return false;
     }
@@ -233,7 +229,7 @@ bool PackageManager::savePackage(Package* package) {
 
     try {
         ConfigurationSaver().save(getPtr(configuration),
-            ConfigurationPaths().getPackageFile(*(package->getPackageId())));
+            ConfigurationPaths().getPackageFile(package->getPackageId()));
     } catch (PersistenceException e) {
         return false;
     }

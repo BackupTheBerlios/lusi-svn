@@ -24,6 +24,7 @@
 #include <string>
 #include <vector>
 
+#include <lusi/package/PackageId.h>
 #include <lusi/package/status/UnknownPackageStatus.h>
 
 namespace lusi {
@@ -34,7 +35,6 @@ class ConfigurationParameterMap;
 
 namespace lusi {
 namespace package {
-class PackageId;
 class Profile;
 }
 }
@@ -107,7 +107,8 @@ public:
      * @param packageId The PackageId.
      * @param packageStatus The PackageStatus, UnknownPackageStatus by default.
      */
-    Package(PackageId* packageId, const status::PackageStatus* packageStatus =
+    Package(const PackageId& packageId,
+            const status::PackageStatus* packageStatus =
                     status::UnknownPackageStatus::getInstance());
 
     /**
@@ -120,7 +121,7 @@ public:
      *
      * @return The PackageId.
      */
-    PackageId* getPackageId() {
+    const PackageId& getPackageId() {
         return mPackageId;
     }
 
@@ -177,7 +178,7 @@ private:
     /**
      * The PackageId.
      */
-    PackageId* mPackageId;
+    PackageId mPackageId;
 
     /**
      * The Profile.

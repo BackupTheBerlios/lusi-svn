@@ -42,7 +42,7 @@ using namespace lusi::package;
 
 void PackageTest::setUp() {
     mPackageId = new PackageId("Scorched3D");
-    mPackage = new Package(mPackageId);
+    mPackage = new Package(*mPackageId);
 }
 
 void PackageTest::tearDown() {
@@ -52,10 +52,10 @@ void PackageTest::tearDown() {
 
 void PackageTest::testConstructor() {
     //Test constructor with default PackageStatus
-    CPPUNIT_ASSERT_EQUAL(mPackageId, mPackage->mPackageId);
+    CPPUNIT_ASSERT(*mPackageId == mPackage->mPackageId);
     CPPUNIT_ASSERT(UnknownPackageStatus::getInstance() ==
                    mPackage->getPackageStatus());
-    CPPUNIT_ASSERT_EQUAL(ProfileManager::getInstance()->getProfile(mPackageId),
+    CPPUNIT_ASSERT_EQUAL(ProfileManager::getInstance()->getProfile(*mPackageId),
                          mPackage->mProfile);
     CPPUNIT_ASSERT(0 != mPackage->mResources);
     CPPUNIT_ASSERT(0 != mPackage->mResourceFiles);
@@ -66,11 +66,11 @@ void PackageTest::testConstructor() {
 
     //Test constructor with explicit PackageStatus
     delete mPackage;
-    mPackage = new Package(mPackageId, BuiltPackageStatus::getInstance());
+    mPackage = new Package(*mPackageId, BuiltPackageStatus::getInstance());
 
     CPPUNIT_ASSERT(BuiltPackageStatus::getInstance() ==
                    mPackage->getPackageStatus());
-    CPPUNIT_ASSERT_EQUAL(ProfileManager::getInstance()->getProfile(mPackageId),
+    CPPUNIT_ASSERT_EQUAL(ProfileManager::getInstance()->getProfile(*mPackageId),
                          mPackage->mProfile);
     CPPUNIT_ASSERT(0 != mPackage->mResources);
     CPPUNIT_ASSERT(0 != mPackage->mResourceFiles);
@@ -81,7 +81,7 @@ void PackageTest::testConstructor() {
 }
 
 void PackageTest::testGetPackageId() {
-    CPPUNIT_ASSERT_EQUAL(mPackage->mPackageId, mPackage->getPackageId());
+    CPPUNIT_ASSERT(mPackage->mPackageId == mPackage->getPackageId());
 }
 
 void PackageTest::testGetProfile() {

@@ -47,8 +47,7 @@ using namespace lusi::task;
 //public:
 
 void TaskConfigurationTest::setUp() {
-    mPackageId = new PackageId("testPackage");
-    mPackage = new Package(mPackageId);
+    mPackage = new Package(PackageId("testPackage"));
     mTask = new Task("MakeTests", mPackage,
                      PackageStatusTestImplementation::getFirstInstance(),
                      PackageStatusTestImplementation::getSecondInstance());
@@ -58,7 +57,6 @@ void TaskConfigurationTest::setUp() {
 void TaskConfigurationTest::tearDown() {
     delete mTask;
     delete mPackage;
-    delete mPackageId;
 }
 
 void TaskConfigurationTest::testConstructor() {

@@ -59,10 +59,10 @@ vector<string> Package::getPackageVersions(const string& packageName) {
     return packageVersions;
 }
 
-Package::Package(PackageId* packageId,
+Package::Package(const PackageId& packageId,
                  const status::PackageStatus* packageStatus /*=
-                        status::UnknownPackageStatus::getInstance()*/) {
-    mPackageId = packageId;
+                        status::UnknownPackageStatus::getInstance()*/):
+    mPackageId(packageId) {
     mPackageStatus = packageStatus;
 
     mProfile = ProfileManager::getInstance()->getProfile(packageId);
@@ -77,7 +77,7 @@ Package::~Package() {
 }
 
 /*
-inline PackageId* Package::getPackageId() {
+inline const PackageId& Package::getPackageId() {
     return mPackageId;
 }
 

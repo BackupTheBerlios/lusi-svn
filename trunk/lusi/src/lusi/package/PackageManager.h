@@ -23,10 +23,11 @@
 
 #include <vector>
 
+#include <lusi/package/PackageId.h>
+
 namespace lusi {
 namespace package {
 class Package;
-class PackageId;
 }
 }
 
@@ -57,11 +58,8 @@ namespace package {
  * PackageStatus, so it can be queried about what PackageIds are associated with
  * a specific PackageStatus through getPackageIds(PackageStatus*).
  *
- * The lifespan of the registered PackageIds is managed by this class, so they
- * are automatically deleted when the PackageManager is destroyed.
- *
  * Packages shouldn't be created directly. Instead, they should always be got
- * using this class through getPackage(PackageId*). The Package is saved
+ * using this class through getPackage(const PackageId&). The Package is saved
  * automatically each time its status is set.
  *
  * This class follows the Singleton Design Pattern. Only one instance is
@@ -98,42 +96,39 @@ public:
 
     /**
      * Returns all the registered PackageIds for the specified PackageStatus.
-     * The returned PackageIds are managed by this class, so they can't be
-     * deleted. They are used to get the registered Packages through
-     * getPackage(PackageId*).
+     * The returned PackageIds can be used to get the registered Packages
+     * through getPackage(const PackageId&).
      *
      * @return All the registered PackageIds for the specified PackageStatus.
-     * @see getPackage(PackageId*)
+     * @see getPackage(const PackageId&)
      */
-    std::vector<PackageId*> getPackageIds(
+    std::vector<PackageId> getPackageIds(
                     const lusi::package::status::PackageStatus* packageStatus);
 
     /**
      * Gets a Package for the specified PackageId.
-     * The PackageId must have been got using getPackageIds(PackageStatus*), or
+     * The PackageId can have been got using getPackageIds(PackageStatus*), or
      * be a new PackageId different from all the returned by
      * getPackageIds(PackageStatus*).
      *
      * If the PackageId was returned by getPackageIds(PackageStatus), the
-     * returned Package will be initialized with the PackageId and its
+     * returned Package will be initialized with that PackageId and its
      * associated PackageStatus.
      *
      * If the PackageId was new, the returned Package will be initialized with
-     * the PackageId and the default PackageStatus. The PackageId lifespan is
-     * managed by PackageManager, and it will be deleted automatically when the
-     * PackageManager is destroyed, so it can't be deleted from outside.
+     * the PackageId and the default PackageStatus.
      *
      * @param packageId The PackageId to get the Package.
      * @return A Package for the specified PackageId initialized with the
      *         available information.
      * @see getPackageIds(PackageStatus*)
      */
-    lusi::util::SmartPtr<Package> getPackage(PackageId* packageId);
+    lusi::util::SmartPtr<Package> getPackage(const PackageId& packageId);
 
     /**
      * Updates the status associated with the PackageId of the Package and saves
      * the Package.
-     * The Package must have been got using getPackage(PackageId*).
+     * The Package must have been got using getPackage(const PackageId&).
      * This method is called automatically when the PackageStatus of a Package
      * is set.
      *
@@ -150,9 +145,15 @@ private:
     struct PackageData {
 
         /**
+         * Creates a new PackageData with trivial attributes.
+         */
+        PackageData(): packageId("") {
+        }
+
+        /**
          * The PackageId.
          */
-        PackageId* packageId;
+        PackageId packageId;
 
         /**
          * The PackageStatus associated to the PackageId.
@@ -170,7 +171,7 @@ private:
     /**
      * The data of all the registered packages.
      * It contains the loaded Packages and the ones created through
-     * getPackage(PackageId*).
+     * getPackage(const PackageId&).
      */
     std::vector<PackageData> mPackageDatas;
 
@@ -189,23 +190,21 @@ private:
      * All the saved Packages and each of their versions are loaded. Also, it is
      * loaded the PackageId without any version (if it was saved).
      *
-     * @see loadPackage(PackageId*)
+     * @see loadPackage(const PackageId&)
      */
     void load();
 
     /**
-     * Loads the saved Package identified by its PackageId.
+     * Loads the saved Package identified by the PackageId.
      * Loading a Package in this context doesn't mean creating a new Package.
      * Instead, the PackageId is added to mPackageDatas with its associated
      * PackageStatus.
-     *
-     * The specified PackageId will be deleted when PackageManager is deleted.
      *
      * @param packageId The PackageId of the Package to load.
      * @return True if the Package was loaded, false otherwise.
      * @see lusi::configuration::ConfigurationLoader
      */
-    bool loadPackage(PackageId* packageId);
+    bool loadPackage(const PackageId& packageId);
 
     /**
      * Saves the Package.

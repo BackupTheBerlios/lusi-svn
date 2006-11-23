@@ -220,6 +220,11 @@ PackageId::PackageId(const string& name, const string& version /*= string()*/) {
     mVersion = version;
 }
 
+PackageId::PackageId(const PackageId& packageId) {
+    mName = packageId.mName;
+    mVersion = packageId.mVersion;
+}
+
 PackageId::~PackageId() {
 }
 
@@ -232,3 +237,18 @@ inline const string& PackageId::getVersion() const {
     return mVersion;
 }
 */
+
+PackageId& PackageId::operator=(const PackageId& packageId) {
+    if (&packageId == this) {
+        return *this;
+    }
+
+    mName = packageId.mName;
+    mVersion = packageId.mVersion;
+
+    return *this;
+}
+
+bool PackageId::operator==(const PackageId& packageId) {
+    return mName == packageId.mName && mVersion == packageId.mVersion;
+}

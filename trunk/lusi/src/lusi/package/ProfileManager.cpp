@@ -35,7 +35,7 @@ ProfileManager* ProfileManager::getInstance() {
 ProfileManager::~ProfileManager() {
 }
 
-Profile* ProfileManager::getProfile(const PackageId* packageId) {
+Profile* ProfileManager::getProfile(const PackageId& packageId) {
     return 0;
 }
 

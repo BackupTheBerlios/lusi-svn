@@ -26,7 +26,6 @@
 namespace lusi {
 namespace package {
 class Package;
-class PackageId;
 }
 }
 
@@ -104,11 +103,6 @@ private:
      * The Package for the Task.
      */
     lusi::package::Package* mPackage;
-
-    /**
-     * The PackageId for the Package.
-     */
-    lusi::package::PackageId* mPackageId;
 
 };
 

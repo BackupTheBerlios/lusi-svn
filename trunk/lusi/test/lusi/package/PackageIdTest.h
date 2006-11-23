@@ -25,6 +25,12 @@
 
 namespace lusi {
 namespace package {
+class PackageId;
+}
+}
+
+namespace lusi {
+namespace package {
 
 /**
  * Test class for PackageId.
@@ -34,8 +40,12 @@ namespace package {
 class PackageIdTest: public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(PackageIdTest);
     CPPUNIT_TEST(testCompareVersions);
+    CPPUNIT_TEST(testConstructor);
+    CPPUNIT_TEST(testCopyConstructor);
     CPPUNIT_TEST(testGetName);
     CPPUNIT_TEST(testGetVersion);
+    CPPUNIT_TEST(testOperatorAssignment);
+    CPPUNIT_TEST(testOperatorEqual);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -60,14 +70,44 @@ public:
     void testCompareVersions();
 
     /**
-     * Checks if getName() returns the name set in the constructor.
+     * Checks if all the values are well set in the constructor. It is tested
+     * also using the default version.
+     */
+    void testConstructor();
+
+    /**
+     * Checks if the copy constructor copies all the fields.
+     */
+    void testCopyConstructor();
+
+    /**
+     * Checks if getName() returns mName.
      */
     void testGetName();
 
     /**
-     * Checks if getVersion() returns the version set in the constructor.
+     * Checks if getVersion() returns mVersion.
      */
     void testGetVersion();
+
+    /**
+     * Tests if the operator assignment copies all the fields and returns the
+     * PackageId. It also checks against self assignment.
+     */
+    void testOperatorAssignment();
+
+    /**
+     * Tests if the operator equal returns true for equal PackageIds and false
+     * for different PackageIds.
+     */
+    void testOperatorEqual();
+
+private:
+
+    /**
+     * The PackageId to test.
+     */
+    PackageId* mPackageId;
 
 };
 

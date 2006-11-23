@@ -35,7 +35,7 @@ namespace package {
  * @class ProfileManager ProfileManager.h lusi/package/ProfileManager.h
  *
  * Manager for Profiles.
- * ProfileManager handles the creation of Profiles. getProfile(PackageId)
+ * ProfileManager handles the creation of Profiles. getProfile(const PackageId&)
  * method returns a specific Profile depending on the PackageId used.
  *
  * This class follows the Singleton Design Pattern. Only one instance is
@@ -65,12 +65,12 @@ public:
      * the TaskConfiguration for all the versions of the Package.
      * If there's no Profile for that Package, a new empty Profile is returned.
      *
-     * The packageId must be linked to a valid Package.
+     * The PackageId must be linked to a valid Package.
      *
      * @param packageId The PackageId of the Package.
      * @return The Profile for the specified Package.
      */
-    Profile* getProfile(const PackageId* packageId);
+    Profile* getProfile(const PackageId& packageId);
 
 protected:
 

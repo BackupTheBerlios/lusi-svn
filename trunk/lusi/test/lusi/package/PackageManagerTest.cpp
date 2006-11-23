@@ -47,9 +47,6 @@ using namespace lusi::package;
 
 void PackageManagerTest::setUp() {
     mPackageManager = new PackageManager();
-    for (uint i=0; i<mPackageManager->mPackageDatas.size(); ++i) {
-        delete mPackageManager->mPackageDatas[i].packageId;
-    }
     mPackageManager->mPackageDatas.clear();
 
     mPackageId1 = new PackageId("1");
@@ -57,21 +54,24 @@ void PackageManagerTest::setUp() {
     mPackageId3 = new PackageId("3");
 
     struct PackageManager::PackageData packageData;
-    packageData.packageId = mPackageId1;
+    packageData.packageId = *mPackageId1;
     packageData.packageStatus = UnpackedPackageStatus::getInstance();
     mPackageManager->mPackageDatas.push_back(packageData);
 
-    packageData.packageId = mPackageId2;
+    packageData.packageId = *mPackageId2;
     packageData.packageStatus = PackedPackageStatus::getInstance();
     mPackageManager->mPackageDatas.push_back(packageData);
 
-    packageData.packageId = mPackageId3;
+    packageData.packageId = *mPackageId3;
     packageData.packageStatus = UnpackedPackageStatus::getInstance();
     mPackageManager->mPackageDatas.push_back(packageData);
 }
 
 void PackageManagerTest::tearDown() {
     delete mPackageManager;
+    delete mPackageId1;
+    delete mPackageId2;
+    delete mPackageId3;
 }
 
 void PackageManagerTest::testSingleton() {
@@ -82,7 +82,7 @@ void PackageManagerTest::testSingleton() {
 }
 
 void PackageManagerTest::testGetPackageIds() {
-    vector<PackageId*> packageIds;
+    vector<PackageId> packageIds;
 
     //Test with a status without registered PackageIds
     packageIds =
@@ -95,49 +95,47 @@ void PackageManagerTest::testGetPackageIds() {
         mPackageManager->getPackageIds(PackedPackageStatus::getInstance());
 
     CPPUNIT_ASSERT_EQUAL((size_t)1, packageIds.size());
-    CPPUNIT_ASSERT_EQUAL(mPackageId2, packageIds[0]);
+    CPPUNIT_ASSERT(*mPackageId2 == packageIds[0]);
 
     //Test with a status with two registered PackageIds
     packageIds =
         mPackageManager->getPackageIds(UnpackedPackageStatus::getInstance());
 
     CPPUNIT_ASSERT_EQUAL((size_t)2, packageIds.size());
-    CPPUNIT_ASSERT_EQUAL(mPackageId1, packageIds[0]);
-    CPPUNIT_ASSERT_EQUAL(mPackageId3, packageIds[1]);
+    CPPUNIT_ASSERT(*mPackageId1 == packageIds[0]);
+    CPPUNIT_ASSERT(*mPackageId3 == packageIds[1]);
 }
 
 void PackageManagerTest::testGetPackage() {
     //Test with a PackageId already registered
-    SmartPtr<Package> package = mPackageManager->getPackage(mPackageId1);
+    SmartPtr<Package> package = mPackageManager->getPackage(*mPackageId1);
 
-    CPPUNIT_ASSERT_EQUAL(mPackageId1, package->getPackageId());
+    CPPUNIT_ASSERT(*mPackageId1 == package->getPackageId());
     CPPUNIT_ASSERT_EQUAL(
                     (const PackageStatus*)UnpackedPackageStatus::getInstance(),
                     package->getPackageStatus());
     CPPUNIT_ASSERT_EQUAL((size_t)3, mPackageManager->mPackageDatas.size());
 
     //Test with a PackageId not registered
-    PackageId* packageId = new PackageId("4");
+    PackageId packageId("4");
     package = mPackageManager->getPackage(packageId);
 
-    CPPUNIT_ASSERT_EQUAL(packageId, package->getPackageId());
+    CPPUNIT_ASSERT(packageId == package->getPackageId());
     CPPUNIT_ASSERT_EQUAL(
                     (const PackageStatus*)UnknownPackageStatus::getInstance(),
                     package->getPackageStatus());
     CPPUNIT_ASSERT_EQUAL((size_t)4, mPackageManager->mPackageDatas.size());
-    CPPUNIT_ASSERT_EQUAL(packageId,
-                         mPackageManager->mPackageDatas[3].packageId);
+    CPPUNIT_ASSERT(packageId == mPackageManager->mPackageDatas[3].packageId);
 }
 
 void PackageManagerTest::testUpdatePackage() {
-    SmartPtr<Package> package = mPackageManager->getPackage(mPackageId1);
+    SmartPtr<Package> package = mPackageManager->getPackage(*mPackageId1);
     package->mPackageStatus = PackedPackageStatus::getInstance();
 
     mPackageManager->updatePackage(getPtr(package));
 
     CPPUNIT_ASSERT_EQUAL((size_t)3, mPackageManager->mPackageDatas.size());
-    CPPUNIT_ASSERT_EQUAL(mPackageId1,
-                         mPackageManager->mPackageDatas[0].packageId);
+    CPPUNIT_ASSERT(*mPackageId1 == mPackageManager->mPackageDatas[0].packageId);
     CPPUNIT_ASSERT_EQUAL(
                     (const PackageStatus*)PackedPackageStatus::getInstance(),
                     mPackageManager->mPackageDatas[0].packageStatus);

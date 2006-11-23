@@ -34,12 +34,11 @@ using namespace lusi::task;
 //public:
 
 TaskTestImplementation::TaskTestImplementation(const std::string& name):
-            Task(name, new Package(new PackageId("testPackage")),
+            Task(name, new Package(PackageId("testPackage")),
                  PackageStatusTestImplementation::getFirstInstance(),
                  PackageStatusTestImplementation::getSecondInstance()) {
 }
 
 TaskTestImplementation::~TaskTestImplementation() {
-    delete mPackage->getPackageId();
     delete mPackage;
 }
