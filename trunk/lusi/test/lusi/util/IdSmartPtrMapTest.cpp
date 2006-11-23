@@ -99,7 +99,7 @@ void IdSmartPtrMapTest::testAdd() {
     CPPUNIT_ASSERT_EQUAL(mIndex3,
                 getPtr(mIdSmartPtrMap->mMap.find(mIndex3->getId())->second));
 
-    //Test return value adding a resource
+    //Test return value adding an element
     Index* index = new Index("4");
 
     CPPUNIT_ASSERT_EQUAL(true, mIdSmartPtrMap->add(SmartPtr<Index>(index)));

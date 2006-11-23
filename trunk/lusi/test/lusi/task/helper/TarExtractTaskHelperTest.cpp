@@ -32,10 +32,8 @@
 #include "../TaskLoggerObserverTestImplementation.h"
 #include "../TaskProgressObserverTestImplementation.h"
 #include "../TaskTestImplementation.h"
-#include "../../package/LocalFileResource.h"
+#include "../../configuration/ConfigurationParameterLocalUrl.h"
 #include "../../package/Package.h"
-#include "../../package/PackageId.h"
-#include "../../package/ResourceMap.h"
 #include "lusi/util/Process.h"
 #include "../../util/SmartPtr.h"
 
@@ -43,13 +41,13 @@ using std::auto_ptr;
 using std::string;
 using std::vector;
 
-using lusi::package::LocalFileResource;
-using lusi::package::Package;
-using lusi::package::PackageId;
-using lusi::package::Resource;
+using lusi::configuration::ConfigurationParameter;
+using lusi::configuration::ConfigurationParameterLocalUrl;
+using lusi::configuration::ConfigurationParameterMap;
 using lusi::task::TaskTestImplementation;
 using lusi::task::TaskLoggerObserverTestImplementation;
 using lusi::task::TaskProgressObserverTestImplementation;
+using lusi::util::LocalUrl;
 using lusi::util::Process;
 using lusi::util::SmartPtr;
 
@@ -74,43 +72,53 @@ void TarExtractTaskHelperTest::tearDown() {
     delete mTask;
 }
 
-void TarExtractTaskHelperTest::testHasValidResourceMap() {
-    //Test the empty ResourceMap used by default
-    CPPUNIT_ASSERT_EQUAL(false, mTarExtractTaskHelper->hasValidResourceMap());
+void TarExtractTaskHelperTest::testHasValidResources() {
+    //Test the empty resource files used by default
+    CPPUNIT_ASSERT_EQUAL(false, mTarExtractTaskHelper->hasValidResources());
 
-    //Test with a ResourceMap with more than one compressed file
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/firstFile.tar.gz")));
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/secondFile.tar.gz")));
+    //Test with resource files with more than one compressed file
+    mTask->getPackage()->getResourceFiles()->add(
+        SmartPtr<ConfigurationParameter>(
+            new ConfigurationParameterLocalUrl("/firstFile.tar.gz",
+                LocalUrl("/firstFile.tar.gz"))));
+    mTask->getPackage()->getResourceFiles()->add(
+        SmartPtr<ConfigurationParameter>(
+            new ConfigurationParameterLocalUrl("/secondFile.tar.gz",
+                LocalUrl("/secondFile.tar.gz"))));
     delete mTarExtractTaskHelper;
     mTarExtractTaskHelper = new TarExtractTaskHelper(mTask);
 
-    CPPUNIT_ASSERT_EQUAL(false, mTarExtractTaskHelper->hasValidResourceMap());
+    CPPUNIT_ASSERT_EQUAL(false, mTarExtractTaskHelper->hasValidResources());
 
-    //Test with a ResourceMap with a not compressed file
-    mTask->getPackage()->getResourceMap()->remove("/firstFile.tar.gz");
-    mTask->getPackage()->getResourceMap()->remove("/secondFile.tar.gz");
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/firstFile.ogg")));
+    //Test with resource files with a not compressed file
+    mTask->getPackage()->getResourceFiles()->remove("/firstFile.tar.gz");
+    mTask->getPackage()->getResourceFiles()->remove("/secondFile.tar.gz");
+    mTask->getPackage()->getResourceFiles()->add(
+        SmartPtr<ConfigurationParameter>(
+            new ConfigurationParameterLocalUrl("/firstFile.ogg",
+                LocalUrl("/firstFile.ogg"))));
     delete mTarExtractTaskHelper;
     mTarExtractTaskHelper = new TarExtractTaskHelper(mTask);
 
-    CPPUNIT_ASSERT_EQUAL(false, mTarExtractTaskHelper->hasValidResourceMap());
+    CPPUNIT_ASSERT_EQUAL(false, mTarExtractTaskHelper->hasValidResources());
 
-    //Test with a ResourceMap with a compressed file
-    mTask->getPackage()->getResourceMap()->remove("/firstFile.ogg");
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/firstFile.tar.bz2")));
+    //Test with resource files with a compressed file
+    mTask->getPackage()->getResourceFiles()->remove("/firstFile.ogg");
+    mTask->getPackage()->getResourceFiles()->add(
+        SmartPtr<ConfigurationParameter>(
+            new ConfigurationParameterLocalUrl("/firstFile.tar.bz2",
+                LocalUrl("/firstFile.tar.bz2"))));
     delete mTarExtractTaskHelper;
     mTarExtractTaskHelper = new TarExtractTaskHelper(mTask);
 
-    CPPUNIT_ASSERT_EQUAL(true, mTarExtractTaskHelper->hasValidResourceMap());
+    CPPUNIT_ASSERT_EQUAL(true, mTarExtractTaskHelper->hasValidResources());
 }
 
 void TarExtractTaskHelperTest::testReceivedStdout() {
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/package.tar.bz2")));
+    mTask->getPackage()->getResourceFiles()->add(
+        SmartPtr<ConfigurationParameter>(
+            new ConfigurationParameterLocalUrl("/package.tar.bz2",
+                LocalUrl("/package.tar.bz2"))));
     delete mTarExtractTaskHelper;
     mTarExtractTaskHelper = new TarExtractTaskHelper(mTask);
     mTarExtractTaskHelper->initConfigurationParameterMap();
@@ -122,17 +130,17 @@ void TarExtractTaskHelperTest::testReceivedStdout() {
                          mTaskLoggerObserver->getMessage());
     CPPUNIT_ASSERT_EQUAL(message, mTaskLoggerObserver->getEventType());
 
-    //Test if the file is added to the ResourceMap
+    //Test if the file is added to the resource files
     CPPUNIT_ASSERT_EQUAL((size_t)2,
-                        mTask->getPackage()->getResourceMap()->getAll().size());
+                    mTask->getPackage()->getResourceFiles()->getAll().size());
 
-    SmartPtr<Resource> resource = mTask->getPackage()->
-                                                getResourceMap()->getAll()[1];
+    SmartPtr<ConfigurationParameter> resource = mTask->getPackage()->
+                                                getResourceFiles()->getAll()[1];
 
     CPPUNIT_ASSERT_EQUAL(1, mTarExtractTaskHelper->mNumberOfFilesExtracted);
     CPPUNIT_ASSERT(!resource.isNull());
     CPPUNIT_ASSERT_EQUAL(string("/package/File1"), resource->getId());
-    CPPUNIT_ASSERT(!((SmartPtr<LocalFileResource>)resource).isNull());
+    CPPUNIT_ASSERT(!resource.isNull());
 
 
     //Test with data without ending new line
@@ -143,9 +151,9 @@ void TarExtractTaskHelperTest::testReceivedStdout() {
                          mTaskLoggerObserver->getMessage());
     CPPUNIT_ASSERT_EQUAL(message, mTaskLoggerObserver->getEventType());
 
-    //Test that the file wasn't added to the ResourceMap
+    //Test that the file wasn't added to the resource files
     CPPUNIT_ASSERT_EQUAL((size_t)2,
-                        mTask->getPackage()->getResourceMap()->getAll().size());
+                    mTask->getPackage()->getResourceFiles()->getAll().size());
 
 
     //Test with the missing data
@@ -156,16 +164,16 @@ void TarExtractTaskHelperTest::testReceivedStdout() {
                          mTaskLoggerObserver->getMessage());
     CPPUNIT_ASSERT_EQUAL(message, mTaskLoggerObserver->getEventType());
 
-    //Test if the file is added to the ResourceMap
+    //Test if the file is added to the resource files
     CPPUNIT_ASSERT_EQUAL((size_t)3,
-                        mTask->getPackage()->getResourceMap()->getAll().size());
+                    mTask->getPackage()->getResourceFiles()->getAll().size());
 
-    resource = mTask->getPackage()->getResourceMap()->getAll()[2];
+    resource = mTask->getPackage()->getResourceFiles()->getAll()[2];
 
     CPPUNIT_ASSERT_EQUAL(2, mTarExtractTaskHelper->mNumberOfFilesExtracted);
     CPPUNIT_ASSERT(!resource.isNull());
     CPPUNIT_ASSERT_EQUAL(string("/package/File2"), resource->getId());
-    CPPUNIT_ASSERT(!((SmartPtr<LocalFileResource>)resource).isNull());
+    CPPUNIT_ASSERT(!resource.isNull());
 
 
     //Test with various files extracted in the same output sent
@@ -176,25 +184,27 @@ void TarExtractTaskHelperTest::testReceivedStdout() {
                          mTaskLoggerObserver->getMessage());
     CPPUNIT_ASSERT_EQUAL(message, mTaskLoggerObserver->getEventType());
 
-    //Test if the file is added to the ResourceMap
+    //Test if the file is added to the resource files
     CPPUNIT_ASSERT_EQUAL((size_t)5,
-                        mTask->getPackage()->getResourceMap()->getAll().size());
+                    mTask->getPackage()->getResourceFiles()->getAll().size());
     CPPUNIT_ASSERT_EQUAL(4, mTarExtractTaskHelper->mNumberOfFilesExtracted);
 
-    resource = mTask->getPackage()->getResourceMap()->getAll()[3];
+    resource = mTask->getPackage()->getResourceFiles()->getAll()[3];
     CPPUNIT_ASSERT(!resource.isNull());
     CPPUNIT_ASSERT_EQUAL(string("/package/File3"), resource->getId());
-    CPPUNIT_ASSERT(!((SmartPtr<LocalFileResource>)resource).isNull());
+    CPPUNIT_ASSERT(!resource.isNull());
 
-    resource = mTask->getPackage()->getResourceMap()->getAll()[4];
+    resource = mTask->getPackage()->getResourceFiles()->getAll()[4];
     CPPUNIT_ASSERT(!resource.isNull());
     CPPUNIT_ASSERT_EQUAL(string("/package/File4"), resource->getId());
-    CPPUNIT_ASSERT(!((SmartPtr<LocalFileResource>)resource).isNull());
+    CPPUNIT_ASSERT(!resource.isNull());
 }
 
 void TarExtractTaskHelperTest::testGetProcess() {
-    mTask->getPackage()->getResourceMap()->add(
-        SmartPtr<Resource>(new LocalFileResource("/directory/file.tar.bz2")));
+    mTask->getPackage()->getResourceFiles()->add(
+        SmartPtr<ConfigurationParameter>(
+            new ConfigurationParameterLocalUrl("/directory/file.tar.bz2",
+                LocalUrl("/directory/file.tar.bz2"))));
     delete mTarExtractTaskHelper;
     mTarExtractTaskHelper = new TarExtractTaskHelper(mTask);
     mTarExtractTaskHelper->initConfigurationParameterMap();
@@ -216,9 +226,11 @@ void TarExtractTaskHelperTest::testGetProcess() {
 
 
     //Test with a tar file (no format argument should be added)
-    mTask->getPackage()->getResourceMap()->remove("/directory/file.tar.bz2");
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/directory/file.tar")));
+    mTask->getPackage()->getResourceFiles()->remove("/directory/file.tar.bz2");
+    mTask->getPackage()->getResourceFiles()->add(
+        SmartPtr<ConfigurationParameter>(
+            new ConfigurationParameterLocalUrl("/directory/file.tar",
+                LocalUrl("/directory/file.tar"))));
     delete mTarExtractTaskHelper;
     mTarExtractTaskHelper = new TarExtractTaskHelper(mTask);
     mTarExtractTaskHelper->initConfigurationParameterMap();
@@ -240,34 +252,29 @@ void TarExtractTaskHelperTest::testGetProcess() {
 }
 
 void TarExtractTaskHelperTest::testInferTarFormat() {
-    //Test the empty LocalFileResource used by default
+    //Test the empty ConfigurationParameterLocalUrl used by default
     CPPUNIT_ASSERT_EQUAL(string("?"), mTarExtractTaskHelper->inferTarFormat());
 
     //Test with tar files
-    mTarExtractTaskHelper->mFileToUnpack =
-            SmartPtr<LocalFileResource>(new LocalFileResource("/file.tar"));
+    mTarExtractTaskHelper->mFileToUnpack = LocalUrl("/file.tar");
 
     CPPUNIT_ASSERT_EQUAL(string(""), mTarExtractTaskHelper->inferTarFormat());
 
     //Test with gzip files
-    mTarExtractTaskHelper->mFileToUnpack =
-            SmartPtr<LocalFileResource>(new LocalFileResource("/file.gzip"));
+    mTarExtractTaskHelper->mFileToUnpack = LocalUrl("/file.gzip");
 
     CPPUNIT_ASSERT_EQUAL(string("-z"), mTarExtractTaskHelper->inferTarFormat());
 
-    mTarExtractTaskHelper->mFileToUnpack =
-            SmartPtr<LocalFileResource>(new LocalFileResource("/file.tar.gz"));
+    mTarExtractTaskHelper->mFileToUnpack = LocalUrl("/file.tar.gz");
 
     CPPUNIT_ASSERT_EQUAL(string("-z"), mTarExtractTaskHelper->inferTarFormat());
 
     //Test with bzip2 files
-    mTarExtractTaskHelper->mFileToUnpack =
-            SmartPtr<LocalFileResource>(new LocalFileResource("/file.bzip2"));
+    mTarExtractTaskHelper->mFileToUnpack = LocalUrl("/file.bzip2");
 
     CPPUNIT_ASSERT_EQUAL(string("-j"), mTarExtractTaskHelper->inferTarFormat());
 
-    mTarExtractTaskHelper->mFileToUnpack =
-            SmartPtr<LocalFileResource>(new LocalFileResource("/file.tar.bz2"));
+    mTarExtractTaskHelper->mFileToUnpack = LocalUrl("/file.tar.bz2");
 
     CPPUNIT_ASSERT_EQUAL(string("-j"), mTarExtractTaskHelper->inferTarFormat());
 }

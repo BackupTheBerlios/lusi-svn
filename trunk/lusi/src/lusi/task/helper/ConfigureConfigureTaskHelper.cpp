@@ -23,9 +23,7 @@
 #include "ConfigureConfigureTaskHelper.h"
 #include "../../configuration/ConfigurationParameterLocalUrl.h"
 #include "../../configuration/ConfigurationParameterMap.h"
-#include "../../package/LocalFileResource.h"
 #include "../../package/Package.h"
-#include "../../package/ResourceMap.h"
 #include "../../task/Task.h"
 #include "../../util/i18n.h"
 #include "../../util/LocalUrl.h"
@@ -38,7 +36,6 @@ using std::vector;
 using lusi::configuration::ConfigurationParameter;
 using lusi::configuration::ConfigurationParameterLocalUrl;
 using lusi::configuration::ConfigurationParameterMap;
-using lusi::package::LocalFileResource;
 using lusi::task::Task;
 using lusi::util::LocalUrl;
 using lusi::util::Process;
@@ -58,14 +55,13 @@ TaskHelper* lusi::task::helper::createConfigureConfigureTaskHelper(
 ConfigureConfigureTaskHelper::ConfigureConfigureTaskHelper(Task* task):
                 TaskHelperUsingProcess("ConfigureConfigureTaskHelper", task) {
     //TODO refactor with same code in other TaskHelpers
-    vector< SmartPtr<LocalFileResource> > localFileResources = mTask->
-            getPackage()->getResourceMap()->
-                    getAllResourcesByType<LocalFileResource>();
-    if (localFileResources.size() == 0 ||
-                !LocalUrl(localFileResources[0]->getId()).isDirectory()) {
+    vector< SmartPtr<ConfigurationParameter> > resourceFiles = mTask->
+                getPackage()->getResourceFiles()->getAll();
+    if (resourceFiles.size() == 0 ||
+                !LocalUrl(resourceFiles[0]->getId()).isDirectory()) {
         mPackageDirectory = new LocalUrl("");
     } else {
-        mPackageDirectory = new LocalUrl(localFileResources[0]->getId());
+        mPackageDirectory = new LocalUrl(resourceFiles[0]->getId());
     }
 }
 
@@ -74,12 +70,12 @@ ConfigureConfigureTaskHelper::~ConfigureConfigureTaskHelper() {
 }
 
 //TODO check if the script is executable. Log error information?
-bool ConfigureConfigureTaskHelper::hasValidResourceMap() {
+bool ConfigureConfigureTaskHelper::hasValidResources() {
     if (mPackageDirectory->getPath() == "") {
         return false;
     }
 
-    if (mTask->getPackage()->getResourceMap()->get(
+    if (mTask->getPackage()->getResourceFiles()->get(
                     mPackageDirectory->getDirectory() + "configure") == 0) {
         return false;
     }

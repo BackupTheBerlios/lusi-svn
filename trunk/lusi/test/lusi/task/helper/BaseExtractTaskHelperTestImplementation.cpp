@@ -41,7 +41,7 @@ BaseExtractTaskHelperTestImplementation::
 }
 
 /*
-inline bool BaseExtractTaskHelperTestImplementation::hasValidResourceMap() {
+inline bool BaseExtractTaskHelperTestImplementation::hasValidResources() {
     return true;
 }
 

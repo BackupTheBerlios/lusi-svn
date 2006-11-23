@@ -60,7 +60,7 @@ TaskHelper* createConfigureConfigureTaskHelper(lusi::task::Task* task);
  * creates the files needed by the build system. It usually accepts a set of
  * options that depends on each package.
  *
- * ResourceMaps that can be used with ConfigureConfigureTaskHelper are those
+ * Resources that can be used with ConfigureConfigureTaskHelper are those
  * with an executable script "configure" in the base directory of the package.
  *
  * The configuration accepted includes all the parameters that the configure
@@ -82,13 +82,13 @@ public:
     virtual ~ConfigureConfigureTaskHelper();
 
     /**
-     * Returns True if the ResourceMap contains a configure script that can be
+     * Returns true if the resource files contain a configure script that can be
      * executed.
      * The script is searched in the directory of the package.
      *
-     * @return bool True if the ResourceMap contains a configure script.
+     * @return True if the resource files contain a configure script.
      */
-    virtual bool hasValidResourceMap();
+    virtual bool hasValidResources();
 
     /**
      * Inits the configuration parameters for this TaskHelper.

@@ -181,7 +181,7 @@ void TaskTest::testNextTaskHelper() {
     mTask->nextTaskHelper();
     CPPUNIT_ASSERT(mTask->mCurrentTaskHelper == 0);
 
-    //Test with only one available taskHelper, but without valid ResourceMap
+    //Test with only one available taskHelper, but without valid resources
     delete mTask;
     mTask = new Task("MakeTests", mPackage,
                      PackageStatusTestImplementation::getFirstInstance(),

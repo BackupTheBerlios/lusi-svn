@@ -40,9 +40,11 @@ namespace package {
  */
 class PackageTest: public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(PackageTest);
+    CPPUNIT_TEST(testConstructor);
     CPPUNIT_TEST(testGetPackageId);
     CPPUNIT_TEST(testGetProfile);
-    CPPUNIT_TEST(testGetResourceMap);
+    CPPUNIT_TEST(testGetResources);
+    CPPUNIT_TEST(testGetResourceFiles);
     CPPUNIT_TEST(testGetPackageStatus);
     CPPUNIT_TEST(testSetPackageStatus);
     CPPUNIT_TEST_SUITE_END();
@@ -60,31 +62,38 @@ public:
     virtual void tearDown();
 
     /**
-     * Checks if getPackageId() returns the PackageId set in the constructor.
+     * Checks if the values are initialized in constructor as they should. It is
+     * tested with a default PackageStatus and an explicit PackageStatus.
+     */
+    void testConstructor();
+
+    /**
+     * Checks if getPackageId() returns mPackageId.
      */
     void testGetPackageId();
 
     /**
-     * Checks if getProfile() returns the Profile created in the
-     * constructor (get from ProfileManager).
+     * Checks if getProfile() returns mProfile.
      */
     void testGetProfile();
 
     /**
-     * Checks if getResourceMap() returns the ResourceMap created in the
-     * constructor (an empty ResourceMap).
+     * Checks if getResources() returns mResources.
      */
-    void testGetResourceMap();
+    void testGetResources();
 
     /**
-     * Checks if getPackageStatus() returns the PackageStatus set in the
-     * constructor.
+     * Checks if getResourceFiles() returns mResourceFiles.
+     */
+    void testGetResourceFiles();
+
+    /**
+     * Checks if getPackageStatus() returns mPackageStatus.
      */
     void testGetPackageStatus();
 
     /**
-     * Checks if setPackageStatus() sets the PackageStatus and is returned with
-     * getPackageStatus().
+     * Checks if setPackageStatus() sets mPackageStatus.
      */
     void testSetPackageStatus();
 

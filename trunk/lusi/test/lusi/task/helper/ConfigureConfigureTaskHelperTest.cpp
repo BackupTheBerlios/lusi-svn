@@ -30,10 +30,8 @@
 #undef protected
 
 #include "../TaskTestImplementation.h"
-#include "../../package/LocalFileResource.h"
+#include "../../configuration/ConfigurationParameterLocalUrl.h"
 #include "../../package/Package.h"
-#include "../../package/PackageId.h"
-#include "../../package/ResourceMap.h"
 #include "../../util/LocalUrl.h"
 #include "../../util/SmartPtr.h"
 
@@ -41,11 +39,10 @@ using std::auto_ptr;
 using std::string;
 using std::vector;
 
-using lusi::package::LocalFileResource;
-using lusi::package::Package;
-using lusi::package::PackageId;
-using lusi::package::Resource;
+using lusi::configuration::ConfigurationParameter;
+using lusi::configuration::ConfigurationParameterLocalUrl;
 using lusi::task::TaskTestImplementation;
+using lusi::util::LocalUrl;
 using lusi::util::Process;
 using lusi::util::SmartPtr;
 
@@ -64,23 +61,25 @@ void ConfigureConfigureTaskHelperTest::tearDown() {
 }
 
 void ConfigureConfigureTaskHelperTest::testConstructor() {
-    //Test the empty ResourceMap used by default
+    //Test the empty resource files used by default
     CPPUNIT_ASSERT_EQUAL(string(""),
                 mConfigureConfigureTaskHelper->mPackageDirectory->getPath());
 
-    //Test with a ResourceMap without a package directory
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/configure")));
+    //Test with resource files without a package directory
+    mTask->getPackage()->getResourceFiles()->add(
+        SmartPtr<ConfigurationParameter>(new ConfigurationParameterLocalUrl(
+            "/configure", LocalUrl("/configure"))));
     delete mConfigureConfigureTaskHelper;
     mConfigureConfigureTaskHelper = new ConfigureConfigureTaskHelper(mTask);
 
     CPPUNIT_ASSERT_EQUAL(string(""),
                 mConfigureConfigureTaskHelper->mPackageDirectory->getPath());
 
-    //Test with a ResourceMap with a valid package directory
-    mTask->getPackage()->getResourceMap()->remove("/configure");
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/package/")));
+    //Test with resource files with a valid package directory
+    mTask->getPackage()->getResourceFiles()->remove("/configure");
+    mTask->getPackage()->getResourceFiles()->add(
+        SmartPtr<ConfigurationParameter>(new ConfigurationParameterLocalUrl(
+            "/package/", LocalUrl("/package/"))));
     delete mConfigureConfigureTaskHelper;
     mConfigureConfigureTaskHelper = new ConfigureConfigureTaskHelper(mTask);
 
@@ -88,47 +87,53 @@ void ConfigureConfigureTaskHelperTest::testConstructor() {
                 mConfigureConfigureTaskHelper->mPackageDirectory->getPath());
 }
 
-void ConfigureConfigureTaskHelperTest::testHasValidResourceMap() {
-    //Test the empty ResourceMap used by default
+void ConfigureConfigureTaskHelperTest::testHasValidResources() {
+    //Test the empty resource files used by default
     CPPUNIT_ASSERT_EQUAL(false,
-                         mConfigureConfigureTaskHelper->hasValidResourceMap());
+                         mConfigureConfigureTaskHelper->hasValidResources());
 
-    //Test with a ResourceMap without a package directory
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/configure")));
+    //Test with resource files without a package directory
+    mTask->getPackage()->getResourceFiles()->add(
+        SmartPtr<ConfigurationParameter>(new ConfigurationParameterLocalUrl(
+            "/configure", LocalUrl("/configure"))));
     delete mConfigureConfigureTaskHelper;
     mConfigureConfigureTaskHelper = new ConfigureConfigureTaskHelper(mTask);
 
     CPPUNIT_ASSERT_EQUAL(false,
-                         mConfigureConfigureTaskHelper->hasValidResourceMap());
+                         mConfigureConfigureTaskHelper->hasValidResources());
 
-    //Test with a ResourceMap with a package directory but without a configure
-    mTask->getPackage()->getResourceMap()->remove("/configure");
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/package/")));
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/package/COPYING")));
+    //Test with resource files with a package directory but without a configure
+    mTask->getPackage()->getResourceFiles()->remove("/configure");
+    mTask->getPackage()->getResourceFiles()->add(
+        SmartPtr<ConfigurationParameter>(new ConfigurationParameterLocalUrl(
+            "/package/", LocalUrl("/package/"))));
+    mTask->getPackage()->getResourceFiles()->add(
+        SmartPtr<ConfigurationParameter>(new ConfigurationParameterLocalUrl(
+            "/package/COPYING", LocalUrl("/package/COPYING"))));
     delete mConfigureConfigureTaskHelper;
     mConfigureConfigureTaskHelper = new ConfigureConfigureTaskHelper(mTask);
 
     CPPUNIT_ASSERT_EQUAL(false,
-                         mConfigureConfigureTaskHelper->hasValidResourceMap());
+                         mConfigureConfigureTaskHelper->hasValidResources());
 
-    //Test with a ResourceMap with a configure script in the package directory
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/package/configure")));
+    //Test with resource files with a configure script in the package directory
+    mTask->getPackage()->getResourceFiles()->add(
+        SmartPtr<ConfigurationParameter>(new ConfigurationParameterLocalUrl(
+            "/package/configure", LocalUrl("/package/configure"))));
     delete mConfigureConfigureTaskHelper;
     mConfigureConfigureTaskHelper = new ConfigureConfigureTaskHelper(mTask);
 
     CPPUNIT_ASSERT_EQUAL(true,
-                         mConfigureConfigureTaskHelper->hasValidResourceMap());
+                         mConfigureConfigureTaskHelper->hasValidResources());
 }
 
 void ConfigureConfigureTaskHelperTest::testGetProcess() {
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/package/")));
-    mTask->getPackage()->getResourceMap()->add(
-        SmartPtr<Resource>(new LocalFileResource("/package/subDirectory/")));
+    mTask->getPackage()->getResourceFiles()->add(
+        SmartPtr<ConfigurationParameter>(new ConfigurationParameterLocalUrl(
+            "/package/", LocalUrl("/package/"))));
+    mTask->getPackage()->getResourceFiles()->add(
+        SmartPtr<ConfigurationParameter>(new ConfigurationParameterLocalUrl(
+            "/package/subDirectory/", LocalUrl("/package/subDirectory/"))));
     delete mConfigureConfigureTaskHelper;
     mConfigureConfigureTaskHelper = new ConfigureConfigureTaskHelper(mTask);
     mConfigureConfigureTaskHelper->initConfigurationParameterMap();

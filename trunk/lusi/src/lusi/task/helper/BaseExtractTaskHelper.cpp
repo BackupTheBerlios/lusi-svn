@@ -21,11 +21,8 @@
 #include "BaseExtractTaskHelper.h"
 #include "../../configuration/ConfigurationParameterLocalUrl.h"
 #include "../../configuration/ConfigurationParameterMap.h"
-#include "../../package/LocalFileResource.h"
 #include "../../package/Package.h"
-#include "../../package/ResourceMap.h"
 #include "../../util/i18n.h"
-#include "../../util/LocalFile.h"
 #include "../../util/Process.h"
 #include "../../util/SmartPtr.h"
 
@@ -34,10 +31,7 @@ using std::vector;
 
 using lusi::configuration::ConfigurationParameter;
 using lusi::configuration::ConfigurationParameterLocalUrl;
-using lusi::configuration::ConfigurationParameterMap;
 using lusi::configuration::InvalidConfigurationException;
-using lusi::package::LocalFileResource;
-using lusi::package::Resource;
 using lusi::task::Task;
 using lusi::util::LocalUrl;
 using lusi::util::Process;
@@ -54,9 +48,8 @@ void BaseExtractTaskHelper::execute() throw (ExecuteTaskHelperException,
                                              InvalidConfigurationException) {
     TaskHelperUsingProcess::execute();
 
-    mTask->getPackage()->getResourceMap()->remove(mFileToUnpack->getId());
-    //TODO add release method to smartptr instead of assign an empty one
-    mFileToUnpack = SmartPtr<LocalFileResource>(0);
+    mTask->getPackage()->getResourceFiles()->remove(mFileToUnpack.getPath());
+    mFileToUnpack = LocalUrl();
 }
 
 void BaseExtractTaskHelper::initConfigurationParameterMap() {
@@ -64,7 +57,7 @@ void BaseExtractTaskHelper::initConfigurationParameterMap() {
         new ConfigurationParameterLocalUrl("extractionDirectory",
             _("Extraction directory"), ConfigurationParameter::OptionalPriority,
             _("The directory to extract the package to"),
-            LocalUrl(mFileToUnpack->getId()).getParent(),
+            mFileToUnpack.getParent(),
             ConfigurationParameterLocalUrl::DirectoryType);
 
     mConfigurationParameterMap->add(
@@ -75,13 +68,12 @@ void BaseExtractTaskHelper::initConfigurationParameterMap() {
 
 BaseExtractTaskHelper::BaseExtractTaskHelper(const string& name, Task* task):
                         TaskHelperUsingProcess(name, task) {
-    vector< SmartPtr<LocalFileResource> > localFileResources = mTask->
-            getPackage()->getResourceMap()->
-                    getAllResourcesByType<LocalFileResource>();
-    if (localFileResources.size() != 1) {
-        mFileToUnpack = SmartPtr<LocalFileResource>(new LocalFileResource(""));
+    vector< SmartPtr<ConfigurationParameter> > resourceFiles =
+            mTask->getPackage()->getResourceFiles()->getAll();
+    if (resourceFiles.size() != 1) {
+        mFileToUnpack = LocalUrl("");
     } else {
-        mFileToUnpack = localFileResources[0];
+        mFileToUnpack = LocalUrl(resourceFiles[0]->getId());
     }
 
     mNumberOfFilesToExtract = 0;
@@ -109,6 +101,7 @@ void BaseExtractTaskHelper::fileExtracted(const string& fileName) {
                                             mNumberOfFilesToExtract);
     }
 
-    mTask->getPackage()->getResourceMap()->add(
-                        SmartPtr<Resource>(new LocalFileResource(fileName)));
+    mTask->getPackage()->getResourceFiles()->add(
+        SmartPtr<ConfigurationParameter>(new ConfigurationParameterLocalUrl(
+            fileName, LocalUrl(fileName))));
 }

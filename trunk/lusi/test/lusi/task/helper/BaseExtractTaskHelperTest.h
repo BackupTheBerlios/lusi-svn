@@ -24,16 +24,8 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 namespace lusi {
-namespace package {
-class Package;
-class PackageId;
-}
-}
-
-namespace lusi {
 namespace task {
 class Task;
-class TaskConfiguration;
 class TaskLoggerObserverTestImplementation;
 class TaskProgressObserverTestImplementation;
 }
@@ -80,7 +72,7 @@ public:
     /**
      * Checks if the method from parent is called (the process to be executed is
      * prepared and executed, progress is then set to FINISHED) and the file to
-     * unpack is removed from the ResourceMap.
+     * unpack is removed from the ConfigurationParameterMap.
      */
     void testExecute();
 
@@ -100,8 +92,8 @@ public:
     void testSetNumberOfFilesToExtract();
 
     /**
-     * Checks if the progress is updated and the Resource with the file is added
-     * to the ResourceMap.
+     * Checks if the progress is updated and the ConfigurationParameterLocalUrl
+     * with the file is added to the ConfigurationParameterMap.
      */
     void testFileExtracted();
 
@@ -111,11 +103,6 @@ private:
      * The BaseExtractTaskHelper to test.
      */
     BaseExtractTaskHelper* mBaseExtractTaskHelper;
-
-    /**
-     * The Package for the Task.
-     */
-    lusi::package::Package* mPackage;
 
     /**
      * The Task to use in mBaseExtractTaskHelper.

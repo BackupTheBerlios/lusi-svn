@@ -27,10 +27,15 @@
 #include <lusi/package/status/UnknownPackageStatus.h>
 
 namespace lusi {
+namespace configuration {
+class ConfigurationParameterMap;
+}
+}
+
+namespace lusi {
 namespace package {
 class PackageId;
 class Profile;
-class ResourceMap;
 }
 }
 
@@ -51,18 +56,31 @@ namespace package {
  * The Package class represents a software package.
  * Packages are identified by its name and version. They also have a Profile
  * which contains information about the Tasks executed over the Package. A
- * Package is composed by different Resources, all grouped in a ResourceMap.
+ * Package is composed by different resources (files, for example), grouped in
+ * a ConfigurationParameterMap.
  * Packages have also a specific PackageStatus, used to describe which Tasks
  * can be executed over the Package.
+ *
+ * The configuration of the Package is composed of the different resources that
+ * form the Package in the current PackageStatus. They are added directly under
+ * the root ConfigurationParameterMap of the configuration, returned by
+ * getResources().
+ *
+ * The most common resource are files. All the files that are part of the
+ * Package are added under the "files" ConfigurationParameterMap, direct child
+ * of the root ConfigurationParameterMap. As it is the most common
+ * ConfigurationParameter needed, it can be got directly through
+ * getResourceFiles(). All the children of the "files" ConfigurationParameterMap
+ * are ConfigurationParameterLocalUrl with an id equal to the path of the
+ * default LocalUrl.
+ *
+ * The resources are updated when Tasks are executed to reflect the changes
+ * made by the Tasks, if any.
  *
  * The only property of a Package that can be set is the PackageStatus, which
  * is updated by Tasks when they finish their execution. However, an initial
  * PackageStatus should be provided by classes which creates Packages. If not
  * specified, default PackageStatus is set to UnknownPackageStatus.
- *
- * A Package with an empty ResourceMap represents a Package already used by the
- * library. Resources are then got from the Profile.
- * @todo Better design for Packages already used.
  */
 class Package {
 public:
@@ -116,12 +134,23 @@ public:
     }
 
     /**
-     * Returns the ResourceMap.
+     * Returns the resources in a ConfigurationParameterMap.
      *
-     * @return The ResourceMap.
+     * @return The resources in a ConfigurationParameterMap.
      */
-    ResourceMap* getResourceMap() {
-        return mResourceMap;
+    lusi::configuration::ConfigurationParameterMap* getResources() {
+        return mResources;
+    }
+
+    /**
+     * Returns the ConfigurationParameterMap containing the files of this
+     * Package.
+     *
+     * @return The ConfigurationParameterMap containing the files of this
+     *         Package.
+     */
+    lusi::configuration::ConfigurationParameterMap* getResourceFiles() {
+        return mResourceFiles;
     }
 
     /**
@@ -156,9 +185,14 @@ private:
     Profile* mProfile;
 
     /**
-     * The ResourceMap.
+     * The ConfigurationParameterMap.
      */
-    ResourceMap* mResourceMap;
+    lusi::configuration::ConfigurationParameterMap* mResources;
+
+    /**
+     * The ConfigurationParameterMap containing the files of this Package.
+     */
+    lusi::configuration::ConfigurationParameterMap* mResourceFiles;
 
     /**
      * The PackageStatus.

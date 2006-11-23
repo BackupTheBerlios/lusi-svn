@@ -25,11 +25,6 @@
 #define protected public
 #define private public
 #include "TaskManager.h"
-#undef private
-#undef protected
-
-#define protected public
-#define private public
 #include "helper/TaskHelperManager.h"
 #undef private
 #undef protected
@@ -38,9 +33,7 @@
 
 #include "../package/Package.h"
 #include "../package/PackageId.h"
-#include "../package/ResourceMap.h"
 #include "../package/status/PackageStatusTestImplementation.h"
-#include "../package/status/PackedPackageStatus.h"
 
 #define firstPackageStatus ((const PackageStatus*) \
                 PackageStatusTestImplementation::getFirstInstance())
@@ -59,7 +52,6 @@ using lusi::package::Package;
 using lusi::package::PackageId;
 using lusi::package::status::PackageStatus;
 using lusi::package::status::PackageStatusTestImplementation;
-using lusi::package::status::PackedPackageStatus;
 using lusi::task::helper::TaskHelperManager;
 using lusi::task::helper::createTaskHelperTestImplementation1;
 

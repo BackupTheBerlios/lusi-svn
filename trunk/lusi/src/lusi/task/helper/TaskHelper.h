@@ -31,12 +31,6 @@
 #include <lusi/task/helper/ExecuteTaskHelperException.h>
 
 namespace lusi {
-namespace package {
-class ResourceMap;
-}
-}
-
-namespace lusi {
 namespace util {
 template<typename T>
 class SmartPtr;
@@ -54,9 +48,9 @@ namespace helper {
  * TaskHelper contains the real behaviour that executes a Task. Each TaskHelper
  * is an implementation of a Task, and a Task can have various TaskHelpers.
  *
- * A Task can use a TaskHelper only if the ResourceMap of the Package of the
- * Task is valid for the TaskHelper. It can be checked with
- * hasValidResourceMap().
+ * A Task can use a TaskHelper only if the resources of the Package of the
+ * Task are valid for the TaskHelper. It can be checked with
+ * hasValidResources().
  * This way, for the same Task, different TaskHelpers could be executed
  * depending on the Package being used.
  *
@@ -98,19 +92,18 @@ public:
     virtual ~TaskHelper();
 
     /**
-     * Returns True if this TaskHelper can be executed using the ResourceMap of
+     * Returns true if this TaskHelper can be executed using the resources of
      * the Package of the Task.
      * Must be implemented in derived classes.
      *
-     * @return bool True if the ResourceMap is valid, false otherwise.
+     * @return True if the resources are valid, false otherwise.
      */
-    virtual bool hasValidResourceMap() = 0;
+    virtual bool hasValidResources() = 0;
 
     /**
      * Executes this TaskHelper.
-     * This method must be called only on TaskHelpers with a valid resource map.
-     * If the resource map is invalid, the behaviour of this method is
-     * undefined.
+     * This method must be called only on TaskHelpers with valid resources.
+     * If the resources are invalid, the behaviour of this method is undefined.
      *
      * Configuration has been already initialized when this method is called.
      *

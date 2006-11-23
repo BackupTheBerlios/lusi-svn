@@ -365,8 +365,8 @@ private:
      * the Package, a null pointer is set.
      *
      * The TaskHelper set is the next suitable TaskHelper to be executed from
-     * the vector of TaskHelpers. A TaskHelper is suitable if the ResourceMap
-     * is valid for that TaskHelper.
+     * the vector of TaskHelpers. A TaskHelper is suitable if the resources
+     * (the configuration of the Package) are valid for that TaskHelper.
      * Once the TaskHelper is set, its configuration is initialized and the
      * TaskHelper configuration got from TaskConfiguration merged with it.
      */

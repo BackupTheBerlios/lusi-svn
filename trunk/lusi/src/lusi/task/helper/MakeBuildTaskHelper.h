@@ -47,9 +47,10 @@ TaskHelper* createMakeBuildTaskHelper(lusi::task::Task* task);
  * the package or cleans the files created when building it. It uses no
  * parameters.
  *
- * ResourceMaps that can be used with MakeBuildTaskHelper are those
- * with a "Makefile" file in the base directory of the package. The package
- * directory must be the first LocalFileResource in the ResourceMap.
+ * Resources that can be used with MakeBuildTaskHelper are those with a
+ * "Makefile" file in the base directory of the package. The package
+ * directory must be the first ConfigurationParameterLocalUrl in the
+ * resource files.
  *
  * No configuration is needed.
  */
@@ -58,9 +59,10 @@ public:
 
     /**
      * Creates a new MakeBuildTaskHelper.
-     * The package directory is the first LocalFileResource in the ResourceMap.
-     * If there's no LocalFileResource, or the first it's not a directory, an
-     * empty LocalUrl is used.
+     * The package directory is the first ConfigurationParameterLocalUrl in the
+     * resource files.
+     * If there's no ConfigurationParameterLocalUrl, or the first it's not a
+     * directory, an empty LocalUrl is used.
      * No checks about, for example, more than one package directory, are made.
      *
      * @param task The Task to help.

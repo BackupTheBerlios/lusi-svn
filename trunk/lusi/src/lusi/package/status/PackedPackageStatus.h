@@ -34,7 +34,7 @@ namespace status {
  * PackageStatus which represents packaged (tarred, zipped, compressed...)
  * packages.
  * This status is meant to be used whenever the Package is stored in a single
- * resource.
+ * file.
  *
  * This class follows the Singleton Design Pattern. Only one instance is
  * created, and it can be got with getInstance() method.

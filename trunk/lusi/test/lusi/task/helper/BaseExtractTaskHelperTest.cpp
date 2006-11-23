@@ -31,23 +31,23 @@
 #include "../TaskLoggerObserverTestImplementation.h"
 #include "../TaskProgressObserverTestImplementation.h"
 #include "../TaskTestImplementation.h"
-#include "../../package/LocalFileResource.h"
+#include "../../configuration/ConfigurationParameterLocalUrl.h"
 #include "../../package/Package.h"
 #include "../../package/PackageId.h"
-#include "../../package/ResourceMap.h"
+#include "../../util/LocalUrl.h"
 #include "../../util/SmartPtr.h"
 
 using std::string;
 using std::vector;
 
+using lusi::configuration::ConfigurationParameter;
 using lusi::configuration::ConfigurationParameterLocalUrl;
-using lusi::package::LocalFileResource;
 using lusi::package::Package;
 using lusi::package::PackageId;
-using lusi::package::Resource;
 using lusi::task::TaskTestImplementation;
 using lusi::task::TaskLoggerObserverTestImplementation;
 using lusi::task::TaskProgressObserverTestImplementation;
+using lusi::util::LocalUrl;
 using lusi::util::SmartPtr;
 
 using namespace lusi::task::helper;
@@ -56,7 +56,6 @@ using namespace lusi::task::helper;
 
 void BaseExtractTaskHelperTest::setUp() {
     mTask = new TaskTestImplementation("TaskTestImplementation");
-    mPackage = mTask->getPackage();
     mBaseExtractTaskHelper = new BaseExtractTaskHelperTestImplementation(
                     "BaseExtractTaskHelperTestImplementation", mTask);
     mTaskLoggerObserver = new TaskLoggerObserverTestImplementation();
@@ -75,8 +74,9 @@ void BaseExtractTaskHelperTest::tearDown() {
 
 void BaseExtractTaskHelperTest::testExecute() {
     delete mBaseExtractTaskHelper;
-    mPackage->getResourceMap()->add(
-                        SmartPtr<Resource>(new LocalFileResource("/someFile")));
+    mTask->getPackage()->getResourceFiles()->add(
+        SmartPtr<ConfigurationParameter>(new ConfigurationParameterLocalUrl(
+            "/someFile", LocalUrl("/someFile"))));
     mBaseExtractTaskHelper = new BaseExtractTaskHelperTestImplementation(
                     "BaseExtractTaskHelperTestImplementation", mTask);
 
@@ -86,28 +86,30 @@ void BaseExtractTaskHelperTest::testExecute() {
     CPPUNIT_ASSERT_EQUAL(true,
                 static_cast<BaseExtractTaskHelperTestImplementation*>
                         (mBaseExtractTaskHelper)->isExecutionPrepared());
-    CPPUNIT_ASSERT(
-            mTask->getPackage()->getResourceMap()->get("/someFile").isNull());
+    CPPUNIT_ASSERT(mTask->getPackage()->getResourceFiles()->
+                                                    get("/someFile").isNull());
 }
 
 void BaseExtractTaskHelperTest::testConstructor() {
     CPPUNIT_ASSERT_EQUAL(0, mBaseExtractTaskHelper->mNumberOfFilesToExtract);
     CPPUNIT_ASSERT_EQUAL(0, mBaseExtractTaskHelper->mNumberOfFilesExtracted);
     CPPUNIT_ASSERT_EQUAL(string(""),
-                         mBaseExtractTaskHelper->mFileToUnpack->getId());
+                         mBaseExtractTaskHelper->mFileToUnpack.getPath());
     CPPUNIT_ASSERT_EQUAL((ConfigurationParameterLocalUrl*)0,
                          mBaseExtractTaskHelper->mExtractionDirectory);
 
     delete mBaseExtractTaskHelper;
 
-    //Test with a ResourceMap containing a LocalResource
-    mPackage->getResourceMap()->add(
-                        SmartPtr<Resource>(new LocalFileResource("/someFile")));
+    //Test with a ConfigurationParameterMap containing a
+    //ConfigurationParameterLocalUrl
+    mTask->getPackage()->getResourceFiles()->add(
+        SmartPtr<ConfigurationParameter>(new ConfigurationParameterLocalUrl(
+            "/someFile", LocalUrl("/someFile"))));
     mBaseExtractTaskHelper = new BaseExtractTaskHelperTestImplementation(
                     "BaseExtractTaskHelperTestImplementation", mTask);
 
     CPPUNIT_ASSERT_EQUAL(string("/someFile"),
-                         mBaseExtractTaskHelper->mFileToUnpack->getId());
+                         mBaseExtractTaskHelper->mFileToUnpack.getPath());
     CPPUNIT_ASSERT_EQUAL((ConfigurationParameterLocalUrl*)0,
                          mBaseExtractTaskHelper->mExtractionDirectory);
 }
@@ -130,43 +132,43 @@ void BaseExtractTaskHelperTest::testFileExtracted() {
     mBaseExtractTaskHelper->fileExtracted("/firstFile");
 
     CPPUNIT_ASSERT_EQUAL((size_t)1,
-                        mTask->getPackage()->getResourceMap()->getAll().size());
+                mTask->getPackage()->getResourceFiles()->getAll().size());
 
-    SmartPtr<Resource> resource = mTask->getPackage()->
-                                                getResourceMap()->getAll()[0];
+    SmartPtr<ConfigurationParameter> parameter = mTask->getPackage()->
+                                        getResourceFiles()->getAll()[0];
 
     CPPUNIT_ASSERT_EQUAL(1, mBaseExtractTaskHelper->mNumberOfFilesExtracted);
     CPPUNIT_ASSERT_EQUAL(-1, mTaskProgressObserver->getProgress());
-    CPPUNIT_ASSERT(!resource.isNull());
-    CPPUNIT_ASSERT_EQUAL(string("/firstFile"), resource->getId());
-    CPPUNIT_ASSERT(!((SmartPtr<LocalFileResource>)resource).isNull());
+    CPPUNIT_ASSERT(!parameter.isNull());
+    CPPUNIT_ASSERT_EQUAL(string("/firstFile"), parameter->getId());
+    CPPUNIT_ASSERT(!parameter.isNull());
 
     //Test with total number of files set
     mBaseExtractTaskHelper->setNumberOfFilesToExtract(3);
     mBaseExtractTaskHelper->fileExtracted("/secondFile");
 
     CPPUNIT_ASSERT_EQUAL((size_t)2,
-                        mTask->getPackage()->getResourceMap()->getAll().size());
+                mTask->getPackage()->getResourceFiles()->getAll().size());
 
-    resource = mTask->getPackage()->getResourceMap()->getAll()[1];
+    parameter = mTask->getPackage()->getResourceFiles()->getAll()[1];
 
     CPPUNIT_ASSERT_EQUAL(2, mBaseExtractTaskHelper->mNumberOfFilesExtracted);
     CPPUNIT_ASSERT_EQUAL(66, mTaskProgressObserver->getProgress());
-    CPPUNIT_ASSERT(!resource.isNull());
-    CPPUNIT_ASSERT_EQUAL(string("/secondFile"), resource->getId());
-    CPPUNIT_ASSERT(!((SmartPtr<LocalFileResource>)resource).isNull());
+    CPPUNIT_ASSERT(!parameter.isNull());
+    CPPUNIT_ASSERT_EQUAL(string("/secondFile"), parameter->getId());
+    CPPUNIT_ASSERT(!parameter.isNull());
 
 
     mBaseExtractTaskHelper->fileExtracted("/thirdFile");
 
     CPPUNIT_ASSERT_EQUAL((size_t)3,
-                        mTask->getPackage()->getResourceMap()->getAll().size());
+                mTask->getPackage()->getResourceFiles()->getAll().size());
 
-    resource =mTask->getPackage()->getResourceMap()->getAll()[2];
+    parameter = mTask->getPackage()->getResourceFiles()->getAll()[2];
 
     CPPUNIT_ASSERT_EQUAL(3, mBaseExtractTaskHelper->mNumberOfFilesExtracted);
     CPPUNIT_ASSERT_EQUAL(100, mTaskProgressObserver->getProgress());
-    CPPUNIT_ASSERT(!resource.isNull());
-    CPPUNIT_ASSERT_EQUAL(string("/thirdFile"), resource->getId());
-    CPPUNIT_ASSERT(!((SmartPtr<LocalFileResource>)resource).isNull());
+    CPPUNIT_ASSERT(!parameter.isNull());
+    CPPUNIT_ASSERT_EQUAL(string("/thirdFile"), parameter->getId());
+    CPPUNIT_ASSERT(!parameter.isNull());
 }

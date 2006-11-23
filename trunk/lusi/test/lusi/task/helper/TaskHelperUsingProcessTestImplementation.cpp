@@ -41,7 +41,7 @@ TaskHelperUsingProcessTestImplementation::
 }
 
 /*
-inline bool TaskHelperUsingProcessTestImplementation::hasValidResourceMap() {
+inline bool TaskHelperUsingProcessTestImplementation::hasValidResources() {
     return true;
 }
 

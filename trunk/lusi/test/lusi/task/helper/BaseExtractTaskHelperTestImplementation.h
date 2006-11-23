@@ -59,7 +59,7 @@ public:
      *
      * @return bool True.
      */
-    virtual bool hasValidResourceMap() {
+    virtual bool hasValidResources() {
         return true;
     }
 

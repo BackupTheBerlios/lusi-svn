@@ -76,9 +76,9 @@ TaskHelper* createUndoMakeInstallTaskHelper(lusi::task::Task* task);
  * Task should be "MakeInstallTaskHelper" for install target and
  * "UndoMakeInstallTaskHelper" for uninstall target.
  *
- * ResourceMaps that can be used with MakeInstallTaskHelper are those
- * with a "Makefile" file in the base directory of the package. The package
- * directory must be the first LocalFileResource in the ResourceMap.
+ * Resources that can be used with MakeInstallTaskHelper are those with a
+ * "Makefile" file in the base directory of the package. The package directory must
+ * be the first ConfigurationParameterLocalUrl in the resource files.
  *
  * It may happen that the directory where the package will be installed or
  * uninstalled doesn't belongs to the current user and she doesn't have write

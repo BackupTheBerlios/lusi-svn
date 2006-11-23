@@ -23,16 +23,19 @@
 #include "PackageManager.h"
 #include "Profile.h"
 #include "ProfileManager.h"
-#include "ResourceMap.h"
+#include "../configuration/ConfigurationParameterMap.h"
 #include "../configuration/ConfigurationPaths.h"
 #include "../util/LocalFile.h"
 
 using std::string;
 using std::vector;
 
+using lusi::configuration::ConfigurationParameter;
+using lusi::configuration::ConfigurationParameterMap;
 using lusi::configuration::ConfigurationPaths;
 using lusi::package::status::PackageStatus;
 using lusi::util::LocalFile;
+using lusi::util::SmartPtr;
 
 using namespace lusi::package;
 
@@ -63,12 +66,14 @@ Package::Package(PackageId* packageId,
     mPackageStatus = packageStatus;
 
     mProfile = ProfileManager::getInstance()->getProfile(packageId);
-    mResourceMap = new ResourceMap();
+    mResources = new ConfigurationParameterMap("resources");
+    mResourceFiles = new ConfigurationParameterMap("files");
+    mResources->add(SmartPtr<ConfigurationParameter>(mResourceFiles));
 }
 
 Package::~Package() {
     delete mProfile;
-    delete mResourceMap;
+    delete mResources;
 }
 
 /*
@@ -80,14 +85,17 @@ inline Profile* Package::getProfile() {
     return mProfile;
 }
 
-inline ResourceMap* Package::getResourceMap() {
-    return mResourceMap;
+inline ConfigurationParameterMap* Package::getResources() {
+    return mResources;
+}
+
+inline SmartPtr<ConfigurationParameterMap> Package::getResourceFiles() {
+    return mResourceFiles;
 }
 
 inline const PackageStatus* Package::getPackageStatus() {
     return mPackageStatus;
 }
-
 */
 
 void Package::setPackageStatus(const PackageStatus* packageStatus) {

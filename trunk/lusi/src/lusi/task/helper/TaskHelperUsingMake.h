@@ -41,7 +41,7 @@ namespace helper {
  * This class provides the base implementation for those TaskHelpers which use
  * make command to be executed. This class extends TaskHelperUsingProcess.
  *
- * ResourceMaps are valid if they contain a "Makefile" file in the directory of
+ * Resources are valid if they contain a "Makefile" file in the directory of
  * the package. It also handles redirecting the output in stderr to notify
  * warnings instead of errors when needed (as make outputs warnings to stderr).
  * No configuration is used, although it can be overriden in derived classes.
@@ -59,17 +59,17 @@ public:
     virtual ~TaskHelperUsingMake();
 
     /**
-     * Returns True if the ResourceMap contains a Makefile to be executed by
+     * Returns true if the resource files contain a Makefile to be executed by
      * make command.
      * The "Makefile" is searched in the directory of the package. If the
-     * ResourceMap doesn't contain the Makefile, but it does exist in the
+     * resources don't contain the Makefile, but it does exist in the
      * directory, it also returns true.
      *
-     * @return True if the ResourceMap (or the actual directory) contains
+     * @return True if the resources (or the actual directory) contains
      *         a valid Makefile.
      * @todo Check for targets such as install in Makefile?
      */
-    virtual bool hasValidResourceMap();
+    virtual bool hasValidResources();
 
     /**
      * Called when new data is received in stderr.
@@ -106,9 +106,10 @@ protected:
 
     /**
      * Creates a new TaskHelperUsingMake.
-     * The package directory is the first LocalFileResource in the ResourceMap.
-     * If there's no LocalFileResource, or the first it's not a directory, an
-     * empty LocalUrl is used.
+     * The package directory is the first ConfigurationParameterLocalUrl in the
+     * resource files.
+     * If there's no ConfigurationParameterLocalUrl, or the first it's not a
+     * directory, an empty LocalUrl is used.
      * No checks about, for example, more than one package directory, are made.
      *
      * @param name The name of this TaskHelperUsingMake.

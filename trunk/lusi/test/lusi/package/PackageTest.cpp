@@ -19,12 +19,18 @@
  ***************************************************************************/
 
 #include "PackageTest.h"
+
+#define protected public
+#define private public
 #include "Package.h"
+#undef private
+#undef protected
+
 #include "PackageId.h"
 #include "ProfileManager.h"
-#include "ResourceMap.h"
 #include "status/BuiltPackageStatus.h"
 #include "status/UnknownPackageStatus.h"
+#include "../configuration/ConfigurationParameterMap.h"
 
 using lusi::package::status::BuiltPackageStatus;
 using lusi::package::status::PackageStatus;
@@ -44,38 +50,63 @@ void PackageTest::tearDown() {
     delete mPackageId;
 }
 
-void PackageTest::testGetPackageId() {
-    CPPUNIT_ASSERT_EQUAL(mPackageId, mPackage->getPackageId());
-}
-
-void PackageTest::testGetProfile() {
-    CPPUNIT_ASSERT_EQUAL(ProfileManager::getInstance()->getProfile(mPackageId),
-                         mPackage->getProfile());
-}
-
-void PackageTest::testGetResourceMap() {
-    CPPUNIT_ASSERT(mPackage->getResourceMap() != 0);
-    CPPUNIT_ASSERT(mPackage->getResourceMap()->getAll().size() == 0);
-}
-
-void PackageTest::testGetPackageStatus() {
+void PackageTest::testConstructor() {
     //Test constructor with default PackageStatus
-    CPPUNIT_ASSERT_EQUAL(static_cast<const PackageStatus*>
-                                (UnknownPackageStatus::getInstance()),
-                         mPackage->getPackageStatus());
+    CPPUNIT_ASSERT_EQUAL(mPackageId, mPackage->mPackageId);
+    CPPUNIT_ASSERT(UnknownPackageStatus::getInstance() ==
+                   mPackage->getPackageStatus());
+    CPPUNIT_ASSERT_EQUAL(ProfileManager::getInstance()->getProfile(mPackageId),
+                         mPackage->mProfile);
+    CPPUNIT_ASSERT(0 != mPackage->mResources);
+    CPPUNIT_ASSERT(0 != mPackage->mResourceFiles);
+    CPPUNIT_ASSERT_EQUAL((size_t)1,
+                         mPackage->mResources->getAll().size());
+    CPPUNIT_ASSERT(mPackage->mResourceFiles ==
+                   mPackage->mResources->get("files"));
 
+    //Test constructor with explicit PackageStatus
     delete mPackage;
     mPackage = new Package(mPackageId, BuiltPackageStatus::getInstance());
 
-    //Test constructor with explicit PackageStatus
-    CPPUNIT_ASSERT_EQUAL(static_cast<const PackageStatus*>
-                                (BuiltPackageStatus::getInstance()),
+    CPPUNIT_ASSERT(BuiltPackageStatus::getInstance() ==
+                   mPackage->getPackageStatus());
+    CPPUNIT_ASSERT_EQUAL(ProfileManager::getInstance()->getProfile(mPackageId),
+                         mPackage->mProfile);
+    CPPUNIT_ASSERT(0 != mPackage->mResources);
+    CPPUNIT_ASSERT(0 != mPackage->mResourceFiles);
+    CPPUNIT_ASSERT_EQUAL((size_t)1,
+                         mPackage->mResources->getAll().size());
+    CPPUNIT_ASSERT(mPackage->mResourceFiles ==
+                   mPackage->mResources->get("files"));
+}
+
+void PackageTest::testGetPackageId() {
+    CPPUNIT_ASSERT_EQUAL(mPackage->mPackageId, mPackage->getPackageId());
+}
+
+void PackageTest::testGetProfile() {
+    CPPUNIT_ASSERT_EQUAL(mPackage->mProfile, mPackage->getProfile());
+}
+
+void PackageTest::testGetResources() {
+    CPPUNIT_ASSERT_EQUAL(mPackage->mResources, mPackage->getResources());
+}
+
+void PackageTest::testGetResourceFiles() {
+    CPPUNIT_ASSERT_EQUAL(mPackage->mResourceFiles,
+                         mPackage->getResourceFiles());
+}
+
+void PackageTest::testGetPackageStatus() {
+    CPPUNIT_ASSERT_EQUAL(mPackage->mPackageStatus,
                          mPackage->getPackageStatus());
 }
 
 void PackageTest::testSetPackageStatus() {
+    mPackage->mPackageStatus = UnknownPackageStatus::getInstance();
+
     mPackage->setPackageStatus(BuiltPackageStatus::getInstance());
     CPPUNIT_ASSERT_EQUAL(static_cast<const PackageStatus*>
                                 (BuiltPackageStatus::getInstance()),
-                         mPackage->getPackageStatus());
+                         mPackage->mPackageStatus);
 }

@@ -20,9 +20,7 @@
 
 #include "TaskHelperUsingMake.h"
 #include "../../configuration/ConfigurationParameterMap.h"
-#include "../../package/LocalFileResource.h"
 #include "../../package/Package.h"
-#include "../../package/ResourceMap.h"
 #include "../../task/Task.h"
 #include "../../util/LocalFile.h"
 #include "../../util/LocalUrl.h"
@@ -30,8 +28,7 @@
 using std::string;
 using std::vector;
 
-using lusi::configuration::ConfigurationParameterMap;
-using lusi::package::LocalFileResource;
+using lusi::configuration::ConfigurationParameter;
 using lusi::task::Task;
 using lusi::util::LocalFile;
 using lusi::util::LocalUrl;
@@ -46,12 +43,12 @@ TaskHelperUsingMake::~TaskHelperUsingMake() {
     delete mPackageDirectory;
 }
 
-bool TaskHelperUsingMake::hasValidResourceMap() {
+bool TaskHelperUsingMake::hasValidResources() {
     if (mPackageDirectory->getPath() == "") {
         return false;
     }
 
-    if (mTask->getPackage()->getResourceMap()->get(
+    if (mTask->getPackage()->getResourceFiles()->get(
                     mPackageDirectory->getDirectory() + "Makefile") != 0) {
         return true;
     }
@@ -83,13 +80,12 @@ void TaskHelperUsingMake::receivedStderr(Process* process, const string& data) {
 
 TaskHelperUsingMake::TaskHelperUsingMake(const string& name, Task* task):
             TaskHelperUsingProcess(name, task), mReceivedStderrData("") {
-    vector< SmartPtr<LocalFileResource> > localFileResources = mTask->
-                getPackage()->getResourceMap()->
-                        getAllResourcesByType<LocalFileResource>();
-    if (localFileResources.size() == 0 ||
-                !LocalUrl(localFileResources[0]->getId()).isDirectory()) {
+    vector< SmartPtr<ConfigurationParameter> > resourceFiles = mTask->
+                getPackage()->getResourceFiles()->getAll();
+    if (resourceFiles.size() == 0 ||
+                !LocalUrl(resourceFiles[0]->getId()).isDirectory()) {
         mPackageDirectory = new LocalUrl("");
     } else {
-        mPackageDirectory = new LocalUrl(localFileResources[0]->getId());
+        mPackageDirectory = new LocalUrl(resourceFiles[0]->getId());
     }
 }

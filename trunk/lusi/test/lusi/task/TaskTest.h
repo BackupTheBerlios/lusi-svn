@@ -127,7 +127,7 @@ public:
     /**
      * Checks if nextTaskHelper() sets the suitable TaskHelpers for the Package
      * using valid and invalid TaskHelpers, no TaskHelpers, and only one
-     * TaskHelper without a valid ResourceMap.
+     * TaskHelper without valid resources.
      */
     void testNextTaskHelper();
 

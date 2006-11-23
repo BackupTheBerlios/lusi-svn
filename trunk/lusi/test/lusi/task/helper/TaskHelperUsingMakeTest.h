@@ -49,7 +49,7 @@ namespace helper {
 class TaskHelperUsingMakeTest: public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(TaskHelperUsingMakeTest);
     CPPUNIT_TEST(testConstructor);
-    CPPUNIT_TEST(testHasValidResourceMap);
+    CPPUNIT_TEST(testHasValidResources);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -74,7 +74,7 @@ public:
     /**
      * Checks if true is returned only if a valid Makefile is available.
      */
-    void testHasValidResourceMap();
+    void testHasValidResources();
 
 protected:
 

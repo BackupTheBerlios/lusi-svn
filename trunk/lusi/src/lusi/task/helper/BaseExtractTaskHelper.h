@@ -22,19 +22,11 @@
 #define LUSI_TASK_HELPER_BASEEXTRACTTASKHELPER_H
 
 #include <lusi/task/helper/TaskHelperUsingProcess.h>
-
-#include <lusi/util/SmartPtr.h>
+#include <lusi/util/LocalUrl.h>
 
 namespace lusi {
 namespace configuration {
 class ConfigurationParameterLocalUrl;
-class ConfigurationParameterMap;
-}
-}
-
-namespace lusi {
-namespace package {
-class LocalFileResource;
 }
 }
 
@@ -51,7 +43,7 @@ namespace helper {
  * contents of a packed Package. Real extracting is made by the Process created
  * when executing the TaskHelper.
  *
- * Derived classes must define hasValidResourceMap() method, as this
+ * Derived classes must define hasValidResources() method, as this
  * method depends on the specific extracter command used.
  * Moreover, derived classes must call fileExtracted(string) each time a file
  * is extracted.
@@ -83,7 +75,7 @@ public:
     /**
      * Extracts the package.
      * The generic implementation for ExtractTasks is execute parent method,
-     * and then remove the packed file from the ResourceMap.
+     * and then remove the packed file from the resource files.
      *
      * Derived classes can, however, redefine this method if this default
      * implementation doesn't suit their needs.
@@ -110,7 +102,7 @@ protected:
     /**
      * The packaged file to be unpacked.
      */
-    lusi::util::SmartPtr<lusi::package::LocalFileResource> mFileToUnpack;
+    lusi::util::LocalUrl mFileToUnpack;
 
     /**
      * The directory where the file will be extracted.
@@ -122,10 +114,11 @@ protected:
 
     /**
      * Creates a new BaseExtractTaskHelper.
-     * The mFileToUnpack is got from the ResourceMap of the Package. The only
-     * LocalFileResource in the ResourceMap is used. If the ResourceMap doesn't
-     * contain any LocalFileResource, or more than one, a new LocalFileResource
-     * is created with an empty id.
+     * The mFileToUnpack is the first and only ConfigurationParameterLocalUrl
+     * in the resource files.
+     * If the resource files doesn't contain any
+     * ConfigurationParameterLocalUrl, or more than one, an empty LocalUrl is
+     * used.
      *
      * @param name The name of the BaseExtractTaskHelper.
      * @param task The Task to help.
@@ -152,8 +145,8 @@ protected:
     }
 
     /**
-     * Notifies the extraction progress and adds a new Resource with the file to
-     * the ResourceMap.
+     * Notifies the extraction progress and adds a new resource with the file to
+     * the resource files.
      * The progress is notified only if the number of files to be extracted was
      * set.
      * This method must be called by child classes whenever a new file is

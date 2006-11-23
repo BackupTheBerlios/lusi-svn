@@ -28,8 +28,7 @@ namespace task {
 namespace helper {
 
 /**
- * Returns a new TaskHelperTestImplementation with name "1" and valid resource
- * map.
+ * Returns a new TaskHelperTestImplementation with name "1" and valid resources.
  *
  * @param task The Task to help.
  * @return The TaskHelperTestImplementation created.
@@ -65,10 +64,10 @@ public:
      *
      * @param task The task to help.
      * @param name The name of the TaskHelper.
-     * @param validResourceMap The value to return by hasValidResourceMap().
+     * @param validResources The value to return by hasValidResources().
      */
     TaskHelperTestImplementation(Task* task, const std::string& name,
-                                 bool validResourceMap = false);
+                                 bool validResources = false);
 
     /**
      * Destroys this TaskHelperTestImplementation.
@@ -78,18 +77,18 @@ public:
     /**
      * Returns the value set in the constructor.
      *
-     * @param resourceMap A ResourceMap.
+     * @return The value set in the constructor.
      */
-    virtual bool hasValidResourceMap() {
-        return mValidResourceMap;
+    virtual bool hasValidResources() {
+        return mValidResources;
     }
 
 private:
 
     /**
-     * The value to return in hasValidResourceMap().
+     * The value to return in hasValidResources().
      */
-    bool mValidResourceMap;
+    bool mValidResources;
 
 };
 

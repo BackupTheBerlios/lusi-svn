@@ -27,16 +27,16 @@
 #undef protected
 
 #include "../TaskTestImplementation.h"
-#include "../../package/LocalFileResource.h"
+#include "../../configuration/ConfigurationParameterLocalUrl.h"
 #include "../../package/Package.h"
-#include "../../package/ResourceMap.h"
 #include "../../util/LocalUrl.h"
 
 using std::string;
 
-using lusi::package::LocalFileResource;
-using lusi::package::Resource;
+using lusi::configuration::ConfigurationParameter;
+using lusi::configuration::ConfigurationParameterLocalUrl;
 using lusi::task::TaskTestImplementation;
+using lusi::util::LocalUrl;
 using lusi::util::SmartPtr;
 
 using namespace lusi::task::helper;
@@ -54,23 +54,25 @@ void TaskHelperUsingMakeTest::tearDown() {
 }
 
 void TaskHelperUsingMakeTest::testConstructor() {
-    //Test the empty ResourceMap used by default
+    //Test the empty resource files used by default
     CPPUNIT_ASSERT_EQUAL(string(""),
                          mTaskHelperUsingMake->mPackageDirectory->getPath());
 
-    //Test with a ResourceMap without a package directory
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/Makefile")));
+    //Test with resource files without a package directory
+    mTask->getPackage()->getResourceFiles()->add(
+        SmartPtr<ConfigurationParameter>(new ConfigurationParameterLocalUrl(
+            "/Makefile", LocalUrl("/Makefile"))));
     delete mTaskHelperUsingMake;
     mTaskHelperUsingMake = new TaskHelperUsingMakeTestImplementation(mTask);
 
     CPPUNIT_ASSERT_EQUAL(string(""),
                          mTaskHelperUsingMake->mPackageDirectory->getPath());
 
-    //Test with a ResourceMap with a valid package directory
-    mTask->getPackage()->getResourceMap()->remove("/Makefile");
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/package/")));
+    //Test with resource files with a valid package directory
+    mTask->getPackage()->getResourceFiles()->remove("/Makefile");
+    mTask->getPackage()->getResourceFiles()->add(
+        SmartPtr<ConfigurationParameter>(new ConfigurationParameterLocalUrl(
+            "/package/", LocalUrl("/package/"))));
     delete mTaskHelperUsingMake;
     mTaskHelperUsingMake = new TaskHelperUsingMakeTestImplementation(mTask);
 
@@ -78,34 +80,38 @@ void TaskHelperUsingMakeTest::testConstructor() {
                          mTaskHelperUsingMake->mPackageDirectory->getPath());
 }
 
-void TaskHelperUsingMakeTest::testHasValidResourceMap() {
-    //Test the empty ResourceMap used by default
-    CPPUNIT_ASSERT_EQUAL(false, mTaskHelperUsingMake->hasValidResourceMap());
+void TaskHelperUsingMakeTest::testHasValidResources() {
+    //Test the empty resource files used by default
+    CPPUNIT_ASSERT_EQUAL(false, mTaskHelperUsingMake->hasValidResources());
 
-    //Test with a ResourceMap without a package directory
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/Makefile")));
+    //Test with resource files without a package directory
+    mTask->getPackage()->getResourceFiles()->add(
+        SmartPtr<ConfigurationParameter>(new ConfigurationParameterLocalUrl(
+            "/Makefile", LocalUrl("/Makefile"))));
     delete mTaskHelperUsingMake;
     mTaskHelperUsingMake = new TaskHelperUsingMakeTestImplementation(mTask);
 
-    CPPUNIT_ASSERT_EQUAL(false, mTaskHelperUsingMake->hasValidResourceMap());
+    CPPUNIT_ASSERT_EQUAL(false, mTaskHelperUsingMake->hasValidResources());
 
-    //Test with a ResourceMap with a package directory but without a Makefile
-    mTask->getPackage()->getResourceMap()->remove("/Makefile");
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/package/")));
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/package/COPYING")));
+    //Test with resource files with a package directory but without a Makefile
+    mTask->getPackage()->getResourceFiles()->remove("/Makefile");
+    mTask->getPackage()->getResourceFiles()->add(
+        SmartPtr<ConfigurationParameter>(new ConfigurationParameterLocalUrl(
+            "/package/", LocalUrl("/package/"))));
+    mTask->getPackage()->getResourceFiles()->add(
+        SmartPtr<ConfigurationParameter>(new ConfigurationParameterLocalUrl(
+            "/package/COPYING", LocalUrl("/package/COPYING"))));
     delete mTaskHelperUsingMake;
     mTaskHelperUsingMake = new TaskHelperUsingMakeTestImplementation(mTask);
 
-    CPPUNIT_ASSERT_EQUAL(false, mTaskHelperUsingMake->hasValidResourceMap());
+    CPPUNIT_ASSERT_EQUAL(false, mTaskHelperUsingMake->hasValidResources());
 
-    //Test with a ResourceMap with a Makefile in the package directory
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/package/Makefile")));
+    //Test with resource files with a Makefile in the package directory
+    mTask->getPackage()->getResourceFiles()->add(
+        SmartPtr<ConfigurationParameter>(new ConfigurationParameterLocalUrl(
+            "/package/Makefile", LocalUrl("/package/Makefile"))));
     delete mTaskHelperUsingMake;
     mTaskHelperUsingMake = new TaskHelperUsingMakeTestImplementation(mTask);
 
-    CPPUNIT_ASSERT_EQUAL(true, mTaskHelperUsingMake->hasValidResourceMap());
+    CPPUNIT_ASSERT_EQUAL(true, mTaskHelperUsingMake->hasValidResources());
 }

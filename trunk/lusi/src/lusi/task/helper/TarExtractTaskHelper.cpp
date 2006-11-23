@@ -22,7 +22,6 @@
 
 #include "TarExtractTaskHelper.h"
 #include "../../configuration/ConfigurationParameterLocalUrl.h"
-#include "../../package/LocalFileResource.h"
 #include "../../util/LocalFile.h"
 #include "../../util/LocalUrl.h"
 #include "../../util/Process.h"
@@ -31,14 +30,11 @@
 using std::istringstream;
 using std::string;
 
-using lusi::configuration::ConfigurationParameterLocalUrl;
-using lusi::package::ResourceMap;
 using lusi::task::Task;
 using lusi::util::LocalFile;
 using lusi::util::LocalUrl;
 using lusi::util::Process;
 using lusi::util::ProcessRunner;
-using lusi::util::SmartPtr;
 
 using namespace lusi::task::helper;
 
@@ -58,7 +54,7 @@ TarExtractTaskHelper::TarExtractTaskHelper(Task* task):
 TarExtractTaskHelper::~TarExtractTaskHelper() {
 }
 
-bool TarExtractTaskHelper::hasValidResourceMap() {
+bool TarExtractTaskHelper::hasValidResources() {
     if (mTarFormat == "?") {
         return false;
     }
@@ -86,8 +82,7 @@ Process* TarExtractTaskHelper::getProcess() {
     setNumberOfFilesToExtract(calculateNumberOfFilesToExtract());
 
     Process* process = Process::newProcess(Process::PipeCommunication);
-    process->setWorkingDirectory(
-                    LocalUrl(mFileToUnpack->getId()).getDirectory());
+    process->setWorkingDirectory(mFileToUnpack.getDirectory());
 
     string extractCommand;
 
@@ -97,7 +92,7 @@ Process* TarExtractTaskHelper::getProcess() {
     }
 
     extractCommand += "tar -vx" + (mTarFormat!=""?" "+mTarFormat:"") +
-                      " -f " + LocalUrl(mFileToUnpack->getId()).getFileName();
+                      " -f " + mFileToUnpack.getFileName();
 
     if (!mExtractionDirectory->isDefaultValue()) {
         extractCommand += " -C " + mExtractionDirectory->getValue().getPath();
@@ -116,7 +111,7 @@ Process* TarExtractTaskHelper::getProcess() {
 //private:
 
 std::string TarExtractTaskHelper::inferTarFormat() {
-    string extension = LocalUrl(mFileToUnpack->getId()).getExtension();
+    string extension = mFileToUnpack.getExtension();
 
     if (extension == "gzip" || extension == "gz") {
         return "-z";
@@ -138,7 +133,7 @@ int TarExtractTaskHelper::calculateNumberOfFilesToExtract() {
     ProcessRunner processRunner;
     Process* process = processRunner.getProcess();
     (*process) << "/bin/sh" << "-c" <<
-                  "tar -t " + mTarFormat + " -f " + mFileToUnpack->getId() +
+                  "tar -t " + mTarFormat + " -f " + mFileToUnpack.getPath() +
                   " | wc -l" ;
 
     notifyTaskLogger("Calculating number of files to extract (" +

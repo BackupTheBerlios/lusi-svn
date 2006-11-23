@@ -29,16 +29,16 @@
 #undef protected
 
 #include "../TaskTestImplementation.h"
-#include "../../package/LocalFileResource.h"
+#include "../../configuration/ConfigurationParameterLocalUrl.h"
 #include "../../package/Package.h"
-#include "../../package/ResourceMap.h"
 #include "../../util/SmartPtr.h"
 
 using std::string;
 
-using lusi::package::LocalFileResource;
-using lusi::package::Resource;
+using lusi::configuration::ConfigurationParameter;
+using lusi::configuration::ConfigurationParameterLocalUrl;
 using lusi::task::TaskTestImplementation;
+using lusi::util::LocalUrl;
 using lusi::util::Process;
 using lusi::util::SmartPtr;
 
@@ -63,10 +63,14 @@ void MakeBuildTaskHelperTest::testConstructor() {
 }
 
 void MakeBuildTaskHelperTest::testGetProcess() {
-    mTask->getPackage()->getResourceMap()->add(
-            SmartPtr<Resource>(new LocalFileResource("/package/")));
-    mTask->getPackage()->getResourceMap()->add(
-        SmartPtr<Resource>(new LocalFileResource("/package/subDirectory/")));
+    mTask->getPackage()->getResourceFiles()->add(
+        SmartPtr<ConfigurationParameter>(
+            new ConfigurationParameterLocalUrl("/package/",
+                LocalUrl("/package/"))));
+    mTask->getPackage()->getResourceFiles()->add(
+        SmartPtr<ConfigurationParameter>(
+            new ConfigurationParameterLocalUrl("/package/subDirectory/",
+                LocalUrl("/package/subDirectory/"))));
     delete mMakeBuildTaskHelper;
     mMakeBuildTaskHelper = new MakeBuildTaskHelper(mTask);
 

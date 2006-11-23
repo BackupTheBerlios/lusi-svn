@@ -26,12 +26,6 @@
 #include <lusi/task/helper/BaseExtractTaskHelper.h>
 
 namespace lusi {
-namespace package {
-class ResourceMap;
-}
-}
-
-namespace lusi {
 namespace task {
 namespace helper {
 
@@ -53,8 +47,8 @@ TaskHelper* createTarExtractTaskHelper(lusi::task::Task* task);
  * This ExtractTask implementation adds support for tar command. This command
  * extracts the contents of packed files supported by it.
  *
- * ResourceMaps that can be used with TarExtractTaskHelper are those
- * with a packed file with a format supported by tar, containing the Package.
+ * Resources that can be used with TarExtractTaskHelper are those with a packed
+ * file with a format supported by tar, containing the Package.
  *
  * No specific configuration is needed, only the generic for
  * BaseExtractTaskHelpers.
@@ -75,13 +69,13 @@ public:
     virtual ~TarExtractTaskHelper();
 
     /**
-     * Returns True if the ResourceMap contains a packed file with the name of
+     * Returns true if the resources contain a packed file with the name of
      * the Package in a format supported by "tar" command (those are tar, gzip
      * and bzip2).
      *
-     * @return bool True if the ResourceMap contains the packed Package.
+     * @return True if the resources contain the packed Package.
      */
-    virtual bool hasValidResourceMap();
+    virtual bool hasValidResources();
 
     /**
      * Called when new data is received in stdout.

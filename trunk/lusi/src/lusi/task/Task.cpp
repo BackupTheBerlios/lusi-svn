@@ -168,7 +168,7 @@ void Task::nextTaskHelper() {
     for (; !validTaskHelper && mTaskHelpersIterator != mTaskHelpers.end();
             ++mTaskHelpersIterator) {
         taskHelper = *mTaskHelpersIterator;
-        if (taskHelper->hasValidResourceMap()) {
+        if (taskHelper->hasValidResources()) {
             validTaskHelper = true;
         } else {
             taskHelper = 0;

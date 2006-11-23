@@ -25,7 +25,6 @@ using std::string;
 
 using lusi::configuration::ConfigurationParameterMap;
 using lusi::configuration::InvalidConfigurationException;
-using lusi::package::ResourceMap;
 
 using namespace lusi::task::helper;
 
@@ -48,16 +47,16 @@ TaskHelper* lusi::task::helper::createTaskHelperTestImplementation3(
 
 TaskHelperTestImplementation::TaskHelperTestImplementation(Task* task,
                                     const string& name,
-                                    bool validResourceMap /* = false*/):
+                                    bool validResources /* = false*/):
                             TaskHelper(name, task) {
-    mValidResourceMap = validResourceMap;
+    mValidResources = validResources;
 }
 
 TaskHelperTestImplementation::~TaskHelperTestImplementation() {
 }
 
 /*
-inline bool TaskHelperTestImplementation::hasValidResourceMap() {
-    return mValidResourceMap;
+inline bool TaskHelperTestImplementation::hasValidResources() {
+    return mValidResources;
 }
 */

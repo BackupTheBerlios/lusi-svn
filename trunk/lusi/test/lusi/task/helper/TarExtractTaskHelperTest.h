@@ -58,7 +58,7 @@ namespace helper {
  */
 class TarExtractTaskHelperTest: public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(TarExtractTaskHelperTest);
-    CPPUNIT_TEST(testHasValidResourceMap);
+    CPPUNIT_TEST(testHasValidResources);
     CPPUNIT_TEST(testReceivedStdout);
     CPPUNIT_TEST(testGetProcess);
     CPPUNIT_TEST(testInferTarFormat);
@@ -80,7 +80,7 @@ public:
      * Checks if true is returned only if the format of the packed file is
      * supported.
      */
-    void testHasValidResourceMap();
+    void testHasValidResources();
 
     /**
      * Checks the notification to the base class about extracted files.

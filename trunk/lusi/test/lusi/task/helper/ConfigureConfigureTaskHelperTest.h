@@ -57,7 +57,7 @@ namespace helper {
 class ConfigureConfigureTaskHelperTest: public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(ConfigureConfigureTaskHelperTest);
     CPPUNIT_TEST(testConstructor);
-    CPPUNIT_TEST(testHasValidResourceMap);
+    CPPUNIT_TEST(testHasValidResources);
     CPPUNIT_TEST(testGetProcess);
     CPPUNIT_TEST_SUITE_END();
 
@@ -81,7 +81,7 @@ public:
     /**
      * Checks if true is returned only if a valid configure script is available.
      */
-    void testHasValidResourceMap();
+    void testHasValidResources();
 
     /**
      * Checks if the Process arguments set are correct.
