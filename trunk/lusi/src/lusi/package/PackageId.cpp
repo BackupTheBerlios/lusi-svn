@@ -249,6 +249,6 @@ PackageId& PackageId::operator=(const PackageId& packageId) {
     return *this;
 }
 
-bool PackageId::operator==(const PackageId& packageId) {
+bool PackageId::operator==(const PackageId& packageId) const {
     return mName == packageId.mName && mVersion == packageId.mVersion;
 }

@@ -126,7 +126,7 @@ public:
      * @return True if the PackageId is equal to this PackageId, false
      *         otherwise.
      */
-    bool operator==(const PackageId& packageId);
+    bool operator==(const PackageId& packageId) const;
 
 protected:
 
