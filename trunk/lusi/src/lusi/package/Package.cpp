@@ -23,16 +23,21 @@
 #include "PackageManager.h"
 #include "Profile.h"
 #include "ProfileManager.h"
+#include "../configuration/ConfigurationLoader.h"
 #include "../configuration/ConfigurationParameterMap.h"
 #include "../configuration/ConfigurationPaths.h"
+#include "../configuration/ConfigurationSaver.h"
 #include "../util/LocalFile.h"
 
 using std::string;
 using std::vector;
 
+using lusi::configuration::ConfigurationLoader;
 using lusi::configuration::ConfigurationParameter;
 using lusi::configuration::ConfigurationParameterMap;
 using lusi::configuration::ConfigurationPaths;
+using lusi::configuration::ConfigurationSaver;
+using lusi::configuration::PersistenceException;
 using lusi::package::status::PackageStatus;
 using lusi::util::LocalFile;
 using lusi::util::SmartPtr;
@@ -90,7 +95,7 @@ Profile* Package::getProfile() {
 }
 
 ConfigurationParameterMap* Package::getResources() {
-    if (!mResources) {
+    if (!mResources && !loadResources()) {
         mResources = new ConfigurationParameterMap("resources");
     }
 
@@ -104,10 +109,10 @@ ConfigurationParameterMap* Package::getResourceFiles() {
         if (resourceFiles.isNull()) {
             resourceFiles = SmartPtr<ConfigurationParameter>(
                                 new ConfigurationParameterMap("files"));
+            mResources->add(resourceFiles);
         }
 
         mResourceFiles = getPtr(resourceFiles);
-        mResources->add(resourceFiles);
     }
 
     return mResourceFiles;
@@ -121,5 +126,30 @@ inline const PackageStatus* Package::getPackageStatus() {
 
 void Package::setPackageStatus(const PackageStatus* packageStatus) {
     mPackageStatus = packageStatus;
+    saveResources();
     PackageManager::getInstance()->updatePackage(this);
+}
+
+//private:
+
+bool Package::loadResources() {
+    try {
+        mResources = ConfigurationLoader().load(
+                ConfigurationPaths().getPackageResourcesFile(mPackageId));
+    } catch (PersistenceException e) {
+        return false;
+    }
+
+    return true;
+}
+
+bool Package::saveResources() {
+    try {
+        ConfigurationSaver().save(getResources(),
+            ConfigurationPaths().getPackageResourcesFile(mPackageId));
+    } catch (PersistenceException e) {
+        return false;
+    }
+
+    return true;
 }

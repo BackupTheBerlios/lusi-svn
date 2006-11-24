@@ -100,6 +100,14 @@ void ConfigurationPathsTest::testGetPackageFile() {
                          mConfigurationPaths->getPackageFile(packageId));
 }
 
+void ConfigurationPathsTest::testGetPackageResourcesFile() {
+    PackageId packageId("testPackage");
+
+    CPPUNIT_ASSERT_EQUAL(mConfigurationPaths->getPackageDirectory(packageId) +
+                                                        "package-resources.xml",
+                    mConfigurationPaths->getPackageResourcesFile(packageId));
+}
+
 void ConfigurationPathsTest::testGetTaskFile() {
     PackageId packageId("testPackage");
     string taskId("MakeTests");

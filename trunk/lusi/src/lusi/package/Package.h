@@ -209,6 +209,24 @@ private:
 
 
     /**
+     * Loads the resources for this Package from hard disk in mResources.
+     * If the resources aren't loaded, it can be due to an external problem, or
+     * due to not to have been previously saved.
+     *
+     * @return True if the resources were loaded, false otherwise.
+     */
+    bool loadResources();
+
+    /**
+     * Saves  the resources.
+     * If the resources aren't saved, it is due to an external problem (lack of
+     * permissions, for example).
+     *
+     * @return True if the resources were saved, false otherwise.
+     */
+    bool saveResources();
+
+    /**
      * Copy constructor disabled.
      */
     Package(const Package& package);

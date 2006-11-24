@@ -44,6 +44,7 @@ class ConfigurationPathsTest: public CppUnit::TestFixture {
     CPPUNIT_TEST(testGetPackagesBaseDirectory);
     CPPUNIT_TEST(testGetPackageDirectory);
     CPPUNIT_TEST(testGetPackageFile);
+    CPPUNIT_TEST(testGetPackageResourcesFile);
     CPPUNIT_TEST(testGetTaskFile);
     CPPUNIT_TEST_SUITE_END();
 
@@ -88,6 +89,12 @@ public:
      * "package-data.xml".
      */
     void testGetPackageFile();
+
+    /**
+     * Tests if the returned file is the package directory followed by
+     * "package-resources.xml".
+     */
+    void testGetPackageResourcesFile();
 
     /**
      * Tests if the returned file is the package directory followed by

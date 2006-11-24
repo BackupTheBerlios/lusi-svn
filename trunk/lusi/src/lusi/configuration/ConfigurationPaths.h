@@ -112,6 +112,21 @@ public:
     std::string getPackageFile(const lusi::package::PackageId& packageId);
 
     /**
+     * Returns the path to the configuration file of the Package resources
+     * identified by the specified PackageId.
+     * It is
+     * "$HOME/.lusi/package/${packageName}/${packageVersion}/
+     * package-resources.xml".
+     * The file isn't guaranteed to exist.
+     *
+     * @param packageId The PackageId to get the name and version from.
+     * @return The path to the configuration file of the Package resources
+     *         identified by the specified PackageId.
+     */
+    std::string getPackageResourcesFile(
+                        const lusi::package::PackageId& packageId);
+
+    /**
      * Returns the path to the configuration file of the specified Task.
      * It is
      * "$HOME/.lusi/package/${packageName}/${packageVersion}/${taskId}.xml".

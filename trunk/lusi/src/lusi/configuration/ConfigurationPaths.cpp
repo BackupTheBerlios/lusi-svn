@@ -65,6 +65,10 @@ string ConfigurationPaths::getPackageFile(const PackageId& packageId) {
     return getPackageDirectory(packageId) + "package-data.xml";
 }
 
+string ConfigurationPaths::getPackageResourcesFile(const PackageId& packageId) {
+    return getPackageDirectory(packageId) + "package-resources.xml";
+}
+
 string ConfigurationPaths::getTaskFile(const string& taskId,
                                        const PackageId& packageId) {
     return getPackageDirectory(packageId) + taskId + ".xml";
