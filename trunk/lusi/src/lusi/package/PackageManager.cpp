@@ -86,49 +86,44 @@ vector<string> PackageManager::getPackageNames() {
 }
 
 PackageManager::~PackageManager() {
+    for (uint i=0; i<mPackages.size(); ++i) {
+        delete mPackages[i];
+    }
 }
 
-vector<PackageId> PackageManager::getPackageIds(
-                                        const PackageStatus* packageStatus) {
-    vector<PackageId> packageIds;
+/*
+inline vector<Package*> PackageManager::getPackages() {
+    return mPackages;
+}
+*/
 
-    for (uint i=0; i<mPackageDatas.size(); ++i) {
-        if (mPackageDatas[i].packageStatus == packageStatus) {
-            packageIds.push_back(mPackageDatas[i].packageId);
+vector<Package*> PackageManager::getPackages(
+                                        const PackageStatus* packageStatus) {
+    vector<Package*> packages;
+
+    for (uint i=0; i<mPackages.size(); ++i) {
+        if (mPackages[i]->getPackageStatus() == packageStatus) {
+            packages.push_back(mPackages[i]);
         }
     }
 
-    return packageIds;
+    return packages;
 }
 
-SmartPtr<Package> PackageManager::getPackage(const PackageId& packageId) {
-    for (uint i=0; i<mPackageDatas.size(); ++i) {
-        if (mPackageDatas[i].packageId == packageId) {
-            return SmartPtr<Package>(
-                        new Package(packageId, mPackageDatas[i].packageStatus));
+Package* PackageManager::getPackage(const PackageId& packageId) {
+    for (uint i=0; i<mPackages.size(); ++i) {
+        if (mPackages[i]->getPackageId() == packageId) {
+            return mPackages[i];
         }
     }
 
     Package* package = new Package(packageId);
+    mPackages.push_back(package);
 
-    struct PackageData packageData;
-    packageData.packageId = packageId;
-    packageData.packageStatus = package->getPackageStatus();
-
-    mPackageDatas.push_back(packageData);
-
-    return SmartPtr<Package>(package);
+    return package;
 }
 
 bool PackageManager::updatePackage(Package* package) {
-    bool found = false;
-    for (uint i=0; !found && i<mPackageDatas.size(); ++i) {
-        if (mPackageDatas[i].packageId == package->getPackageId()) {
-            mPackageDatas[i].packageStatus = package->getPackageStatus();
-            found = true;
-        }
-    }
-
     return savePackage(package);
 }
 
@@ -187,11 +182,8 @@ bool PackageManager::loadPackage(const PackageId& packageId) {
         packageStatus = UnpackedPackageStatus::getInstance();
     }
 
-    struct PackageData packageData;
-    packageData.packageId = packageId;
-    packageData.packageStatus = packageStatus;
-
-    mPackageDatas.push_back(packageData);
+    Package* package = new Package(packageId, packageStatus);
+    mPackages.push_back(package);
 
     return true;
 }

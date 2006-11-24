@@ -32,6 +32,7 @@
 #include "status/UnknownPackageStatus.h"
 #include "../configuration/ConfigurationParameterMap.h"
 
+using lusi::configuration::ConfigurationParameterMap;
 using lusi::package::status::BuiltPackageStatus;
 using lusi::package::status::PackageStatus;
 using lusi::package::status::UnknownPackageStatus;
@@ -55,14 +56,10 @@ void PackageTest::testConstructor() {
     CPPUNIT_ASSERT(*mPackageId == mPackage->mPackageId);
     CPPUNIT_ASSERT(UnknownPackageStatus::getInstance() ==
                    mPackage->getPackageStatus());
-    CPPUNIT_ASSERT_EQUAL(ProfileManager::getInstance()->getProfile(*mPackageId),
-                         mPackage->mProfile);
-    CPPUNIT_ASSERT(0 != mPackage->mResources);
-    CPPUNIT_ASSERT(0 != mPackage->mResourceFiles);
-    CPPUNIT_ASSERT_EQUAL((size_t)1,
-                         mPackage->mResources->getAll().size());
-    CPPUNIT_ASSERT(mPackage->mResourceFiles ==
-                   mPackage->mResources->get("files"));
+    CPPUNIT_ASSERT_EQUAL((Profile*)0, mPackage->mProfile);
+    CPPUNIT_ASSERT_EQUAL((ConfigurationParameterMap*)0, mPackage->mResources);
+    CPPUNIT_ASSERT_EQUAL((ConfigurationParameterMap*)0,
+                         mPackage->mResourceFiles);
 
     //Test constructor with explicit PackageStatus
     delete mPackage;
@@ -70,14 +67,10 @@ void PackageTest::testConstructor() {
 
     CPPUNIT_ASSERT(BuiltPackageStatus::getInstance() ==
                    mPackage->getPackageStatus());
-    CPPUNIT_ASSERT_EQUAL(ProfileManager::getInstance()->getProfile(*mPackageId),
-                         mPackage->mProfile);
-    CPPUNIT_ASSERT(0 != mPackage->mResources);
-    CPPUNIT_ASSERT(0 != mPackage->mResourceFiles);
-    CPPUNIT_ASSERT_EQUAL((size_t)1,
-                         mPackage->mResources->getAll().size());
-    CPPUNIT_ASSERT(mPackage->mResourceFiles ==
-                   mPackage->mResources->get("files"));
+    CPPUNIT_ASSERT_EQUAL((Profile*)0, mPackage->mProfile);
+    CPPUNIT_ASSERT_EQUAL((ConfigurationParameterMap*)0, mPackage->mResources);
+    CPPUNIT_ASSERT_EQUAL((ConfigurationParameterMap*)0,
+                         mPackage->mResourceFiles);
 }
 
 void PackageTest::testGetPackageId() {
@@ -85,15 +78,31 @@ void PackageTest::testGetPackageId() {
 }
 
 void PackageTest::testGetProfile() {
+    CPPUNIT_ASSERT_EQUAL((Profile*)0, mPackage->mProfile);
+
     CPPUNIT_ASSERT_EQUAL(mPackage->mProfile, mPackage->getProfile());
+    CPPUNIT_ASSERT_EQUAL(ProfileManager::getInstance()->getProfile(*mPackageId),
+                         mPackage->mProfile);
+    CPPUNIT_ASSERT_EQUAL(mPackage->getProfile(), mPackage->getProfile());
 }
 
 void PackageTest::testGetResources() {
+    CPPUNIT_ASSERT_EQUAL((ConfigurationParameterMap*)0, mPackage->mResources);
+
     CPPUNIT_ASSERT_EQUAL(mPackage->mResources, mPackage->getResources());
+    CPPUNIT_ASSERT(0 != mPackage->mResources);
+    CPPUNIT_ASSERT_EQUAL(mPackage->getResources(), mPackage->getResources());
 }
 
 void PackageTest::testGetResourceFiles() {
+    CPPUNIT_ASSERT_EQUAL((ConfigurationParameterMap*)0,
+                         mPackage->mResourceFiles);
+
     CPPUNIT_ASSERT_EQUAL(mPackage->mResourceFiles,
+                         mPackage->getResourceFiles());
+    CPPUNIT_ASSERT(mPackage->mResources->get("files") ==
+                   mPackage->mResourceFiles);
+    CPPUNIT_ASSERT_EQUAL(mPackage->getResourceFiles(),
                          mPackage->getResourceFiles());
 }
 

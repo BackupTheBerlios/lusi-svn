@@ -40,13 +40,6 @@ class PackageStatus;
 }
 
 namespace lusi {
-namespace util {
-template<typename T>
-class SmartPtr;
-}
-}
-
-namespace lusi {
 namespace package {
 
 /**
@@ -54,13 +47,20 @@ namespace package {
  *
  * Manager for Packages.
  * PackageManager handles the Packages used in this and previous executions of
- * LUSI. It contains the information to associate a PackageId with their
- * PackageStatus, so it can be queried about what PackageIds are associated with
- * a specific PackageStatus through getPackageIds(PackageStatus*).
+ * LUSI. Each Package is associated with only one PackageId. However, several
+ * Packages can be in the same status.
+ *
+ * This class can be queried about what Packages are associated with a specific
+ * PackageStatus through getPackages(PackageStatus*). This is only an overloaded
+ * version of getPackages(), provided for convenience.
  *
  * Packages shouldn't be created directly. Instead, they should always be got
- * using this class through getPackage(const PackageId&). The Package is saved
- * automatically each time its status is set.
+ * using this class through getPackage(const PackageId&) or
+ * getPackages(PackageStatus*). The former can be used to get registered
+ * Packages or register new Packages, while the latter can only be used to get
+ * already registered Packages.
+ *
+ * The Packages are updated automatically each time their status is set.
  *
  * This class follows the Singleton Design Pattern. Only one instance is
  * created, and it can be got with getInstance() method.
@@ -95,40 +95,45 @@ public:
     virtual ~PackageManager();
 
     /**
-     * Returns all the registered PackageIds for the specified PackageStatus.
-     * The returned PackageIds can be used to get the registered Packages
-     * through getPackage(const PackageId&).
+     * Returns all the registered Packages.
      *
-     * @return All the registered PackageIds for the specified PackageStatus.
-     * @see getPackage(const PackageId&)
+     * @return All the registered Packages.
      */
-    std::vector<PackageId> getPackageIds(
+    std::vector<Package*> getPackages() {
+        return mPackages;
+    }
+
+    /**
+     * Returns all the registered Packages in the specified PackageStatus.
+     * This is only an overloaded version of getPackages(), provided for
+     * convenience.
+     *
+     * @param packageStatus The PackageStatus.
+     * @return All the registered Packages in the specified PackageStatus.
+     */
+    std::vector<Package*> getPackages(
                     const lusi::package::status::PackageStatus* packageStatus);
 
     /**
-     * Gets a Package for the specified PackageId.
-     * The PackageId can have been got using getPackageIds(PackageStatus*), or
-     * be a new PackageId different from all the returned by
-     * getPackageIds(PackageStatus*).
+     * Gets the Package with the specified PackageId.
+     * The PackageId can be the one of an already registered Package, or
+     * be a new PackageId.
      *
-     * If the PackageId was returned by getPackageIds(PackageStatus), the
-     * returned Package will be initialized with that PackageId and its
-     * associated PackageStatus.
+     * If the PackageId is from an already registered Package, that Package is
+     * returned.
      *
-     * If the PackageId was new, the returned Package will be initialized with
-     * the PackageId and the default PackageStatus.
+     * If the PackageId was new, a new Package is registered and returned. The
+     * Package will use UnknownPackageStatus.
      *
      * @param packageId The PackageId to get the Package.
-     * @return A Package for the specified PackageId initialized with the
-     *         available information.
-     * @see getPackageIds(PackageStatus*)
+     * @return The Package with the specified PackageId.
      */
-    lusi::util::SmartPtr<Package> getPackage(const PackageId& packageId);
+    Package* getPackage(const PackageId& packageId);
 
     /**
-     * Updates the status associated with the PackageId of the Package and saves
-     * the Package.
-     * The Package must have been got using getPackage(const PackageId&).
+     * Saves the Package.
+     * The Package must have been got using this class (not creating it
+     * "manually").
      * This method is called automatically when the PackageStatus of a Package
      * is set.
      *
@@ -140,40 +145,17 @@ public:
 private:
 
     /**
-     * Container to hold a PackageId and its associated PackageStatus.
-     */
-    struct PackageData {
-
-        /**
-         * Creates a new PackageData with trivial attributes.
-         */
-        PackageData(): packageId("") {
-        }
-
-        /**
-         * The PackageId.
-         */
-        PackageId packageId;
-
-        /**
-         * The PackageStatus associated to the PackageId.
-         */
-        const lusi::package::status::PackageStatus* packageStatus;
-
-    };
-
-    /**
      * The only created instance of this class.
      * It's created when getInstance() is called for first time.
      */
     static PackageManager* sInstance;
 
     /**
-     * The data of all the registered packages.
+     * The registered packages.
      * It contains the loaded Packages and the ones created through
      * getPackage(const PackageId&).
      */
-    std::vector<PackageData> mPackageDatas;
+    std::vector<Package*> mPackages;
 
 
 
@@ -186,9 +168,9 @@ private:
     PackageManager();
 
     /**
-     * Loads all the saved PackageIds and their associated PackageStatus.
+     * Loads all the saved Packages.
      * All the saved Packages and each of their versions are loaded. Also, it is
-     * loaded the PackageId without any version (if it was saved).
+     * loaded the Package without any version (if it was saved).
      *
      * @see loadPackage(const PackageId&)
      */
@@ -196,9 +178,8 @@ private:
 
     /**
      * Loads the saved Package identified by the PackageId.
-     * Loading a Package in this context doesn't mean creating a new Package.
-     * Instead, the PackageId is added to mPackageDatas with its associated
-     * PackageStatus.
+     * Loading a Package in this context only means creating the new Package,
+     * but not initializing its Profile nor resources.
      *
      * @param packageId The PackageId of the Package to load.
      * @return True if the Package was loaded, false otherwise.

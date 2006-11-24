@@ -61,6 +61,9 @@ namespace package {
  * Packages have also a specific PackageStatus, used to describe which Tasks
  * can be executed over the Package.
  *
+ * Packages shouldn't be created directly. Instead, they should always be got
+ * through PackageManager.
+ *
  * The configuration of the Package is composed of the different resources that
  * form the Package in the current PackageStatus. They are added directly under
  * the root ConfigurationParameterMap of the configuration, returned by
@@ -74,13 +77,21 @@ namespace package {
  * are ConfigurationParameterLocalUrl with an id equal to the path of the
  * default LocalUrl.
  *
- * The resources are updated when Tasks are executed to reflect the changes
- * made by the Tasks, if any.
+ * The resources are updated by Tasks when they are executed to reflect the
+ * changes made, if any.
  *
  * The only property of a Package that can be set is the PackageStatus, which
  * is updated by Tasks when they finish their execution. However, an initial
  * PackageStatus should be provided by classes which creates Packages. If not
  * specified, default PackageStatus is set to UnknownPackageStatus.
+ *
+ * This class follows a Proxy Design Pattern. The Profile and the resources are
+ * only loaded on demand, when their get method is called. Resource files also
+ * load the general resources when they are got. This approach makes possible
+ * to have a long list of Packages which only contains their PackageId and
+ * their PackageStatus instead of the full data of the class.
+ *
+ * @see PackageManager
  */
 class Package {
 public:
@@ -130,18 +141,14 @@ public:
      *
      * @return The Profile.
      */
-    Profile* getProfile() {
-        return mProfile;
-    }
+    Profile* getProfile();
 
     /**
      * Returns the resources in a ConfigurationParameterMap.
      *
      * @return The resources in a ConfigurationParameterMap.
      */
-    lusi::configuration::ConfigurationParameterMap* getResources() {
-        return mResources;
-    }
+    lusi::configuration::ConfigurationParameterMap* getResources();
 
     /**
      * Returns the ConfigurationParameterMap containing the files of this
@@ -150,9 +157,7 @@ public:
      * @return The ConfigurationParameterMap containing the files of this
      *         Package.
      */
-    lusi::configuration::ConfigurationParameterMap* getResourceFiles() {
-        return mResourceFiles;
-    }
+    lusi::configuration::ConfigurationParameterMap* getResourceFiles();
 
     /**
      * Returns the PackageStatus.

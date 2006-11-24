@@ -65,10 +65,9 @@ Package::Package(const PackageId& packageId,
     mPackageId(packageId) {
     mPackageStatus = packageStatus;
 
-    mProfile = ProfileManager::getInstance()->getProfile(packageId);
-    mResources = new ConfigurationParameterMap("resources");
-    mResourceFiles = new ConfigurationParameterMap("files");
-    mResources->add(SmartPtr<ConfigurationParameter>(mResourceFiles));
+    mProfile = 0;
+    mResources = 0;
+    mResourceFiles = 0;
 }
 
 Package::~Package() {
@@ -80,19 +79,41 @@ Package::~Package() {
 inline const PackageId& Package::getPackageId() {
     return mPackageId;
 }
+*/
 
-inline Profile* Package::getProfile() {
+Profile* Package::getProfile() {
+    if (!mProfile) {
+        mProfile = ProfileManager::getInstance()->getProfile(mPackageId);
+    }
+
     return mProfile;
 }
 
-inline ConfigurationParameterMap* Package::getResources() {
+ConfigurationParameterMap* Package::getResources() {
+    if (!mResources) {
+        mResources = new ConfigurationParameterMap("resources");
+    }
+
     return mResources;
 }
 
-inline SmartPtr<ConfigurationParameterMap> Package::getResourceFiles() {
+ConfigurationParameterMap* Package::getResourceFiles() {
+    if (!mResourceFiles) {
+        SmartPtr<ConfigurationParameterMap> resourceFiles =
+                                                getResources()->get("files");
+        if (resourceFiles.isNull()) {
+            resourceFiles = SmartPtr<ConfigurationParameter>(
+                                new ConfigurationParameterMap("files"));
+        }
+
+        mResourceFiles = getPtr(resourceFiles);
+        mResources->add(resourceFiles);
+    }
+
     return mResourceFiles;
 }
 
+/*
 inline const PackageStatus* Package::getPackageStatus() {
     return mPackageStatus;
 }

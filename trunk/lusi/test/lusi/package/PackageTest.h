@@ -73,17 +73,21 @@ public:
     void testGetPackageId();
 
     /**
-     * Checks if getProfile() returns mProfile.
+     * Checks if getProfile() initializes the profile when it is called for
+     * first time, and then it returns mProfile (always the same object).
      */
     void testGetProfile();
 
     /**
-     * Checks if getResources() returns mResources.
+     * Checks if getResources() initializes the resources when it is called for
+     * first time, and then it returns mResources (always the same object).
      */
     void testGetResources();
 
     /**
-     * Checks if getResourceFiles() returns mResourceFiles.
+     * Checks if getResourceFiles() initializes the resource files when it is
+     * called for first time, and then it returns mResourceFiles (always the
+     * same object).
      */
     void testGetResourceFiles();
 

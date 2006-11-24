@@ -25,7 +25,7 @@
 
 namespace lusi {
 namespace package {
-class PackageId;
+class Package;
 class PackageManager;
 }
 }
@@ -41,9 +41,9 @@ namespace package {
 class PackageManagerTest: public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(PackageManagerTest);
     CPPUNIT_TEST(testSingleton);
-    CPPUNIT_TEST(testGetPackageIds);
+    CPPUNIT_TEST(testGetPackages);
+    CPPUNIT_TEST(testGetPackagesPackageStatus);
     CPPUNIT_TEST(testGetPackage);
-    CPPUNIT_TEST(testUpdatePackage);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -64,24 +64,23 @@ public:
     void testSingleton();
 
     /**
-     * Tests if all the PackageIds associated with the specified status are
-     * returned. It is tested with a status without registered PackageIds, a
-     * status with one PackageId and a status with two PackageIds.
+     * Tests if getPackages() returns mPackages.
      */
-    void testGetPackageIds();
+    void testGetPackages();
 
     /**
-     * Tests if a new Package is returned with the specified PackageId and the
-     * current PackageStatus. It is also tested that, if the PackageId isn't
-     * registered yet, it is also registered before returning the Package.
+     * Tests if all the Packages associated with the specified status are
+     * returned. It is tested with a status without registered Packages, a
+     * status with one Package and a status with two Packages.
+     */
+    void testGetPackagesPackageStatus();
+
+    /**
+     * Tests if the Package associated with the specified PackageId is
+     * returned. It is also tested that, if the PackageId isn't
+     * registered yet, a new Package is registered and returned.
      */
     void testGetPackage();
-
-    /**
-     * Tests if the saved status in mPackageDatas of the specified Package is
-     * updated with the status in the Package.
-     */
-    void testUpdatePackage();
 
 private:
 
@@ -93,19 +92,19 @@ private:
     PackageManager* mPackageManager;
 
     /**
-     * The first PackageId registered with mPackageManager.
+     * The first Package registered with mPackageManager.
      */
-    PackageId* mPackageId1;
+    Package* mPackage1;
 
     /**
-     * The second PackageId registered with mPackageManager.
+     * The second Package registered with mPackageManager.
      */
-    PackageId* mPackageId2;
+    Package* mPackage2;
 
     /**
-     * The third PackageId registered with mPackageManager.
+     * The third Package registered with mPackageManager.
      */
-    PackageId* mPackageId3;
+    Package* mPackage3;
 
 };
 
