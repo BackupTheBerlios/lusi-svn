@@ -50,6 +50,7 @@ class IdSmartPtrMapTest: public CppUnit::TestFixture {
     CPPUNIT_TEST(testGet);
     CPPUNIT_TEST(testGetAll);
     CPPUNIT_TEST(testRemove);
+    CPPUNIT_TEST(testClear);
     CPPUNIT_TEST(testOperatorAssignment);
     CPPUNIT_TEST_SUITE_END();
 
@@ -91,6 +92,11 @@ public:
      * Checks if remove() removes an added element.
      */
     void testRemove();
+
+    /**
+     * Checks if clear() removes all the elements.
+     */
+    void testClear();
 
     /**
      * Checks if the pointed objects are shared by both maps.

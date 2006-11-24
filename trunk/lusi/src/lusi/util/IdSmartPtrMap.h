@@ -156,6 +156,13 @@ public:
     }
 
     /**
+     * Removes all the pointers from the Map.
+     */
+    void clear() {
+        mMap.clear();
+    }
+
+    /**
      * Assignment operator.
      *
      * @param idSmartPtrMap The map to assing.

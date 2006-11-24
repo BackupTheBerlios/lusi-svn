@@ -143,6 +143,14 @@ void IdSmartPtrMapTest::testRemove() {
     CPPUNIT_ASSERT_EQUAL((Index*)0, getPtr(mIdSmartPtrMap->get(id)));
 }
 
+void IdSmartPtrMapTest::testClear() {
+    CPPUNIT_ASSERT_EQUAL((size_t)3, mIdSmartPtrMap->mMap.size());
+
+    mIdSmartPtrMap->clear();
+
+    CPPUNIT_ASSERT_EQUAL((size_t)0, mIdSmartPtrMap->mMap.size());
+}
+
 void IdSmartPtrMapTest::testOperatorAssignment() {
     IdSmartPtrMap<Index> idSmartPtrMap;
     idSmartPtrMap = *mIdSmartPtrMap;
