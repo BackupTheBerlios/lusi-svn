@@ -175,13 +175,6 @@ private:
     void checkPassword() throw (SuProcessException);
 
     /**
-     * Returns the user name of the current user.
-     *
-     * @return The user name of the current user.
-     */
-    std::string getCurrentUserName();
-
-    /**
      * Copy constructor disabled.
      */
     SuProcessLinux(const SuProcessLinux& suProcessLinux);
