@@ -21,8 +21,10 @@
 #include "ConfigurationLoader.h"
 #include "ConfigurationXmlDeserializer.h"
 #include "ConfigurationParameterMap.h"
+#include "../util/LocalFile.h"
 #include "../util/LocalUrl.h"
 
+using lusi::util::LocalFile;
 using lusi::util::LocalUrl;
 
 using namespace lusi::configuration;
@@ -39,6 +41,10 @@ ConfigurationParameterMap* ConfigurationLoader::load(
                         const LocalUrl& localUrl) throw (PersistenceException) {
     if (localUrl.isDirectory() || localUrl.isRelative()) {
         throw PersistenceException("Invalid url: " + localUrl.getPath());
+    }
+
+    if (!LocalFile(localUrl).exists()) {
+        throw PersistenceException(localUrl.getPath() + " doesn't exist");
     }
 
     xmlDocPtr document = xmlParseFile(localUrl.getPath().c_str());

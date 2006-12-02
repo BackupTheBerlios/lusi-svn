@@ -73,8 +73,8 @@ public:
      * The returned ConfigurationParameterMap must be deleted when it is no
      * longer needed.
      *
-     * If the file couldn't be parsed or is empty, a PersistenceException is
-     * thrown.
+     * If the url is invalid, the file doesn't exist, couldn't be parsed or is
+     * empty, a PersistenceException is thrown.
      *
      * @param localUrl The path to the file to load.
      * @return The ConfigurationParameterMap loaded from the file.
