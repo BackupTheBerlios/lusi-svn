@@ -65,7 +65,7 @@ void SuProcessLinuxConverser::receivedStderr(Process* process,
             mSuProcessLinux->mStateType ==
                 SuProcessLinux::ExecuteSwitchedUserState) {
         mSuProcessLinux->notifyReceivedStderr(data);
-    } else if (isPasswordPrompt(data)) {
+    } else if (!mPasswordSent && isPasswordPrompt(data)) {
         mStderrData = "";
         waitEcho();
         mSuProcessLinux->mProcessLinux->writeData(mSuProcessLinux->mPassword);
