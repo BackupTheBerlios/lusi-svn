@@ -87,6 +87,10 @@ LocalFile::LocalFile(const LocalUrl& localUrl): mLocalUrl(localUrl) {
     }
 }
 
+LocalFile::LocalFile(const LocalFile& localFile):
+    mLocalUrl(localFile.mLocalUrl) {
+}
+
 LocalFile::~LocalFile() {
 }
 
@@ -245,6 +249,14 @@ bool LocalFile::remove() {
     }
 
     return unlink(getAbsoluteLocalUrl().getPath().c_str()) != -1? true: false;
+}
+
+LocalFile& LocalFile::operator=(const LocalFile& localFile) {
+    if (this != &localFile) {
+        mLocalUrl = localFile.mLocalUrl;
+    }
+
+    return *this;
 }
 
 //private:

@@ -101,6 +101,14 @@ void LocalFileTest::testConstructor() {
     CPPUNIT_ASSERT_EQUAL(string("/bin/"), localFile.mLocalUrl.getPath());
 }
 
+void LocalFileTest::testCopyConstructor() {
+    LocalFile localFile(LocalUrl("/usr/bin/psi"));
+    LocalFile localFileCopy(localFile);
+
+    CPPUNIT_ASSERT_EQUAL(string("/usr/bin/psi"),
+                         localFileCopy.mLocalUrl.getPath());
+}
+
 void LocalFileTest::testExists() {
     //Test a valid absolute url
     LocalFile localFile(LocalUrl("/usr/"));
@@ -402,6 +410,22 @@ void LocalFileTest::testRemove() {
     file = LocalFile(LocalFile::getCurrentWorkingDirectory());
 
     CPPUNIT_ASSERT_EQUAL(false, file.remove());
+}
+
+void LocalFileTest::testOperatorAssignment() {
+    LocalFile localFile(LocalUrl("/usr/local/bin/kdevelop"));
+    LocalFile localFileCopy(LocalUrl("/"));
+    localFileCopy = localFile;
+
+    CPPUNIT_ASSERT_EQUAL(string("/usr/local/bin/kdevelop"),
+                         localFileCopy.mLocalUrl.getPath());
+
+
+    //Test self assignment
+    localFileCopy = localFileCopy;
+
+    CPPUNIT_ASSERT_EQUAL(string("/usr/local/bin/kdevelop"),
+                         localFileCopy.mLocalUrl.getPath());
 }
 
 void LocalFileTest::testGetValidPath() {

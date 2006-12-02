@@ -35,6 +35,7 @@ class LocalFileTest: public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(LocalFileTest);
     CPPUNIT_TEST(testExistsString);
     CPPUNIT_TEST(testConstructor);
+    CPPUNIT_TEST(testCopyConstructor);
     CPPUNIT_TEST(testExists);
     CPPUNIT_TEST(testGetGroup);
     CPPUNIT_TEST(testGetLocalUrl);
@@ -47,6 +48,7 @@ class LocalFileTest: public CppUnit::TestFixture {
     CPPUNIT_TEST(testMkdirs);
     CPPUNIT_TEST(testRenameTo);
     CPPUNIT_TEST(testRemove);
+    CPPUNIT_TEST(testOperatorAssignment);
     CPPUNIT_TEST(testGetValidPath);
     CPPUNIT_TEST_SUITE_END();
 
@@ -74,6 +76,11 @@ public:
      * but changed to directory syntax (with ending "/").
      */
     void testConstructor();
+
+    /**
+     * Tests if the copy constructor copies all the fields.
+     */
+    void testCopyConstructor();
 
     /**
      * Tests if a file that exists returns true and a file that doesn't exist
@@ -161,6 +168,11 @@ public:
      * existent file and a non empty directory fail to be removed.
      */
     void testRemove();
+
+    /**
+     * Tests if the assignment copies all the fields.
+     */
+    void testOperatorAssignment();
 
     /**
      * Tests if it returns the path of a file that exists, the path to the first

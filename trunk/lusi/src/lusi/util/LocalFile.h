@@ -123,6 +123,13 @@ public:
     LocalFile(const LocalUrl& localUrl);
 
     /**
+     * Copy constructor.
+     *
+     * @param localFile The LocalFile to copy.
+     */
+    LocalFile(const LocalFile& localFile);
+
+    /**
      * Destroys this LocalFile.
      */
     virtual ~LocalFile();
@@ -278,6 +285,14 @@ public:
      * @return True if this LocalFile was removed, false otherwise.
      */
     bool remove();
+
+    /**
+     * Assignment operator.
+     *
+     * @param localFile The LocalFile to assign.
+     * @return This LocalFile.
+     */
+    LocalFile& operator=(const LocalFile& localFile);
 
 private:
 
