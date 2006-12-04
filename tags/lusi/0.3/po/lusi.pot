@@ -1,0 +1,59 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Daniel Calviño Sánchez
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: kalvy@users.berlios.de\n"
+"POT-Creation-Date: 2006-10-13 20:54+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/lusi/task/helper/BaseExtractTaskHelper.cpp:65
+msgid "Extraction directory"
+msgstr ""
+
+#: src/lusi/task/helper/BaseExtractTaskHelper.cpp:66
+msgid "The directory to extract the package to"
+msgstr ""
+
+#: src/lusi/task/helper/ConfigureConfigureTaskHelper.cpp:95
+#: src/lusi/task/helper/ConfigureConfigureTaskHelper.cpp:100
+msgid "Prefix"
+msgstr ""
+
+#: src/lusi/task/helper/ConfigureConfigureTaskHelper.cpp:97
+#: src/lusi/task/helper/ConfigureConfigureTaskHelper.cpp:102
+msgid "The prefix directory to install the package to"
+msgstr ""
+
+#: src/lusi/task/helper/MakeInstallTaskHelper.cpp:72
+msgid "User name"
+msgstr ""
+
+#: src/lusi/task/helper/MakeInstallTaskHelper.cpp:74
+msgid "The name of the owner of the directory to install the package to"
+msgstr ""
+
+#: src/lusi/task/helper/MakeInstallTaskHelper.cpp:76
+msgid "Password"
+msgstr ""
+
+#: src/lusi/task/helper/MakeInstallTaskHelper.cpp:78
+msgid "The password of the owner of the directory to install the package to"
+msgstr ""
+
+#: src/lusi/task/helper/MakeInstallTaskHelper.cpp:82
+msgid "Login"
+msgstr ""
+
+#: src/lusi/task/helper/MakeInstallTaskHelper.cpp:83
+msgid "Login data of the owner of the directory to install the package to"
+msgstr ""

@@ -1,0 +1,10 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: lusi
+Description: A library to install/uninstall/update sourcecode packages.
+Version: @VERSION@
+Libs: -L${libdir}/lusi -llusi
+Cflags: -I${includedir}

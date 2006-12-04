@@ -1,0 +1,29 @@
+--------------------
+About LUSI
+--------------------
+
+LUSI (Library for Sourcecode Install) is a library to install/uninstall/update
+sourcecode packages. The intention is automatize as much as possible the
+configure/build/install routine and future uninstallations or updates.
+
+It is licensed under the GNU GPL license. It is also free as in "free beer".
+See COPYING file for license.
+
+
+
+--------------------
+Installing LUSI
+--------------------
+
+See INSTALL file instead.
+
+
+
+--------------------
+Project's webpage
+--------------------
+
+Project's webpage is located here:
+http://lusi.berlios.de
+
+There you can see further information about LUSI, development and so on.

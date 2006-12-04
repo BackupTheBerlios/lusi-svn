@@ -1,0 +1,20 @@
+INCLUDES = -I$(top_srcdir)/src -I$(top_srcdir)/src/lusi/configuration $(LIBXML_CFLAGS)
+
+noinst_HEADERS = ConfigurationTestSuite.h ConfigurationParameterTest.h \
+	ConfigurationParameterTestImplementation.h ConfigurationParameterSimpleTest.h ConfigurationParameterMapTest.h \
+	ConfigurationParameterSimpleTestImplementation.h ConfigurationParameterBoolTest.h ConfigurationParameterDoubleTest.h \
+	ConfigurationParameterIntTest.h ConfigurationParameterLocalUrlTest.h ConfigurationParameterStringTest.h \
+	ConfigurationXmlSerializerTest.h ConfigurationXmlDeserializerTest.h ConfigurationLoaderTest.h \
+	ConfigurationSaverTest.h ConfigurationPathsTest.h ConfigurationMergerTest.h
+
+if CPPUNIT
+check_LTLIBRARIES = libconfigurationtest.la
+
+libconfigurationtest_la_LDFLAGS = -all-static
+libconfigurationtest_la_SOURCES = ConfigurationTestSuite.cpp ConfigurationParameterTest.cpp \
+	ConfigurationParameterTestImplementation.cpp ConfigurationParameterSimpleTest.cpp ConfigurationParameterMapTest.cpp \
+	ConfigurationParameterSimpleTestImplementation.cpp ConfigurationParameterBoolTest.cpp ConfigurationParameterDoubleTest.cpp \
+	ConfigurationParameterIntTest.cpp ConfigurationParameterLocalUrlTest.cpp ConfigurationParameterStringTest.cpp \
+	ConfigurationXmlSerializerTest.cpp ConfigurationXmlDeserializerTest.cpp ConfigurationLoaderTest.cpp \
+	ConfigurationSaverTest.cpp ConfigurationPathsTest.cpp ConfigurationMergerTest.cpp
+endif

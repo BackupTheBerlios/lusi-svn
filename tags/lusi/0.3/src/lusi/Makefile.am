@@ -1,0 +1,13 @@
+SUBDIRS = configuration package task util
+INCLUDES = -I$(top_srcdir)/src
+
+liblusi_LTLIBRARIES = liblusi.la
+liblusidir = $(libdir)/lusi
+
+liblusiincludedir = $(includedir)/lusi
+liblusiinclude_HEADERS = Module.h Installer.h Uninstaller.h
+
+liblusi_la_SOURCES = Installer.cpp Uninstaller.cpp Module.cpp
+liblusi_la_LIBADD = $(top_builddir)/src/lusi/configuration/libconfiguration.la \
+	$(top_builddir)/src/lusi/package/libpackage.la $(top_builddir)/src/lusi/task/libtask.la \
+	$(top_builddir)/src/lusi/util/libutil.la
