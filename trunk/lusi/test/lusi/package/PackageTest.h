@@ -47,6 +47,8 @@ class PackageTest: public CppUnit::TestFixture {
     CPPUNIT_TEST(testGetResourceFiles);
     CPPUNIT_TEST(testGetPackageStatus);
     CPPUNIT_TEST(testSetPackageStatus);
+    CPPUNIT_TEST(testLoadResources);
+    CPPUNIT_TEST(testSaveResources);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -58,6 +60,7 @@ public:
 
     /**
      * Cleans up after the test run.
+     * Removes the files created by the tests.
      */
     virtual void tearDown();
 
@@ -100,6 +103,16 @@ public:
      * Checks if setPackageStatus() sets mPackageStatus.
      */
     void testSetPackageStatus();
+
+    /**
+     * Checks if the previously saved resources are loaded.
+     */
+    void testLoadResources();
+
+    /**
+     * Checks if the saved resources can be loaded.
+     */
+    void testSaveResources();
 
 private:
 

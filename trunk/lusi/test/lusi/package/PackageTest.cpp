@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <sys/stat.h>
+
 #include "PackageTest.h"
 
 #define protected public
@@ -31,22 +33,35 @@
 #include "status/BuiltPackageStatus.h"
 #include "status/UnknownPackageStatus.h"
 #include "../configuration/ConfigurationParameterMap.h"
+#include "../configuration/ConfigurationPaths.h"
+#include "../util/SmartPtr.h"
 
 using lusi::configuration::ConfigurationParameterMap;
+using lusi::configuration::ConfigurationPaths;
 using lusi::package::status::BuiltPackageStatus;
 using lusi::package::status::PackageStatus;
 using lusi::package::status::UnknownPackageStatus;
+using lusi::util::SmartPtr;
 
 using namespace lusi::package;
 
 //public:
 
 void PackageTest::setUp() {
-    mPackageId = new PackageId("Scorched3D");
+    mPackageId = new PackageId("aPackageNameThatCanBeDeletedAfterEachTest");
     mPackage = new Package(*mPackageId);
 }
 
 void PackageTest::tearDown() {
+    ConfigurationPaths paths;
+
+    struct stat fileStat;
+    if (!stat(paths.getPackageDirectory(*mPackageId).c_str(), &fileStat)) {
+        unlink(paths.getPackageFile(*mPackageId).c_str());
+        unlink(paths.getPackageResourcesFile(*mPackageId).c_str());
+        rmdir(paths.getPackageDirectory(*mPackageId).c_str());
+    }
+
     delete mPackage;
     delete mPackageId;
 }
@@ -118,4 +133,25 @@ void PackageTest::testSetPackageStatus() {
     CPPUNIT_ASSERT_EQUAL(static_cast<const PackageStatus*>
                                 (BuiltPackageStatus::getInstance()),
                          mPackage->mPackageStatus);
+}
+
+void PackageTest::testLoadResources() {
+    mPackage->getResources()->add(SmartPtr<ConfigurationParameterMap>(
+        new ConfigurationParameterMap("treasureMap")));
+    mPackage->saveResources();
+    mPackage->mResources = 0;
+
+    CPPUNIT_ASSERT_EQUAL(true, mPackage->loadResources());
+    CPPUNIT_ASSERT(0 != mPackage->mResources);
+    CPPUNIT_ASSERT(0 != mPackage->mResources->get("treasureMap"));
+}
+
+void PackageTest::testSaveResources() {
+    mPackage->getResources()->add(SmartPtr<ConfigurationParameterMap>(
+        new ConfigurationParameterMap("xMarksTheSpot")));
+    CPPUNIT_ASSERT_EQUAL(true, mPackage->saveResources());
+
+    mPackage->mResources = 0;
+    mPackage->loadResources();
+    CPPUNIT_ASSERT(0 != mPackage->mResources->get("xMarksTheSpot"));
 }
