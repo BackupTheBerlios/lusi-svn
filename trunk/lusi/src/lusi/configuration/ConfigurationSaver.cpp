@@ -52,7 +52,8 @@ void ConfigurationSaver::save(
     xmlDocPtr doc = ConfigurationXmlSerializer().serialize(
                                                     configurationParameterMap);
 
-    if (xmlSaveFileEnc(localUrl.getPath().c_str(), doc, "UTF-8") == -1) {
+    if (xmlSaveFormatFileEnc(localUrl.getPath().c_str(), doc, "UTF-8", true) ==
+                -1) {
         xmlFreeDoc(doc);
         throw PersistenceException(localUrl.getPath() + " couldn't be saved");
     }
