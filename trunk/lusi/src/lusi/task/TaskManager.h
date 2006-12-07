@@ -60,7 +60,7 @@ namespace task {
  *
  * Taks must be registered with this class. Only registered Tasks will be taken
  * into account when getting the Tasks to execute. The Task is registered
- * using its name and the PackageStatus it needs and provides.
+ * using its id and the PackageStatus it needs and provides.
  *
  * This class follows the Singleton Design Pattern. Only one instance is
  * created, and it can be got with getInstance() method.
@@ -93,14 +93,14 @@ public:
 
     /**
      * Registers a Task in the manager.
-     * The Task is registered using its name and the PackageStatus it needs and
+     * The Task is registered using its id and the PackageStatus it needs and
      * provides.
      *
-     * @param name The name of the Task.
+     * @param id The id of the Task.
      * @param neededPackageStatus The PackageStatus needed by the Task.
      * @param providedPackageStatus The PackageStatus provided by the Task.
      */
-    void registerTask(const std::string& name,
+    void registerTask(const std::string& id,
              const lusi::package::status::PackageStatus* neededPackageStatus,
              const lusi::package::status::PackageStatus* providedPackageStatus);
 
@@ -112,7 +112,7 @@ private:
      * Structure to hold values used when registering a Task.
      */
     struct TaskData {
-        std::string name;
+        std::string id;
         const lusi::package::status::PackageStatus* neededPackageStatus;
         const lusi::package::status::PackageStatus* providedPackageStatus;
     };
@@ -130,8 +130,7 @@ private:
     mTasksByNeededPackageStatus;
 
     /**
-     * Multimap to store the Task names, indexed by their provided
-     * PackageStatus.
+     * Multimap to store the TaskData, indexed by their provided PackageStatus.
      */
     std::multimap<const lusi::package::status::PackageStatus*, TaskData>
     mTasksByProvidedPackageStatus;

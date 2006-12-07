@@ -72,7 +72,7 @@ Task* TaskManager::getTask(Package* package) {
                     package->getPackageStatus(), mTasksByNeededPackageStatus);
     for (vector<TaskData>::const_iterator iterator = tasks.begin();
                 iterator != tasks.end() && task == 0; ++iterator) {
-        task = new Task((*iterator).name, package,
+        task = new Task((*iterator).id, package,
                 (*iterator).neededPackageStatus,
                 (*iterator).providedPackageStatus);
         if (!task->test()) {
@@ -84,11 +84,11 @@ Task* TaskManager::getTask(Package* package) {
     return task;
 }
 
-void TaskManager::registerTask(const string& name,
+void TaskManager::registerTask(const string& id,
                                const PackageStatus* neededPackageStatus,
                                const PackageStatus* providedPackageStatus) {
     TaskData taskData;
-    taskData.name = name;
+    taskData.id = id;
     taskData.neededPackageStatus = neededPackageStatus;
     taskData.providedPackageStatus = providedPackageStatus;
 
