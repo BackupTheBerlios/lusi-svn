@@ -56,9 +56,7 @@ namespace helper {
  *
  * As each TaskHelper does different things, each TaskHelper needs different
  * configuration parameters. The configuration is stored in a
- * ConfigurationParameterMap, with id "[mName]Configuration". Name and
- * information are empty and priority is set to recommended. Those parameters
- * aren't used, as it is a special case for the ConfigurationParameterMap.
+ * ConfigurationParameterMap, with id "[mName]Configuration".
  * The configuration of the TaskHelper is initialized through
  * initConfigurationParameterMap(). This method must be called in the Task
  * before using the TaskHelper.
@@ -145,8 +143,7 @@ public:
      *
      * Default implementation returns a ConfigurationParameterMap with all the
      * incomplete parameters. The id of the map is
-     * "[mName]InvalidConfiguration", name and information are empty, and
-     * priority is set to required.
+     * "[mName]InvalidConfiguration".
      *
      * This method can be overriden in derived classes if default implementation
      * doesn't suit their needs.
