@@ -19,7 +19,6 @@
  ***************************************************************************/
 
 #include "ConfigurationParameterInt.h"
-#include "ConfigurationParameterVisitor.h"
 
 using std::string;
 
@@ -56,6 +55,9 @@ ConfigurationParameterInt::ConfigurationParameterInt(const string& id,
 ConfigurationParameterInt::~ConfigurationParameterInt() {
 }
 
-void ConfigurationParameterInt::accept(ConfigurationParameterVisitor* visitor) {
+/*
+inline void ConfigurationParameterInt::accept(
+                                        ConfigurationParameterVisitor* visitor) {
     visitor->visit(this);
 }
+*/

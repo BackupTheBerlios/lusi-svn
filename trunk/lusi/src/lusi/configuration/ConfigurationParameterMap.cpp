@@ -19,7 +19,6 @@
  ***************************************************************************/
 
 #include "ConfigurationParameterMap.h"
-#include "ConfigurationParameterVisitor.h"
 
 using std::string;
 using std::vector;
@@ -84,9 +83,12 @@ bool ConfigurationParameterMap::isInvalid() {
     return true;
 }
 
-void ConfigurationParameterMap::accept(ConfigurationParameterVisitor* visitor) {
+/*
+inline void ConfigurationParameterMap::accept(
+                                        ConfigurationParameterVisitor* visitor) {
     visitor->visit(this);
 }
+*/
 
 bool ConfigurationParameterMap::add(
                     SmartPtr<ConfigurationParameter> configurationParameter) {

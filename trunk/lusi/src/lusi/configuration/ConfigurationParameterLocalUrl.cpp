@@ -19,7 +19,6 @@
  ***************************************************************************/
 
 #include "ConfigurationParameterLocalUrl.h"
-#include "ConfigurationParameterVisitor.h"
 
 using std::string;
 
@@ -66,12 +65,12 @@ ConfigurationParameterLocalUrl::ConfigurationParameterLocalUrl(const string& id,
 ConfigurationParameterLocalUrl::~ConfigurationParameterLocalUrl() {
 }
 
-void ConfigurationParameterLocalUrl::accept(
+/*
+inline void ConfigurationParameterLocalUrl::accept(
                                     ConfigurationParameterVisitor* visitor) {
     visitor->visit(this);
 }
 
-/*
 inline UrlType ConfigurationParameterLocalUrl::getUrlType() const {
     return mUrlType;
 }

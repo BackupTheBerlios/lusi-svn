@@ -22,6 +22,7 @@
 #define LUSI_CONFIGURATION_CONFIGURATIONPARAMETERMAP_H
 
 #include <lusi/configuration/ConfigurationParameter.h>
+#include <lusi/configuration/ConfigurationParameterVisitor.h>
 #include <lusi/util/IdSmartPtrMap.h>
 
 namespace lusi {
@@ -114,7 +115,9 @@ public:
      *
      * @param visitor The ConfigurationParameterVisitor to accept.
      */
-    virtual void accept(ConfigurationParameterVisitor* visitor);
+    virtual void accept(ConfigurationParameterVisitor* visitor) {
+        visitor->visit(this);
+    }
 
     /**
      * Adds a new ConfigurationParameter to this ConfigurationParameterMap.

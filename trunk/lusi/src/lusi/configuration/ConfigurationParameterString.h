@@ -22,6 +22,7 @@
 #define LUSI_CONFIGURATION_CONFIGURATIONPARAMETERSTRING_H
 
 #include <lusi/configuration/ConfigurationParameterSimple.h>
+#include <lusi/configuration/ConfigurationParameterVisitor.h>
 
 namespace lusi {
 namespace configuration {
@@ -117,7 +118,9 @@ public:
      *
      * @param visitor The ConfigurationParameterVisitor to accept.
      */
-    virtual void accept(ConfigurationParameterVisitor* visitor);
+    virtual void accept(ConfigurationParameterVisitor* visitor) {
+        visitor->visit(this);
+    }
 
     /**
      * Returns the type of the string.

@@ -19,7 +19,6 @@
  ***************************************************************************/
 
 #include "ConfigurationParameterString.h"
-#include "ConfigurationParameterVisitor.h"
 
 using std::string;
 
@@ -64,12 +63,12 @@ ConfigurationParameterString::ConfigurationParameterString(const string& id,
 ConfigurationParameterString::~ConfigurationParameterString() {
 }
 
-void ConfigurationParameterString::accept(
+/*
+inline void ConfigurationParameterString::accept(
                                     ConfigurationParameterVisitor* visitor) {
     visitor->visit(this);
 }
 
-/*
 inline StringType ConfigurationParameterString::getStringType() const {
     return mStringType;
 }

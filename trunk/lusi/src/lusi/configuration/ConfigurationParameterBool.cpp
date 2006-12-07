@@ -19,7 +19,6 @@
  ***************************************************************************/
 
 #include "ConfigurationParameterBool.h"
-#include "ConfigurationParameterVisitor.h"
 
 using std::string;
 
@@ -56,7 +55,9 @@ ConfigurationParameterBool::ConfigurationParameterBool(const string& id,
 ConfigurationParameterBool::~ConfigurationParameterBool() {
 }
 
-void ConfigurationParameterBool::accept(
+/*
+inline void ConfigurationParameterBool::accept(
                                     ConfigurationParameterVisitor* visitor) {
     visitor->visit(this);
 }
+*/

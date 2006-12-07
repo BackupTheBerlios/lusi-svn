@@ -19,7 +19,6 @@
  ***************************************************************************/
 
 #include "ConfigurationParameterDouble.h"
-#include "ConfigurationParameterVisitor.h"
 
 using std::string;
 
@@ -56,7 +55,9 @@ ConfigurationParameterDouble::ConfigurationParameterDouble(const string& id,
 ConfigurationParameterDouble::~ConfigurationParameterDouble() {
 }
 
-void ConfigurationParameterDouble::accept(
+/*
+inline void ConfigurationParameterDouble::accept(
                                     ConfigurationParameterVisitor* visitor) {
     visitor->visit(this);
 }
+*/
