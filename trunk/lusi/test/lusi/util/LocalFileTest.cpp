@@ -415,15 +415,14 @@ void LocalFileTest::testRemove() {
 void LocalFileTest::testOperatorAssignment() {
     LocalFile localFile(LocalUrl("/usr/local/bin/kdevelop"));
     LocalFile localFileCopy(LocalUrl("/"));
-    localFileCopy = localFile;
 
+    CPPUNIT_ASSERT_EQUAL(&localFileCopy, &(localFileCopy = localFile));
     CPPUNIT_ASSERT_EQUAL(string("/usr/local/bin/kdevelop"),
                          localFileCopy.mLocalUrl.getPath());
 
 
     //Test self assignment
-    localFileCopy = localFileCopy;
-
+    CPPUNIT_ASSERT_EQUAL(&localFileCopy, &(localFileCopy = localFileCopy));
     CPPUNIT_ASSERT_EQUAL(string("/usr/local/bin/kdevelop"),
                          localFileCopy.mLocalUrl.getPath());
 }

@@ -114,14 +114,14 @@ void GroupTest::testIsRoot() {
 
 void GroupTest::testOperatorAssignment() {
     //Test self assignment
-    Group rootGroup = Group(0);
+    Group rootGroup(0);
 
     CPPUNIT_ASSERT_EQUAL(&rootGroup, &(rootGroup = rootGroup));
     CPPUNIT_ASSERT_EQUAL(0, rootGroup.mId);
     CPPUNIT_ASSERT_EQUAL(string("root"), rootGroup.mName);
 
     //Test normal assignment
-    Group group = User::getCurrentUser().getGroup();
+    Group group(User::getCurrentUser().getGroup());
 
     CPPUNIT_ASSERT_EQUAL(&group, &(group = rootGroup));
     CPPUNIT_ASSERT_EQUAL(0, group.mId);

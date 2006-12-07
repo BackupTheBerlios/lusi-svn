@@ -325,14 +325,14 @@ void LocalUrlTest::testAppendRelativePathToDirectory() {
 
 void LocalUrlTest::testOperatorAssignment() {
     LocalUrl localUrl("/usr/local/bin/kdevelop");
-    LocalUrl localUrlCopy = localUrl;
+    LocalUrl localUrlCopy;
 
+    CPPUNIT_ASSERT_EQUAL(&localUrlCopy, &(localUrlCopy = localUrl));
     CPPUNIT_ASSERT_EQUAL(string("/usr/local/bin/kdevelop"), localUrlCopy.mPath);
 
 
     //Test self assignment
-    localUrlCopy = localUrlCopy;
-
+    CPPUNIT_ASSERT_EQUAL(&localUrlCopy, &(localUrlCopy = localUrlCopy));
     CPPUNIT_ASSERT_EQUAL(string("/usr/local/bin/kdevelop"), localUrlCopy.mPath);
 }
 

@@ -153,8 +153,8 @@ void IdSmartPtrMapTest::testClear() {
 
 void IdSmartPtrMapTest::testOperatorAssignment() {
     IdSmartPtrMap<Index> idSmartPtrMap;
-    idSmartPtrMap = *mIdSmartPtrMap;
 
+    CPPUNIT_ASSERT_EQUAL(&idSmartPtrMap, &(idSmartPtrMap = *mIdSmartPtrMap));
     //Test elements in original map
     CPPUNIT_ASSERT_EQUAL(mIndex1,
                 getPtr(mIdSmartPtrMap->mMap.find(mIndex1->getId())->second));
@@ -172,8 +172,7 @@ void IdSmartPtrMapTest::testOperatorAssignment() {
                 getPtr(idSmartPtrMap.mMap.find(mIndex3->getId())->second));
 
     //Test self assignment
-    idSmartPtrMap = idSmartPtrMap;
-
+    CPPUNIT_ASSERT_EQUAL(&idSmartPtrMap, &(idSmartPtrMap = idSmartPtrMap));
     CPPUNIT_ASSERT_EQUAL(mIndex1,
                 getPtr(idSmartPtrMap.mMap.find(mIndex1->getId())->second));
     CPPUNIT_ASSERT_EQUAL(mIndex2,

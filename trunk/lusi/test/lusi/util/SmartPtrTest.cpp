@@ -114,16 +114,16 @@ void SmartPtrTest::testIsNull() {
 void SmartPtrTest::testOperatorAssignment() {
     int* intPtr = new int(108);
     SmartPtr<int> smartPtr(intPtr);
-    *mSmartPtr = smartPtr;
-
-    CPPUNIT_ASSERT_EQUAL(smartPtr.mPointer, mSmartPtr->mPointer);
-    CPPUNIT_ASSERT_EQUAL(smartPtr.mReferenceCount, mSmartPtr->mReferenceCount);
-    CPPUNIT_ASSERT_EQUAL(2, *smartPtr.mReferenceCount);
 
     //Test self assignment
-    *mSmartPtr = smartPtr;
-    CPPUNIT_ASSERT_EQUAL(smartPtr.mPointer, mSmartPtr->mPointer);
-    CPPUNIT_ASSERT_EQUAL(smartPtr.mReferenceCount, mSmartPtr->mReferenceCount);
+    CPPUNIT_ASSERT_EQUAL(&smartPtr, &(smartPtr = smartPtr));
+    CPPUNIT_ASSERT_EQUAL(intPtr, smartPtr.mPointer);
+    CPPUNIT_ASSERT_EQUAL(1, *smartPtr.mReferenceCount);
+
+    //Test normal assignment
+    CPPUNIT_ASSERT_EQUAL(&smartPtr, &(smartPtr = *mSmartPtr));
+    CPPUNIT_ASSERT_EQUAL(mSmartPtr->mPointer, smartPtr.mPointer);
+    CPPUNIT_ASSERT_EQUAL(mSmartPtr->mReferenceCount, smartPtr.mReferenceCount);
     CPPUNIT_ASSERT_EQUAL(2, *smartPtr.mReferenceCount);
 }
 

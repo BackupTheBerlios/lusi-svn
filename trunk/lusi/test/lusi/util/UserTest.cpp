@@ -147,7 +147,7 @@ void UserTest::testIsRoot() {
 
 void UserTest::testOperatorAssignment() {
     //Test self assignment
-    User rootUser = User(0);
+    User rootUser(0);
 
     CPPUNIT_ASSERT_EQUAL(&rootUser, &(rootUser = rootUser));
     CPPUNIT_ASSERT_EQUAL(0, rootUser.mId);
@@ -156,7 +156,7 @@ void UserTest::testOperatorAssignment() {
     CPPUNIT_ASSERT_EQUAL(string("/root/"), rootUser.mHome);
 
     //Test normal assignment
-    User user = User(geteuid());
+    User user(geteuid());
 
     CPPUNIT_ASSERT_EQUAL(&user, &(user = rootUser));
     CPPUNIT_ASSERT_EQUAL(0, user.mId);
