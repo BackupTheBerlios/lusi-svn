@@ -45,17 +45,17 @@ using namespace lusi::task;
 
 //public:
 
-Task::Task(const string& name, Package* package,
+Task::Task(const string& id, Package* package,
            const PackageStatus* neededPackageStatus,
            const PackageStatus* providedPackageStatus) {
-    mName = name;
+    mId = id;
     mPackage = package;
     mTaskConfiguration = new TaskConfiguration(this);
     mNeededPackageStatus = neededPackageStatus;
     mProvidedPackageStatus = providedPackageStatus;
     mCurrentTaskHelper = 0;
 
-    //mName must be set before calling getTaskHelpers, as it uses getName()
+    //mId must be set before calling getTaskHelpers, as it uses getId()
     mTaskHelpers = TaskHelperManager::getInstance()->getTaskHelpers(this);
     mTaskHelpersIterator = mTaskHelpers.begin();
     nextTaskHelper();
@@ -78,8 +78,8 @@ Task::~Task() {
 }
 
 /*
-inline const string& Task::getName() const {
-    return mName;
+inline const string& Task::getId() const {
+    return mId;
 }
 
 inline Package* Task::getPackage() const {
@@ -135,7 +135,7 @@ void Task::execute() throw (ExecuteTaskException,
         throw ExecuteTaskException("There are no available task helpers");
     }
 
-    mTaskLogger->notifyEvent(mName + ": executing " +
+    mTaskLogger->notifyEvent(mId + ": executing " +
                              mCurrentTaskHelper->getName() + '\n', message);
 
     try {

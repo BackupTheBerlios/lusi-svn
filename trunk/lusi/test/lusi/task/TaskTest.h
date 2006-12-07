@@ -46,7 +46,7 @@ namespace task {
 
 class TaskTest: public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(TaskTest);
-    CPPUNIT_TEST(testGetName);
+    CPPUNIT_TEST(testGetId);
     CPPUNIT_TEST(testGetPackage);
     CPPUNIT_TEST(testGetTaskConfiguration);
     CPPUNIT_TEST(testGetNeededPackageStatus);
@@ -72,9 +72,9 @@ public:
     virtual void tearDown();
 
     /**
-     * Checks if getName() returns the name set in the constructor.
+     * Checks if getId() returns the id set in the constructor.
      */
-    void testGetName();
+    void testGetId();
 
     /**
      * Checks if getPackage() returns the Package set in the constructor.

@@ -94,7 +94,7 @@ namespace task {
  * TaskConfiguration used with this Task is also saved, so in another execution
  * of LUSI it can be used as explained.
  *
- * TaskHelpers are registered with a task name using TaskHelperManager. A Task
+ * TaskHelpers are registered with a task id using TaskHelperManager. A Task
  * can, therefore, know which TaskHelpers it can use.
  * Task and TaskHelper are similar to Bridge Design Pattern, although not
  * follow exactly that design pattern. In fact, they're more like a Task
@@ -120,10 +120,10 @@ namespace task {
  * executing the task. There are Loggers for both events, which can be got
  * with getTaskLogger() and getTaskProgress() methods.
  *
- * Tasks are identified by their name, so it must be unique. Two different tasks
+ * Tasks are identified by their id, so it must be unique. Two different tasks
  * can't both need and provide the same PackageStatus. Tasks should be
- * registered with TaskManager using the name and the needed and provided
- * PackageStatus. Undo tasks are named "Undo" followed by the name of the Task
+ * registered with TaskManager using the id and the needed and provided
+ * PackageStatus. Undo tasks id is "Undo" followed by the id of the Task
  * they undo.
  *
  * Task shouldn't be created directly. Instead, use
@@ -142,13 +142,13 @@ public:
      * Creates a new Task.
      * It sets the first TaskHelper to be executed, if any.
      *
-     * @param name The name of the Task.
+     * @param id The id of the Task.
      * @param package The Package to use.
      * @param neededPackageStatus The PackageStatus needed to execute this Task.
      * @param providedPackageStatus The PackageStatus this Task provides once
      *                              it was executed.
      */
-    Task(const std::string& name, lusi::package::Package* package,
+    Task(const std::string& id, lusi::package::Package* package,
          const lusi::package::status::PackageStatus* neededPackageStatus,
          const lusi::package::status::PackageStatus* providedPackageStatus);
 
@@ -159,13 +159,12 @@ public:
     virtual ~Task();
 
     /**
-     * Returns the name of this Task.
-     * The name is read only, and this is an accessor method.
+     * Returns the id of this Task.
      *
-     * @return The name of this Task.
+     * @return The id of this Task.
      */
-    const std::string& getName() const {
-        return mName;
+    const std::string& getId() const {
+        return mId;
     }
 
     /**
@@ -304,9 +303,9 @@ protected:
 private:
 
     /**
-     * The name of this Task.
+     * The id of this Task.
      */
-    std::string mName;
+    std::string mId;
 
     /**
      * The Package to use in this Task.

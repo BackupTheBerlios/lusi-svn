@@ -100,7 +100,7 @@ void TaskManagerTest::testGetTask() {
 
     auto_ptr<Task> task(mTaskManager->getTask(package.get()));
     CPPUNIT_ASSERT(task.get() != 0);
-    CPPUNIT_ASSERT_EQUAL(string("Chew gimer stick cane"), task->getName());
+    CPPUNIT_ASSERT_EQUAL(string("Chew gimer stick cane"), task->getId());
 }
 
 void TaskManagerTest::testRegisterTask() {

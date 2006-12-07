@@ -69,7 +69,7 @@ bool versionsWeakOrdering(const string& version1, const string& version2) {
 TaskConfiguration::TaskConfiguration(Task* task) {
     mTask = task;
     mConfiguration = 0;
-    mConfigurationToSave = new ConfigurationParameterMap(mTask->getName(), "",
+    mConfigurationToSave = new ConfigurationParameterMap(mTask->getId(), "",
                                 ConfigurationParameter::RequiredPriority, "");
 
     load();
@@ -115,7 +115,7 @@ void TaskConfiguration::addTaskHelperConfiguration(
 }
 
 bool TaskConfiguration::save() {
-    const string taskId = mTask->getName();
+    const string taskId = mTask->getId();
     PackageId packageId = mTask->getPackage()->getPackageId();
 
     try {
@@ -188,7 +188,7 @@ void TaskConfiguration::load() {
 }
 
 bool TaskConfiguration::load(const PackageId& packageId) {
-    string taskId = mTask->getName();
+    string taskId = mTask->getId();
     if (taskId.find("Undo") != string::npos) {
         taskId.erase(taskId.find("Undo"), string("Undo").size());
     }

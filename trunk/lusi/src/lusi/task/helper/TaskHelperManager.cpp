@@ -54,7 +54,7 @@ vector<TaskHelper*> TaskHelperManager::getTaskHelpers(Task* task) const {
 
     typedef multimap<string, TaskHelper* (*)(Task*)>::const_iterator iterator;
     for (pair<iterator, iterator> range =
-                    mTaskHelperFactories.equal_range(task->getName());
+                    mTaskHelperFactories.equal_range(task->getId());
             range.first != range.second; ++range.first) {
        taskHelpers.push_back(range.first->second(task));
     }
@@ -64,8 +64,8 @@ vector<TaskHelper*> TaskHelperManager::getTaskHelpers(Task* task) const {
 
 void TaskHelperManager::registerTaskHelper(
                                 TaskHelper* (*taskHelperFactory)(Task*),
-                                const string& taskName) {
-    mTaskHelperFactories.insert(make_pair(taskName, taskHelperFactory));
+                                const string& taskId) {
+    mTaskHelperFactories.insert(make_pair(taskId, taskHelperFactory));
 }
 
 //private:

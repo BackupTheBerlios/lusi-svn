@@ -75,8 +75,8 @@ void TaskTest::tearDown() {
     delete mPackage;
 }
 
-void TaskTest::testGetName() {
-    CPPUNIT_ASSERT_EQUAL(string("MakeTests"), mTask->getName());
+void TaskTest::testGetId() {
+    CPPUNIT_ASSERT_EQUAL(string("MakeTests"), mTask->getId());
 }
 
 void TaskTest::testGetPackage() {

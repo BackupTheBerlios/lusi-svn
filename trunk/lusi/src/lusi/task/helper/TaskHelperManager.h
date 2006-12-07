@@ -48,8 +48,8 @@ namespace helper {
  * lusi/task/helper/TaskHelperManager.h
  *
  * Manager for TaskHelpers.
- * Registers TaskHelpers with Task names, so each Task can know which
- * TaskHelpers can use.
+ * Registers TaskHelpers with Task ids, so each Task can know which TaskHelpers
+ * can use.
  *
  * In order to register a TaskHelper, a function which takes a Task as
  * parameter and returns a pointer to a new TaskHelper (including any derived
@@ -57,7 +57,7 @@ namespace helper {
  * Pattern, as it has the same philosophy, although without using specific
  * Factory classes.
  *
- * A instance of all the TaskHelpers registered with a Task name can be got
+ * A instance of all the TaskHelpers registered with a Task id can be got
  * using getTaskHelpers.
  */
 class TaskHelperManager {
@@ -78,7 +78,7 @@ public:
 
     /**
      * Returns a vector with instances of all the TaskHelpers registered with
-     * the name of the task.
+     * the id of the task.
      * The vector contains pointers to TaskHelpers initialized with the Task.
      * All the elements in the vector must be deleted when they're no longer
      * being used.
@@ -91,20 +91,20 @@ public:
     std::vector<TaskHelper*> getTaskHelpers(lusi::task::Task* task) const;
 
     /**
-     * Register a TaskHelper with a task name.
+     * Register a TaskHelper with a Task id.
      * The TaskHelper is registered using a factory function which creates a new
      * instance of a TaskHelper (or any derived class) when called, using the
      * Task that the TaskHelper will be registered with.
      *
-     * TaskHelpers for each Task name can be got using getTaskHelpers(Task).
+     * TaskHelpers for each Task id can be got using getTaskHelpers(Task).
      *
      * @param taskHelperFactory A function returning a pointer to a new
      *                          TaskHelper, created with the specified Task.
-     * @param taskName The name of the Task to register the TaskHelper with.
+     * @param taskId The id of the Task to register the TaskHelper with.
      * @see getTaskHelpers(lusi::task::Task)
      */
     void registerTaskHelper(TaskHelper* (*taskHelperFactory)(lusi::task::Task*),
-                            const std::string& taskName);
+                            const std::string& taskId);
 
 private:
 
@@ -115,7 +115,7 @@ private:
     static TaskHelperManager* sInstance;
 
     /**
-     * Multimap containing the TaskHelper factories for each Task name.
+     * Multimap containing the TaskHelper factories for each Task id.
      * TaskHelper factories are functions returning a pointer to an instance of
      * a TaskHelper.
      */
