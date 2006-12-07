@@ -66,8 +66,7 @@ void TaskTest::setUp() {
     mTask->mTaskHelpersIterator = mTask->mTaskHelpers.begin();
 
     mTask->mTaskConfiguration->mConfiguration =
-        new ConfigurationParameterMap("MakeTests", "",
-            ConfigurationParameter::RequiredPriority, "");
+        new ConfigurationParameterMap("MakeTests");
 }
 
 void TaskTest::tearDown() {
@@ -204,8 +203,7 @@ void TaskTest::testSortTaskHelpers() {
     restartTestObjects();
 
     SmartPtr<ConfigurationParameterMap> configuration1(
-        new ConfigurationParameterMap("1", "",
-            ConfigurationParameter::OptionalPriority, ""));
+        new ConfigurationParameterMap("1"));
     mTask->mTaskConfiguration->mConfiguration->add(configuration1);
 
     mTask->sortTaskHelpers();
@@ -218,8 +216,7 @@ void TaskTest::testSortTaskHelpers() {
     restartTestObjects();
 
     SmartPtr<ConfigurationParameterMap> configuration3(
-        new ConfigurationParameterMap("3", "",
-            ConfigurationParameter::OptionalPriority, ""));
+        new ConfigurationParameterMap("3"));
     mTask->mTaskConfiguration->mConfiguration->add(configuration3);
     mTask->mTaskConfiguration->mConfiguration->add(configuration1);
 
@@ -234,11 +231,9 @@ void TaskTest::testSortTaskHelpers() {
     restartTestObjects();
 
     SmartPtr<ConfigurationParameterMap> configuration4(
-        new ConfigurationParameterMap("4", "",
-            ConfigurationParameter::OptionalPriority, ""));
+        new ConfigurationParameterMap("4"));
     SmartPtr<ConfigurationParameterMap> configuration2(
-        new ConfigurationParameterMap("2", "",
-            ConfigurationParameter::OptionalPriority, ""));
+        new ConfigurationParameterMap("2"));
     mTask->mTaskConfiguration->mConfiguration->add(configuration4);
     mTask->mTaskConfiguration->mConfiguration->add(configuration2);
     mTask->mTaskConfiguration->mConfiguration->add(configuration3);

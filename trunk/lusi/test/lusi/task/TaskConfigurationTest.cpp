@@ -76,8 +76,7 @@ void TaskConfigurationTest::testGetTaskHelperConfiguration() {
 
     //Test with a loaded configuration (simulated)
     mTaskConfiguration->mConfiguration = new
-                    ConfigurationParameterMap("MakeTests", "",
-                            ConfigurationParameter::RecommendedPriority, "");
+                    ConfigurationParameterMap("MakeTests");
 
     SmartPtr<ConfigurationParameterMap> configuration1(
                     new ConfigurationParameterMap("1", "1",
@@ -106,8 +105,7 @@ void TaskConfigurationTest::testGetAllTaskHelperConfigurations() {
 
     //Test with a loaded configuration (simulated)
     mTaskConfiguration->mConfiguration = new
-                    ConfigurationParameterMap("MakeTests", "",
-                            ConfigurationParameter::RecommendedPriority, "");
+                    ConfigurationParameterMap("MakeTests");
 
     SmartPtr<ConfigurationParameterMap> configuration1(
                     new ConfigurationParameterMap("1", "1",

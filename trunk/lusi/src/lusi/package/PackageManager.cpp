@@ -192,12 +192,10 @@ bool PackageManager::loadPackage(const PackageId& packageId) {
 //yet as I'm planing to modify the status mechanism.
 bool PackageManager::savePackage(Package* package) {
     SmartPtr<ConfigurationParameterMap> configuration(
-        new ConfigurationParameterMap("package", "",
-            ConfigurationParameter::RequiredPriority, ""));
+        new ConfigurationParameterMap("package"));
 
     SmartPtr<ConfigurationParameterString> statusConfiguration(
-        new ConfigurationParameterString("status", "",
-            ConfigurationParameter::RequiredPriority, ""));
+        new ConfigurationParameterString("status"));
     configuration->add(statusConfiguration);
 
     if (package->getPackageStatus() == BuiltPackageStatus::getInstance()) {

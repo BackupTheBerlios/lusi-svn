@@ -69,8 +69,7 @@ bool versionsWeakOrdering(const string& version1, const string& version2) {
 TaskConfiguration::TaskConfiguration(Task* task) {
     mTask = task;
     mConfiguration = 0;
-    mConfigurationToSave = new ConfigurationParameterMap(mTask->getId(), "",
-                                ConfigurationParameter::RequiredPriority, "");
+    mConfigurationToSave = new ConfigurationParameterMap(mTask->getId());
 
     load();
 }
