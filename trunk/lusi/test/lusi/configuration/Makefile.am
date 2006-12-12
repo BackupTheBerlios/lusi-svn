@@ -5,7 +5,8 @@ noinst_HEADERS = ConfigurationTestSuite.h ConfigurationParameterTest.h \
 	ConfigurationParameterSimpleTestImplementation.h ConfigurationParameterBoolTest.h ConfigurationParameterDoubleTest.h \
 	ConfigurationParameterIntTest.h ConfigurationParameterLocalUrlTest.h ConfigurationParameterStringTest.h \
 	ConfigurationXmlSerializerTest.h ConfigurationXmlDeserializerTest.h ConfigurationLoaderTest.h \
-	ConfigurationSaverTest.h ConfigurationPathsTest.h ConfigurationMergerTest.h
+	ConfigurationSaverTest.h ConfigurationPathsTest.h ConfigurationMergerTest.h \
+	ConfigurationClonerTest.h
 
 if CPPUNIT
 check_LTLIBRARIES = libconfigurationtest.la
@@ -16,5 +17,6 @@ libconfigurationtest_la_SOURCES = ConfigurationTestSuite.cpp ConfigurationParame
 	ConfigurationParameterSimpleTestImplementation.cpp ConfigurationParameterBoolTest.cpp ConfigurationParameterDoubleTest.cpp \
 	ConfigurationParameterIntTest.cpp ConfigurationParameterLocalUrlTest.cpp ConfigurationParameterStringTest.cpp \
 	ConfigurationXmlSerializerTest.cpp ConfigurationXmlDeserializerTest.cpp ConfigurationLoaderTest.cpp \
-	ConfigurationSaverTest.cpp ConfigurationPathsTest.cpp ConfigurationMergerTest.cpp
+	ConfigurationSaverTest.cpp ConfigurationPathsTest.cpp ConfigurationMergerTest.cpp \
+	ConfigurationClonerTest.cpp
 endif

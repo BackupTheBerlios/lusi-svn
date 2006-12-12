@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "ConfigurationTestSuite.h"
+#include "ConfigurationClonerTest.h"
 #include "ConfigurationLoaderTest.h"
 #include "ConfigurationMergerTest.h"
 #include "ConfigurationParameterTest.h"
@@ -40,6 +41,7 @@ using namespace lusi::configuration;
 
 ConfigurationTestSuite::ConfigurationTestSuite() {
     //Own namespace Tests
+    addTest(ConfigurationClonerTest::suite());
     addTest(ConfigurationLoaderTest::suite());
     addTest(ConfigurationMergerTest::suite());
     addTest(ConfigurationParameterTest::suite());
