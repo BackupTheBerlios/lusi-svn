@@ -162,6 +162,18 @@ private:
                                     TaskData>& tasksMultimap);
 
     /**
+     * Returns the Task to be executed suggested by the Profile.
+     * The Profile may contain a Task previously executed at the current
+     * PackageStatus, so it is tried the first. If there is no suggested Task,
+     * a null pointer is returned.
+     * The Task must be deleted when it is no longer needed.
+     *
+     * @param package The Package to get the Task for.
+     * @return The Task to be executed suggested by the Profile.
+     */
+    Task* getTaskFromProfile(lusi::package::Package* package);
+
+    /**
      * Copy constructor disabled.
      */
     TaskManager(const TaskManager& taskManager);

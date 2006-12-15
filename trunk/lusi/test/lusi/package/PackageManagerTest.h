@@ -44,6 +44,7 @@ class PackageManagerTest: public CppUnit::TestFixture {
     CPPUNIT_TEST(testGetPackages);
     CPPUNIT_TEST(testGetPackagesPackageStatus);
     CPPUNIT_TEST(testGetPackage);
+    CPPUNIT_TEST(testRemovePackage);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -81,6 +82,13 @@ public:
      * registered yet, a new Package is registered and returned.
      */
     void testGetPackage();
+
+    /**
+     * Tests if the Package data is removed from disk, if the PackageStatus is
+     * removed from the Packages list and if the Profile is reverted to its
+     * first PackageStatus.
+     */
+    void testRemovePackage();
 
 private:
 

@@ -26,6 +26,7 @@
 
 #include <lusi/package/PackageId.h>
 #include <lusi/package/status/UnknownPackageStatus.h>
+#include <lusi/util/SmartPtr.h>
 
 namespace lusi {
 namespace configuration {
@@ -54,12 +55,14 @@ namespace package {
  * @class Package Package.h lusi/package/Package.h
  *
  * The Package class represents a software package.
- * Packages are identified by its name and version. They also have a Profile
- * which contains information about the Tasks executed over the Package. A
- * Package is composed by different resources (files, for example), grouped in
- * a ConfigurationParameterMap.
+ * Packages are identified by its name and version. A Package is composed by
+ * different resources (files, for example), grouped in a
+ * ConfigurationParameterMap.
  * Packages have also a specific PackageStatus, used to describe which Tasks
  * can be executed over the Package.
+ * They also have a Profile which contains information about the Tasks executed
+ * over the Package, the resources and the PackageStatus (it is like the
+ * historial of the Package).
  *
  * Packages shouldn't be created directly. Instead, they should always be got
  * through PackageManager.
@@ -81,9 +84,10 @@ namespace package {
  * changes made, if any.
  *
  * The only property of a Package that can be set is the PackageStatus, which
- * is updated by Tasks when they finish their execution. However, an initial
- * PackageStatus should be provided by classes which creates Packages. If not
- * specified, default PackageStatus is set to UnknownPackageStatus.
+ * is updated by Tasks when they finish their execution. An initial
+ * PackageStatus is provided by the PackageManager with the last PackageStatus
+ * the Package was in the last execution of LUSI. If not specified, default
+ * PackageStatus is set to UnknownPackageStatus.
  *
  * This class follows a Proxy Design Pattern. The Profile and the resources are
  * only loaded on demand, when their get method is called. Resource files also
@@ -91,9 +95,14 @@ namespace package {
  * to have a long list of Packages which only contains their PackageId and
  * their PackageStatus instead of the full data of the class.
  *
+ * Resources are got initially from the Profile, and depth copied to the
+ * Package, to avoid changes in the resources of the Package to modify also the
+ * Profile.
+ *
  * @see PackageManager
  */
 class Package {
+friend class Profile;
 public:
 
     /**
@@ -112,8 +121,7 @@ public:
 
     /**
      * Creates a new Package using the specified PackageId and PackageStatus.
-     * If no PackageStatus is specified, it uses UnknownPackageStatus. You're
-     * encouraged to set it, however.
+     * If no PackageStatus is specified, it uses UnknownPackageStatus.
      *
      * @param packageId The PackageId.
      * @param packageStatus The PackageStatus, UnknownPackageStatus by default.
@@ -148,7 +156,8 @@ public:
      *
      * @return The resources in a ConfigurationParameterMap.
      */
-    lusi::configuration::ConfigurationParameterMap* getResources();
+    lusi::util::SmartPtr<lusi::configuration::ConfigurationParameterMap>
+    getResources();
 
     /**
      * Returns the ConfigurationParameterMap containing the files of this
@@ -157,7 +166,8 @@ public:
      * @return The ConfigurationParameterMap containing the files of this
      *         Package.
      */
-    lusi::configuration::ConfigurationParameterMap* getResourceFiles();
+    lusi::util::SmartPtr<lusi::configuration::ConfigurationParameterMap>
+    getResourceFiles();
 
     /**
      * Returns the PackageStatus.
@@ -170,7 +180,7 @@ public:
 
     /**
      * Sets the PackageStatus.
-     * This Package is also updated in the PackageManager.
+     * The Profile and the the PackageManager are also updated.
      *
      * @param packageStatus The PackageStatus.
      */
@@ -193,12 +203,14 @@ private:
     /**
      * The ConfigurationParameterMap.
      */
-    lusi::configuration::ConfigurationParameterMap* mResources;
+    lusi::util::SmartPtr<lusi::configuration::ConfigurationParameterMap>
+    mResources;
 
     /**
      * The ConfigurationParameterMap containing the files of this Package.
      */
-    lusi::configuration::ConfigurationParameterMap* mResourceFiles;
+    lusi::util::SmartPtr<lusi::configuration::ConfigurationParameterMap>
+    mResourceFiles;
 
     /**
      * The PackageStatus.
@@ -207,24 +219,15 @@ private:
 
 
 
-
     /**
-     * Loads the resources for this Package from hard disk in mResources.
-     * If the resources aren't loaded, it can be due to an external problem, or
-     * due to not to have been previously saved.
+     * Reverts the PackageStatus to a previous one.
+     * This method is called by Profile to update the PackageStatus in the
+     * Package and in the PackageManager. It also sets to null the resources of
+     * this Package, so they are got again from the Profile when needed.
      *
-     * @return True if the resources were loaded, false otherwise.
+     * @param packageStatus The PackageStatus to revert to.
      */
-    bool loadResources();
-
-    /**
-     * Saves  the resources.
-     * If the resources aren't saved, it is due to an external problem (lack of
-     * permissions, for example).
-     *
-     * @return True if the resources were saved, false otherwise.
-     */
-    bool saveResources();
+    void revertPackageStatus(const status::PackageStatus* packageStatus);
 
     /**
      * Copy constructor disabled.

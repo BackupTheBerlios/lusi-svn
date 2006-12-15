@@ -26,6 +26,7 @@
 #include "helper/TaskHelperManager.h"
 #include "../configuration/ConfigurationMerger.h"
 #include "../package/Package.h"
+#include "../package/Profile.h"
 #include "../util/SmartPtr.h"
 
 using std::string;
@@ -147,6 +148,7 @@ void Task::execute() throw (ExecuteTaskException,
             mCurrentTaskHelper->getName() + ": " + e.what());
     }
 
+    mPackage->getProfile()->setTaskId(mId);
     mPackage->setPackageStatus(mProvidedPackageStatus);
     mTaskConfiguration->addTaskHelperConfiguration(
                             mCurrentTaskHelper->getConfigurationParameterMap());

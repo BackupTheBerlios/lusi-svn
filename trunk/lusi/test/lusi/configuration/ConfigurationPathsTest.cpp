@@ -100,12 +100,12 @@ void ConfigurationPathsTest::testGetPackageFile() {
                          mConfigurationPaths->getPackageFile(packageId));
 }
 
-void ConfigurationPathsTest::testGetPackageResourcesFile() {
+void ConfigurationPathsTest::testGetProfileFile() {
     PackageId packageId("testPackage");
 
     CPPUNIT_ASSERT_EQUAL(mConfigurationPaths->getPackageDirectory(packageId) +
-                                                        "package-resources.xml",
-                    mConfigurationPaths->getPackageResourcesFile(packageId));
+                                                        "profile.xml",
+                         mConfigurationPaths->getProfileFile(packageId));
 }
 
 void ConfigurationPathsTest::testGetTaskFile() {

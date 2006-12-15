@@ -278,9 +278,9 @@ public:
     /**
      * Executes this Task.
      * The current TaskHelper, which is the real implementation of the Task, is
-     * executed. Once finished, the package status is updated and the
-     * configuration of the TaskHelper added to the TaskConfiguration to save
-     * the parameters used.
+     * executed. Once finished, the Task id is added to the Profile, the
+     * PackageStatus is updated and the configuration of the TaskHelper added
+     * to the TaskConfiguration to save the parameters used.
      *
      * This method can only be called when all the parameters are valid. If
      * there are any invalid parameters, an exception is thrown.

@@ -21,6 +21,7 @@
 #include "PackageManager.h"
 #include "Package.h"
 #include "PackageId.h"
+#include "Profile.h"
 #include "status/BuiltPackageStatus.h"
 #include "status/ConfiguredPackageStatus.h"
 #include "status/InstalledPackageStatus.h"
@@ -123,8 +124,21 @@ Package* PackageManager::getPackage(const PackageId& packageId) {
     return package;
 }
 
-bool PackageManager::updatePackage(Package* package) {
-    return savePackage(package);
+void PackageManager::removePackage(Package* package) {
+    package->getProfile()->revertPackageStatus(
+        package->getProfile()->getAllPackageStatus()[0]);
+
+    LocalFile(ConfigurationPaths().getPackageFile(package->getPackageId())).
+        remove();
+
+    for (vector<Package*>::iterator it = mPackages.begin();
+            it != mPackages.end(); ++it) {
+        if (*it == package) {
+            mPackages.erase(it);
+            delete package;
+            return;
+        }
+    }
 }
 
 //private:

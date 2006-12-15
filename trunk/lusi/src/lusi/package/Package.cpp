@@ -22,7 +22,7 @@
 #include "PackageId.h"
 #include "PackageManager.h"
 #include "Profile.h"
-#include "ProfileManager.h"
+#include "../configuration/ConfigurationCloner.h"
 #include "../configuration/ConfigurationLoader.h"
 #include "../configuration/ConfigurationParameterMap.h"
 #include "../configuration/ConfigurationPaths.h"
@@ -32,6 +32,7 @@
 using std::string;
 using std::vector;
 
+using lusi::configuration::ConfigurationCloner;
 using lusi::configuration::ConfigurationLoader;
 using lusi::configuration::ConfigurationParameter;
 using lusi::configuration::ConfigurationParameterMap;
@@ -71,13 +72,10 @@ Package::Package(const PackageId& packageId,
     mPackageStatus = packageStatus;
 
     mProfile = 0;
-    mResources = 0;
-    mResourceFiles = 0;
 }
 
 Package::~Package() {
     delete mProfile;
-    delete mResources;
 }
 
 /*
@@ -88,22 +86,23 @@ inline const PackageId& Package::getPackageId() {
 
 Profile* Package::getProfile() {
     if (!mProfile) {
-        mProfile = ProfileManager::getInstance()->getProfile(mPackageId);
+        mProfile = new Profile(this);
     }
 
     return mProfile;
 }
 
-ConfigurationParameterMap* Package::getResources() {
-    if (!mResources && !loadResources()) {
-        mResources = new ConfigurationParameterMap("resources");
+SmartPtr<ConfigurationParameterMap> Package::getResources() {
+    if (mResources.isNull()) {
+        mResources = SmartPtr<ConfigurationParameterMap>(
+            ConfigurationCloner().clone(getPtr(getProfile()->getResources())));
     }
 
     return mResources;
 }
 
-ConfigurationParameterMap* Package::getResourceFiles() {
-    if (!mResourceFiles) {
+SmartPtr<ConfigurationParameterMap> Package::getResourceFiles() {
+    if (mResourceFiles.isNull()) {
         SmartPtr<ConfigurationParameterMap> resourceFiles =
                                                 getResources()->get("files");
         if (resourceFiles.isNull()) {
@@ -112,7 +111,7 @@ ConfigurationParameterMap* Package::getResourceFiles() {
             mResources->add(resourceFiles);
         }
 
-        mResourceFiles = getPtr(resourceFiles);
+        mResourceFiles = resourceFiles;
     }
 
     return mResourceFiles;
@@ -126,30 +125,17 @@ inline const PackageStatus* Package::getPackageStatus() {
 
 void Package::setPackageStatus(const PackageStatus* packageStatus) {
     mPackageStatus = packageStatus;
-    saveResources();
-    PackageManager::getInstance()->updatePackage(this);
+    getProfile()->addPackageStatus(packageStatus);
+    getProfile()->setResources(getResources());
+    PackageManager::getInstance()->savePackage(this);
 }
 
 //private:
 
-bool Package::loadResources() {
-    try {
-        mResources = ConfigurationLoader().load(
-                ConfigurationPaths().getPackageResourcesFile(mPackageId));
-    } catch (PersistenceException e) {
-        return false;
-    }
+void Package::revertPackageStatus(const PackageStatus* packageStatus) {
+    mPackageStatus = packageStatus;
+    PackageManager::getInstance()->savePackage(this);
 
-    return true;
-}
-
-bool Package::saveResources() {
-    try {
-        ConfigurationSaver().save(getResources(),
-            ConfigurationPaths().getPackageResourcesFile(mPackageId));
-    } catch (PersistenceException e) {
-        return false;
-    }
-
-    return true;
+    mResources = SmartPtr<ConfigurationParameterMap>();
+    mResourceFiles = SmartPtr<ConfigurationParameterMap>();
 }

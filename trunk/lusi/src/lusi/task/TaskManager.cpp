@@ -59,14 +59,11 @@ TaskManager::~TaskManager() {
 
 //TODO handle several valid Tasks registered with the same needed status
 Task* TaskManager::getTask(Package* package) {
-    Task* task = package->getProfile()->getTask();
-    if (task != 0) {
-        if (task->test()) {
-            return task;
-        }
-        delete task;
+    Task* task = getTaskFromProfile(package);
+
+    if (task) {
+        return task;
     }
-    task = 0;
 
     vector<TaskData> tasks = getTasksByPackageStatus(
                     package->getPackageStatus(), mTasksByNeededPackageStatus);
@@ -130,4 +127,28 @@ vector<TaskManager::TaskData> TaskManager::getTasksByPackageStatus(
     }
 
     return taskDatas;
+}
+
+Task* TaskManager::getTaskFromProfile(Package* package) {
+    string taskId = package->getProfile()->getTaskId();
+    if (taskId == "") {
+        return 0;
+    }
+
+    //TODO index Tasks also by name, instead of traversing the other maps
+    typedef multimap<const PackageStatus*, TaskData>::const_iterator iterator;
+    for (iterator it = mTasksByNeededPackageStatus.begin();
+            it != mTasksByNeededPackageStatus.end(); ++it) {
+        if (it->second.id == taskId) {
+            Task* task = new Task(it->second.id, package,
+                                 it->second.neededPackageStatus,
+                                 it->second.providedPackageStatus);
+            if (task->test()) {
+                return task;
+            }
+            delete task;
+        }
+    }
+
+    return 0;
 }

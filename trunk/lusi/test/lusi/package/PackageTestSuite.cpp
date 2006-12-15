@@ -22,7 +22,7 @@
 #include "PackageTest.h"
 #include "PackageIdTest.h"
 #include "PackageManagerTest.h"
-#include "ProfileManagerTest.h"
+#include "ProfileTest.h"
 #include "status/PackageStatusTestSuite.h"
 
 using lusi::package::status::PackageStatusTestSuite;
@@ -36,7 +36,7 @@ PackageTestSuite::PackageTestSuite() {
     addTest(PackageTest::suite());
     addTest(PackageIdTest::suite());
     addTest(PackageManagerTest::suite());
-    addTest(ProfileManagerTest::suite());
+    addTest(ProfileTest::suite());
 
     //Direct child namespaces TestSuites
     addTest(new PackageStatusTestSuite());

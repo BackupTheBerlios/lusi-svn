@@ -173,6 +173,11 @@ int compareSubversions(const string& subversion1, const string& subversion2) {
 
 //public:
 
+bool lusi::package::versionsWeakOrdering(const string& version1,
+                                         const string& version2) {
+    return PackageId::compareVersions(version1, version2) < 0;
+}
+
 //TODO It doesn't fully follow the regular expression: subversion qualifiers
 //are accepted in every subversion, not only in the last.
 int PackageId::compareVersions(const string& version1, const string& version2) {

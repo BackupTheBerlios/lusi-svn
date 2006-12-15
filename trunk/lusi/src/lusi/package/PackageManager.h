@@ -62,13 +62,24 @@ namespace package {
  *
  * The Packages are updated automatically each time their status is set.
  *
+ * Any Package can be removed from LUSI control using remove(Package*).
+ *
  * This class follows the Singleton Design Pattern. Only one instance is
  * created, and it can be got with getInstance() method.
  *
  * A static method, getPackageNames(), is provided to know the name of all the
  * saved Packages in the hard disk.
+ *
+ * The PackageManager loads and save the PackageStatus of each Package in a
+ * specific file. The PackageStatus of the Package can also be known using the
+ * Profile, but the PackageManager saves its own copy of that information due to
+ * efficency reasons: this way, only the PackageStatus must be loaded, but if
+ * the PackageStatus were got from the Profile, the whole Profile with all the
+ * resources would need to be loaded for each Package, even when they weren't
+ * going to be used.
  */
 class PackageManager {
+friend class Package;
 public:
 
     /**
@@ -131,16 +142,23 @@ public:
     Package* getPackage(const PackageId& packageId);
 
     /**
-     * Saves the Package.
-     * The Package must have been got using this class (not creating it
-     * "manually").
-     * This method is called automatically when the PackageStatus of a Package
-     * is set.
+     * Removes a Package.
+     * The Package data saved by the PackageManager is removed from disk, the
+     * Package is removed from the list of Packages and the Profile is reverted
+     * to its first PackageStatus (this way, the information about the Task is
+     * kept, but all the resources are removed).
      *
-     * @param package The Package to update.
-     * @return True if the Package was successfully saved, false otherwise.
+     * Note that this only removes the Package from LUSI, but the files of the
+     * Package aren't removed, it isn't uninstalled automatically... This only
+     * affects to LUSI control over the Package.
+     *
+     * The Package must have been got using this class (not creating it
+     * "manually"). It can't be used after calling this method, as it is
+     * deleted in it.
+     *
+     * @param package The Package to remove.
      */
-    bool updatePackage(Package* package);
+    void removePackage(Package* package);
 
 private:
 

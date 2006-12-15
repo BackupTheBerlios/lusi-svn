@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: kalvy@users.berlios.de\n"
-"POT-Creation-Date: 2006-10-13 20:54+0200\n"
+"POT-Creation-Date: 2006-12-12 12:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,44 +16,44 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/lusi/task/helper/BaseExtractTaskHelper.cpp:65
+#: src/lusi/task/helper/BaseExtractTaskHelper.cpp:58
 msgid "Extraction directory"
 msgstr ""
 
-#: src/lusi/task/helper/BaseExtractTaskHelper.cpp:66
+#: src/lusi/task/helper/BaseExtractTaskHelper.cpp:59
 msgid "The directory to extract the package to"
 msgstr ""
 
-#: src/lusi/task/helper/ConfigureConfigureTaskHelper.cpp:95
-#: src/lusi/task/helper/ConfigureConfigureTaskHelper.cpp:100
+#: src/lusi/task/helper/ConfigureConfigureTaskHelper.cpp:91
+#: src/lusi/task/helper/ConfigureConfigureTaskHelper.cpp:96
 msgid "Prefix"
 msgstr ""
 
-#: src/lusi/task/helper/ConfigureConfigureTaskHelper.cpp:97
-#: src/lusi/task/helper/ConfigureConfigureTaskHelper.cpp:102
+#: src/lusi/task/helper/ConfigureConfigureTaskHelper.cpp:93
+#: src/lusi/task/helper/ConfigureConfigureTaskHelper.cpp:98
 msgid "The prefix directory to install the package to"
 msgstr ""
 
-#: src/lusi/task/helper/MakeInstallTaskHelper.cpp:72
+#: src/lusi/task/helper/MakeInstallTaskHelper.cpp:82
 msgid "User name"
 msgstr ""
 
-#: src/lusi/task/helper/MakeInstallTaskHelper.cpp:74
+#: src/lusi/task/helper/MakeInstallTaskHelper.cpp:84
 msgid "The name of the owner of the directory to install the package to"
 msgstr ""
 
-#: src/lusi/task/helper/MakeInstallTaskHelper.cpp:76
+#: src/lusi/task/helper/MakeInstallTaskHelper.cpp:86
 msgid "Password"
 msgstr ""
 
-#: src/lusi/task/helper/MakeInstallTaskHelper.cpp:78
+#: src/lusi/task/helper/MakeInstallTaskHelper.cpp:88
 msgid "The password of the owner of the directory to install the package to"
 msgstr ""
 
-#: src/lusi/task/helper/MakeInstallTaskHelper.cpp:82
+#: src/lusi/task/helper/MakeInstallTaskHelper.cpp:93
 msgid "Login"
 msgstr ""
 
-#: src/lusi/task/helper/MakeInstallTaskHelper.cpp:83
+#: src/lusi/task/helper/MakeInstallTaskHelper.cpp:94
 msgid "Login data of the owner of the directory to install the package to"
 msgstr ""

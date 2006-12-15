@@ -21,16 +21,35 @@
 #ifndef LUSI_PACKAGE_PROFILE_H
 #define LUSI_PACKAGE_PROFILE_H
 
+#include <string>
+#include <vector>
+
+#include <lusi/util/SmartPtr.h>
+
+namespace lusi {
+namespace configuration {
+class ConfigurationParameterMap;
+}
+}
+
 namespace lusi {
 namespace package {
-    class Package;
+class Package;
+class PackageId;
+}
+}
+
+namespace lusi {
+namespace package {
+namespace status {
+class PackageStatus;
+}
 }
 }
 
 namespace lusi {
 namespace task {
-    class Task;
-    class TaskConfiguration;
+class Task;
 }
 }
 
@@ -40,30 +59,43 @@ namespace package {
 /**
  * @class Profile Profile.h lusi/package/Profile.h
  *
- * Profile contains all the information about the Tasks executed over a Package,
- * including order of execution and configuration of each Task.
- * Based on this information and the status of the Package, a Profile can
- * suggest a Task to be executed. The suggested Task isn't tested to verify if
- * it can be executed.
+ * Profile contains all the information about the PackageStatus a Package had.
+ * This includes the order of the PackageStatus, the Task executed in each
+ * PackageStatus to evolve to the next, and the resources the Package had in
+ * each PackageStatus.
  *
- * New TaskConfigurations can be added using
- * addTaskConfiguration(TaskConfiguration). The order used to add them is kept
- * for future use. Added TaskConfigurations lifespan is handled by Profile.
+ * The PackageStatus of the Package is the "current PackageStatus" of the
+ * Profile. The resources associated with the current PackageStatus can be got
+ * with getResources(). The Profile may contain the id of the Task used to go
+ * from the current PackageStatus to the next in a previous execution. That id
+ * can be got using getTaskId().
  *
- * Profiles can be saved in a persistent way, so they can be later retrieved
- * for future use. Due to this, Profiles should be got through
- * ProfileManager::getProfile(const PackageId&). This method takes care of
- * adding the needed TaskConfigurations.
+ * The resources and the Task id for the current PackageStatus can also be set
+ * using setResources(SmartPtr<ConfigurationParameterMap>) and setTaskId(const
+ * string*).
  *
- * @see ProfileManager
+ * When the Package advances to a new PackageStatus, it can be set with
+ * addPackageStatus(const PackageStatus*). When a new PackageStatus is set, its
+ * resources and Task id are empty, so they must be set as needed.
+ *
+ * As the Profile contains the history of all the PackageStatus of the Package,
+ * the current PackageStatus can be reverted to a previous one using
+ * reverPackageStatus(const PackageStatus*). The resources of all the
+ * PackageStatus from the next to the reverted to the end are cleared (as
+ * they are no longer valid). The Task ids, however, are kept, as they can
+ * suggest the Tasks to be executed.
+ *
+ * The available PackageStatus to revert to can be known using
+ * getAllPackageStatus().
+ *
+ * When a change is made in the Profile (a PackageStatus is added, resources
+ * are set, and so on), it is saved automatically.
  */
 class Profile {
 public:
 
     /**
      * Creates a new Profile of the specified Package.
-     * ProfileManager::getProfile(const PackageId&) should be used instead of
-     * creating a new Profile explicitly.
      *
      * @param package The Package of this Profile.
      */
@@ -75,17 +107,6 @@ public:
     virtual ~Profile();
 
     /**
-     * Adds a new TaskConfiguration to the Profile.
-     * The order used to add the TaskConfigurations is taken into account. Once
-     * added, the TaskConfiguration lifespan is handled by this Profile (it's
-     * destroyed when this Profile is destroyed).
-     *
-     * @param taskConfiguration The TaskConfiguration to add.
-     */
-    void addTaskConfiguration(
-                lusi::task::TaskConfiguration* taskConfiguration);
-
-    /**
      * Returns the Package of this Profile.
      *
      * @return The Package of this Profile.
@@ -95,22 +116,104 @@ public:
     }
 
     /**
-     * Returns a suggested Task to be executed based on the status of the
-     * Package.
-     * The TaskConfiguration selected is the newest version of the one for the
-     * Task that needs the current PackageStatus.
-     * If there's no suitable Task to be executed, a null pointer is returned.
+     * Returns the list with all the PackageStatus.
+     * The list contains the PackageStatus from the first to the current in the
+     * same order they were added.
      *
-     * @return The suggested Task to execute.
+     * @return The list with all the PackageStatus.
      */
-    lusi::task::Task* getTask();
+    std::vector<const lusi::package::status::PackageStatus*>
+    getAllPackageStatus();
 
     /**
-     * Saves the profile in a persistent way.
-     * This method commits the changes made in the Profile to the configuration
-     * file from where it was loaded (or a new one if it's a fresh profile).
+     * Returns the current PackageStatus.
+     *
+     * @return The current PackageStatus.
      */
-    void save();
+    const lusi::package::status::PackageStatus* getPackageStatus();
+
+    /**
+     * Returns the current resources.
+     * The current resources are those associated with the current
+     * PackageStatus. If there are no associated resources, an empty
+     * ConfigurationParameterMap is returned.
+     *
+     * The id of the returned ConfigurationParameterMap is "resources".
+     *
+     * @return The current resources.
+     */
+    lusi::util::SmartPtr<lusi::configuration::ConfigurationParameterMap>
+    getResources();
+
+    /**
+     * Returns the id of a suggested Task to be executed based on the Package
+     * status.
+     * If there's no suitable Task to be executed, an empty string is returned.
+     *
+     * @return The id of the suggested Task to execute.
+     */
+    std::string getTaskId();
+
+    /**
+     * Sets the current resources.
+     * The current resources are removed and substituted with the new ones.
+     * The configuration itself isn't added, but a copy of it. All the child
+     * parameters are also copied.
+     *
+     * @param resources The resources to set.
+     */
+    void setResources(lusi::util::SmartPtr<
+                lusi::configuration::ConfigurationParameterMap> resources);
+
+    /**
+     * Sets the current Task id.
+     *
+     * @param taskId The Task id to set.
+     */
+    void setTaskId(const std::string& taskId);
+
+    /**
+     * Adds a new package status after the current one.
+     * After adding the new status it is set as the current one.
+     *
+     * If the current PackageStatus is the last in the list of PackageStatus,
+     * the new PackageStatus is added at the end. An empty string is added as
+     * the Task id, and an empty ConfigurationParameterMap is added as the
+     * resources.
+     *
+     * If the current PackageStatus isn't the last and the new one to add is
+     * equal to the next PackageStatus, the next PackageStatus is set as the
+     * current one. No changes are made in the Task ids or resources, as if the
+     * PackageStatus wasn't the last, the Profile was reverted, so no more
+     * changes are needed.
+     *
+     * If the new one to add is different, the next PackageStatus and all the
+     * others until the end are removed, and the PackageStatus is added like in
+     * the first case (the current being the last, as all the others are
+     * removed).
+     *
+     * @param packageStatus The PackageStatus to add.
+     */
+    void addPackageStatus(
+                const lusi::package::status::PackageStatus* packageStatus);
+
+    /**
+     * Reverts this Profile to the specified PackageStatus.
+     * The current PackageStatus is set as the one specified. If the specified
+     * PackageStatus isn't any of the PackageStatus before the current one in
+     * the list, nothing is done.
+     *
+     * All the resources of the PackageStatus from the next PackageStatus (the
+     * next of the new current PackageStatus) to the end are cleared, although
+     * the Task ids are kept.
+     *
+     * The Package of this Profile is also reverted, so its PackageStatus is
+     * changed and the resources cleared to be got again.
+     *
+     * @param packageStatus The PackageStatus to revert to.
+     */
+    void revertPackageStatus(
+                const lusi::package::status::PackageStatus* packageStatus);
 
 protected:
 
@@ -121,8 +224,103 @@ private:
      */
     Package* mPackage;
 
+    /**
+     * The configuration with all the PackageStatus, resources and Task ids.
+     */
+    lusi::configuration::ConfigurationParameterMap* mConfiguration;
+
+    /**
+     * The configuration for the current PackageStatus.
+     */
+    lusi::util::SmartPtr<lusi::configuration::ConfigurationParameterMap>
+    mCurrentConfiguration;
 
 
+
+    /**
+     * Returns the versions of the Package that have a saved Profile.
+     *
+     * @return The versions of the Package that have a saved Profile.
+     */
+    std::vector<std::string> getVersionsWithProfile();
+
+    /**
+     * Loads the Profile.
+     * First, the Profile for the exact version of the Package is used. If it
+     * can't be loaded, the greatest smaller version than the current version
+     * is used. If it can't be loaded, the smaller greatest version than the
+     * current version is used. It it can't be loaded, a Package without
+     * version is used. If it can't be loaded, a default Profile is created.
+     *
+     * If the loaded Profile isn't that for the exact version of the Package, it
+     * is reverted to its first PackageStatus, so the information about the Task
+     * ids is kept, but all the resources are removed (as they aren't valid with
+     * the new Package).
+     */
+    void load();
+
+    /**
+     * Loads the Profile for the greatest smaller version of the PackageId.
+     *
+     * @param packageVersions All the versions of the Package.
+     * @return True if the Profile was loaded, false otherwise.
+     */
+    bool loadPreviousVersion(std::vector<std::string>& packageVersions);
+
+    /**
+     * Loads the Profile for the smaller greatest version of the PackageId.
+     *
+     * @param packageVersions All the versions of the Package.
+     * @return True if the Profile was loaded, false otherwise.
+     */
+    bool loadNextVersion(const std::vector<std::string>& packageVersions);
+
+    /**
+     * Loads the Profile for a specific PackageId.
+     * The current PackageStatus is that with the "selected"
+     * ConfigurationParameterBool. That parameter is removed in the
+     * configuration.
+     *
+     * @return True if the Profile was loaded, false otherwise.
+     */
+    bool load(const PackageId& packageId);
+
+    /**
+     * Creates a new default profile.
+     * The default Profile contains an empty ConfigurationParameterMap called
+     * "resources", an empty Task id and an UnknownPackageStatus.
+     */
+    void createDefaultProfile();
+
+    /**
+     * Saves the profile in a persistent way.
+     * This method commits the changes made in the Profile to the configuration
+     * file from where it was loaded (or a new one if it's a fresh profile).
+     *
+     * The current PackageStatus is marked in the saved file with a
+     * ConfigurationParameterBool called "selected".
+     */
+    void save();
+
+    /**
+     * Returns the PackageStatus from its id.
+     * Temporal method until redesign of PackageStatus is made.
+     *
+     * @param id The id to get the PackageStatus from.
+     * @return The PackageStatus from its id.
+     */
+    const lusi::package::status::PackageStatus* getPackageStatusFromId(
+                                                        const std::string& id);
+
+    /**
+     * Returns the id for the PackageStatus.
+     * Temporal method until redesign of PackageStatus is made.
+     *
+     * @param packageStatus The PackageStatus to get its id.
+     * @return The id for the PackageStatus.
+     */
+    std::string getIdForPackageStatus(
+                    const lusi::package::status::PackageStatus* packageStatus);
 
     /**
      * Copy constructor disabled.

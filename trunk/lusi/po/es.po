@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: kalvy@users.berlios.de\n"
-"POT-Creation-Date: 2006-10-13 20:54+0200\n"
+"POT-Creation-Date: 2006-12-12 12:32+0100\n"
 "PO-Revision-Date: 2006-10-13 21:52+0200\n"
 "Last-Translator: Daniel Calviño Sánchez <kalvy@users.berlios.de>\n"
 "Language-Team: Español\n"
@@ -19,45 +19,46 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: KBabel 1.10.2\n"
 
-#: src/lusi/task/helper/BaseExtractTaskHelper.cpp:65
+#: src/lusi/task/helper/BaseExtractTaskHelper.cpp:58
 msgid "Extraction directory"
 msgstr "Directorio de extracción"
 
-#: src/lusi/task/helper/BaseExtractTaskHelper.cpp:66
+#: src/lusi/task/helper/BaseExtractTaskHelper.cpp:59
 msgid "The directory to extract the package to"
 msgstr "El directorio en el que extraer el paquete"
 
-#: src/lusi/task/helper/ConfigureConfigureTaskHelper.cpp:95
-#: src/lusi/task/helper/ConfigureConfigureTaskHelper.cpp:100
+#: src/lusi/task/helper/ConfigureConfigureTaskHelper.cpp:91
+#: src/lusi/task/helper/ConfigureConfigureTaskHelper.cpp:96
 msgid "Prefix"
 msgstr "Prefijo"
 
-#: src/lusi/task/helper/ConfigureConfigureTaskHelper.cpp:97
-#: src/lusi/task/helper/ConfigureConfigureTaskHelper.cpp:102
+#: src/lusi/task/helper/ConfigureConfigureTaskHelper.cpp:93
+#: src/lusi/task/helper/ConfigureConfigureTaskHelper.cpp:98
 msgid "The prefix directory to install the package to"
 msgstr "El directorio base donde instalar el paquete"
 
-#: src/lusi/task/helper/MakeInstallTaskHelper.cpp:72
+#: src/lusi/task/helper/MakeInstallTaskHelper.cpp:82
 msgid "User name"
 msgstr "Nombre de usuario"
 
-#: src/lusi/task/helper/MakeInstallTaskHelper.cpp:74
+#: src/lusi/task/helper/MakeInstallTaskHelper.cpp:84
 msgid "The name of the owner of the directory to install the package to"
 msgstr "El nombre del propietario del directorio donde instalar el paquete"
 
-#: src/lusi/task/helper/MakeInstallTaskHelper.cpp:76
+#: src/lusi/task/helper/MakeInstallTaskHelper.cpp:86
 msgid "Password"
 msgstr "Contraseña"
 
-#: src/lusi/task/helper/MakeInstallTaskHelper.cpp:78
+#: src/lusi/task/helper/MakeInstallTaskHelper.cpp:88
 msgid "The password of the owner of the directory to install the package to"
 msgstr "La contraseña del propietario del directorio donde instalar el paquete"
 
-#: src/lusi/task/helper/MakeInstallTaskHelper.cpp:82
+#: src/lusi/task/helper/MakeInstallTaskHelper.cpp:93
 msgid "Login"
 msgstr "Identificador de usuario"
 
-#: src/lusi/task/helper/MakeInstallTaskHelper.cpp:83
+#: src/lusi/task/helper/MakeInstallTaskHelper.cpp:94
 msgid "Login data of the owner of the directory to install the package to"
-msgstr "Los datos del identificador de usuario del propietario del directorio donde instalar el paquete"
-
+msgstr ""
+"Los datos del identificador de usuario del propietario del directorio donde "
+"instalar el paquete"

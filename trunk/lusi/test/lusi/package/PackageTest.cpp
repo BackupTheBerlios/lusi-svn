@@ -29,19 +29,17 @@
 #undef protected
 
 #include "PackageId.h"
-#include "ProfileManager.h"
+#include "Profile.h"
 #include "status/BuiltPackageStatus.h"
 #include "status/UnknownPackageStatus.h"
 #include "../configuration/ConfigurationParameterMap.h"
 #include "../configuration/ConfigurationPaths.h"
-#include "../util/SmartPtr.h"
 
 using lusi::configuration::ConfigurationParameterMap;
 using lusi::configuration::ConfigurationPaths;
 using lusi::package::status::BuiltPackageStatus;
 using lusi::package::status::PackageStatus;
 using lusi::package::status::UnknownPackageStatus;
-using lusi::util::SmartPtr;
 
 using namespace lusi::package;
 
@@ -58,7 +56,7 @@ void PackageTest::tearDown() {
     struct stat fileStat;
     if (!stat(paths.getPackageDirectory(*mPackageId).c_str(), &fileStat)) {
         unlink(paths.getPackageFile(*mPackageId).c_str());
-        unlink(paths.getPackageResourcesFile(*mPackageId).c_str());
+        unlink(paths.getProfileFile(*mPackageId).c_str());
         rmdir(paths.getPackageDirectory(*mPackageId).c_str());
     }
 
@@ -72,9 +70,8 @@ void PackageTest::testConstructor() {
     CPPUNIT_ASSERT(UnknownPackageStatus::getInstance() ==
                    mPackage->getPackageStatus());
     CPPUNIT_ASSERT_EQUAL((Profile*)0, mPackage->mProfile);
-    CPPUNIT_ASSERT_EQUAL((ConfigurationParameterMap*)0, mPackage->mResources);
-    CPPUNIT_ASSERT_EQUAL((ConfigurationParameterMap*)0,
-                         mPackage->mResourceFiles);
+    CPPUNIT_ASSERT_EQUAL(true, mPackage->mResources.isNull());
+    CPPUNIT_ASSERT_EQUAL(true, mPackage->mResourceFiles.isNull());
 
     //Test constructor with explicit PackageStatus
     delete mPackage;
@@ -83,9 +80,8 @@ void PackageTest::testConstructor() {
     CPPUNIT_ASSERT(BuiltPackageStatus::getInstance() ==
                    mPackage->getPackageStatus());
     CPPUNIT_ASSERT_EQUAL((Profile*)0, mPackage->mProfile);
-    CPPUNIT_ASSERT_EQUAL((ConfigurationParameterMap*)0, mPackage->mResources);
-    CPPUNIT_ASSERT_EQUAL((ConfigurationParameterMap*)0,
-                         mPackage->mResourceFiles);
+    CPPUNIT_ASSERT_EQUAL(true, mPackage->mResources.isNull());
+    CPPUNIT_ASSERT_EQUAL(true, mPackage->mResourceFiles.isNull());
 }
 
 void PackageTest::testGetPackageId() {
@@ -96,29 +92,25 @@ void PackageTest::testGetProfile() {
     CPPUNIT_ASSERT_EQUAL((Profile*)0, mPackage->mProfile);
 
     CPPUNIT_ASSERT_EQUAL(mPackage->mProfile, mPackage->getProfile());
-    CPPUNIT_ASSERT_EQUAL(ProfileManager::getInstance()->getProfile(*mPackageId),
-                         mPackage->mProfile);
     CPPUNIT_ASSERT_EQUAL(mPackage->getProfile(), mPackage->getProfile());
 }
 
 void PackageTest::testGetResources() {
-    CPPUNIT_ASSERT_EQUAL((ConfigurationParameterMap*)0, mPackage->mResources);
+    CPPUNIT_ASSERT_EQUAL(true, mPackage->mResources.isNull());
 
-    CPPUNIT_ASSERT_EQUAL(mPackage->mResources, mPackage->getResources());
-    CPPUNIT_ASSERT(0 != mPackage->mResources);
-    CPPUNIT_ASSERT_EQUAL(mPackage->getResources(), mPackage->getResources());
+    CPPUNIT_ASSERT_EQUAL(false, mPackage->getResources().isNull());
+    CPPUNIT_ASSERT(mPackage->mResources == mPackage->getResources());
+    CPPUNIT_ASSERT(mPackage->getResources() == mPackage->getResources());
 }
 
 void PackageTest::testGetResourceFiles() {
-    CPPUNIT_ASSERT_EQUAL((ConfigurationParameterMap*)0,
-                         mPackage->mResourceFiles);
+    CPPUNIT_ASSERT_EQUAL(true, mPackage->mResourceFiles.isNull());
 
-    CPPUNIT_ASSERT_EQUAL(mPackage->mResourceFiles,
-                         mPackage->getResourceFiles());
+    CPPUNIT_ASSERT(mPackage->mResourceFiles == mPackage->getResourceFiles());
     CPPUNIT_ASSERT(mPackage->mResources->get("files") ==
                    mPackage->mResourceFiles);
-    CPPUNIT_ASSERT_EQUAL(mPackage->getResourceFiles(),
-                         mPackage->getResourceFiles());
+    CPPUNIT_ASSERT(mPackage->getResourceFiles() ==
+                   mPackage->getResourceFiles());
 }
 
 void PackageTest::testGetPackageStatus() {
@@ -133,25 +125,18 @@ void PackageTest::testSetPackageStatus() {
     CPPUNIT_ASSERT_EQUAL(static_cast<const PackageStatus*>
                                 (BuiltPackageStatus::getInstance()),
                          mPackage->mPackageStatus);
+    CPPUNIT_ASSERT_EQUAL(static_cast<const PackageStatus*>
+                                (BuiltPackageStatus::getInstance()),
+                         mPackage->getProfile()->getPackageStatus());
 }
 
-void PackageTest::testLoadResources() {
-    mPackage->getResources()->add(SmartPtr<ConfigurationParameterMap>(
-        new ConfigurationParameterMap("treasureMap")));
-    mPackage->saveResources();
-    mPackage->mResources = 0;
+void PackageTest::testRevertPackageStatus() {
+    mPackage->setPackageStatus(BuiltPackageStatus::getInstance());
+    mPackage->revertPackageStatus(UnknownPackageStatus::getInstance());
 
-    CPPUNIT_ASSERT_EQUAL(true, mPackage->loadResources());
-    CPPUNIT_ASSERT(0 != mPackage->mResources);
-    CPPUNIT_ASSERT(0 != mPackage->mResources->get("treasureMap"));
-}
-
-void PackageTest::testSaveResources() {
-    mPackage->getResources()->add(SmartPtr<ConfigurationParameterMap>(
-        new ConfigurationParameterMap("xMarksTheSpot")));
-    CPPUNIT_ASSERT_EQUAL(true, mPackage->saveResources());
-
-    mPackage->mResources = 0;
-    mPackage->loadResources();
-    CPPUNIT_ASSERT(0 != mPackage->mResources->get("xMarksTheSpot"));
+    CPPUNIT_ASSERT_EQUAL(static_cast<const PackageStatus*>(
+                            UnknownPackageStatus::getInstance()),
+                         mPackage->mPackageStatus);
+    CPPUNIT_ASSERT_EQUAL(true, mPackage->mResources.isNull());
+    CPPUNIT_ASSERT_EQUAL(true, mPackage->mResourceFiles.isNull());
 }

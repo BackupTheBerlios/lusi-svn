@@ -47,8 +47,7 @@ class PackageTest: public CppUnit::TestFixture {
     CPPUNIT_TEST(testGetResourceFiles);
     CPPUNIT_TEST(testGetPackageStatus);
     CPPUNIT_TEST(testSetPackageStatus);
-    CPPUNIT_TEST(testLoadResources);
-    CPPUNIT_TEST(testSaveResources);
+    CPPUNIT_TEST(testRevertPackageStatus);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -100,19 +99,15 @@ public:
     void testGetPackageStatus();
 
     /**
-     * Checks if setPackageStatus() sets mPackageStatus.
+     * Checks if setPackageStatus() sets mPackageStatus and updates the Profile.
      */
     void testSetPackageStatus();
 
     /**
-     * Checks if the previously saved resources are loaded.
+     * Checks if the PackageStatus in the Package and if the resources and
+     * resource files are set to null.
      */
-    void testLoadResources();
-
-    /**
-     * Checks if the saved resources can be loaded.
-     */
-    void testSaveResources();
+    void testRevertPackageStatus();
 
 private:
 

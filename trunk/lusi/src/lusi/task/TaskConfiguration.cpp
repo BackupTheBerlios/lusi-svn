@@ -42,27 +42,11 @@ using lusi::configuration::ConfigurationSaver;
 using lusi::configuration::PersistenceException;
 using lusi::package::Package;
 using lusi::package::PackageId;
+using lusi::package::versionsWeakOrdering;
 using lusi::util::LocalFile;
 using lusi::util::SmartPtr;
 
 using namespace lusi::task;
-
-/**
- * Wrapper function for PackageId::compareVersions static method to adjust to
- * weak ordering interface used by stdlib algorithms.
- * It simply returns true if version1 is smaller than version2, false otherwise.
- *
- * @param version1 The first version to compare.
- * @param version2 The second version to compare.
- * @return True if version1 is smaller than version2, false otherwise.
- */
-bool versionsWeakOrdering(const string& version1, const string& version2) {
-    if (PackageId::compareVersions(version1, version2) < 0) {
-        return true;
-    }
-
-    return false;
-}
 
 //public:
 

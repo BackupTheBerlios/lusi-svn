@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <sys/stat.h>
+
 #include "PackageManagerTest.h"
 
 #define protected public
@@ -28,16 +30,21 @@
 #undef protected
 
 #include "PackageId.h"
+#include "Profile.h"
 #include "status/PackedPackageStatus.h"
 #include "status/UnknownPackageStatus.h"
 #include "status/UnpackedPackageStatus.h"
+#include "../configuration/ConfigurationPaths.h"
+#include "../util/LocalFile.h"
 
 using std::vector;
 
+using lusi::configuration::ConfigurationPaths;
 using lusi::package::status::PackageStatus;
 using lusi::package::status::PackedPackageStatus;
 using lusi::package::status::UnknownPackageStatus;
 using lusi::package::status::UnpackedPackageStatus;
+using lusi::util::LocalFile;
 
 using namespace lusi::package;
 
@@ -66,6 +73,16 @@ void PackageManagerTest::setUp() {
 }
 
 void PackageManagerTest::tearDown() {
+    ConfigurationPaths paths;
+    PackageId packageId("2");
+
+    struct stat fileStat;
+    if (!stat(paths.getPackageDirectory(packageId).c_str(), &fileStat)) {
+        unlink(paths.getPackageFile(packageId).c_str());
+        unlink(paths.getProfileFile(packageId).c_str());
+        rmdir(paths.getPackageDirectory(packageId).c_str());
+    }
+
     delete mPackageManager;
 }
 
@@ -126,4 +143,25 @@ void PackageManagerTest::testGetPackage() {
                     package->getPackageStatus());
     CPPUNIT_ASSERT_EQUAL((size_t)4, mPackageManager->mPackages.size());
     CPPUNIT_ASSERT(packageId == mPackageManager->mPackages[3]->getPackageId());
+}
+
+void PackageManagerTest::testRemovePackage() {
+    mPackage2->setPackageStatus(UnpackedPackageStatus::getInstance());
+    PackageId packageId(mPackage2->getPackageId());
+
+    mPackageManager->removePackage(mPackage2);
+
+    CPPUNIT_ASSERT_EQUAL(false, LocalFile(ConfigurationPaths().getPackageFile(
+                                        packageId)).exists());
+
+    CPPUNIT_ASSERT_EQUAL((size_t)2, mPackageManager->mPackages.size());
+    CPPUNIT_ASSERT_EQUAL(mPackage1, mPackageManager->mPackages[0]);
+    CPPUNIT_ASSERT_EQUAL(mPackage3, mPackageManager->mPackages[1]);
+
+    mPackage2 = PackageManager::getInstance()->getPackage(packageId);
+    CPPUNIT_ASSERT_EQUAL((size_t)1,
+                         mPackage2->getProfile()->getAllPackageStatus().size());
+    CPPUNIT_ASSERT_EQUAL(
+                    (const PackageStatus*)UnknownPackageStatus::getInstance(),
+                    mPackage2->getProfile()->getPackageStatus());
 }
