@@ -6,7 +6,12 @@ AM_INIT_AUTOMAKE(lusi, 0.3)
 
 AC_LANG_CPLUSPLUS
 AC_PROG_CXX
+AC_LIBTOOL_DLOPEN
+AC_LIBLTDL_INSTALLABLE
 AM_PROG_LIBTOOL
+
+AC_SUBST(INCLTDL)
+AC_SUBST(LIBLTDL)
 
 dnl
 dnl Checks for gettext
@@ -38,6 +43,7 @@ AC_OUTPUT(Makefile
           src/lusi/configuration/Makefile
           src/lusi/package/Makefile
           src/lusi/package/status/Makefile
+          src/lusi/plugin/Makefile
           src/lusi/task/Makefile
           src/lusi/task/helper/Makefile
           src/lusi/util/Makefile
