@@ -278,9 +278,11 @@ public:
     /**
      * Executes this Task.
      * The current TaskHelper, which is the real implementation of the Task, is
-     * executed. Once finished, the Task id is added to the Profile, the
-     * PackageStatus is updated and the configuration of the TaskHelper added
-     * to the TaskConfiguration to save the parameters used.
+     * executed. Once finished, if it was a normal Task, the Task id is added
+     * to the Profile and the PackageStatus is updated. If it was an UndoTask,
+     * the Profile is reverted to the provided PackageStatus of the UndoTask.
+     * In both cases, the configuration of the TaskHelper is added to the
+     * TaskConfiguration to save the parameters used.
      *
      * This method can only be called when all the parameters are valid. If
      * there are any invalid parameters, an exception is thrown.

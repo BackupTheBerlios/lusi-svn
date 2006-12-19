@@ -148,8 +148,12 @@ void Task::execute() throw (ExecuteTaskException,
             mCurrentTaskHelper->getName() + ": " + e.what());
     }
 
-    mPackage->getProfile()->setTaskId(mId);
-    mPackage->setPackageStatus(mProvidedPackageStatus);
+    if (mId.find("Undo") == 0) {
+        mPackage->getProfile()->revertPackageStatus(mProvidedPackageStatus);
+    } else {
+        mPackage->getProfile()->setTaskId(mId);
+        mPackage->setPackageStatus(mProvidedPackageStatus);
+    }
     mTaskConfiguration->addTaskHelperConfiguration(
                             mCurrentTaskHelper->getConfigurationParameterMap());
     //If it fails to save... well, bad luck :P, as it will likely be due to
