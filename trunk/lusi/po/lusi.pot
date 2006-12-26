@@ -8,13 +8,33 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: kalvy@users.berlios.de\n"
-"POT-Creation-Date: 2006-12-12 12:32+0100\n"
+"POT-Creation-Date: 2006-12-20 00:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: src/lusi/task/TaskManager.cpp:106
+msgid "Build"
+msgstr ""
+
+#: src/lusi/task/TaskManager.cpp:109
+msgid "Configure"
+msgstr ""
+
+#: src/lusi/task/TaskManager.cpp:112
+msgid "Extract"
+msgstr ""
+
+#: src/lusi/task/TaskManager.cpp:115
+msgid "Install"
+msgstr ""
+
+#: src/lusi/task/TaskManager.cpp:118
+msgid "Undo install"
+msgstr ""
 
 #: src/lusi/task/helper/BaseExtractTaskHelper.cpp:58
 msgid "Extraction directory"

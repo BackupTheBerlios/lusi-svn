@@ -126,6 +126,10 @@ namespace task {
  * PackageStatus. Undo tasks id is "Undo" followed by the id of the Task
  * they undo.
  *
+ * Tasks also have a name, which is an internationalized human readable text so
+ * the user can identify a Task in a comfortable way (a lot more than using the
+ * pure id).
+ *
  * Task shouldn't be created directly. Instead, use
  * TaskManager::getTask(lusi::package::Package*).
  *
@@ -143,12 +147,14 @@ public:
      * It sets the first TaskHelper to be executed, if any.
      *
      * @param id The id of the Task.
+     * @param name The name of the Task.
      * @param package The Package to use.
      * @param neededPackageStatus The PackageStatus needed to execute this Task.
      * @param providedPackageStatus The PackageStatus this Task provides once
      *                              it was executed.
      */
-    Task(const std::string& id, lusi::package::Package* package,
+    Task(const std::string& id, const std::string& name,
+         lusi::package::Package* package,
          const lusi::package::status::PackageStatus* neededPackageStatus,
          const lusi::package::status::PackageStatus* providedPackageStatus);
 
@@ -165,6 +171,15 @@ public:
      */
     const std::string& getId() const {
         return mId;
+    }
+
+    /**
+     * Returns the name of this Task.
+     *
+     * @return The name of this Task.
+     */
+    const std::string& getName() const {
+        return mName;
     }
 
     /**
@@ -308,6 +323,11 @@ private:
      * The id of this Task.
      */
     std::string mId;
+
+    /**
+     * The name of this Task.
+     */
+    std::string mName;
 
     /**
      * The Package to use in this Task.

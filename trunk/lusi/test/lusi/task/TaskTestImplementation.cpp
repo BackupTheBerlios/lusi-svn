@@ -34,7 +34,7 @@ using namespace lusi::task;
 //public:
 
 TaskTestImplementation::TaskTestImplementation(const std::string& name):
-            Task(name, new Package(PackageId("testPackage")),
+            Task(name, name, new Package(PackageId("testPackage")),
                  PackageStatusTestImplementation::getFirstInstance(),
                  PackageStatusTestImplementation::getSecondInstance()) {
 }

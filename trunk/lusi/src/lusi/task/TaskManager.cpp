@@ -27,6 +27,7 @@
 #include "../package/status/InstalledPackageStatus.h"
 #include "../package/status/PackedPackageStatus.h"
 #include "../package/status/UnpackedPackageStatus.h"
+#include "../util/i18n.h"
 
 using std::make_pair;
 using std::multimap;
@@ -69,7 +70,7 @@ Task* TaskManager::getTask(Package* package) {
                     package->getPackageStatus(), mTasksByNeededPackageStatus);
     for (vector<TaskData>::const_iterator iterator = tasks.begin();
                 iterator != tasks.end() && task == 0; ++iterator) {
-        task = new Task((*iterator).id, package,
+        task = new Task((*iterator).id, (*iterator).name, package,
                 (*iterator).neededPackageStatus,
                 (*iterator).providedPackageStatus);
         if (!task->test()) {
@@ -81,11 +82,12 @@ Task* TaskManager::getTask(Package* package) {
     return task;
 }
 
-void TaskManager::registerTask(const string& id,
+void TaskManager::registerTask(const string& id, const string& name,
                                const PackageStatus* neededPackageStatus,
                                const PackageStatus* providedPackageStatus) {
     TaskData taskData;
     taskData.id = id;
+    taskData.name = name;
     taskData.neededPackageStatus = neededPackageStatus;
     taskData.providedPackageStatus = providedPackageStatus;
 
@@ -101,15 +103,20 @@ TaskManager* TaskManager::sInstance = 0;
 
 TaskManager::TaskManager(): mTasksByNeededPackageStatus(),
                     mTasksByProvidedPackageStatus() {
-    registerTask("BuildTask", ConfiguredPackageStatus::getInstance(),
+    registerTask("BuildTask", _("Build"),
+                 ConfiguredPackageStatus::getInstance(),
                  BuiltPackageStatus::getInstance());
-    registerTask("ConfigureTask", UnpackedPackageStatus::getInstance(),
+    registerTask("ConfigureTask", _("Configure"),
+                 UnpackedPackageStatus::getInstance(),
                  ConfiguredPackageStatus::getInstance());
-    registerTask("ExtractTask", PackedPackageStatus::getInstance(),
+    registerTask("ExtractTask", _("Extract"),
+                 PackedPackageStatus::getInstance(),
                  UnpackedPackageStatus::getInstance());
-    registerTask("InstallTask", BuiltPackageStatus::getInstance(),
+    registerTask("InstallTask", _("Install"),
+                 BuiltPackageStatus::getInstance(),
                  InstalledPackageStatus::getInstance());
-    registerTask("UndoInstallTask", InstalledPackageStatus::getInstance(),
+    registerTask("UndoInstallTask", _("Undo install"),
+                 InstalledPackageStatus::getInstance(),
                  BuiltPackageStatus::getInstance());
 }
 
@@ -135,12 +142,12 @@ Task* TaskManager::getTaskFromProfile(Package* package) {
         return 0;
     }
 
-    //TODO index Tasks also by name, instead of traversing the other maps
+    //TODO index Tasks also by id, instead of traversing the other maps
     typedef multimap<const PackageStatus*, TaskData>::const_iterator iterator;
     for (iterator it = mTasksByNeededPackageStatus.begin();
             it != mTasksByNeededPackageStatus.end(); ++it) {
         if (it->second.id == taskId) {
-            Task* task = new Task(it->second.id, package,
+            Task* task = new Task(it->second.id, it->second.name, package,
                                  it->second.neededPackageStatus,
                                  it->second.providedPackageStatus);
             if (task->test()) {

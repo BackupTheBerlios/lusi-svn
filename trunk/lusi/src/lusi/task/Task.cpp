@@ -46,10 +46,11 @@ using namespace lusi::task;
 
 //public:
 
-Task::Task(const string& id, Package* package,
+Task::Task(const string& id, const string& name, Package* package,
            const PackageStatus* neededPackageStatus,
            const PackageStatus* providedPackageStatus) {
     mId = id;
+    mName = name;
     mPackage = package;
     mTaskConfiguration = new TaskConfiguration(this);
     mNeededPackageStatus = neededPackageStatus;
@@ -81,6 +82,10 @@ Task::~Task() {
 /*
 inline const string& Task::getId() const {
     return mId;
+}
+
+inline const string& Task::getName() const {
+    return mName;
 }
 
 inline Package* Task::getPackage() const {

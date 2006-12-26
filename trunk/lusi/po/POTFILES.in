@@ -1,4 +1,5 @@
 # List of source files which contain translatable strings.
+src/lusi/task/TaskManager.cpp
 src/lusi/task/helper/BaseExtractTaskHelper.cpp
 src/lusi/task/helper/ConfigureConfigureTaskHelper.cpp
 src/lusi/task/helper/MakeInstallTaskHelper.cpp

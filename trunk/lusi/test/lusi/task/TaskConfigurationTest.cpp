@@ -48,7 +48,7 @@ using namespace lusi::task;
 
 void TaskConfigurationTest::setUp() {
     mPackage = new Package(PackageId("testPackage"));
-    mTask = new Task("MakeTests", mPackage,
+    mTask = new Task("MakeTests", "Make tests",  mPackage,
                      PackageStatusTestImplementation::getFirstInstance(),
                      PackageStatusTestImplementation::getSecondInstance());
     mTaskConfiguration = mTask->mTaskConfiguration;

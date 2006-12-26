@@ -54,7 +54,7 @@ using namespace lusi::task;
 
 void TaskTest::setUp() {
     mPackage = new Package(PackageId("testPackage"));
-    mTask = new Task("MakeTests", mPackage,
+    mTask = new Task("MakeTests", "Make tests", mPackage,
                      PackageStatusTestImplementation::getFirstInstance(),
                      PackageStatusTestImplementation::getSecondInstance());
 
@@ -76,6 +76,10 @@ void TaskTest::tearDown() {
 
 void TaskTest::testGetId() {
     CPPUNIT_ASSERT_EQUAL(string("MakeTests"), mTask->getId());
+}
+
+void TaskTest::testGetName() {
+    CPPUNIT_ASSERT_EQUAL(string("Make tests"), mTask->getName());
 }
 
 void TaskTest::testGetPackage() {
@@ -171,7 +175,7 @@ void TaskTest::testNextTaskHelper() {
 
     //Test with no available taskHelpers
     delete mTask;
-    mTask = new Task("MakeTests", mPackage,
+    mTask = new Task("MakeTests", "Make tests", mPackage,
                      PackageStatusTestImplementation::getFirstInstance(),
                      PackageStatusTestImplementation::getSecondInstance());
 
@@ -180,7 +184,7 @@ void TaskTest::testNextTaskHelper() {
 
     //Test with only one available taskHelper, but without valid resources
     delete mTask;
-    mTask = new Task("MakeTests", mPackage,
+    mTask = new Task("MakeTests", "Make tests", mPackage,
                      PackageStatusTestImplementation::getFirstInstance(),
                      PackageStatusTestImplementation::getSecondInstance());
 

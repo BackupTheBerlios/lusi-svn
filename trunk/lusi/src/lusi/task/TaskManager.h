@@ -60,7 +60,7 @@ namespace task {
  *
  * Taks must be registered with this class. Only registered Tasks will be taken
  * into account when getting the Tasks to execute. The Task is registered
- * using its id and the PackageStatus it needs and provides.
+ * using its id, name and the PackageStatus it needs and provides.
  *
  * This class follows the Singleton Design Pattern. Only one instance is
  * created, and it can be got with getInstance() method.
@@ -93,14 +93,15 @@ public:
 
     /**
      * Registers a Task in the manager.
-     * The Task is registered using its id and the PackageStatus it needs and
-     * provides.
+     * The Task is registered using its id, name and the PackageStatus it needs
+     * and provides.
      *
      * @param id The id of the Task.
+     * @param name The name of the Task.
      * @param neededPackageStatus The PackageStatus needed by the Task.
      * @param providedPackageStatus The PackageStatus provided by the Task.
      */
-    void registerTask(const std::string& id,
+    void registerTask(const std::string& id, const std::string& name,
              const lusi::package::status::PackageStatus* neededPackageStatus,
              const lusi::package::status::PackageStatus* providedPackageStatus);
 
@@ -113,6 +114,7 @@ private:
      */
     struct TaskData {
         std::string id;
+        std::string name;
         const lusi::package::status::PackageStatus* neededPackageStatus;
         const lusi::package::status::PackageStatus* providedPackageStatus;
     };

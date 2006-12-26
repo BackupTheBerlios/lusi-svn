@@ -61,19 +61,22 @@ using namespace lusi::task;
 
 void TaskManagerTest::setUp() {
     mTaskManager = TaskManager::getInstance();
-    mTaskManager->registerTask("Chew gimer stick cane",
+    mTaskManager->registerTask("ChewTask",
+                               "Chew gimer stick cane",
                                firstPackageStatus,
                                secondPackageStatus);
-    mTaskManager->registerTask("Watch House M.D.",
+    mTaskManager->registerTask("WatchTask",
+                               "Watch House M.D.",
                                firstPackageStatus,
                                thirdPackageStatus);
-    mTaskManager->registerTask("Milk the platypus",
+    mTaskManager->registerTask("MilkTask",
+                               "Milk the platypus",
                                secondPackageStatus,
                                thirdPackageStatus);
 
     TaskHelperManager::getInstance()->
             registerTaskHelper(createTaskHelperTestImplementation1,
-                               "Chew gimer stick cane");
+                               "ChewTask");
 }
 
 void TaskManagerTest::tearDown() {
@@ -84,7 +87,7 @@ void TaskManagerTest::tearDown() {
     mTaskManager->mTasksByProvidedPackageStatus.erase(thirdPackageStatus);
 
     TaskHelperManager::getInstance()->
-                            mTaskHelperFactories.erase("Chew gimer stick cane");
+                            mTaskHelperFactories.erase("ChewTask");
 }
 
 void TaskManagerTest::testSingleton() {
@@ -100,7 +103,7 @@ void TaskManagerTest::testGetTask() {
 
     auto_ptr<Task> task(mTaskManager->getTask(package.get()));
     CPPUNIT_ASSERT(task.get() != 0);
-    CPPUNIT_ASSERT_EQUAL(string("Chew gimer stick cane"), task->getId());
+    CPPUNIT_ASSERT_EQUAL(string("ChewTask"), task->getId());
 }
 
 void TaskManagerTest::testRegisterTask() {
@@ -111,15 +114,19 @@ void TaskManagerTest::testRegisterTask() {
                 mTaskManager->mTasksByNeededPackageStatus.equal_range(
                                                         firstPackageStatus);
     CPPUNIT_ASSERT(range1.first != range1.second);
-    CPPUNIT_ASSERT_EQUAL(string("Chew gimer stick cane"),
+    CPPUNIT_ASSERT_EQUAL(string("ChewTask"),
                          range1.first->second.id);
+    CPPUNIT_ASSERT_EQUAL(string("Chew gimer stick cane"),
+                         range1.first->second.name);
     CPPUNIT_ASSERT_EQUAL(firstPackageStatus,
                          range1.first->second.neededPackageStatus);
     CPPUNIT_ASSERT_EQUAL(secondPackageStatus,
                          range1.first->second.providedPackageStatus);
     ++range1.first;
-    CPPUNIT_ASSERT_EQUAL(string("Watch House M.D."),
+    CPPUNIT_ASSERT_EQUAL(string("WatchTask"),
                          range1.first->second.id);
+    CPPUNIT_ASSERT_EQUAL(string("Watch House M.D."),
+                         range1.first->second.name);
     CPPUNIT_ASSERT_EQUAL(firstPackageStatus,
                          range1.first->second.neededPackageStatus);
     CPPUNIT_ASSERT_EQUAL(thirdPackageStatus,
@@ -131,8 +138,10 @@ void TaskManagerTest::testRegisterTask() {
                 mTaskManager->mTasksByNeededPackageStatus.equal_range(
                                                         secondPackageStatus);
     CPPUNIT_ASSERT(range2.first != range2.second);
-    CPPUNIT_ASSERT_EQUAL(string("Milk the platypus"),
+    CPPUNIT_ASSERT_EQUAL(string("MilkTask"),
                          range2.first->second.id);
+    CPPUNIT_ASSERT_EQUAL(string("Milk the platypus"),
+                         range2.first->second.name);
     CPPUNIT_ASSERT_EQUAL(secondPackageStatus,
                          range2.first->second.neededPackageStatus);
     CPPUNIT_ASSERT_EQUAL(thirdPackageStatus,
@@ -146,8 +155,10 @@ void TaskManagerTest::testRegisterTask() {
     range1 = mTaskManager->mTasksByProvidedPackageStatus.equal_range(
                                                         secondPackageStatus);
     CPPUNIT_ASSERT(range1.first != range1.second);
-    CPPUNIT_ASSERT_EQUAL(string("Chew gimer stick cane"),
+    CPPUNIT_ASSERT_EQUAL(string("ChewTask"),
                          range1.first->second.id);
+    CPPUNIT_ASSERT_EQUAL(string("Chew gimer stick cane"),
+                         range1.first->second.name);
     CPPUNIT_ASSERT_EQUAL(firstPackageStatus,
                          range1.first->second.neededPackageStatus);
     CPPUNIT_ASSERT_EQUAL(secondPackageStatus,
@@ -158,15 +169,19 @@ void TaskManagerTest::testRegisterTask() {
     range2 = mTaskManager->mTasksByProvidedPackageStatus.equal_range(
                                                         thirdPackageStatus);
     CPPUNIT_ASSERT(range2.first != range2.second);
-    CPPUNIT_ASSERT_EQUAL(string("Watch House M.D."),
+    CPPUNIT_ASSERT_EQUAL(string("WatchTask"),
                          range2.first->second.id);
+    CPPUNIT_ASSERT_EQUAL(string("Watch House M.D."),
+                         range2.first->second.name);
     CPPUNIT_ASSERT_EQUAL(firstPackageStatus,
                          range2.first->second.neededPackageStatus);
     CPPUNIT_ASSERT_EQUAL(thirdPackageStatus,
                          range2.first->second.providedPackageStatus);
     ++range2.first;
-    CPPUNIT_ASSERT_EQUAL(string("Milk the platypus"),
+    CPPUNIT_ASSERT_EQUAL(string("MilkTask"),
                          range2.first->second.id);
+    CPPUNIT_ASSERT_EQUAL(string("Milk the platypus"),
+                         range2.first->second.name);
     CPPUNIT_ASSERT_EQUAL(secondPackageStatus,
                          range2.first->second.neededPackageStatus);
     CPPUNIT_ASSERT_EQUAL(thirdPackageStatus,
@@ -181,14 +196,18 @@ void TaskManagerTest::testGetTasksByPackageStatus() {
     vector<TaskData> neededStatus1 = mTaskManager->getTasksByPackageStatus(
                                 firstPackageStatus,
                                 mTaskManager->mTasksByNeededPackageStatus);
-    CPPUNIT_ASSERT_EQUAL(string("Chew gimer stick cane"),
+    CPPUNIT_ASSERT_EQUAL(string("ChewTask"),
                          neededStatus1[0].id);
+    CPPUNIT_ASSERT_EQUAL(string("Chew gimer stick cane"),
+                         neededStatus1[0].name);
     CPPUNIT_ASSERT_EQUAL(firstPackageStatus,
                          neededStatus1[0].neededPackageStatus);
     CPPUNIT_ASSERT_EQUAL(secondPackageStatus,
                          neededStatus1[0].providedPackageStatus);
-    CPPUNIT_ASSERT_EQUAL(string("Watch House M.D."),
+    CPPUNIT_ASSERT_EQUAL(string("WatchTask"),
                          neededStatus1[1].id);
+    CPPUNIT_ASSERT_EQUAL(string("Watch House M.D."),
+                         neededStatus1[1].name);
     CPPUNIT_ASSERT_EQUAL(firstPackageStatus,
                          neededStatus1[1].neededPackageStatus);
     CPPUNIT_ASSERT_EQUAL(thirdPackageStatus,
@@ -198,8 +217,10 @@ void TaskManagerTest::testGetTasksByPackageStatus() {
     vector<TaskData> neededStatus2 = mTaskManager->getTasksByPackageStatus(
                                 secondPackageStatus,
                                 mTaskManager->mTasksByNeededPackageStatus);
-    CPPUNIT_ASSERT_EQUAL(string("Milk the platypus"),
+    CPPUNIT_ASSERT_EQUAL(string("MilkTask"),
                          neededStatus2[0].id);
+    CPPUNIT_ASSERT_EQUAL(string("Milk the platypus"),
+                         neededStatus2[0].name);
     CPPUNIT_ASSERT_EQUAL(secondPackageStatus,
                          neededStatus2[0].neededPackageStatus);
     CPPUNIT_ASSERT_EQUAL(thirdPackageStatus,
@@ -219,8 +240,10 @@ void TaskManagerTest::testGetTasksByPackageStatus() {
     vector<TaskData> providedStatus1 = mTaskManager->getTasksByPackageStatus(
                                 secondPackageStatus,
                                 mTaskManager->mTasksByProvidedPackageStatus);
-    CPPUNIT_ASSERT_EQUAL(string("Chew gimer stick cane"),
+    CPPUNIT_ASSERT_EQUAL(string("ChewTask"),
                          providedStatus1[0].id);
+    CPPUNIT_ASSERT_EQUAL(string("Chew gimer stick cane"),
+                         providedStatus1[0].name);
     CPPUNIT_ASSERT_EQUAL(firstPackageStatus,
                          providedStatus1[0].neededPackageStatus);
     CPPUNIT_ASSERT_EQUAL(secondPackageStatus,
@@ -230,14 +253,18 @@ void TaskManagerTest::testGetTasksByPackageStatus() {
     vector<TaskData> providedStatus2 = mTaskManager->getTasksByPackageStatus(
                                 thirdPackageStatus,
                                 mTaskManager->mTasksByProvidedPackageStatus);
-    CPPUNIT_ASSERT_EQUAL(string("Watch House M.D."),
+    CPPUNIT_ASSERT_EQUAL(string("WatchTask"),
                          providedStatus2[0].id);
+    CPPUNIT_ASSERT_EQUAL(string("Watch House M.D."),
+                         providedStatus2[0].name);
     CPPUNIT_ASSERT_EQUAL(firstPackageStatus,
                          providedStatus2[0].neededPackageStatus);
     CPPUNIT_ASSERT_EQUAL(thirdPackageStatus,
                          providedStatus2[0].providedPackageStatus);
-    CPPUNIT_ASSERT_EQUAL(string("Milk the platypus"),
+    CPPUNIT_ASSERT_EQUAL(string("MilkTask"),
                          providedStatus2[1].id);
+    CPPUNIT_ASSERT_EQUAL(string("Milk the platypus"),
+                         providedStatus2[1].name);
     CPPUNIT_ASSERT_EQUAL(secondPackageStatus,
                          providedStatus2[1].neededPackageStatus);
     CPPUNIT_ASSERT_EQUAL(thirdPackageStatus,
