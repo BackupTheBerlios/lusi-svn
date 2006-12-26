@@ -48,10 +48,10 @@ int loadModule(const char* filename, lt_ptr data) {
     if (module) {
         typedef void initializer();
 
-        //int cast is an ugly hack made to avoid an ISO C++ warning
+        //This code has an ISO C++ warning
         //See http://www.trilithium.com/johan/2004/12/problem-with-dlsym/
         initializer* init = reinterpret_cast<initializer*>(
-                                    (int)lt_dlsym(module, "initializer"));
+                                    lt_dlsym(module, "initializer"));
         if (init) {
             init();
         } else {
