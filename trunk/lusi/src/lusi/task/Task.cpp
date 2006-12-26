@@ -59,13 +59,13 @@ Task::Task(const string& id, const string& name, Package* package,
 
     //mId must be set before calling getTaskHelpers, as it uses getId()
     mTaskHelpers = TaskHelperManager::getInstance()->getTaskHelpers(this);
+    sortTaskHelpers();
+
     mTaskHelpersIterator = mTaskHelpers.begin();
     nextTaskHelper();
 
     mTaskLogger = new TaskLogger(this);
     mTaskProgress = new TaskProgress(this);
-
-    sortTaskHelpers();
 }
 
 Task::~Task() {
